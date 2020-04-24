@@ -1,0 +1,19 @@
+{
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "clean": "lerna run clean",
+    "build": "lerna run build",
+    "watch": "lerna run --stream watch --no-private",
+    "bootstrap": "lerna bootstrap",
+    "postinstall": "npm run bootstrap",
+    "pub": "lerna publish",
+    "changelog": "lerna-changelog"
+  },
+  "devDependencies": {
+    "lerna": "^3.20.2",
+    "lerna-changelog": "^1.0.1"
+  }
+}

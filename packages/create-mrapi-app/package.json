@@ -1,0 +1,16 @@
+{
+  "name": "create-mrapi-app",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "neikvon",
+  "license": "MIT",
+  "files": [
+    "lib",
+    "bin"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "clean": "rm -rf ./lib"
+  }
+}

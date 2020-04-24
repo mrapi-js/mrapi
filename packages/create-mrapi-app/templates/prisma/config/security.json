@@ -1,0 +1,13 @@
+{
+  "cors": {
+    "credentials": true
+  },
+  "auth": {
+    "accessTokenName": "access-token",
+    "accessTokenSecret": "wesjcywhcs",
+    "accessTokenExpiresIn": "15min",
+    "refreshTokenName": "refresh-token",
+    "refreshTokenSecret": "wesjcywhcs",
+    "refreshTokenExpiresIn": "7d"
+  }
+}

@@ -1,0 +1,1881 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Example API",
+    "version": "3.0.0"
+  },
+  "paths": {
+    "/api/role": {
+      "get": {
+        "operationId": "roleQuery",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "where",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/RoleWhereUniqueInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "roleUsersWhere",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "roleUsersOrderBy",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserOrderByInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "roleUsersSkip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "roleUsersAfter",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereUniqueInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "roleUsersBefore",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereUniqueInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "roleUsersFirst",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "roleUsersLast",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/roles": {
+      "get": {
+        "operationId": "rolesQuery",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "where",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/RoleWhereInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/RoleOrderByInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/RoleWhereUniqueInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/RoleWhereUniqueInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "last",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rolesUsersWhere",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rolesUsersOrderBy",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserOrderByInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rolesUsersSkip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rolesUsersAfter",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereUniqueInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rolesUsersBefore",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereUniqueInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rolesUsersFirst",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "rolesUsersLast",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Role"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user": {
+      "get": {
+        "operationId": "userQuery",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "where",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereUniqueInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users": {
+      "get": {
+        "operationId": "usersQuery",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "where",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "orderBy",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserOrderByInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "skip",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "after",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereUniqueInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereUniqueInput"
+            }
+          },
+          {
+            "in": "query",
+            "name": "first",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "last",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/User"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/users-count": {
+      "get": {
+        "operationId": "usersCountQuery",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "where",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/UserWhereInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "用户数量",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/roles-count": {
+      "get": {
+        "operationId": "rolesCountQuery",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "where",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/RoleWhereInput"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "角色数量",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create-one-role": {
+      "post": {
+        "operationId": "createOneRoleMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/RoleCreateInput"
+                  },
+                  "createOneRoleUsersWhere": {
+                    "$ref": "#/components/schemas/UserWhereInput"
+                  },
+                  "createOneRoleUsersOrderBy": {
+                    "$ref": "#/components/schemas/UserOrderByInput"
+                  },
+                  "createOneRoleUsersSkip": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "createOneRoleUsersAfter": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  },
+                  "createOneRoleUsersBefore": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  },
+                  "createOneRoleUsersFirst": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "createOneRoleUsersLast": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                },
+                "required": [
+                  "data"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/delete-one-role": {
+      "post": {
+        "operationId": "deleteOneRoleMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "where": {
+                    "$ref": "#/components/schemas/RoleWhereUniqueInput"
+                  },
+                  "deleteOneRoleUsersWhere": {
+                    "$ref": "#/components/schemas/UserWhereInput"
+                  },
+                  "deleteOneRoleUsersOrderBy": {
+                    "$ref": "#/components/schemas/UserOrderByInput"
+                  },
+                  "deleteOneRoleUsersSkip": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "deleteOneRoleUsersAfter": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  },
+                  "deleteOneRoleUsersBefore": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  },
+                  "deleteOneRoleUsersFirst": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "deleteOneRoleUsersLast": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                },
+                "required": [
+                  "where"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/update-one-role": {
+      "post": {
+        "operationId": "updateOneRoleMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/RoleUpdateInput"
+                  },
+                  "where": {
+                    "$ref": "#/components/schemas/RoleWhereUniqueInput"
+                  },
+                  "updateOneRoleUsersWhere": {
+                    "$ref": "#/components/schemas/UserWhereInput"
+                  },
+                  "updateOneRoleUsersOrderBy": {
+                    "$ref": "#/components/schemas/UserOrderByInput"
+                  },
+                  "updateOneRoleUsersSkip": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "updateOneRoleUsersAfter": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  },
+                  "updateOneRoleUsersBefore": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  },
+                  "updateOneRoleUsersFirst": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "updateOneRoleUsersLast": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                },
+                "required": [
+                  "data",
+                  "where"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/delete-many-role": {
+      "post": {
+        "operationId": "deleteManyRoleMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "where": {
+                    "$ref": "#/components/schemas/RoleWhereInput"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchPayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/update-many-role": {
+      "post": {
+        "operationId": "updateManyRoleMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/RoleUpdateManyMutationInput"
+                  },
+                  "where": {
+                    "$ref": "#/components/schemas/RoleWhereInput"
+                  }
+                },
+                "required": [
+                  "data"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchPayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/upsert-one-role": {
+      "post": {
+        "operationId": "upsertOneRoleMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "where": {
+                    "$ref": "#/components/schemas/RoleWhereUniqueInput"
+                  },
+                  "create": {
+                    "$ref": "#/components/schemas/RoleCreateInput"
+                  },
+                  "update": {
+                    "$ref": "#/components/schemas/RoleUpdateInput"
+                  },
+                  "upsertOneRoleUsersWhere": {
+                    "$ref": "#/components/schemas/UserWhereInput"
+                  },
+                  "upsertOneRoleUsersOrderBy": {
+                    "$ref": "#/components/schemas/UserOrderByInput"
+                  },
+                  "upsertOneRoleUsersSkip": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "upsertOneRoleUsersAfter": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  },
+                  "upsertOneRoleUsersBefore": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  },
+                  "upsertOneRoleUsersFirst": {
+                    "type": "integer",
+                    "format": "int32"
+                  },
+                  "upsertOneRoleUsersLast": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                },
+                "required": [
+                  "where",
+                  "create",
+                  "update"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Role"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create-one-user": {
+      "post": {
+        "operationId": "createOneUserMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/UserCreateInput"
+                  }
+                },
+                "required": [
+                  "data"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/delete-one-user": {
+      "post": {
+        "operationId": "deleteOneUserMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "where": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  }
+                },
+                "required": [
+                  "where"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/update-one-user": {
+      "post": {
+        "operationId": "updateOneUserMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/UserUpdateInput"
+                  },
+                  "where": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  }
+                },
+                "required": [
+                  "data",
+                  "where"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/delete-many-user": {
+      "post": {
+        "operationId": "deleteManyUserMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "where": {
+                    "$ref": "#/components/schemas/UserWhereInput"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchPayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/update-many-user": {
+      "post": {
+        "operationId": "updateManyUserMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "$ref": "#/components/schemas/UserUpdateManyMutationInput"
+                  },
+                  "where": {
+                    "$ref": "#/components/schemas/UserWhereInput"
+                  }
+                },
+                "required": [
+                  "data"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BatchPayload"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/upsert-one-user": {
+      "post": {
+        "operationId": "upsertOneUserMutation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "where": {
+                    "$ref": "#/components/schemas/UserWhereUniqueInput"
+                  },
+                  "create": {
+                    "$ref": "#/components/schemas/UserCreateInput"
+                  },
+                  "update": {
+                    "$ref": "#/components/schemas/UserUpdateInput"
+                  }
+                },
+                "required": [
+                  "where",
+                  "create",
+                  "update"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Query": {
+        "type": "object",
+        "required": [
+          "roles",
+          "users",
+          "usersCount",
+          "rolesCount"
+        ],
+        "properties": {
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Role"
+            }
+          },
+          "user": {
+            "$ref": "#/components/schemas/User"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          },
+          "usersCount": {
+            "type": "integer",
+            "format": "int32",
+            "description": "用户数量"
+          },
+          "rolesCount": {
+            "type": "integer",
+            "format": "int32",
+            "description": "角色数量"
+          }
+        }
+      },
+      "RoleWhereUniqueInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "Role": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "description",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/User"
+            }
+          }
+        }
+      },
+      "UserWhereInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "object"
+          },
+          "name": {
+            "type": "object"
+          },
+          "email": {
+            "type": "object"
+          },
+          "password": {
+            "type": "object"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "roleId": {
+            "type": "object"
+          },
+          "AND": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "OR": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "NOT": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "role": {
+            "type": "object"
+          }
+        }
+      },
+      "StringFilter": {
+        "type": "object",
+        "properties": {
+          "equals": {
+            "type": "string"
+          },
+          "not": {
+            "type": "string"
+          },
+          "in": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notIn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lt": {
+            "type": "string"
+          },
+          "lte": {
+            "type": "string"
+          },
+          "gt": {
+            "type": "string"
+          },
+          "gte": {
+            "type": "string"
+          },
+          "contains": {
+            "type": "string"
+          },
+          "startsWith": {
+            "type": "string"
+          },
+          "endsWith": {
+            "type": "string"
+          }
+        }
+      },
+      "DateTimeFilter": {
+        "type": "object",
+        "properties": {
+          "equals": {
+            "type": "object"
+          },
+          "not": {
+            "type": "object"
+          },
+          "in": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "notIn": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "lt": {
+            "type": "object"
+          },
+          "lte": {
+            "type": "object"
+          },
+          "gt": {
+            "type": "object"
+          },
+          "gte": {
+            "type": "object"
+          }
+        }
+      },
+      "NullableStringFilter": {
+        "type": "object",
+        "properties": {
+          "equals": {
+            "type": "string"
+          },
+          "not": {
+            "type": "string"
+          },
+          "in": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "notIn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "lt": {
+            "type": "string"
+          },
+          "lte": {
+            "type": "string"
+          },
+          "gt": {
+            "type": "string"
+          },
+          "gte": {
+            "type": "string"
+          },
+          "contains": {
+            "type": "string"
+          },
+          "startsWith": {
+            "type": "string"
+          },
+          "endsWith": {
+            "type": "string"
+          }
+        }
+      },
+      "RoleWhereInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "object"
+          },
+          "name": {
+            "type": "object"
+          },
+          "description": {
+            "type": "object"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "users": {
+            "type": "object"
+          },
+          "AND": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "OR": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "NOT": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "UserFilter": {
+        "type": "object",
+        "properties": {
+          "every": {
+            "type": "object"
+          },
+          "some": {
+            "type": "object"
+          },
+          "none": {
+            "type": "object"
+          }
+        }
+      },
+      "UserOrderByInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "object"
+          },
+          "name": {
+            "type": "object"
+          },
+          "email": {
+            "type": "object"
+          },
+          "password": {
+            "type": "object"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "role": {
+            "type": "object"
+          },
+          "roleId": {
+            "type": "object"
+          }
+        }
+      },
+      "UserWhereUniqueInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "email",
+          "password",
+          "createdAt",
+          "updatedAt"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "roleId": {
+            "type": "string"
+          },
+          "role": {
+            "$ref": "#/components/schemas/Role"
+          }
+        }
+      },
+      "RoleOrderByInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "object"
+          },
+          "name": {
+            "type": "object"
+          },
+          "description": {
+            "type": "object"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          }
+        }
+      },
+      "Mutation": {
+        "type": "object",
+        "required": [
+          "createOneRole",
+          "deleteManyRole",
+          "updateManyRole",
+          "upsertOneRole",
+          "createOneUser",
+          "deleteManyUser",
+          "updateManyUser",
+          "upsertOneUser"
+        ],
+        "properties": {
+          "createOneRole": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "deleteOneRole": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "updateOneRole": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "deleteManyRole": {
+            "$ref": "#/components/schemas/BatchPayload"
+          },
+          "updateManyRole": {
+            "$ref": "#/components/schemas/BatchPayload"
+          },
+          "upsertOneRole": {
+            "$ref": "#/components/schemas/Role"
+          },
+          "createOneUser": {
+            "$ref": "#/components/schemas/User"
+          },
+          "deleteOneUser": {
+            "$ref": "#/components/schemas/User"
+          },
+          "updateOneUser": {
+            "$ref": "#/components/schemas/User"
+          },
+          "deleteManyUser": {
+            "$ref": "#/components/schemas/BatchPayload"
+          },
+          "updateManyUser": {
+            "$ref": "#/components/schemas/BatchPayload"
+          },
+          "upsertOneUser": {
+            "$ref": "#/components/schemas/User"
+          }
+        }
+      },
+      "RoleCreateInput": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "users": {
+            "type": "object"
+          }
+        }
+      },
+      "UserCreateManyWithoutRoleInput": {
+        "type": "object",
+        "properties": {
+          "create": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "connect": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "UserCreateWithoutRoleInput": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          }
+        }
+      },
+      "RoleUpdateInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "users": {
+            "type": "object"
+          }
+        }
+      },
+      "UserUpdateManyWithoutRoleInput": {
+        "type": "object",
+        "properties": {
+          "create": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "connect": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "set": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "disconnect": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "delete": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "update": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "updateMany": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "deleteMany": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "upsert": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "UserUpdateWithWhereUniqueWithoutRoleInput": {
+        "type": "object",
+        "required": [
+          "where",
+          "data"
+        ],
+        "properties": {
+          "where": {
+            "type": "object"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "UserUpdateWithoutRoleDataInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          }
+        }
+      },
+      "UserUpdateManyWithWhereNestedInput": {
+        "type": "object",
+        "required": [
+          "where",
+          "data"
+        ],
+        "properties": {
+          "where": {
+            "type": "object"
+          },
+          "data": {
+            "type": "object"
+          }
+        }
+      },
+      "UserScalarWhereInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "object"
+          },
+          "name": {
+            "type": "object"
+          },
+          "email": {
+            "type": "object"
+          },
+          "password": {
+            "type": "object"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "roleId": {
+            "type": "object"
+          },
+          "AND": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "OR": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          },
+          "NOT": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "UserUpdateManyDataInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          }
+        }
+      },
+      "UserUpsertWithWhereUniqueWithoutRoleInput": {
+        "type": "object",
+        "required": [
+          "where",
+          "update",
+          "create"
+        ],
+        "properties": {
+          "where": {
+            "type": "object"
+          },
+          "update": {
+            "type": "object"
+          },
+          "create": {
+            "type": "object"
+          }
+        }
+      },
+      "BatchPayload": {
+        "type": "object",
+        "required": [
+          "count"
+        ],
+        "properties": {
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RoleUpdateManyMutationInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          }
+        }
+      },
+      "UserCreateInput": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "role": {
+            "type": "object"
+          }
+        }
+      },
+      "RoleCreateOneWithoutUsersInput": {
+        "type": "object",
+        "properties": {
+          "create": {
+            "type": "object"
+          },
+          "connect": {
+            "type": "object"
+          }
+        }
+      },
+      "RoleCreateWithoutUsersInput": {
+        "type": "object",
+        "required": [
+          "name",
+          "description"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          }
+        }
+      },
+      "UserUpdateInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          },
+          "role": {
+            "type": "object"
+          }
+        }
+      },
+      "RoleUpdateOneWithoutUsersInput": {
+        "type": "object",
+        "properties": {
+          "create": {
+            "type": "object"
+          },
+          "connect": {
+            "type": "object"
+          },
+          "disconnect": {
+            "type": "boolean"
+          },
+          "delete": {
+            "type": "boolean"
+          },
+          "update": {
+            "type": "object"
+          },
+          "upsert": {
+            "type": "object"
+          }
+        }
+      },
+      "RoleUpdateWithoutUsersDataInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          }
+        }
+      },
+      "RoleUpsertWithoutUsersInput": {
+        "type": "object",
+        "required": [
+          "update",
+          "create"
+        ],
+        "properties": {
+          "update": {
+            "type": "object"
+          },
+          "create": {
+            "type": "object"
+          }
+        }
+      },
+      "UserUpdateManyMutationInput": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "object"
+          },
+          "updatedAt": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "host": "localhost",
+  "port": 1358,
+  "logger": {
+    "prettyPrint": false
+  },
+  "graphql": {
+    "endpoint": "/graphql",
+    "playground": "playground",
+    "resolvers": {
+      "generated": "../src/generated",
+      "custom": "./src/resolvers"
+    },
+    "emitSchemaFile": "exports/schema.graphql",
+    "validate": false,
+    "jit": 1,
+    "queryDepth": 100
+  }
+}

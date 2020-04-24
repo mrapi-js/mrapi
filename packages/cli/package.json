@@ -1,0 +1,32 @@
+{
+  "name": "@mrapi/cli",
+  "version": "0.0.1",
+  "private": true,
+  "bin": {
+    "mrapi": "./bin/run"
+  },
+  "files": [
+    "lib",
+    "bin"
+  ],
+  "author": "neikvon",
+  "license": "MIT",
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prisma": "prisma",
+    "clean": "rm -rf ./lib"
+  },
+  "dependencies": {
+    "@mrapi/core": "*",
+    "execa": "^4.0.0",
+    "fs-extra": "^9.0.0"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

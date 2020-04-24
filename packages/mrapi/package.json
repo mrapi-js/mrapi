@@ -1,0 +1,53 @@
+{
+  "name": "@mrapi/core",
+  "version": "0.0.0",
+  "main": "lib/index.js",
+  "author": "neikvon",
+  "license": "MIT",
+  "private": true,
+  "files": [
+    "lib",
+    "bin"
+  ],
+  "scripts": {
+    "dev": "tsc -w",
+    "build": "tsc",
+    "watch": "tsc -w",
+    "prisma": "prisma",
+    "clean": "rm -rf ./lib"
+  },
+  "dependencies": {
+    "@prisma/cli": "^2.0.0-beta.3",
+    "@prisma/client": "^2.0.0-beta.3",
+    "dotenv": "^8.2.0",
+    "execa": "^4.0.0",
+    "fastify": "^2.13.1",
+    "fastify-cookie": "^3.6.0",
+    "fastify-cors": "^3.0.3",
+    "fastify-gql": "^3.3.0",
+    "fs-extra": "^9.0.0",
+    "graphql": "^14.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "ms": "^2.1.2",
+    "pino-pretty": "^4.0.0",
+    "prisma-multi-tenant": "^2.0.0-beta.2",
+    "reflect-metadata": "^0.1.13",
+    "type-graphql": "^0.17.6",
+    "typegraphql-prisma": "^0.2.1"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^8.1.0",
+    "@types/jsonwebtoken": "^8.3.9",
+    "@types/ms": "^0.7.31",
+    "graphql-tools": "^5.0.0",
+    "nodemon": "^2.0.3",
+    "ts-node": "^8.8.2",
+    "typescript": "^3.8.3"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

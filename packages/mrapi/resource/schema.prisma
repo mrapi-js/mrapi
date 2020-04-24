@@ -1,0 +1,13 @@
+datasource db {
+  provider = "$DB_PROVIDER$"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+generator typegraphql {
+  provider = env("TYPE_GRAPHQL_PROVIDER")
+  output   = env("TYPE_GRAPHQL_OUTPUT")
+}

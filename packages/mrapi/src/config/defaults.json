@@ -1,0 +1,45 @@
+{
+  "database": {
+    "provider": "postgresql",
+    "client": "prisma",
+    "host": "localhost",
+    "port": 5432,
+    "database": "mrapi2",
+    "user": "postgres",
+    "password": "pgpass",
+    "schema": "./config/schema.prisma",
+    "schemaOutput": "./prisma/schema.prisma"
+  },
+  "server": {
+    "host": "localhost",
+    "port": 1358,
+    "logger": {
+      "prettyPrint": true
+    },
+    "graphql": {
+      "endpoint": "/graphql",
+      "playground": "playground",
+      "resolvers": {
+        "generated": "../src/generated",
+        "custom": "./src/resolvers"
+      },
+      "emitSchemaFile": "exports/schema.graphql",
+      "validate": false,
+      "jit": 1,
+      "queryDepth": 100
+    }
+  },
+  "security": {
+    "cors": {
+      "credentials": true
+    },
+    "auth": {
+      "accessTokenName": "access-token",
+      "accessTokenSecret": "wesjcywhcs",
+      "accessTokenExpiresIn": "15min",
+      "refreshTokenName": "refresh-token",
+      "refreshTokenSecret": "wesjcywhcs",
+      "refreshTokenExpiresIn": "7d"
+    }
+  }
+}
