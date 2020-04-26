@@ -1,6 +1,6 @@
 {
   "name": "mrapi-app",
-  "version": "0.0.0",
+  "version": "0.0.1-alpha.0",
   "main": "index.js",
   "author": "mrapi",
   "license": "MIT",
@@ -20,12 +20,12 @@
     "mrapi-app"
   ],
   "dependencies": {
-    "@mrapi/core": "*"
+    "@mrapi/core": "^0.0.1-alpha.0"
   },
   "devDependencies": {
-    "@mrapi/cli": "*",
-    "typescript": "^3.8.3",
-    "ts-node-dev": "^1.0.0-pre.44"
+    "@mrapi/cli": "^0.0.1-alpha.0",
+    "ts-node-dev": "^1.0.0-pre.44",
+    "typescript": "^3.8.3"
   },
   "prettier": {
     "semi": false,
