@@ -136,61 +136,6 @@ export class Mrapi {
       },
     )
 
-    this.app.addHook('onRequest', async (request: any, reply: any) => {
-      const accessToken = request.cookies['access-token']
-      const refreshToken = request.cookies['refresh-token']
-      console.log('cookies:', request.cookies)
-      if (!refreshToken && !accessToken) {
-        return
-      }
-      if (this.auth.verifyAccessToken(accessToken) || !refreshToken) {
-        return
-      }
-
-      const refreshInfo = this.auth.verifyRefreshToken(refreshToken)
-      if (!refreshInfo || !refreshInfo.id) {
-        return
-      }
-
-      const user = await this.db.client.user.findOne({
-        where: {
-          id: refreshInfo.id,
-        },
-        include: {
-          role: true,
-        },
-      })
-      // token has been invalidated
-      if (!user || user.times !== refreshInfo.times) {
-        return
-      }
-      const tokens = this.auth.createTokens(user)
-
-      const now = Date.now()
-      reply.setCookie(this.auth.config.accessTokenName, tokens.accessToken, {
-        // domain: 'localhost',
-        path: '/',
-        // secure: false, // send cookie over HTTPS only
-        httpOnly: true,
-        sameSite: true, // alternative CSRF protection
-        expires: new Date(now + ms(this.auth.config.accessTokenExpiresIn)),
-      })
-
-      reply.setCookie(this.auth.config.refreshTokenName, tokens.refreshToken, {
-        // domain: 'localhost',
-        path: '/',
-        // secure: false, // send cookie over HTTPS only
-        httpOnly: true,
-        sameSite: true, // alternative CSRF protection
-        expires: new Date(now + ms(this.auth.config.refreshTokenExpiresIn)),
-      })
-      ;(request as Request).user = {
-        id: user.id,
-        role: user.role,
-      }
-      return
-    })
-
     for (let [key, cb] of Object.entries(this.hooks)) {
       this.app.addHook(key as any, cb)
     }
