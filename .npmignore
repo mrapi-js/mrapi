@@ -1,1 +1,20 @@
-examples
+# Logs
+logs/
+*.log
+
+# Cache
+.eslintcache
+.idea
+.npm
+yarn.lock
+
+# Directories
+examples/
+docs/
+src/
+tests/
+node_modules/
+
+# Custom
+*.min.js
+*.map

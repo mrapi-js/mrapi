@@ -5,7 +5,7 @@
   "author": "mrapi",
   "license": "MIT",
   "scripts": {
-    "dev": "DEBUG=prisma:query ts-node-dev --respawn --transpileOnly ./src/app.ts",
+    "dev": "DEBUG=prisma:query ts-node-dev --inspect --respawn --transpileOnly ./src/app.ts",
     "build": "mrapi build",
     "start": "node app",
     "generate": "mrapi generate",
