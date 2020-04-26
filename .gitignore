@@ -3,4 +3,5 @@
 .jest-*
 lib
 node_modules
+tmp/
 *.tsbuildinfo

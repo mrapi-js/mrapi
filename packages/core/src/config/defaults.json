@@ -1,12 +1,8 @@
 {
   "database": {
-    "provider": "postgresql",
+    "provider": "sqlite",
     "client": "prisma",
-    "host": "localhost",
-    "port": 5432,
-    "database": "mrapi2",
-    "user": "postgres",
-    "password": "pgpass",
+    "url": "file:dev.db",
     "schema": "./config/schema.prisma",
     "schemaOutput": "./prisma/schema.prisma"
   },

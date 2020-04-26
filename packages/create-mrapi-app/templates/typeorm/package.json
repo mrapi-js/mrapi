@@ -14,11 +14,6 @@
     "migrate:save": "mrapi migrate:save",
     "migrate:up": "mrapi migrate:up"
   },
-  "workspaces": [
-    "mrapi",
-    "@mrapi/cli",
-    "my-mrapi-app"
-  ],
   "dependencies": {
     "mrapi": "*"
   },

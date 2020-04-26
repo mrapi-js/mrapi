@@ -1,25 +1,24 @@
 {
-  "name": "my-mrapi-app",
-  "version": "1.0.0",
+  "name": "mrapi-app",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "mrapi",
   "license": "MIT",
-  "private": true,
   "scripts": {
-    "dev": "DEBUG=prisma:query ts-node-dev --respawn --transpileOnly ./src/app.ts",
+    "dev": "DEBUG=prisma:query ts-node-dev --inspect --respawn --transpileOnly ./src/app.ts",
     "build": "mrapi build",
-    "start": "node app"
+    "start": "node app",
+    "generate": "mrapi generate",
+    "db": "npm run db:save && npm run db:up",
+    "db:save": "mrapi db:save",
+    "db:up": "mrapi db:up",
+    "db:ui": "mrapi db:ui"
   },
-  "workspaces": [
-    "mrapi",
-    "@mrapi/cli",
-    "my-mrapi-app"
-  ],
   "dependencies": {
-    "mrapi": "*"
+    "@mrapi/core": "0.0.1-alpha.2"
   },
   "devDependencies": {
-    "@mrapi/cli": "*",
+    "@mrapi/cli": "0.0.1-alpha.2",
     "typescript": "^3.8.3",
     "ts-node-dev": "^1.0.0-pre.44"
   },

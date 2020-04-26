@@ -2,7 +2,7 @@
   "host": "localhost",
   "port": 1358,
   "logger": {
-    "prettyPrint": false
+    "prettyPrint": true
   },
   "graphql": {
     "endpoint": "/graphql",

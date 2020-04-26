@@ -1,8 +1,7 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*",
-    "examples/*"
+    "packages/*"
   ],
   "scripts": {
     "clean": "lerna run clean",
@@ -11,7 +10,9 @@
     "bootstrap": "lerna bootstrap",
     "postinstall": "npm run bootstrap",
     "pub": "lerna publish --ignore-changes=mrapi-app",
-    "changelog": "lerna-changelog"
+    "changelog": "lerna-changelog",
+    "lerna": "lerna",
+    "tsc": "tsc"
   },
   "devDependencies": {
     "lerna": "^3.20.2",

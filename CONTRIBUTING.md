@@ -15,14 +15,17 @@
    yarn watch
    ```
 
-## Link packages & use
+## Link packages & usage
 
 - link
+
    ```bash
    cd packages/create-mrapi-app
    yarn link
    ```
-- use
+
+- create a demo app
+
   ```bash
   cd path/to/empty/folder
   yarn create mrapi api-demo

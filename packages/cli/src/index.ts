@@ -22,7 +22,7 @@ export const run = async () => {
   program
     .command('db:up [name/increment/timestamp]')
     .description('Migrate the database up to a specific state')
-    .action((name) => prismaUtils.migrate.save(config, cwd, name))
+    .action((name) => prismaUtils.migrate.up(config, cwd, name))
   program
     .command('db:ui')
     .option('-p, --port <number>', 'The port number to start Studio on', '5555')
