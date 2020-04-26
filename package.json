@@ -10,7 +10,7 @@
     "watch": "lerna run --parallel watch --no-private",
     "bootstrap": "lerna bootstrap",
     "postinstall": "npm run bootstrap",
-    "pub": "lerna publish --ignore=mrapi-app",
+    "pub": "lerna publish --ignore-changes=mrapi-app",
     "changelog": "lerna-changelog"
   },
   "devDependencies": {
