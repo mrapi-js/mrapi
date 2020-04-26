@@ -9,7 +9,8 @@
   "license": "MIT",
   "files": [
     "lib",
-    "bin"
+    "bin",
+    "templates"
   ],
   "scripts": {
     "build": "tsc",
