@@ -1,37 +1,38 @@
-import { Mrapi, loadConfig, prismaUtils } from '@mrapi/core'
+import { loadConfig, prismaUtils } from '@mrapi/core'
+import { Command } from 'commander'
+const pkg = require('../package.json')
 
 export const run = async () => {
   const cwd = process.cwd()
-  const argv = process.argv.slice(2)
-  console.log({ argv })
-  const [rawPrimary, ...rawRest] = argv.join(' ').split(' -- ')
-  const command = rawPrimary.trim().split(' ')[0]
-  const secondary = rawRest.join(' -- ')
-
   const config = loadConfig(cwd)
-  // const mrapi = new Mrapi()
 
-  if (config.database.client === 'prisma') {
-    // const prisma = await import('../utils/prisma')
-    switch (command) {
-      case 'generate':
-        await prismaUtils.generate(config, cwd)
-        break
-      case 'migrate:save':
-        await prismaUtils.migrate.save(config, cwd)
-        break
-      case 'migrate:up':
-        await prismaUtils.migrate.up(config, cwd)
-        break
-      default:
-        break
-    }
-  }
+  const program = new Command()
+
+  program.allowUnknownOption(true)
+
+  program.version(pkg.version, '-v, --version')
+  program
+    .command('generate')
+    .description('Generate DB Client code')
+    .action(() => prismaUtils.generate(config, cwd))
+  program
+    .command('db:save [name]')
+    .description('Create a migration with a specific name')
+    .action((name) => prismaUtils.migrate.save(config, cwd, name))
+  program
+    .command('db:up [name/increment/timestamp]')
+    .description('Migrate the database up to a specific state')
+    .action((name) => prismaUtils.migrate.save(config, cwd, name))
+  program
+    .command('db:ui')
+    .option('-p, --port <number>', 'The port number to start Studio on', '5555')
+    .description('Start database management ui')
+    .action((cmdObj) => prismaUtils.studio(config, cwd, cmdObj))
+
+  program.parse(process.argv)
 }
 
-run()
-  // .then(async () => {})
-  .catch(async (err) => {
-    console.error(err)
-    process.exit(1)
-  })
+run().catch(async (err) => {
+  console.error(err)
+  process.exit(1)
+})

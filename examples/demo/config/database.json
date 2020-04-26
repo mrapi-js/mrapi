@@ -1,0 +1,7 @@
+{
+  "provider": "sqlite",
+  "client": "prisma",
+  "url": "file:dev.db",
+  "schema": "./config/schema.prisma",
+  "schemaOutput": "./prisma/schema.prisma"
+}

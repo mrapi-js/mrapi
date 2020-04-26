@@ -1,7 +1,10 @@
 {
   "name": "create-mrapi-app",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "main": "index.js",
+  "bin": {
+    "create-mrapi-app": "./bin/run"
+  },
   "author": "neikvon",
   "license": "MIT",
   "files": [
@@ -10,7 +13,16 @@
   ],
   "scripts": {
     "build": "tsc",
-    "watch": "tsc -w",
+    "watch": "tsc --preserveWatchOutput --watch",
     "clean": "rm -rf ./lib"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "dependencies": {
+    "fs-extra": "^9.0.0"
   }
 }

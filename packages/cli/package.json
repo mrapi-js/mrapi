@@ -1,7 +1,7 @@
 {
   "name": "@mrapi/cli",
   "version": "0.0.1",
-  "private": true,
+  "main": "lib/index.js",
   "bin": {
     "mrapi": "./bin/run"
   },
@@ -12,14 +12,14 @@
   "author": "neikvon",
   "license": "MIT",
   "scripts": {
-    "dev": "tsc -w",
     "build": "tsc",
-    "watch": "tsc -w",
+    "watch": "tsc --preserveWatchOutput --watch",
     "prisma": "prisma",
     "clean": "rm -rf ./lib"
   },
   "dependencies": {
     "@mrapi/core": "*",
+    "commander": "^5.1.0",
     "execa": "^4.0.0",
     "fs-extra": "^9.0.0"
   },

@@ -8,9 +8,11 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "declaration": true,
+    "composite": true,
     "paths": {
       "create-mrapi-app": ["packages/create-mrapi-app/src"],
-      "@mrapi/*": ["packages/*/src"]
+      "@mrapi/cli": ["packages/cli/src"],
+      "@mrapi/core": ["packages/core/src"]
     }
   },
   "exclude": ["node_modules", "lib"]

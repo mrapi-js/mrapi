@@ -1,10 +1,9 @@
 {
-  "name": "my-mrapi-app",
-  "version": "1.0.0",
+  "name": "mrapi-app",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "mrapi",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "dev": "DEBUG=prisma:query ts-node-dev --respawn --transpileOnly ./src/app.ts",
     "build": "mrapi build",
@@ -15,12 +14,12 @@
     "migrate:up": "mrapi migrate:up"
   },
   "workspaces": [
-    "mrapi",
+    "@mrapi/core",
     "@mrapi/cli",
-    "my-mrapi-app"
+    "mrapi-app"
   ],
   "dependencies": {
-    "mrapi": "*"
+    "@mrapi/core": "*"
   },
   "devDependencies": {
     "@mrapi/cli": "*",
