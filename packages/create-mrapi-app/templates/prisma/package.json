@@ -1,5 +1,6 @@
 {
   "name": "mrapi-app",
+  "version": "0.0.0",
   "main": "index.js",
   "author": "mrapi",
   "license": "MIT",
@@ -12,13 +13,14 @@
     "db": "npm run db:save && npm run db:up",
     "db:save": "mrapi db:save",
     "db:up": "mrapi db:up",
-    "db:ui": "mrapi db:ui"
+    "db:ui": "mrapi db:ui",
+    "db:seed": "ts-node config/seed"
   },
   "dependencies": {
-    "@mrapi/core": "0.0.1-alpha.3"
+    "@mrapi/core": "0.0.1-alpha.4"
   },
   "devDependencies": {
-    "@mrapi/cli": "0.0.1-alpha.3",
+    "@mrapi/cli": "0.0.1-alpha.4",
     "cross-env": "^7.0.2",
     "typescript": "^3.8.3",
     "ts-node-dev": "^1.0.0-pre.44"

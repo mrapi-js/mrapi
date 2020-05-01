@@ -6,7 +6,8 @@ import { Config } from '../types'
 import { resolveFromCurrent, checkPrismaSchema } from './tools'
 
 function getPrismaCli() {
-  return resolveFromCurrent('@prisma/cli/build/index.js')
+  // return resolveFromCurrent('@prisma/cli/build/index.js')
+  return 'prisma'
 }
 
 export const runPrisma = async (cmd: string, options?: ExecaOptions) => {
@@ -33,9 +34,10 @@ export const create = async (
     database.provider === 'sqlite'
       ? database.url || 'file:dev.db'
       : `${database.provider}://${database.user}:${database.password}@${database.host}:${database.port}/${database.database}`
-  const TYPE_GRAPHQL_PROVIDER = resolveFromCurrent(
-    'typegraphql-prisma/generator.js',
-  )
+  // const TYPE_GRAPHQL_PROVIDER = resolveFromCurrent(
+  //   'typegraphql-prisma/generator.js',
+  // )
+  const TYPE_GRAPHQL_PROVIDER = 'node_modules/typegraphql-prisma/generator.js'
   const TYPE_GRAPHQL_OUTPUT = server.graphql!.resolvers.generated
   const baseSchemaContent = await fs.readFile(
     join(__dirname, '../../resource/schema.prisma'),

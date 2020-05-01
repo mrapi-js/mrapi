@@ -61,8 +61,14 @@ export const resolveFromProject = (name: string, cwd = process.cwd()) => {
 }
 
 export const checkPrismaClient = () => {
-  const client = requireFromProject('@prisma/client')
-  return !!client.prismaVersion
+  // from prisma-beta.4, Prisma Client is now generated into a folder called node_modules/.prisma
+  // https://github.com/prisma/prisma/releases/tag/2.0.0-beta.4
+  try {
+    const client = requireFromProject('.prisma/client')
+    return !!client.prismaVersion
+  } catch (err) {
+    return false
+  }
 }
 
 export const checkPrismaLocal = () => {

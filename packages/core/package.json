@@ -16,8 +16,8 @@
     "clean": "rm -rf ./lib"
   },
   "dependencies": {
-    "@prisma/cli": "^2.0.0-beta.3",
-    "@prisma/client": "^2.0.0-beta.3",
+    "@prisma/cli": "^2.0.0-beta.4",
+    "@prisma/client": "^2.0.0-beta.4",
     "class-validator": "^0.12.2",
     "dotenv": "^8.2.0",
     "execa": "^4.0.0",
@@ -26,12 +26,12 @@
     "fastify-cors": "^3.0.3",
     "fastify-gql": "^3.3.0",
     "fs-extra": "^9.0.0",
-    "graphql": "^14.1.1",
+    "graphql": "^14.6.0",
     "jsonwebtoken": "^8.5.1",
     "ms": "^2.1.2",
     "pino-pretty": "^4.0.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^0.17.6",
+    "type-graphql": "^0.18.0-beta.17",
     "typegraphql-prisma": "^0.2.1"
   },
   "devDependencies": {
