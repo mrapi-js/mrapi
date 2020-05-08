@@ -1,27 +1,21 @@
-import ms = require('ms')
-import fastify = require('fastify')
-import fastifyGQL = require('fastify-gql')
-import fastifyCORS = require('fastify-cors')
-import fastifyCookie = require('fastify-cookie')
-import { formatError, GraphQLError } from 'graphql'
+import 'reflect-metadata'
+import fastify, { FastifyInstance } from 'fastify'
+import { Server, IncomingMessage, ServerResponse } from 'http'
 
 import { getDBClient } from './db'
-import { Auth } from './auth'
+import { loadConfig } from './utils/tools'
 import * as defaults from './config/defaults.json'
+import registerGraphql from './middlewares/graphql'
+import registerRest from './middlewares/rest'
 import {
-  HttpServer,
-  HttpRequest,
-  HttpResponse,
-  ContextWithPrisma,
   DBClient,
-  Request,
-  Reply,
   Config,
   Middleware,
   Hook,
+  DBConfig,
+  ServerConfig,
+  SecurityConfig,
 } from './types'
-
-import { loadConfig } from './utils/tools'
 
 process.on('unhandledRejection', (error) => {
   console.error(error)
@@ -29,10 +23,9 @@ process.on('unhandledRejection', (error) => {
 })
 
 export class Mrapi {
-  app: fastify.FastifyInstance<HttpServer, HttpRequest, HttpResponse>
-  db: DBClient
-  auth: Auth
+  app: FastifyInstance<Server, IncomingMessage, ServerResponse>
   cwd = process.cwd()
+  db: DBClient
   config = defaults as Config
   middlewares: Middleware = {}
   hooks: Hook = {}
@@ -40,19 +33,34 @@ export class Mrapi {
   constructor({
     middlewares,
     hooks,
+    server,
+    database,
+    security,
+    rest,
   }: {
     middlewares?: Middleware
     hooks?: Hook
+    server?: ServerConfig
+    database?: DBConfig
+    security?: SecurityConfig
+    rest?: any
   } = {}) {
     this.middlewares = middlewares || {}
     this.hooks = hooks || {}
-    // load configs
-    this.config = loadConfig(this.cwd)
-    // console.log(this.config)
+    this.config = loadConfig(this.cwd, {
+      server,
+      database,
+      security,
+      rest,
+    })
     this.app = fastify({
       logger: this.config.server.logger,
     })
-    this.auth = new Auth(this.config.security.auth)
+
+    this.app.server.on('connect', (conn) => {
+      console.log('-----connect')
+      console.log(conn)
+    })
   }
 
   async init() {
@@ -61,65 +69,34 @@ export class Mrapi {
       await prepare(this.config, this.cwd)
     }
     this.db = await getDBClient(this.config)
+
     // load middleware
-    await this.applyMiddleware()
+    await this.applyMiddlewares()
     await this.applyHooks()
   }
 
-  async applyMiddleware() {
-    this.app.register(fastifyCORS, this.config.security.cors)
-    this.app.register(fastifyCookie)
-    if (this.config.server.graphql) {
-      const option = this.config.server.graphql
-      const { createSchema } = require('./utils/schema')
-      const schema = await createSchema(option, this.cwd)
-      // console.log({ schema })
-      this.app.register(fastifyGQL, {
-        schema,
-        context: (request: Request, reply: Reply) => {
-          return {
-            ...this.db.context,
-            request,
-            reply,
-          } as ContextWithPrisma
-        },
-        path: option.endpoint,
-        ide: option.playground,
-        // https://github.com/zalando-incubator/graphql-jit
-        jit: option.jit,
-        // 请求嵌套层级
-        queryDepth: option.queryDepth,
-        errorHandler(err: any, request: Request, reply: Reply) {
-          if (err.data) {
-            reply.code(200)
-          } else {
-            reply.code(err.statusCode || 500)
-          }
+  async applyMiddlewares() {
+    this.app.register(require('fastify-cookie'))
 
-          let returns
-
-          if (err.errors) {
-            const errors = err.errors.map((error: any) => {
-              // console.log(error.message.split('\n'))
-              return error instanceof GraphQLError
-                ? formatError(error)
-                : { message: error.message }
-            })
-
-            returns = { errors, data: err.data || null }
-          } else {
-            returns = {
-              errors: [{ message: err.message }],
-              data: err.data || null,
-            }
-          }
-
-          reply.send(returns)
-
-          return returns
-        },
-      })
+    if (this.config.security && this.config.security.cors) {
+      this.app.register(require('fastify-cors'), this.config.security.cors)
     }
+
+    if (this.config.server.compress) {
+      this.app.register(
+        require('fastify-compress'),
+        typeof this.config.server.compress === 'boolean'
+          ? { global: false }
+          : this.config.server.compress,
+      )
+    }
+
+    await registerGraphql(
+      this.app,
+      this.config.server.graphql,
+      this.db,
+      this.cwd,
+    )
 
     for (let [key, opts = {}] of Object.entries(this.middlewares)) {
       this.app.register(require(key), opts)
@@ -148,10 +125,14 @@ export class Mrapi {
         console.log(this.app.printRoutes())
       })
       const { host, port } = this.config.server
-      return this.app.listen({
+      const address = await this.app.listen({
         host,
         port,
       })
+      return {
+        app: this.app,
+        address,
+      }
     } catch (err) {
       throw err
     }
@@ -177,3 +158,5 @@ export class Mrapi {
     }
   }
 }
+
+export const mrapi = new Mrapi()

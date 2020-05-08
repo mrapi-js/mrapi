@@ -22,6 +22,12 @@
    ```bash
    cd packages/create-mrapi-app
    yarn link
+
+   cd ../cli
+   yarn link
+
+   cd ../core
+   yarn link
    ```
 
 - create a demo app
@@ -29,4 +35,7 @@
   ```bash
   cd path/to/empty/folder
   yarn create mrapi api-demo
+
+  cd api-demo
+  yarn dev
   ```

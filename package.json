@@ -17,5 +17,12 @@
   "devDependencies": {
     "lerna": "^3.20.2",
     "lerna-changelog": "^1.0.1"
+  },
+  "changelog": {
+    "repo": "mrapi-js/mrapi",
+    "labels": {
+      "feat": "New Feature",
+      "fix": "Bug Fix"
+    }
   }
 }

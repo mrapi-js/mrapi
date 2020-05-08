@@ -1,30 +1,55 @@
 import { join } from 'path'
 import * as fs from 'fs-extra'
-import { DBConfig, ServerConfig } from '../types'
+import { DBConfig, ServerConfig, SecurityConfig } from '../types'
 
-export const loadConfig = (cwd: string) => {
-  const databaseFile = join(cwd, 'config/database.json')
-  const databaseExist = fs.existsSync(databaseFile)
-  if (!databaseExist) {
-    throw Error('config/database.json is required')
+export const loadConfig = (
+  cwd: string,
+  { server, database, security, rest },
+) => {
+  let serverConfig = server
+  let databaseConfig = database
+  let securityConfig = security
+  let restConfig = rest
+
+  if (!serverConfig) {
+    const file = join(cwd, 'config/server.json')
+    const exist = fs.existsSync(file)
+    if (!exist) {
+      throw Error('config/server.json is required')
+    }
+    serverConfig = require(file)
   }
 
-  const serverFile = join(cwd, 'config/server.json')
-  const serverExist = fs.existsSync(serverFile)
-  if (!serverExist) {
-    throw Error('config/server.json is required')
+  if (!databaseConfig) {
+    const file = join(cwd, 'config/database.json')
+    const exist = fs.existsSync(file)
+    if (!exist) {
+      throw Error('config/database.json is required')
+    }
+    databaseConfig = require(file)
   }
 
-  const securityFile = join(cwd, 'config/security.json')
-  const securityExist = fs.existsSync(securityFile)
-  if (!securityExist) {
-    throw Error('config/security.json is required')
+  if (!securityConfig) {
+    const file = join(cwd, 'config/security.json')
+    const exist = fs.existsSync(file)
+    if (exist) {
+      securityConfig = require(file)
+    }
+  }
+
+  if (!restConfig) {
+    const file = join(cwd, 'config/rest.json')
+    const exist = fs.existsSync(file)
+    if (exist) {
+      restConfig = require(file)
+    }
   }
 
   return {
-    database: require(databaseFile) as DBConfig,
-    server: require(serverFile) as ServerConfig,
-    security: require(securityFile),
+    server: serverConfig as ServerConfig,
+    database: databaseConfig as DBConfig,
+    security: securityConfig as SecurityConfig,
+    rest: restConfig,
   }
 }
 

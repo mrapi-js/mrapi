@@ -24,10 +24,12 @@ export const getDBClient = async ({ database, server }: any) => {
     errorFormat: 'minimal',
   })
 
-  return {
-    client,
-    context: {
-      prisma: client,
-    },
-  } as DBClient
+  // return {
+  //   client,
+  //   context: {
+  //     prisma: client,
+  //   },
+  // } as DBClient
+
+  return client
 }
