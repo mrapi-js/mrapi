@@ -1,13 +1,25 @@
 import 'reflect-metadata'
-import { Mrapi } from '@mrapi/core'
+import { Mrapi, Request, Reply } from '@mrapi/core'
 
 async function main() {
-  const mrapi = new Mrapi()
+  const mrapi = new Mrapi({
+    config: {
+      server: require('../config/server'),
+      database: require('../config/database'),
+    },
+    hooks: {
+      onRequest(request: Request, reply: Reply, done: () => void) {
+        // Some code
+        console.log('onRequest hook')
+        done()
+      },
+    },
+  })
   mrapi
     .start()
-    .then((address) => {
-      mrapi.app.log.info(`GraphQL Server:     ${address}/graphql`)
-      mrapi.app.log.info(`GraphQL Playground: ${address}/playground`)
+    .then(({ app, address }) => {
+      app.log.info(`GraphQL Server:     ${address}/graphql`)
+      app.log.info(`GraphQL Playground: ${address}/playground`)
     })
     .catch((err) => {
       mrapi.app.log.error('Error starting server')

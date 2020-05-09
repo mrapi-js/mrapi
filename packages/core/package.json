@@ -20,22 +20,23 @@
     "@prisma/client": "^2.0.0-beta.4",
     "class-validator": "^0.12.2",
     "dotenv": "^8.2.0",
-    "execa": "^4.0.0",
-    "fastify": "^2.14.0",
+    "execa": "^4.0.1",
+    "fastify": "^2.14.1",
     "fastify-compress": "^2.0.1",
-    "fastify-cookie": "^3.6.0",
+    "fastify-cookie": "^3.6.1",
     "fastify-cors": "^3.0.3",
-    "fastify-gql": "^3.3.0",
+    "fastify-gql": "^3.6.0",
     "fs-extra": "^9.0.0",
     "graphql": "^14.6.0",
     "pino-pretty": "^4.0.0",
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^0.18.0-beta.17",
+    "type-graphql": "^0.17.6",
     "typegraphql-prisma": "^0.2.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
+    "@types/node": "^13.13.5",
     "graphql-tools": "^5.0.0",
     "nodemon": "^2.0.3",
     "typescript": "^3.8.3"
@@ -48,6 +49,12 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">= 10.3"
+  },
+  "resolutions": {
+    "graphql": "^14.6.0"
   },
   "gitHead": "392939c0f944b174c89d44c6df1929e406ae6918"
 }

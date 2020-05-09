@@ -12,7 +12,6 @@ import {
 import { Http2ServerRequest, Http2ServerResponse } from 'http2'
 import fastifyGQL from 'fastify-gql'
 import fastifyCompress from 'fastify-compress'
-import fastifyCors from 'fastify-cors'
 import { ExecutionResult } from 'graphql'
 
 export type HttpServer = Server | Http2Server
@@ -21,24 +20,16 @@ export type HttpResponse = ServerResponse | Http2ServerResponse
 
 // export type Middleware = BaseMiddleware<HttpServer, HttpRequest, HttpResponse>
 // export type Middleware = FastifyInstance<HttpServer, HttpRequest, HttpResponse>
-export type Middleware = Record<string, any>
-export type Hook = Record<string, any>
-
-export interface Request extends FastifyRequest<HttpRequest> {
-  user: {
-    id: String
-    role?: any
-    times?: Number
-  }
-}
-
+// export type Middleware = Record<string, any>
+export type Hooks = Record<string, any>
+export type Request = FastifyRequest<HttpRequest>
 export type Reply = FastifyReply<HttpResponse>
-
+export type App = FastifyInstance<Server, IncomingMessage, ServerResponse>
 export type Context = {
   request: Request
   reply: Reply
   prisma: PrismaClient
-  app: fastify.FastifyInstance
+  app: App
 }
 
 export interface ContextWithPrisma extends Context {
@@ -49,12 +40,6 @@ export enum DBEngine {
   prisma = 'prisma',
   typeorm = 'typeorm',
 }
-
-// export type DBClient = {
-//   client: PrismaClient
-//   // context: ContextWithPrisma
-// }
-
 export type DBClient = PrismaClient
 
 export interface AuthConfig {
@@ -96,14 +81,6 @@ export type ServerConfig = {
     queryDepth: number
   }
   compress?: boolean | fastifyCompress.FastifyCompressOptions
-}
-
-type originCallback = (err: Error | null, allow: boolean) => void
-type originFunction = (origin: string, callback: originCallback) => void
-type originType = string | boolean | RegExp
-type ValueOrArray<T> = T | ArrayOfValueOrArray<T>
-interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}
-export type SecurityConfig = {
   cors?: {
     /**
      * Configures the Access-Control-Allow-Origin CORS header.
@@ -159,10 +136,15 @@ export type SecurityConfig = {
   }
 }
 
+type originCallback = (err: Error | null, allow: boolean) => void
+type originFunction = (origin: string, callback: originCallback) => void
+type originType = string | boolean | RegExp
+type ValueOrArray<T> = T | ArrayOfValueOrArray<T>
+interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}
+
 export type Config = {
   database: DBConfig
   server: ServerConfig
-  security?: SecurityConfig
   rest?: [
     {
       name: String

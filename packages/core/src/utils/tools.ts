@@ -1,54 +1,46 @@
 import { join } from 'path'
 import * as fs from 'fs-extra'
-import { DBConfig, ServerConfig, SecurityConfig } from '../types'
+import { DBConfig, ServerConfig, Config } from '../types'
 
 export const loadConfig = (
   cwd: string,
-  { server, database, security, rest },
+  { server, database, rest }: Config = { server: null, database: null },
 ) => {
   let serverConfig = server
   let databaseConfig = database
-  let securityConfig = security
   let restConfig = rest
 
   if (!serverConfig) {
-    const file = join(cwd, 'config/server.json')
-    const exist = fs.existsSync(file)
-    if (!exist) {
-      throw Error('config/server.json is required')
+    try {
+      const file = join(cwd, 'config/server')
+      const config = require(file)
+      serverConfig = config.default || config
+    } catch (err) {
+      throw Error('config/server.{js|json} is required')
     }
-    serverConfig = require(file)
   }
 
   if (!databaseConfig) {
-    const file = join(cwd, 'config/database.json')
-    const exist = fs.existsSync(file)
-    if (!exist) {
-      throw Error('config/database.json is required')
-    }
-    databaseConfig = require(file)
-  }
-
-  if (!securityConfig) {
-    const file = join(cwd, 'config/security.json')
-    const exist = fs.existsSync(file)
-    if (exist) {
-      securityConfig = require(file)
+    try {
+      const file = join(cwd, 'config/database')
+      const config = require(file)
+      databaseConfig = config.default || config
+    } catch (err) {
+      throw Error('config/database.{js|json} is required')
     }
   }
 
   if (!restConfig) {
-    const file = join(cwd, 'config/rest.json')
-    const exist = fs.existsSync(file)
-    if (exist) {
-      restConfig = require(file)
-    }
+    try {
+      const file = join(cwd, 'config/rest')
+      const config = require(file)
+      restConfig = config.default || config
+    } catch (err) {}
   }
 
   return {
     server: serverConfig as ServerConfig,
     database: databaseConfig as DBConfig,
-    security: securityConfig as SecurityConfig,
     rest: restConfig,
   }
 }

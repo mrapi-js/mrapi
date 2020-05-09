@@ -6,16 +6,10 @@ import { getDBClient } from './db'
 import { loadConfig } from './utils/tools'
 import * as defaults from './config/defaults.json'
 import registerGraphql from './middlewares/graphql'
-import registerRest from './middlewares/rest'
-import {
-  DBClient,
-  Config,
-  Middleware,
-  Hook,
-  DBConfig,
-  ServerConfig,
-  SecurityConfig,
-} from './types'
+
+// TODO: add rest supports
+// import registerRest from './middlewares/rest'
+import { App, DBClient, Config, Hooks } from './types'
 
 process.on('unhandledRejection', (error) => {
   console.error(error)
@@ -23,43 +17,27 @@ process.on('unhandledRejection', (error) => {
 })
 
 export class Mrapi {
-  app: FastifyInstance<Server, IncomingMessage, ServerResponse>
+  app: App
   cwd = process.cwd()
   db: DBClient
   config = defaults as Config
-  middlewares: Middleware = {}
-  hooks: Hook = {}
+  middlewares = []
+  hooks: Hooks = {}
 
   constructor({
+    config,
     middlewares,
     hooks,
-    server,
-    database,
-    security,
-    rest,
   }: {
-    middlewares?: Middleware
-    hooks?: Hook
-    server?: ServerConfig
-    database?: DBConfig
-    security?: SecurityConfig
-    rest?: any
+    config?: Config
+    middlewares?: any[]
+    hooks?: Hooks
   } = {}) {
-    this.middlewares = middlewares || {}
+    this.middlewares = middlewares || []
     this.hooks = hooks || {}
-    this.config = loadConfig(this.cwd, {
-      server,
-      database,
-      security,
-      rest,
-    })
+    this.config = loadConfig(this.cwd, config)
     this.app = fastify({
       logger: this.config.server.logger,
-    })
-
-    this.app.server.on('connect', (conn) => {
-      console.log('-----connect')
-      console.log(conn)
     })
   }
 
@@ -78,8 +56,8 @@ export class Mrapi {
   async applyMiddlewares() {
     this.app.register(require('fastify-cookie'))
 
-    if (this.config.security && this.config.security.cors) {
-      this.app.register(require('fastify-cors'), this.config.security.cors)
+    if (this.config.server && this.config.server.cors) {
+      this.app.register(require('fastify-cors'), this.config.server.cors)
     }
 
     if (this.config.server.compress) {
@@ -98,8 +76,10 @@ export class Mrapi {
       this.cwd,
     )
 
-    for (let [key, opts = {}] of Object.entries(this.middlewares)) {
-      this.app.register(require(key), opts)
+    for (let [plugin, options = {}] of this.middlewares) {
+      if (plugin) {
+        this.app.register(plugin, options)
+      }
     }
   }
 

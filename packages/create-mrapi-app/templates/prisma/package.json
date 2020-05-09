@@ -10,10 +10,11 @@
     "build": "tsc",
     "start": "cross-env NODE_ENV=production node dist/app",
     "generate": "mrapi generate",
-    "db": "npm run db:save && npm run db:up",
-    "db:save": "mrapi db:save",
-    "db:up": "mrapi db:up",
-    "db:ui": "mrapi db:ui",
+    "db:save": "npx prisma migrate save --create-db --name '' --experimental",
+    "db:up": "npx prisma migrate up --experimental",
+    "db:down": "npx prisma migrate down --experimental",
+    "db:ui": "npx prisma studio --experimental",
+    "db:introspect": "npx prisma introspect",
     "db:seed": "ts-node config/seed"
   },
   "dependencies": {
