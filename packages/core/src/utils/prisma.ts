@@ -22,7 +22,6 @@ export const create = async (
   cwd = process.cwd(),
 ) => {
   if (!database || !database.schema) {
-    console.log({ database, server })
     throw new Error('database.schema is required')
   }
   console.log('[mrapi] creating schema.prisma ...')
@@ -138,4 +137,28 @@ export const prepare = async (
     await migrate.save({ database, server }, cwd, '')
     await migrate.up({ database, server }, cwd, '')
   }
+}
+
+export const getModels = async ({ database }: Config, cwd = process.cwd()) => {
+  const models = []
+  const schemaPath = join(cwd, database.schemaOutput)
+  const content = await fs.readFileSync(schemaPath, 'utf8')
+  const lines = content.split(`
+`)
+  for (let line of lines) {
+    const clearedLine = line.replace(/[\n\r]/g, '')
+    if (!clearedLine) {
+      continue
+    }
+    const lineArray = clearedLine.split(' ')
+    const filteredArray = lineArray.filter(v => v)
+    if (filteredArray[0] === 'model' && filteredArray[1]) {
+      const name = filteredArray[1]
+      if (!models.includes(name)) {
+        models.push(name)
+      }
+    }
+  }
+
+  return models
 }

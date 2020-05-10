@@ -145,12 +145,11 @@ interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}
 export type Config = {
   database: DBConfig
   server: ServerConfig
-  rest?: [
-    {
-      name: String
-      api: any
-    },
-  ]
+  rest?: {
+    enable: boolean
+    prefix?: string
+    schema: Record<string, Array<string>>
+  }
 }
 
 declare module 'fastify' {

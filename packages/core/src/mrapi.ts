@@ -1,17 +1,14 @@
 import 'reflect-metadata'
-import fastify, { FastifyInstance } from 'fastify'
-import { Server, IncomingMessage, ServerResponse } from 'http'
+import fastify from 'fastify'
 
 import { getDBClient } from './db'
 import { loadConfig } from './utils/tools'
 import * as defaults from './config/defaults.json'
 import registerGraphql from './middlewares/graphql'
-
-// TODO: add rest supports
-// import registerRest from './middlewares/rest'
+import registerRest from './middlewares/rest'
 import { App, DBClient, Config, Hooks } from './types'
 
-process.on('unhandledRejection', (error) => {
+process.on('unhandledRejection', error => {
   console.error(error)
   process.exit(1)
 })
@@ -76,6 +73,10 @@ export class Mrapi {
       this.cwd,
     )
 
+    if (this.config.rest && this.config.rest.enable) {
+      await registerRest(this.app, this.config, this.db, this.cwd)
+    }
+
     for (let [plugin, options = {}] of this.middlewares) {
       if (plugin) {
         this.app.register(plugin, options)
@@ -129,7 +130,7 @@ export class Mrapi {
         () => {
           console.log('successfully closed!')
         },
-        (err) => {
+        err => {
           console.log('an error happened', err)
         },
       )
