@@ -73,7 +73,16 @@ export const generate = async (
     path: envPath,
   })
   // console.log(process.env)
-  await runPrisma('generate', {})
+  try {
+    await runPrisma('generate', {
+      preferLocal: true,
+      stdout: 'ignore',
+    })
+  } catch (err) {
+    if (!err.message.includes('defined any model in your schema.prisma')) {
+      throw err
+    }
+  }
   process.exit(0)
 }
 

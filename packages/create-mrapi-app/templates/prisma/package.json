@@ -14,14 +14,14 @@
     "db:up": "npx prisma migrate up --experimental",
     "db:down": "npx prisma migrate down --experimental",
     "db:ui": "npx prisma studio --experimental",
-    "db:introspect": "npx prisma introspect",
+    "db:introspect": "npx prisma introspect && npx prisma generate",
     "db:seed": "ts-node config/seed"
   },
   "dependencies": {
-    "@mrapi/core": "0.1.0-alpha.0"
+    "@mrapi/core": "0.1.0-alpha.1"
   },
   "devDependencies": {
-    "@mrapi/cli": "0.1.0-alpha.0",
+    "@mrapi/cli": "0.1.0-alpha.1",
     "cross-env": "^7.0.2",
     "typescript": "^3.8.3",
     "ts-node-dev": "^1.0.0-pre.44"
