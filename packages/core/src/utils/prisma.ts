@@ -74,6 +74,7 @@ export const generate = async (
   })
   // console.log(process.env)
   await runPrisma('generate', {})
+  process.exit(0)
 }
 
 export const migrate = {
@@ -151,7 +152,7 @@ export const getModels = async ({ database }: Config, cwd = process.cwd()) => {
       continue
     }
     const lineArray = clearedLine.split(' ')
-    const filteredArray = lineArray.filter(v => v)
+    const filteredArray = lineArray.filter((v) => v)
     if (filteredArray[0] === 'model' && filteredArray[1]) {
       const name = filteredArray[1]
       if (!models.includes(name)) {
