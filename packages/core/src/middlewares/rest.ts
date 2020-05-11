@@ -59,38 +59,110 @@ function handler(models, db) {
     for (let { model, api, methods } of models) {
       if (methods.includes('findMany')) {
         app.get(`/${api}`, async (request: Request) => {
-          const params = parseFilter(request.query)
-          return db[model].findMany(params)
+          try {
+            const params = parseFilter(request.query, {
+              filtering: true,
+              pagination: true,
+              sorting: true,
+              selecting: true,
+            })
+            return {
+              code: 0,
+              data: {
+                list: await db[model].findMany(params),
+                total: await db[model].count({
+                  where: params.where || {},
+                }),
+              },
+            }
+          } catch (err) {
+            return {
+              code: -1,
+              message: err.message,
+            }
+          }
         })
       }
 
       if (methods.includes('findOne')) {
         app.get(`/${api}/:id`, async (request: Request) => {
-          return db[model].findOne({
-            where: request.params,
-          })
+          try {
+            return {
+              code: 0,
+              data: await db[model].findOne({
+                where: request.params,
+                ...parseFilter(request.query, {
+                  selecting: true,
+                }),
+              }),
+            }
+          } catch (err) {
+            return {
+              code: -1,
+              message: err.message,
+            }
+          }
         })
       }
       if (methods.includes('create')) {
         app.post(`/${api}`, async (request: Request) => {
-          return db[model].create({
-            data: request.body,
-          })
+          try {
+            return {
+              code: 0,
+              data: await db[model].create({
+                data: request.body,
+                ...parseFilter(request.query, {
+                  selecting: true,
+                }),
+              }),
+            }
+          } catch (err) {
+            return {
+              code: -1,
+              message: err.message,
+            }
+          }
         })
       }
       if (methods.includes('update')) {
         app.put(`/${api}/:id`, async (request: Request) => {
-          return db[model].update({
-            where: request.params,
-            data: request.body,
-          })
+          try {
+            return {
+              code: 0,
+              data: await db[model].update({
+                where: request.params,
+                data: request.body,
+                ...parseFilter(request.query, {
+                  selecting: true,
+                }),
+              }),
+            }
+          } catch (err) {
+            return {
+              code: -1,
+              message: err.message,
+            }
+          }
         })
       }
       if (methods.includes('delete')) {
         app.delete(`/${api}/:id`, async (request: Request) => {
-          return db[model].delete({
-            where: request.params,
-          })
+          try {
+            return {
+              code: 0,
+              data: await db[model].delete({
+                where: request.params,
+                ...parseFilter(request.query, {
+                  selecting: true,
+                }),
+              }),
+            }
+          } catch (err) {
+            return {
+              code: -1,
+              message: err.message,
+            }
+          }
         })
       }
     }

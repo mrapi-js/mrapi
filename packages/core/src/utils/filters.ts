@@ -1,21 +1,4 @@
-/*
-  equals
-  not
-  in
-  notIn
-  lt
-  lte
-  gt
-  gte
-  contains
-  startsWith
-  endsWith
-*/
-/*
-  select
-  include
-*/
-const filters = [
+const FILTERING = [
   'equals',
   'not',
   'in',
@@ -28,51 +11,84 @@ const filters = [
   'startsWith',
   'endsWith',
 ]
-export const parseFilter = (params: Record<any, String>) => {
+// use `include` or `select`, but not both at the same time
+const SELECTING = ['select', 'include']
+const SORTING = 'orderBy'
+const PAGINATION = ['skip', 'after', 'before', 'first', 'last']
+
+export const parseFilter = (
+  params: Record<any, string>,
+  { filtering = false, selecting = false, sorting = false, pagination = false },
+): {
+  where?: {}
+  select?: {}
+  include?: {}
+  orderBy?: {}
+  skip?: {}
+  after?: {}
+  before?: {}
+  first?: {}
+  last?: {}
+} => {
   const result = {}
   const where = {}
-  let select
-  let include
+
   for (let [key, val] of Object.entries(params)) {
-    const arr = key.split('_')
-    if (!arr[0]) {
-      continue
-    }
-
-    if (arr[0] === 'select') {
-      select = {}
-      const arr = [...new Set(val.split(','))]
-      for (let a of arr) {
-        select[a] = true
-      }
-      continue
-    }
-    if (arr[0] === 'include') {
-      include = {}
-      const arr = [...new Set(val.split(','))]
-      for (let a of arr) {
-        include[a] = true
+    // sort: =name:asc  =name:desc
+    if (sorting && key === SORTING) {
+      const arr = val.split(':')
+      if (arr.length === 2) {
+        result[key] = {
+          [arr[0]]: arr[1],
+        }
       }
       continue
     }
 
-    const filter = arr[1] && filters.includes(arr[1]) ? arr[1] : 'equals'
-    const vals = ['in', 'notIn'].includes(filter)
-      ? [...new Set(val.split(','))]
-      : val
-
-    where[arr[0]] = {
-      [filter]: vals,
+    // selecting: use `include` or `select`, but not both at the same time
+    if (selecting && SELECTING.includes(key)) {
+      const tmp = {}
+      const arr = [...new Set(val.split(','))]
+      for (let a of arr) {
+        tmp[a] = true
+      }
+      result[key] = tmp
+      continue
     }
-  }
 
-  result['where'] = where
+    // pagination
+    if (pagination && PAGINATION.includes(key)) {
+      if (['skip', 'first', 'last'].includes(key)) {
+        if (!isNaN(parseInt(val))) {
+          result[key] = parseInt(val)
+        }
+      } else {
+        // 'after', 'before':  after=id:xxxx
+        const arr = val.split(':')
+        result[key] = {
+          [arr[0]]: arr[1],
+        }
+      }
+      continue
+    }
 
-  // use `include` or `select`, but not both at the same time
-  if (select) {
-    result['select'] = select
-  } else if (include) {
-    result['include'] = include
+    // where: _equals, _not, _in, _notIn, _lt, _lte, _gt, _gte, _contains, _startsWith, _endsWith
+    if (filtering) {
+      const arr = key.split('_')
+      if (!arr[0]) {
+        continue
+      }
+
+      const filter = arr[1] && FILTERING.includes(arr[1]) ? arr[1] : 'equals'
+      const vals = ['in', 'notIn'].includes(filter)
+        ? [...new Set(val.split(','))]
+        : val
+
+      result['where'] = result['where'] || {}
+      result['where'][arr[0]] = {
+        [filter]: vals,
+      }
+    }
   }
 
   return result

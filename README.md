@@ -53,6 +53,7 @@ yarn dev
 
       ```js
       module.exports = {
+        enable: true,
         prefix: "/api",
         schema: {
           User: ["findOne", "findMany", "create", "update"],
