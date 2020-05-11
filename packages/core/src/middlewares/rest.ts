@@ -7,7 +7,7 @@
   update({ where: {}, data: {} })
   // updateMany({ where: {}, data: {} })
 
-  upsert({ where: {}, update: {}, create: {} })
+  // upsert({ where: {}, update: {}, create: {} })
 
   delete({ where: {} })
   // deleteMany({ where: {} })
