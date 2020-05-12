@@ -15,7 +15,7 @@
 
 import pluralize from 'pluralize'
 
-import { App, Request, Config } from '../types'
+import { App, Request, Reply, Config } from '../types'
 import { parseFilter } from '../utils/filters'
 import { getModels } from '../utils/prisma'
 
@@ -54,34 +54,71 @@ export default async (app: App, config: Config, db, cwd) => {
   })
 }
 
+// TODO: route schema
 function handler(models, db) {
   return (app, opts, done) => {
     for (let { model, api, methods } of models) {
       if (methods.includes('findMany')) {
-        app.get(`/${api}`, async (request: Request) => {
-          try {
-            const params = parseFilter(request.query, {
-              filtering: true,
-              pagination: true,
-              sorting: true,
-              selecting: true,
-            })
-            return {
-              code: 0,
-              data: {
-                list: await db[model].findMany(params),
-                total: await db[model].count({
-                  where: params.where || {},
-                }),
-              },
+        app.route({
+          method: 'GET',
+          url: `/${api}`,
+          schema: {
+            querystring: {
+              select: { type: 'string' },
+              include: { type: 'string' },
+              orderBy: { type: 'string' },
+            },
+          },
+          async handler(request: Request, reply: Reply) {
+            try {
+              const params = parseFilter(request.query, {
+                filtering: true,
+                pagination: true,
+                sorting: true,
+                selecting: true,
+              })
+              reply.send({
+                code: 0,
+                data: {
+                  list: await db[model].findMany(params),
+                  total: await db[model].count({
+                    where: params.where || {},
+                  }),
+                },
+              })
+            } catch (err) {
+              reply.send({
+                code: -1,
+                message: err.message,
+              })
             }
-          } catch (err) {
-            return {
-              code: -1,
-              message: err.message,
-            }
-          }
+          },
         })
+
+        // app.get(`/${api}`, async (request: Request) => {
+        //   try {
+        //     const params = parseFilter(request.query, {
+        //       filtering: true,
+        //       pagination: true,
+        //       sorting: true,
+        //       selecting: true,
+        //     })
+        //     return {
+        //       code: 0,
+        //       data: {
+        //         list: await db[model].findMany(params),
+        //         total: await db[model].count({
+        //           where: params.where || {},
+        //         }),
+        //       },
+        //     }
+        //   } catch (err) {
+        //     return {
+        //       code: -1,
+        //       message: err.message,
+        //     }
+        //   }
+        // })
       }
 
       if (methods.includes('findOne')) {

@@ -16,8 +16,8 @@
     "clean": "rm -rf ./lib"
   },
   "dependencies": {
-    "@prisma/cli": "^2.0.0-beta.4",
-    "@prisma/client": "^2.0.0-beta.4",
+    "@prisma/cli": "^2.0.0-beta.5",
+    "@prisma/client": "^2.0.0-beta.5",
     "class-validator": "^0.12.2",
     "dotenv": "^8.2.0",
     "execa": "^4.0.1",
@@ -25,7 +25,9 @@
     "fastify-compress": "^2.0.1",
     "fastify-cookie": "^3.6.1",
     "fastify-cors": "^3.0.3",
-    "fastify-gql": "^3.6.0",
+    "fastify-gql": "^3.8.0",
+    "fastify-swagger": "^2.5.1",
+    "fastify-oas": "^2.7.0",
     "fs-extra": "^9.0.0",
     "graphql": "^14.6.0",
     "pino-pretty": "^4.0.0",

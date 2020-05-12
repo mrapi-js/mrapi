@@ -8,7 +8,7 @@ import registerGraphql from './middlewares/graphql'
 import registerRest from './middlewares/rest'
 import { App, DBClient, Config, Hooks } from './types'
 
-process.on('unhandledRejection', error => {
+process.on('unhandledRejection', (error) => {
   console.error(error)
   process.exit(1)
 })
@@ -74,7 +74,17 @@ export class Mrapi {
     )
 
     if (this.config.rest && this.config.rest.enable) {
+      this.app.register(require('fastify-oas'), this.config.rest.documentation)
+
       await registerRest(this.app, this.config, this.db, this.cwd)
+
+      // documentation
+      if (this.config.rest.documentation) {
+        // this.app.register(
+        //   require('fastify-swagger'),
+        //   this.config.rest.documentation,
+        // )
+      }
     }
 
     for (let [plugin, options = {}] of this.middlewares) {
@@ -104,6 +114,8 @@ export class Mrapi {
       await this.init()
       await this.app.ready().then(() => {
         console.log(this.app.printRoutes())
+
+        this.app.oas()
       })
       const { host, port } = this.config.server
       const address = await this.app.listen({
@@ -130,7 +142,7 @@ export class Mrapi {
         () => {
           console.log('successfully closed!')
         },
-        err => {
+        (err) => {
           console.log('an error happened', err)
         },
       )

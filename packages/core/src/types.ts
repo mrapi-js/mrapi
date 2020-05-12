@@ -13,6 +13,11 @@ import { Http2ServerRequest, Http2ServerResponse } from 'http2'
 import fastifyGQL from 'fastify-gql'
 import fastifyCompress from 'fastify-compress'
 import { ExecutionResult } from 'graphql'
+import {
+  FastifySwaggerOptions,
+  FastifyStaticSwaggerOptions,
+  FastifyDynamicSwaggerOptions,
+} from 'fastify-swagger'
 
 export type HttpServer = Server | Http2Server
 export type HttpRequest = IncomingMessage | Http2ServerRequest
@@ -148,11 +153,20 @@ export type Config = {
   rest?: {
     enable: boolean
     prefix?: string
-    schema: Record<string, Array<string>>
+    schema?: Record<string, Array<string>>
+    documentation?: FastifyStaticSwaggerOptions | FastifyDynamicSwaggerOptions
   }
 }
 
 declare module 'fastify' {
+  // fastify-oas
+  interface FastifyInstance<HttpServer, HttpRequest, HttpResponse> {
+    /**
+     * Init OpenApi plugin
+     */
+    oas(): Promise<void>
+  }
+
   // from fastify-cookie
   interface FastifyRequest<
     HttpRequest,
