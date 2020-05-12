@@ -1,31 +1,20 @@
-import { Server } from 'http'
 import { Http2Server } from 'http2'
-import { PrismaClient } from '@prisma/client'
-import { IncomingMessage, ServerResponse } from 'http'
-import * as fastify from 'fastify'
-import {
-  FastifyRequest,
-  FastifyReply,
-  Middleware as BaseMiddleware,
-  FastifyInstance,
-} from 'fastify'
-import { Http2ServerRequest, Http2ServerResponse } from 'http2'
-import fastifyGQL from 'fastify-gql'
-import fastifyCompress from 'fastify-compress'
+import { Server, IncomingMessage, ServerResponse } from 'http'
+
 import { ExecutionResult } from 'graphql'
-import {
-  FastifySwaggerOptions,
-  FastifyStaticSwaggerOptions,
-  FastifyDynamicSwaggerOptions,
-} from 'fastify-swagger'
+import { PrismaClient } from '@prisma/client'
+
+import * as fastify from 'fastify'
+import fastifyGQL from 'fastify-gql'
+import { FastifyOASOptions } from 'fastify-oas'
+import fastifyCompress from 'fastify-compress'
+import { Http2ServerRequest, Http2ServerResponse } from 'http2'
+import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 
 export type HttpServer = Server | Http2Server
 export type HttpRequest = IncomingMessage | Http2ServerRequest
 export type HttpResponse = ServerResponse | Http2ServerResponse
 
-// export type Middleware = BaseMiddleware<HttpServer, HttpRequest, HttpResponse>
-// export type Middleware = FastifyInstance<HttpServer, HttpRequest, HttpResponse>
-// export type Middleware = Record<string, any>
 export type Hooks = Record<string, any>
 export type Request = FastifyRequest<HttpRequest>
 export type Reply = FastifyReply<HttpResponse>
@@ -150,11 +139,11 @@ interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}
 export type Config = {
   database: DBConfig
   server: ServerConfig
-  rest?: {
+  openapi?: {
     enable: boolean
     prefix?: string
     schema?: Record<string, Array<string>>
-    documentation?: FastifyStaticSwaggerOptions | FastifyDynamicSwaggerOptions
+    documentation?: FastifyOASOptions
   }
 }
 

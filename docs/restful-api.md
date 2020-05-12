@@ -2,29 +2,48 @@
 
 ## Setup
 
-  - add `config/rest.js` with content:
+- add `config/openapi.js` with content:
 
-    ```js
-    module.exports = {
-      enable: true,
-      prefix: "/api",
-      schema: {
-        User: ["findOne", "findMany", "create", "update"], // methods
-        Role: ["findMany"],
+  ```js
+  module.exports = {
+    enable: true,
+    prefix: "/api",
+    schema: {
+      User: ["findOne", "findMany", "create", "update", "delete"] // methods
+    },
+    custom: {
+      path: "src/openapi"
+    },
+    documentation: {
+      routePrefix: "/documentation",
+      swagger: {
+        info: {
+          title: "Test openapi",
+          description: "testing the fastify swagger api",
+          version: "0.1.0"
+        },
+        externalDocs: {
+          url: "https://swagger.io",
+          description: "Find more info here"
+        },
+        consumes: ["application/json"],
+        produces: ["application/json"]
       },
-    };
-    ```
-
-  - update `src/app.ts` with:
-
-    ```js
-    const mrapi = new Mrapi({
-      config: {
-        ...
-        rest: require('../config/rest'),
-      },
+      exposeRoute: true
     }
-    ```
+  };
+  ```
+
+- update `src/app.ts` with:
+
+  ```js
+  const mrapi = new Mrapi({
+    config: {
+      ...
+      openapi: require('../config/openapi'),
+    },
+  }
+  ```
 
 ## Methods
 
@@ -65,3 +84,25 @@
 - `select`: String, Example: `select=id,name`, only return `id` and `name` fields
 - `include`: String, Example: `include=roles`, including `roles` relation data
 - Full example: `/api/users?select=id`
+
+## Custom APIs
+
+path config: `examples/app1/config/openapi.js` => `custom.path`
+
+```ts
+// index.ts
+import { Context } from "@mrapi/core";
+
+export default [
+  {
+    method: "GET",
+    url: `/test`,
+    async handler({ app, request, reply, prisma }: Context) {
+      reply.send({
+        code: 0,
+        data: await prisma.user.findMany()
+      });
+    }
+  }
+];
+```

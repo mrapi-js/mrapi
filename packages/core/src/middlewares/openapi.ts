@@ -18,10 +18,11 @@ import pluralize from 'pluralize'
 import { App, Request, Reply, Config } from '../types'
 import { parseFilter } from '../utils/filters'
 import { getModels } from '../utils/prisma'
+import { getCustomRoutes } from '../utils/routes'
 
 export default async (app: App, config: Config, db, cwd) => {
   const names = await getModels(config)
-  const userConfig = config.rest.schema
+  const userConfig = config.openapi.schema
   // check user config
   if (userConfig) {
     for (let m of Object.keys(userConfig)) {
@@ -46,16 +47,27 @@ export default async (app: App, config: Config, db, cwd) => {
           : ['findOne', 'findMany', 'create', 'update', 'delete'],
     })
   }
-  let prefix = config.rest.prefix || '/'
+  let prefix = config.openapi.prefix || '/'
   prefix = prefix.startsWith('/') ? prefix : `/${prefix}`
 
-  app.register(handler(models, db), {
-    prefix,
-  })
+  // core APIs
+  if (models && models.length > 0) {
+    app.register(coreAPIs(models, db), {
+      prefix,
+    })
+  }
+
+  // custom APIs
+  const routes = await getCustomRoutes(config.openapi, cwd)
+  if (routes && routes.length > 0) {
+    app.register(customAPIs(routes, db), {
+      prefix,
+    })
+  }
 }
 
 // TODO: route schema
-function handler(models, db) {
+function coreAPIs(models, db) {
   return (app, opts, done) => {
     for (let { model, api, methods } of models) {
       if (methods.includes('findMany')) {
@@ -202,6 +214,19 @@ function handler(models, db) {
           }
         })
       }
+    }
+    done()
+  }
+}
+
+function customAPIs(routes, db) {
+  return (app: App, opts, done) => {
+    for (let route of routes) {
+      app.route({
+        ...route,
+        handler: (request: Request, reply: Reply) =>
+          route.handler({ app, request, reply, prisma: db }),
+      })
     }
     done()
   }

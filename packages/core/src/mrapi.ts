@@ -5,10 +5,10 @@ import { getDBClient } from './db'
 import { loadConfig } from './utils/tools'
 import * as defaults from './config/defaults.json'
 import registerGraphql from './middlewares/graphql'
-import registerRest from './middlewares/rest'
+import registerOpenAPI from './middlewares/openapi'
 import { App, DBClient, Config, Hooks } from './types'
 
-process.on('unhandledRejection', (error) => {
+process.on('unhandledRejection', error => {
   console.error(error)
   process.exit(1)
 })
@@ -73,16 +73,16 @@ export class Mrapi {
       this.cwd,
     )
 
-    if (this.config.rest && this.config.rest.enable) {
+    if (this.config.openapi && this.config.openapi.enable) {
       // docs
-      if (this.config.rest.documentation) {
+      if (this.config.openapi.documentation) {
         this.app.register(
           require('fastify-oas'),
-          this.config.rest.documentation,
+          this.config.openapi.documentation,
         )
       }
 
-      await registerRest(this.app, this.config, this.db, this.cwd)
+      await registerOpenAPI(this.app, this.config, this.db, this.cwd)
     }
 
     for (let [plugin, options = {}] of this.middlewares) {
@@ -114,9 +114,9 @@ export class Mrapi {
         console.log(this.app.printRoutes())
 
         if (
-          this.config.rest &&
-          this.config.rest.enable &&
-          this.config.rest.documentation
+          this.config.openapi &&
+          this.config.openapi.enable &&
+          this.config.openapi.documentation
         ) {
           this.app.oas()
         }
@@ -146,7 +146,7 @@ export class Mrapi {
         () => {
           console.log('successfully closed!')
         },
-        (err) => {
+        err => {
           console.log('an error happened', err)
         },
       )

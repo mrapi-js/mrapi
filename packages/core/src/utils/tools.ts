@@ -4,11 +4,11 @@ import { DBConfig, ServerConfig, Config } from '../types'
 
 export const loadConfig = (
   cwd: string,
-  { server, database, rest }: Config = { server: null, database: null },
+  { server, database, openapi }: Config = { server: null, database: null },
 ) => {
   let serverConfig = server
   let databaseConfig = database
-  let restConfig = rest
+  let openapiConfig = openapi
 
   if (!serverConfig) {
     try {
@@ -30,18 +30,18 @@ export const loadConfig = (
     }
   }
 
-  if (!restConfig) {
+  if (!openapiConfig) {
     try {
-      const file = join(cwd, 'config/rest')
+      const file = join(cwd, 'config/openapi')
       const config = require(file)
-      restConfig = config.default || config
+      openapiConfig = config.default || config
     } catch (err) {}
   }
 
   return {
     server: serverConfig as ServerConfig,
     database: databaseConfig as DBConfig,
-    rest: restConfig,
+    openapi: openapiConfig,
   }
 }
 
@@ -103,7 +103,7 @@ export const checkPrismaSchema = (database: any, cwd = process.cwd()) => {
 const strip = (str: string) =>
   str
     .split('/')
-    .filter((x) => !!x && x != '.')
+    .filter(x => !!x && x != '.')
     .join('/')
 
 export const getTSConfig = (cwd = process.cwd()) => {
