@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/core",
-  "version": "0.1.0-alpha.1",
+  "version": "0.1.0",
   "main": "lib/index.js",
   "author": "neikvon",
   "license": "MIT",
@@ -26,8 +26,8 @@
     "fastify-cookie": "^3.6.1",
     "fastify-cors": "^3.0.3",
     "fastify-gql": "^3.8.0",
-    "fastify-swagger": "^2.5.1",
     "fastify-oas": "^2.7.0",
+    "fastify-swagger": "^2.5.1",
     "fs-extra": "^9.0.0",
     "graphql": "^14.6.0",
     "pino-pretty": "^4.0.0",
