@@ -74,17 +74,14 @@ export class Mrapi {
     )
 
     if (this.config.rest && this.config.rest.enable) {
-      this.app.register(require('fastify-oas'), this.config.rest.documentation)
+      if (this.config.rest.documentation) {
+        this.app.register(
+          require('fastify-oas'),
+          this.config.rest.documentation,
+        )
+      }
 
       await registerRest(this.app, this.config, this.db, this.cwd)
-
-      // documentation
-      if (this.config.rest.documentation) {
-        // this.app.register(
-        //   require('fastify-swagger'),
-        //   this.config.rest.documentation,
-        // )
-      }
     }
 
     for (let [plugin, options = {}] of this.middlewares) {
@@ -115,7 +112,13 @@ export class Mrapi {
       await this.app.ready().then(() => {
         console.log(this.app.printRoutes())
 
-        this.app.oas()
+        if (
+          this.config.rest &&
+          this.config.rest.enable &&
+          this.config.rest.documentation
+        ) {
+          this.app.oas()
+        }
       })
       const { host, port } = this.config.server
       const address = await this.app.listen({
