@@ -74,6 +74,7 @@ export class Mrapi {
     )
 
     if (this.config.rest && this.config.rest.enable) {
+      // docs
       if (this.config.rest.documentation) {
         this.app.register(
           require('fastify-oas'),
