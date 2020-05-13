@@ -3,6 +3,9 @@ import { pathExists } from 'fs-extra'
 import { getSrcDirFromTSConfig, getDistDirFromTSConfig } from './tools'
 
 export const getCustomRoutes = async (config: any, cwd = process.cwd()) => {
+  if (!config.custom || !config.custom.path) {
+    return []
+  }
   const isDev = process.env.NODE_ENV !== 'production'
   const src = getSrcDirFromTSConfig()
   const dist = getDistDirFromTSConfig()

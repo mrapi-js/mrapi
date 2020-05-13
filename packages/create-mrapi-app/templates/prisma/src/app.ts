@@ -3,10 +3,9 @@ import { Mrapi, Request, Reply } from '@mrapi/core'
 
 async function main() {
   const mrapi = new Mrapi({
-    config: {
-      server: require('../config/server'),
-      database: require('../config/database'),
-    },
+    server: require('../config/server'),
+    database: require('../config/database'),
+    plugins: require('../config/plugins'),
     hooks: {
       onRequest(request: Request, reply: Reply, done: () => void) {
         // Some code

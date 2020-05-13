@@ -3,106 +3,83 @@ import fastify from 'fastify'
 
 import { getDBClient } from './db'
 import { loadConfig } from './utils/tools'
-import * as defaults from './config/defaults.json'
-import registerGraphql from './middlewares/graphql'
-import registerOpenAPI from './middlewares/openapi'
-import { App, DBClient, Config, Hooks } from './types'
+import { MrapiOptions, App, DBClient } from './types'
 
-process.on('unhandledRejection', error => {
+process.on('unhandledRejection', (error) => {
   console.error(error)
   process.exit(1)
 })
 
 export class Mrapi {
-  app: App
   cwd = process.cwd()
+  app: App
   db: DBClient
-  config = defaults as Config
-  middlewares = []
-  hooks: Hooks = {}
+  callbacksAfterReady: Function[] = []
 
-  constructor({
-    config,
-    middlewares,
-    hooks,
-  }: {
-    config?: Config
-    middlewares?: any[]
-    hooks?: Hooks
-  } = {}) {
-    this.middlewares = middlewares || []
-    this.hooks = hooks || {}
-    this.config = loadConfig(this.cwd, config)
+  constructor(public options?: MrapiOptions) {
+    this.options = loadConfig(this.cwd, options)
     this.app = fastify({
-      logger: this.config.server.logger,
+      logger: this.options.server.logger,
     })
   }
 
   async init() {
-    if (this.config.database.client === 'prisma') {
+    if (this.options.database.client === 'prisma') {
       const { prepare } = require('./utils/prisma')
-      await prepare(this.config, this.cwd)
+      await prepare(this.options, this.cwd)
     }
-    this.db = await getDBClient(this.config)
+    this.db = await getDBClient(this.options)
 
     // load middleware
-    await this.applyMiddlewares()
-    await this.applyHooks()
+    await this.registerPlugins()
+    await this.registerHooks()
   }
 
-  async applyMiddlewares() {
-    this.app.register(require('fastify-cookie'))
+  async registerPlugins() {
+    const plugins = Object.entries(this.options.plugins)
 
-    if (this.config.server && this.config.server.cors) {
-      this.app.register(require('fastify-cors'), this.config.server.cors)
-    }
-
-    if (this.config.server.compress) {
-      this.app.register(
-        require('fastify-compress'),
-        typeof this.config.server.compress === 'boolean'
-          ? { global: false }
-          : this.config.server.compress,
-      )
-    }
-
-    await registerGraphql(
-      this.app,
-      this.config.server.graphql,
-      this.db,
-      this.cwd,
-    )
-
-    if (this.config.openapi && this.config.openapi.enable) {
-      // docs
-      if (this.config.openapi.documentation) {
-        this.app.register(
-          require('fastify-oas'),
-          this.config.openapi.documentation,
-        )
+    for (let [key, val] of plugins) {
+      if (val && !val.enable) {
+        continue
       }
 
-      await registerOpenAPI(this.app, this.config, this.db, this.cwd)
-    }
-
-    for (let [plugin, options = {}] of this.middlewares) {
-      if (plugin) {
-        this.app.register(plugin, options)
+      if (key.startsWith('builtIn:')) {
+        const name = key.split(':')[1]
+        try {
+          let plugin = require(`./plugins/${name}`)
+          plugin = plugin.default || plugin
+          const ret = await plugin(
+            this.app,
+            val.options,
+            this.db,
+            this.cwd,
+            this.options,
+          )
+          this.app.log.debug(`register plugin:`, key)
+          if (
+            ret &&
+            ret.callbackAfterReady &&
+            typeof ret.callbackAfterReady === 'function'
+          ) {
+            this.callbacksAfterReady.push(ret.callbackAfterReady)
+          }
+        } catch (err) {
+          this.app.log.error(`builtIn plugin '${name}' not found`)
+        }
+      } else {
+        try {
+          const pluginPath = require.resolve(key)
+          this.app.register(require(pluginPath), val.options)
+          this.app.log.debug(`register plugin:`, key)
+        } catch (err) {
+          this.app.log.error(`plugin '${key}' not found`)
+        }
       }
     }
   }
 
-  applyHooks() {
-    this.app.addHook(
-      'onError',
-      (request: any, reply: any, error: any, done: any) => {
-        console.log(error)
-        // Some code
-        done()
-      },
-    )
-
-    for (let [key, cb] of Object.entries(this.hooks)) {
+  registerHooks() {
+    for (let [key, cb] of Object.entries(this.options.hooks)) {
       this.app.addHook(key as any, cb)
     }
   }
@@ -110,18 +87,14 @@ export class Mrapi {
   async start() {
     try {
       await this.init()
-      await this.app.ready().then(() => {
+      await this.app.ready().then(async () => {
         console.log(this.app.printRoutes())
 
-        if (
-          this.config.openapi &&
-          this.config.openapi.enable &&
-          this.config.openapi.documentation
-        ) {
-          this.app.oas()
+        for (let fn of this.callbacksAfterReady) {
+          await fn()
         }
       })
-      const { host, port } = this.config.server
+      const { host, port } = this.options.server
       const address = await this.app.listen({
         host,
         port,
@@ -146,7 +119,7 @@ export class Mrapi {
         () => {
           console.log('successfully closed!')
         },
-        err => {
+        (err) => {
           console.log('an error happened', err)
         },
       )

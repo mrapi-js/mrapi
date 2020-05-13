@@ -2,7 +2,7 @@ import * as fs from 'fs-extra'
 import { join, dirname } from 'path'
 import execa, { Options as ExecaOptions } from 'execa'
 
-import { Config } from '../types'
+import { MrapiOptions } from '../types'
 import { resolveFromCurrent, checkPrismaSchema } from './tools'
 
 function getPrismaCli() {
@@ -18,7 +18,7 @@ export const runPrisma = async (cmd: string, options?: ExecaOptions) => {
 
 // create schema.prisma file
 export const create = async (
-  { database, server }: Config,
+  { database, server, plugins }: MrapiOptions,
   cwd = process.cwd(),
 ) => {
   if (!database || !database.schema) {
@@ -37,7 +37,8 @@ export const create = async (
   //   'typegraphql-prisma/generator.js',
   // )
   const TYPE_GRAPHQL_PROVIDER = 'node_modules/typegraphql-prisma/generator.js'
-  const TYPE_GRAPHQL_OUTPUT = server.graphql!.resolvers.generated
+  const TYPE_GRAPHQL_OUTPUT =
+    plugins['builtIn:graphql'].options.resolvers.generated
   const baseSchemaContent = await fs.readFile(
     join(__dirname, '../../resource/schema.prisma'),
     'utf8',
@@ -62,7 +63,7 @@ TYPE_GRAPHQL_OUTPUT="${TYPE_GRAPHQL_OUTPUT}"
 }
 
 export const generate = async (
-  { database, server }: Config,
+  { database, server }: MrapiOptions,
   cwd = process.cwd(),
 ) => {
   await create({ database, server }, cwd)
@@ -88,7 +89,7 @@ export const generate = async (
 
 export const migrate = {
   save: async (
-    { database, server }: Config,
+    { database, server }: MrapiOptions,
     cwd = process.cwd(),
     name,
     options = {},
@@ -109,7 +110,7 @@ export const migrate = {
     )
   },
   up: async (
-    { database, server }: Config,
+    { database, server }: MrapiOptions,
     cwd = process.cwd(),
     name,
     options = {},
@@ -128,7 +129,7 @@ export const migrate = {
 }
 
 export const studio = async (
-  { database, server }: Config,
+  { database, server }: MrapiOptions,
   cwd = process.cwd(),
   options = {},
 ) => {
@@ -139,7 +140,7 @@ export const studio = async (
 }
 
 export const prepare = async (
-  { database, server }: Config,
+  { database, server }: MrapiOptions,
   cwd = process.cwd(),
 ) => {
   if (!(await checkPrismaSchema(database, cwd))) {
@@ -149,7 +150,10 @@ export const prepare = async (
   }
 }
 
-export const getModels = async ({ database }: Config, cwd = process.cwd()) => {
+export const getModels = async (
+  { database }: MrapiOptions,
+  cwd = process.cwd(),
+) => {
   const models = []
   const schemaPath = join(cwd, database.schemaOutput)
   const content = await fs.readFileSync(schemaPath, 'utf8')

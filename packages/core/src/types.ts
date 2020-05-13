@@ -6,7 +6,6 @@ import { PrismaClient } from '@prisma/client'
 
 import * as fastify from 'fastify'
 import fastifyGQL from 'fastify-gql'
-import { FastifyOASOptions } from 'fastify-oas'
 import fastifyCompress from 'fastify-compress'
 import { Http2ServerRequest, Http2ServerResponse } from 'http2'
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
@@ -36,15 +35,6 @@ export enum DBEngine {
 }
 export type DBClient = PrismaClient
 
-export interface AuthConfig {
-  accessTokenName: string
-  accessTokenSecret: string
-  accessTokenExpiresIn: string
-  refreshTokenName: string
-  refreshTokenSecret: string
-  refreshTokenExpiresIn: string
-}
-
 export type DBConfig = {
   provider: string
   client: string
@@ -61,73 +51,14 @@ export type DBConfig = {
 export type ServerConfig = {
   host: string
   port: number
-  logger?: {}
-  graphql?: {
-    endpoint: string
-    playground: string
-    resolvers: {
-      generated: string
-      custom: string
-    }
-    emitSchemaFile: string
-    validate: boolean
-    jit: number
-    queryDepth: number
-  }
-  compress?: boolean | fastifyCompress.FastifyCompressOptions
-  cors?: {
-    /**
-     * Configures the Access-Control-Allow-Origin CORS header.
-     */
-    origin?: ValueOrArray<originType> | originFunction
-    /**
-     * Configures the Access-Control-Allow-Credentials CORS header.
-     * Set to true to pass the header, otherwise it is omitted.
-     */
-    credentials?: boolean
-    /**
-     * Configures the Access-Control-Expose-Headers CORS header.
-     * Expects a comma-delimited string (ex: 'Content-Range,X-Content-Range')
-     * or an array (ex: ['Content-Range', 'X-Content-Range']).
-     * If not specified, no custom headers are exposed.
-     */
-    exposedHeaders?: string | string[]
-    /**
-     * Configures the Access-Control-Allow-Headers CORS header.
-     * Expects a comma-delimited string (ex: 'Content-Type,Authorization')
-     * or an array (ex: ['Content-Type', 'Authorization']). If not
-     * specified, defaults to reflecting the headers specified in the
-     * request's Access-Control-Request-Headers header.
-     */
-    allowedHeaders?: string | string[]
-    /**
-     * Configures the Access-Control-Allow-Methods CORS header.
-     * Expects a comma-delimited string (ex: 'GET,PUT,POST') or an array (ex: ['GET', 'PUT', 'POST']).
-     */
-    methods?: string | string[]
-    /**
-     * Configures the Access-Control-Max-Age CORS header.
-     * Set to an integer to pass the header, otherwise it is omitted.
-     */
-    maxAge?: number
-    /**
-     * Pass the CORS preflight response to the route handler (default: false).
-     */
-    preflightContinue?: boolean
-    /**
-     * Provides a status code to use for successful OPTIONS requests,
-     * since some legacy browsers (IE11, various SmartTVs) choke on 204.
-     */
-    optionsSuccessStatus?: number
-    /**
-     * Pass the CORS preflight response to the route handler (default: false).
-     */
-    preflight?: boolean
-    /**
-     * Hide options route from the documentation built using fastify-swagger (default: true).
-     */
-    hideOptionsRoute?: boolean
-  }
+  logger?: any
+}
+
+export type MrapiOptions = {
+  server: ServerConfig
+  database: DBConfig
+  plugins?: Record<string, any>
+  hooks?: Hooks
 }
 
 type originCallback = (err: Error | null, allow: boolean) => void
@@ -135,17 +66,6 @@ type originFunction = (origin: string, callback: originCallback) => void
 type originType = string | boolean | RegExp
 type ValueOrArray<T> = T | ArrayOfValueOrArray<T>
 interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}
-
-export type Config = {
-  database: DBConfig
-  server: ServerConfig
-  openapi?: {
-    enable: boolean
-    prefix?: string
-    schema?: Record<string, Array<string>>
-    documentation?: FastifyOASOptions
-  }
-}
 
 declare module 'fastify' {
   // fastify-oas

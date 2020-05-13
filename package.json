@@ -1,7 +1,8 @@
 {
   "private": true,
   "workspaces": [
-    "packages/*"
+    "packages/*",
+    "examples/*"
   ],
   "scripts": {
     "clean": "lerna run clean",
@@ -15,7 +16,7 @@
     "tsc": "tsc"
   },
   "devDependencies": {
-    "lerna": "^3.20.2",
+    "lerna": "^3.21.0",
     "lerna-changelog": "^1.0.1"
   },
   "changelog": {

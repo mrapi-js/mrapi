@@ -15,14 +15,32 @@
 
 import pluralize from 'pluralize'
 
-import { App, Request, Reply, Config } from '../types'
+import { App, Request, Reply } from '../types'
 import { parseFilter } from '../utils/filters'
 import { getModels } from '../utils/prisma'
 import { getCustomRoutes } from '../utils/routes'
+import { FastifyOASOptions } from 'fastify-oas'
 
-export default async (app: App, config: Config, db, cwd) => {
-  const names = await getModels(config)
-  const userConfig = config.openapi.schema
+type OpenapiOptions = {
+  prefix?: string
+  custom?: {
+    path: string
+  }
+  schema?: any
+  documentation?: {
+    enable: boolean
+    options: FastifyOASOptions
+  }
+}
+
+export default async (app: App, config: OpenapiOptions, db, cwd, options) => {
+  // documentation
+  if (config.documentation?.enable) {
+    app.register(require('fastify-oas'), config.documentation.options)
+  }
+
+  const names = await getModels(options)
+  const userConfig = config.schema
   // check user config
   if (userConfig) {
     for (let m of Object.keys(userConfig)) {
@@ -47,7 +65,7 @@ export default async (app: App, config: Config, db, cwd) => {
           : ['findOne', 'findMany', 'create', 'update', 'delete'],
     })
   }
-  let prefix = config.openapi.prefix || '/'
+  let prefix = config.prefix || '/'
   prefix = prefix.startsWith('/') ? prefix : `/${prefix}`
 
   // core APIs
@@ -58,11 +76,17 @@ export default async (app: App, config: Config, db, cwd) => {
   }
 
   // custom APIs
-  const routes = await getCustomRoutes(config.openapi, cwd)
+  const routes = await getCustomRoutes(config, cwd)
   if (routes && routes.length > 0) {
     app.register(customAPIs(routes, db), {
       prefix,
     })
+  }
+
+  if (config.documentation?.enable) {
+    return {
+      callbackAfterReady: app.oas,
+    }
   }
 }
 
@@ -106,31 +130,6 @@ function coreAPIs(models, db) {
             }
           },
         })
-
-        // app.get(`/${api}`, async (request: Request) => {
-        //   try {
-        //     const params = parseFilter(request.query, {
-        //       filtering: true,
-        //       pagination: true,
-        //       sorting: true,
-        //       selecting: true,
-        //     })
-        //     return {
-        //       code: 0,
-        //       data: {
-        //         list: await db[model].findMany(params),
-        //         total: await db[model].count({
-        //           where: params.where || {},
-        //         }),
-        //       },
-        //     }
-        //   } catch (err) {
-        //     return {
-        //       code: -1,
-        //       message: err.message,
-        //     }
-        //   }
-        // })
       }
 
       if (methods.includes('findOne')) {

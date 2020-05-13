@@ -1,14 +1,19 @@
 import { join } from 'path'
 import * as fs from 'fs-extra'
-import { DBConfig, ServerConfig, Config } from '../types'
+import { defaults } from '../config'
+import { MrapiOptions, DBConfig, ServerConfig } from '../types'
 
 export const loadConfig = (
   cwd: string,
-  { server, database, openapi }: Config = { server: null, database: null },
+  { server, database, plugins, hooks }: MrapiOptions = {
+    server: null,
+    database: null,
+  },
 ) => {
   let serverConfig = server
   let databaseConfig = database
-  let openapiConfig = openapi
+  let pluginsConfig = plugins
+  let hooksConfig = hooks
 
   if (!serverConfig) {
     try {
@@ -16,7 +21,7 @@ export const loadConfig = (
       const config = require(file)
       serverConfig = config.default || config
     } catch (err) {
-      throw Error('config/server.{js|json} is required')
+      serverConfig = defaults.server
     }
   }
 
@@ -26,22 +31,35 @@ export const loadConfig = (
       const config = require(file)
       databaseConfig = config.default || config
     } catch (err) {
-      throw Error('config/database.{js|json} is required')
+      databaseConfig = defaults.database
     }
   }
 
-  if (!openapiConfig) {
+  if (!pluginsConfig) {
     try {
-      const file = join(cwd, 'config/openapi')
+      const file = join(cwd, 'config/plugins')
       const config = require(file)
-      openapiConfig = config.default || config
-    } catch (err) {}
+      pluginsConfig = config.default || config
+    } catch (err) {
+      pluginsConfig = defaults.plugins
+    }
+  }
+
+  if (!hooksConfig) {
+    try {
+      const file = join(cwd, 'config/hooks')
+      const config = require(file)
+      hooksConfig = config.default || config
+    } catch (err) {
+      hooksConfig = defaults.hooks
+    }
   }
 
   return {
     server: serverConfig as ServerConfig,
     database: databaseConfig as DBConfig,
-    openapi: openapiConfig,
+    plugins: pluginsConfig,
+    hooks: hooksConfig,
   }
 }
 
@@ -103,7 +121,7 @@ export const checkPrismaSchema = (database: any, cwd = process.cwd()) => {
 const strip = (str: string) =>
   str
     .split('/')
-    .filter(x => !!x && x != '.')
+    .filter((x) => !!x && x != '.')
     .join('/')
 
 export const getTSConfig = (cwd = process.cwd()) => {
