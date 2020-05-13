@@ -42,10 +42,10 @@ export class Mrapi {
       if (val && !val.enable) {
         continue
       }
+      try {
+        if (key.startsWith('builtIn:')) {
+          const name = key.split(':')[1]
 
-      if (key.startsWith('builtIn:')) {
-        const name = key.split(':')[1]
-        try {
           let plugin = require(`./plugins/${name}`)
           plugin = plugin.default || plugin
           const ret = await plugin(
@@ -63,16 +63,16 @@ export class Mrapi {
           ) {
             this.callbacksAfterReady.push(ret.callbackAfterReady)
           }
-        } catch (err) {
-          this.app.log.error(`builtIn plugin '${name}' not found`)
-        }
-      } else {
-        try {
+        } else {
           const pluginPath = require.resolve(key)
           this.app.register(require(pluginPath), val.options)
           this.app.log.debug(`register plugin:`, key)
-        } catch (err) {
+        }
+      } catch (err) {
+        if (err && err.code === 'MODULE_NOT_FOUND') {
           this.app.log.error(`plugin '${key}' not found`)
+        } else {
+          this.app.log.error(err)
         }
       }
     }
