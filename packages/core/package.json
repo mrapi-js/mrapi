@@ -30,19 +30,19 @@
     "fastify-helmet": "^3.0.2",
     "fastify-oas": "^2.7.0",
     "fs-extra": "^9.0.0",
-    "graphql": "^14.6.0",
+    "graphql": "15.0.0",
     "pino-pretty": "^4.0.0",
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^0.17.6",
-    "typegraphql-prisma": "^0.2.1"
+    "type-graphql": "^1.0.0-rc.1",
+    "typegraphql-prisma": "^0.2.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
-    "@types/node": "^13.13.5",
+    "@types/node": "*",
     "graphql-tools": "^5.0.0",
     "nodemon": "^2.0.3",
-    "typescript": "^3.8.3"
+    "typescript": "^3.9.2"
   },
   "prettier": {
     "semi": false,
@@ -57,7 +57,7 @@
     "node": ">= 10.3"
   },
   "resolutions": {
-    "graphql": "^14.6.0"
+    "graphql": "15.0.0"
   },
   "repository": {
     "type": "git",

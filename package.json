@@ -19,6 +19,9 @@
     "lerna": "^3.21.0",
     "lerna-changelog": "^1.0.1"
   },
+  "resolutions": {
+    "graphql": "15.0.0"
+  },
   "changelog": {
     "repo": "mrapi-js/mrapi",
     "labels": {

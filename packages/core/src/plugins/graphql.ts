@@ -6,6 +6,7 @@ import { createSchema } from '../utils/schema'
 export default async (app, option, db, cwd) => {
   const schema = await createSchema(option, cwd)
 
+  // https://github.com/mcollina/fastify-gql#plugin-options
   app.register(require('fastify-gql'), {
     schema,
     context: (request: Request, reply: Reply) => {
@@ -18,6 +19,7 @@ export default async (app, option, db, cwd) => {
     },
     path: option.endpoint,
     ide: option.playground,
+    // graphiql: true,
     // https://github.com/zalando-incubator/graphql-jit
     jit: option.jit,
     // 请求嵌套层级
@@ -33,7 +35,6 @@ export default async (app, option, db, cwd) => {
 
       if (err.errors) {
         const errors = err.errors.map((error: any) => {
-          // console.log(error.message.split('\n'))
           return error instanceof GraphQLError
             ? formatError(error)
             : { message: error.message }
