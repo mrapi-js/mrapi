@@ -3187,7 +3187,7 @@ fast-json-stable-stringify@^2.0.0:
   resolved "https://registry.yarnpkg.com/fast-json-stable-stringify/-/fast-json-stable-stringify-2.1.0.tgz#874bf69c6f404c2b5d99c481341399fd55892633"
   integrity sha512-lhd/wF+Lk98HZoTCtlVraHtfh5XYijIjalXck7saUtuanSDyLMxnHhSXEDJqHxD7msR8D0uCmqlkwjCV8xvwHw==
 
-fast-json-stringify@^1.13.0, fast-json-stringify@^1.14.0, fast-json-stringify@^1.18.0:
+fast-json-stringify@^1.13.0, fast-json-stringify@^1.18.0:
   version "1.20.1"
   resolved "https://registry.yarnpkg.com/fast-json-stringify/-/fast-json-stringify-1.20.1.tgz#07e30057718d85c39a798d43678a4a91ea7fa30e"
   integrity sha512-PEPWrRZvKqI11fY2uDhLLuoapIda9wVQ2mzAj8rkBfVD7jWvOSIICL0Om1knoReIWKF5y/5bbR/GzcZANaaJfQ==
@@ -3307,22 +3307,12 @@ fastify-oas@^2.7.0:
     js-yaml "^3.13.1"
     openapi3-ts "^1.3.0"
 
-fastify-plugin@^1.0.0, fastify-plugin@^1.2.1, fastify-plugin@^1.3.0, fastify-plugin@^1.4.0, fastify-plugin@^1.6.0, fastify-plugin@^1.6.1:
+fastify-plugin@^1.0.0, fastify-plugin@^1.2.1, fastify-plugin@^1.4.0, fastify-plugin@^1.6.0, fastify-plugin@^1.6.1:
   version "1.6.1"
   resolved "https://registry.yarnpkg.com/fastify-plugin/-/fastify-plugin-1.6.1.tgz#122f5a5eeb630d55c301713145a9d188e6d5dd5b"
   integrity sha512-APBcb27s+MjaBIerFirYmBLatoPCgmHZM6XP0K+nDL9k0yX8NJPWDY1RAC3bh6z+AB5ULS2j31BUfLMT3uaZ4A==
   dependencies:
     semver "^6.3.0"
-
-fastify-rate-limit@^3.0.1:
-  version "3.0.1"
-  resolved "https://registry.yarnpkg.com/fastify-rate-limit/-/fastify-rate-limit-3.0.1.tgz#44e4313ac85e3cb85c02f3de3bf6a526979d155d"
-  integrity sha512-yxPEgR5MzoBqo55y/X8rrVXbaU2KWLLK+woZGk0mAHifDYV2lUPKEb3R3FuHcazDLpabAbBOBZqFOi7iOPqnkQ==
-  dependencies:
-    fast-json-stringify "^1.14.0"
-    fastify-plugin "^1.3.0"
-    ms "^2.1.1"
-    tiny-lru "^7.0.0"
 
 fastify-static@^2.6.0, fastify-static@^2.7.0:
   version "2.7.0"
@@ -7564,7 +7554,7 @@ through@2, "through@>=2.2.7 <3", through@^2.3.4, through@^2.3.6:
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
   integrity sha1-DdTJ/6q8NXlgsbckEV1+Doai4fU=
 
-tiny-lru@^7.0.0, tiny-lru@^7.0.2:
+tiny-lru@^7.0.2:
   version "7.0.2"
   resolved "https://registry.yarnpkg.com/tiny-lru/-/tiny-lru-7.0.2.tgz#6a8853deb1e355f4c8863bf1289337e3e3a7e973"
   integrity sha512-cmc9OOwmnAJtyFBYaznKR3abypEhWecarFrvS5db6qwSgoaDUWV0JX+mdh6B9wN60Wux3+gE1vjzxkoqxFBjqw==

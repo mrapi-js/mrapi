@@ -62,14 +62,11 @@ TYPE_GRAPHQL_OUTPUT="${TYPE_GRAPHQL_OUTPUT}"
   )
 }
 
-export const generate = async (
-  { database, server }: MrapiOptions,
-  cwd = process.cwd(),
-) => {
-  await create({ database, server }, cwd)
+export const generate = async (options: MrapiOptions, cwd = process.cwd()) => {
+  await create(options, cwd)
 
   console.log('[mrapi] prisma generate...')
-  const envPath = join(dirname(database.schemaOutput), '.env')
+  const envPath = join(dirname(options.database.schemaOutput), '.env')
   require('dotenv').config({
     path: envPath,
   })
@@ -89,17 +86,17 @@ export const generate = async (
 
 export const migrate = {
   save: async (
-    { database, server }: MrapiOptions,
+    options: MrapiOptions,
     cwd = process.cwd(),
     name,
-    options = {},
+    config = {},
   ) => {
-    if (!(await checkPrismaSchema(database, cwd))) {
-      await create({ database, server }, cwd)
+    if (!(await checkPrismaSchema(options, cwd))) {
+      await create(options, cwd)
     }
 
     console.log('prisma migrate save...')
-    const schemaFilePath = join(cwd, database.schemaOutput)
+    const schemaFilePath = join(cwd, options.database.schemaOutput)
     // console.log({ schemaFilePath })
     await runPrisma(
       `migrate save --create-db --name '' --experimental --schema=${schemaFilePath}`,
@@ -109,17 +106,12 @@ export const migrate = {
       },
     )
   },
-  up: async (
-    { database, server }: MrapiOptions,
-    cwd = process.cwd(),
-    name,
-    options = {},
-  ) => {
-    if (!(await checkPrismaSchema(database, cwd))) {
-      await create({ database, server }, cwd)
+  up: async (options: MrapiOptions, cwd = process.cwd(), name, config = {}) => {
+    if (!(await checkPrismaSchema(options.database, cwd))) {
+      await create(options, cwd)
     }
 
-    const schemaFilePath = join(cwd, database.schemaOutput)
+    const schemaFilePath = join(cwd, options.database.schemaOutput)
     console.log('prisma migrate up...')
     await runPrisma(`migrate up --experimental --schema=${schemaFilePath}`, {
       preferLocal: true,
@@ -129,9 +121,9 @@ export const migrate = {
 }
 
 export const studio = async (
-  { database, server }: MrapiOptions,
+  options: MrapiOptions,
   cwd = process.cwd(),
-  options = {},
+  config = {},
 ) => {
   await runPrisma('studio --experimental', {
     preferLocal: true,
@@ -139,23 +131,17 @@ export const studio = async (
   })
 }
 
-export const prepare = async (
-  { database, server }: MrapiOptions,
-  cwd = process.cwd(),
-) => {
-  if (!(await checkPrismaSchema(database, cwd))) {
-    await generate({ database, server }, cwd)
-    await migrate.save({ database, server }, cwd, '')
-    await migrate.up({ database, server }, cwd, '')
+export const prepare = async (options: MrapiOptions, cwd = process.cwd()) => {
+  if (!(await checkPrismaSchema(options.database, cwd))) {
+    await generate(options, cwd)
+    await migrate.save(options, cwd, '')
+    await migrate.up(options, cwd, '')
   }
 }
 
-export const getModels = async (
-  { database }: MrapiOptions,
-  cwd = process.cwd(),
-) => {
+export const getModels = async (options: MrapiOptions, cwd = process.cwd()) => {
   const models = []
-  const schemaPath = join(cwd, database.schemaOutput)
+  const schemaPath = join(cwd, options.database.schemaOutput)
   const content = await fs.readFileSync(schemaPath, 'utf8')
   const lines = content.split(`
 `)
