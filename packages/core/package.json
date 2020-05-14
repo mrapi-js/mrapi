@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/core",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "main": "lib/index.js",
   "author": "neikvon",
   "license": "MIT",
@@ -40,8 +40,8 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
-    "@types/node": "*",
     "@types/graphql-type-json": "^0.3.2",
+    "@types/node": "*",
     "graphql-tools": "^5.0.0",
     "nodemon": "^2.0.3",
     "typescript": "^3.9.2"
