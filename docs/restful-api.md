@@ -2,7 +2,7 @@
 
 ## Setup
 
-- enable `builtIn:openapi` in `config/plugins.js` with content:
+- enable `builtIn:openapi` in `config/plugins.js`
 - set custom API path:`options.custom.path`
 
 ## Methods
