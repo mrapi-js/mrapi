@@ -3,7 +3,6 @@
 ## Setup
 
 - enable `builtIn:openapi` in `config/plugins.js`
-- set custom API path:`options.custom.path`
 
 ## Methods
 
@@ -47,7 +46,7 @@
 
 ## Custom APIs
 
-path config: `examples/app1/config/openapi.js` => `custom.path`
+path config: `config/plugins.js` => `builtIn:openapi.options.custom.path`
 
 ```ts
 // src/openapi/index.ts
