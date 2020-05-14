@@ -18,8 +18,7 @@
     "db:seed": "ts-node config/seed"
   },
   "dependencies": {
-    "@mrapi/core": "^0.3.2",
-    "graphql-type-json": "^0.3.1"
+    "@mrapi/core": "^0.3.2"
   },
   "devDependencies": {
     "@mrapi/cli": "^0.3.2",

@@ -2,48 +2,8 @@
 
 ## Setup
 
-- add `config/openapi.js` with content:
-
-  ```js
-  module.exports = {
-    enable: true,
-    prefix: "/api",
-    schema: {
-      User: ["findOne", "findMany", "create", "update", "delete"] // methods
-    },
-    custom: {
-      path: "src/openapi"
-    },
-    documentation: {
-      routePrefix: "/documentation",
-      swagger: {
-        info: {
-          title: "Test openapi",
-          description: "testing the fastify swagger api",
-          version: "0.1.0"
-        },
-        externalDocs: {
-          url: "https://swagger.io",
-          description: "Find more info here"
-        },
-        consumes: ["application/json"],
-        produces: ["application/json"]
-      },
-      exposeRoute: true
-    }
-  };
-  ```
-
-- update `src/app.ts` with:
-
-  ```js
-  const mrapi = new Mrapi({
-    config: {
-      ...
-      openapi: require('../config/openapi'),
-    },
-  }
-  ```
+- enable `builtIn:openapi` in `config/plugins.js` with content:
+- set custom API path:`options.custom.path`
 
 ## Methods
 
@@ -90,7 +50,7 @@
 path config: `examples/app1/config/openapi.js` => `custom.path`
 
 ```ts
-// index.ts
+// src/openapi/index.ts
 import { Context } from "@mrapi/core";
 
 export default [
