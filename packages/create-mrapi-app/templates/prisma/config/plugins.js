@@ -39,7 +39,7 @@ module.exports = {
       },
       emitSchemaFile: 'exports/schema.graphql',
       validate: false,
-      // temporary disable graphql-jit, fix memory leak caused by 'very long string'
+      // ! important: temporary disable graphql-jit, fix memory leak caused by 'very long string'
       // jit: 1,
       queryDepth: 100,
     },
