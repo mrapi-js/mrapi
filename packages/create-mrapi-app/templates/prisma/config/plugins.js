@@ -39,7 +39,7 @@ module.exports = {
       },
       emitSchemaFile: 'exports/schema.graphql',
       validate: false,
-      jit: 1,
+      // jit: 1,
       queryDepth: 100,
     },
   },
