@@ -34,5 +34,8 @@
     "url": "https://github.com/mrapi-js/mrapi/issues"
   },
   "homepage": "https://github.com/mrapi-js/mrapi#readme",
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
+  },
   "gitHead": "0fe9641be7b23f3635dc5ae44085bda1833ebab9"
 }
