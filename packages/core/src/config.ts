@@ -1,9 +1,13 @@
 export const defaults = {
   server: {
-    host: 'localhost',
-    port: 1358,
-    logger: {
-      prettyPrint: true,
+    options: {
+      logger: {
+        prettyPrint: true,
+      },
+    },
+    listen: {
+      host: 'localhost',
+      port: 1358,
     },
   },
   database: {

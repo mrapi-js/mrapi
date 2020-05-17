@@ -18,10 +18,10 @@
     "db:seed": "ts-node config/seed"
   },
   "dependencies": {
-    "@mrapi/core": "^0.3.3"
+    "@mrapi/core": "^0.3.4"
   },
   "devDependencies": {
-    "@mrapi/cli": "^0.3.3",
+    "@mrapi/cli": "^0.3.4",
     "cross-env": "^7.0.2",
     "typescript": "^3.9.2",
     "ts-node-dev": "^1.0.0-pre.44"

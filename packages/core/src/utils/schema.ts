@@ -2,7 +2,11 @@ import { join } from 'path'
 import { buildSchema } from 'type-graphql'
 import { getSrcDirFromTSConfig, getDistDirFromTSConfig } from './tools'
 
-export const createSchema = (config: any, cwd: string) => {
+export const createSchema = (option: any, cwd: string) => {
+  const config = option.buildSchema
+  if (!config) {
+    throw new Error(`'buildSchema' not found`)
+  }
   const isDev = process.env.NODE_ENV !== 'production'
   const src = getSrcDirFromTSConfig()
   const dist = getDistDirFromTSConfig()
@@ -29,8 +33,7 @@ export const createSchema = (config: any, cwd: string) => {
   )
 
   return buildSchema({
+    ...config,
     resolvers: [crudFilePath, relationFilePath, customResolvers],
-    emitSchemaFile: config.emitSchemaFile,
-    validate: config.validate,
   })
 }

@@ -49,9 +49,12 @@ export type DBConfig = {
 }
 
 export type ServerConfig = {
-  host: string
-  port: number
-  logger?: any
+  options:
+    | fastify.ServerOptionsAsHttp
+    | fastify.ServerOptionsAsSecureHttp
+    | fastify.ServerOptionsAsHttp2
+    | fastify.ServerOptionsAsSecureHttp2
+  listen: fastify.ListenOptions
 }
 
 export type MrapiOptions = {

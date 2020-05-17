@@ -33,15 +33,17 @@ module.exports = {
     options: {
       endpoint: '/graphql',
       playground: 'playground',
-      resolvers: {
-        generated: '../src/generated',
-        custom: './src/resolvers',
-      },
-      emitSchemaFile: 'exports/schema.graphql',
-      validate: false,
       // ! important: temporary disable graphql-jit, fix memory leak caused by 'very long string'
       // jit: 1,
       queryDepth: 100,
+      buildSchema: {
+        resolvers: {
+          generated: '../src/graphql/generated',
+          custom: './src/graphql/resolvers',
+        },
+        emitSchemaFile: 'exports/schema.graphql',
+        validate: false,
+      },
     },
   },
   'builtIn:openapi': {

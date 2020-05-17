@@ -18,9 +18,7 @@ export class Mrapi {
 
   constructor(public options?: MrapiOptions) {
     this.options = loadConfig(this.cwd, options)
-    this.app = fastify({
-      logger: this.options.server.logger,
-    })
+    this.app = fastify(this.options.server.options)
   }
 
   async init() {
@@ -94,11 +92,7 @@ export class Mrapi {
           await fn()
         }
       })
-      const { host, port } = this.options.server
-      const address = await this.app.listen({
-        host,
-        port,
-      })
+      const address = await this.app.listen(this.options.server.listen)
       return {
         app: this.app,
         address,
