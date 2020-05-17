@@ -36,11 +36,11 @@
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "^1.0.0-rc.1",
-    "typegraphql-prisma": "^0.2.2"
+    "typegraphql-prisma": "^0.2.2",
+    "@types/graphql-type-json": "^0.3.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^8.1.0",
-    "@types/graphql-type-json": "^0.3.2",
     "@types/node": "*",
     "graphql-tools": "^5.0.0",
     "nodemon": "^2.0.3",
