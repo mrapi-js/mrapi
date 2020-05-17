@@ -28,5 +28,8 @@
       "feat": "New Feature",
       "fix": "Bug Fix"
     }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org/"
   }
 }
