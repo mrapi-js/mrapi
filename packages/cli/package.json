@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/cli",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "main": "lib/index.js",
   "bin": {
     "mrapi": "./bin/run"
@@ -18,7 +18,7 @@
     "clean": "rm -rf ./lib"
   },
   "dependencies": {
-    "@mrapi/core": "^0.3.4",
+    "@mrapi/core": "^0.3.5",
     "commander": "^5.1.0",
     "execa": "^4.0.0",
     "fs-extra": "^9.0.0"
