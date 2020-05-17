@@ -1,8 +1,8 @@
 .tmp
 .DS_Store
-# packages/examples
 **/*/*.bak
 exports/
+src/graphql/generated
 
 # Logs
 logs

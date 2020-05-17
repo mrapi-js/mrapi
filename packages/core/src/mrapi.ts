@@ -67,11 +67,7 @@ export class Mrapi {
           this.app.log.debug(`register plugin:`, key)
         }
       } catch (err) {
-        if (err && err.code === 'MODULE_NOT_FOUND') {
-          this.app.log.error(`plugin '${key}' not found`)
-        } else {
-          this.app.log.error(err)
-        }
+        this.app.log.error(err)
       }
     }
   }
