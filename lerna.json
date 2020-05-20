@@ -14,5 +14,12 @@
       "tag: underlying tools": ":hammer: Underlying Tools"
     },
     "cacheDir": ".changelog"
+  },
+  "commands": {
+    "publish": {
+      "npmClient": "npm",
+      "verifyAccess": false,
+      "ignoreChanges": ["*.md", "tests/*"]
+    }
   }
 }
