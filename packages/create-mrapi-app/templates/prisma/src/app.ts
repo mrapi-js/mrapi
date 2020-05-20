@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { Mrapi, Request, Reply } from '@mrapi/core'
-import { ErrorInterceptor } from './graphql/middlewares/error-interceptor'
+import { ErrorMiddleware } from './graphql/middlewares/ErrorMiddleware'
 
 const plugins = require('../config/plugins')
 
@@ -13,8 +13,8 @@ async function main() {
       'builtIn:graphql': {
         enable: true,
         options: {
-          endpoint: '/graphql',
-          playground: 'playground',
+          path: '/graphql',
+          ide: 'playground',
           // ! important: temporary disable graphql-jit, fix memory leak caused by 'very long string'
           // jit: 1,
           queryDepth: 100,
@@ -25,7 +25,7 @@ async function main() {
             },
             emitSchemaFile: 'exports/schema.graphql',
             validate: false,
-            globalMiddlewares: [ErrorInterceptor],
+            globalMiddlewares: [ErrorMiddleware],
           },
         },
       },

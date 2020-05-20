@@ -16,6 +16,7 @@ export const defaults = {
     url: 'file:dev.db',
     schema: './config/schema.prisma',
     schemaOutput: './prisma/schema.prisma',
+    prismaClient: {},
   },
   plugins: {
     // https://github.com/fastify/fastify-cookie#example
@@ -50,16 +51,19 @@ export const defaults = {
     'builtIn:graphql': {
       enable: true,
       options: {
-        endpoint: '/graphql',
-        playground: 'playground',
-        resolvers: {
-          generated: '../src/generated',
-          custom: './src/resolvers',
-        },
-        emitSchemaFile: 'exports/schema.graphql',
-        validate: false,
-        jit: 1,
+        path: '/graphql',
+        ide: 'playground',
+        // ! important: temporary disable graphql-jit, fix memory leak caused by 'very long string'
+        // jit: 1,
         queryDepth: 100,
+        buildSchema: {
+          resolvers: {
+            generated: '../src/graphql/generated',
+            custom: './src/graphql/resolvers',
+          },
+          emitSchemaFile: 'exports/schema.graphql',
+          validate: false,
+        },
       },
     },
     'builtIn:openapi': {

@@ -9,12 +9,20 @@ export const getDBClient = async ({ database, server }: any) => {
     await generate({ database, server })
   }
   const { PrismaClient } = requireFromProject('@prisma/client')
-
-  const client = new PrismaClient({
-    debug: true,
-    log: ['query'],
-    errorFormat: 'minimal',
+  const datasources = process.env.DB_URL
+    ? {
+        db: process.env.DB_URL,
+      }
+    : database.url
+    ? {
+        db: database.url,
+      }
+    : {}
+  if (Object.keys(datasources).length > 0) {
+    console.log(`[mrapi] connected to ${datasources.db}`)
+  }
+  return new PrismaClient({
+    ...(database.prismaClient || {}),
+    ...datasources,
   })
-
-  return client
 }

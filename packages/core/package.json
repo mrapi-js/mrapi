@@ -27,7 +27,7 @@
     "fastify-cookie": "^3.6.1",
     "fastify-cors": "^3.0.3",
     "fastify-formbody": "^3.2.0",
-    "fastify-gql": "^3.8.0",
+    "fastify-gql": "^3.9.0",
     "fastify-helmet": "^3.0.2",
     "fastify-oas": "^2.7.0",
     "fs-extra": "^9.0.0",
@@ -36,15 +36,15 @@
     "pino-pretty": "^4.0.0",
     "pluralize": "^8.0.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "^1.0.0-rc.1",
+    "type-graphql": "^1.0.0-rc.2",
     "typegraphql-prisma": "^0.2.2"
   },
   "devDependencies": {
-    "@types/fs-extra": "^8.1.0",
-    "@types/node": "*",
+    "@types/fs-extra": "^9.0.1",
+    "@types/node": "^14.0.4",
     "graphql-tools": "^5.0.0",
-    "nodemon": "^2.0.3",
-    "typescript": "^3.9.2"
+    "nodemon": "^2.0.4",
+    "typescript": "^3.9.3"
   },
   "prettier": {
     "semi": false,

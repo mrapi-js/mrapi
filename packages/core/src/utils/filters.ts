@@ -31,7 +31,6 @@ export const parseFilter = (
   last?: {}
 } => {
   const result = {}
-  const where = {}
 
   for (let [key, val] of Object.entries(params)) {
     // sort: =name:asc  =name:desc
@@ -59,8 +58,12 @@ export const parseFilter = (
     // pagination
     if (pagination && PAGINATION.includes(key)) {
       if (['skip', 'first', 'last'].includes(key)) {
-        if (!isNaN(parseInt(val))) {
-          result[key] = parseInt(val)
+        // must be positive integer
+        const num = parseInt(val)
+        if (!isNaN(num) && num > 0) {
+          result[key] = num
+        } else {
+          throw new Error(`argument '${key}' must be a positive integer`)
         }
       } else {
         // 'after', 'before':  after=id:xxxx

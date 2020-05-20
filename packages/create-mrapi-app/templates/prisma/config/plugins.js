@@ -31,8 +31,8 @@ module.exports = {
   'builtIn:graphql': {
     enable: true,
     options: {
-      endpoint: '/graphql',
-      playground: 'playground',
+      path: '/graphql',
+      ide: 'playground',
       // ! important: temporary disable graphql-jit, fix memory leak caused by 'very long string'
       // jit: 1,
       queryDepth: 100,

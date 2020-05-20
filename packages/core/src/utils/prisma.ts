@@ -27,12 +27,9 @@ export const create = async (
   console.log('[mrapi] creating schema.prisma ...')
   const prismaFilePath = join(cwd, database.schema)
   const userSchemaContent = await fs.readFile(prismaFilePath, 'utf8')
-
   const URL =
-    database.provider === 'sqlite'
-      ? database.url || 'file:dev.db'
-      : `${database.provider}://${database.user}:${database.password}@${database.host}:${database.port}/${database.database}`
-
+    database.url ||
+    `${database.provider}://${database.user}:${database.password}@${database.host}:${database.port}/${database.database}`
   const TYPE_GRAPHQL_PROVIDER = 'node_modules/typegraphql-prisma/generator.js'
   const TYPE_GRAPHQL_OUTPUT =
     plugins['builtIn:graphql']?.options?.buildSchema?.resolvers?.generated ||
