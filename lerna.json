@@ -15,11 +15,13 @@
     },
     "cacheDir": ".changelog"
   },
-  "commands": {
+  "command": {
     "publish": {
       "npmClient": "npm",
       "verifyAccess": false,
-      "ignoreChanges": ["*.md", "tests/*"]
+      "ignoreChanges": ["*.md", "tests/*"],
+      "message": "chore(release): publish",
+      "registry": "https://registry.npmjs.org"
     }
   }
 }
