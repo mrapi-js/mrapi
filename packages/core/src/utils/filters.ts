@@ -60,7 +60,7 @@ export const parseFilter = (
       if (['skip', 'first', 'last'].includes(key)) {
         // must be positive integer
         const num = parseInt(val)
-        if (!isNaN(num) && num > 0) {
+        if (!isNaN(num) && num >= 0) {
           result[key] = num
         } else {
           throw new Error(`argument '${key}' must be a positive integer`)
