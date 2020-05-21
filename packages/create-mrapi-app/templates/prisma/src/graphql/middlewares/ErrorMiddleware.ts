@@ -15,10 +15,6 @@ export const ErrorMiddleware: MiddlewareFn<Context> = async (
       console.log('cookies:', request.cookies)
       console.log('body:', request.body)
     }
-    console.error(err)
-    reply.send({
-      errors: [{ message: err.message }],
-      data: null,
-    })
+    throw err
   }
 }
