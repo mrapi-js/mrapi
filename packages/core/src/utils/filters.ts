@@ -58,7 +58,7 @@ export const parseFilter = (
     // pagination
     if (pagination && PAGINATION.includes(key)) {
       if (['skip', 'first', 'last'].includes(key)) {
-        // must be positive integer
+        // must >=0
         const num = parseInt(val)
         if (!isNaN(num) && num >= 0) {
           result[key] = num
