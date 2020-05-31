@@ -16,7 +16,7 @@
     "tsc": "tsc"
   },
   "devDependencies": {
-    "lerna": "^3.21.0",
+    "lerna": "^3.22.0",
     "lerna-changelog": "^1.0.1"
   },
   "resolutions": {

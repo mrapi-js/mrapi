@@ -15,6 +15,7 @@ async function main() {
         options: {
           path: '/graphql',
           ide: 'playground',
+          noIntrospection: false,
           // ! important: temporary disable graphql-jit, fix memory leak caused by 'very long string'
           // jit: 1,
           queryDepth: 100,
