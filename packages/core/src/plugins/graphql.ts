@@ -15,8 +15,8 @@ export default async (app, option, db, cwd) => {
         // https://graphql.org/learn/introspection/
         const strArr = [
           '__schema',
-          '__type',
-          '__Type',
+          // '__type',
+          // '__Type',
           '__TypeKind',
           '__Field',
           '__InputValue',

@@ -5,13 +5,8 @@
   "changelog": {
     "repo": "mrapi-js/mrapi",
     "labels": {
-      "tag: new feature": ":rocket: New Feature",
-      "tag: breaking change": ":boom: Breaking Change",
-      "tag: bug fix": ":bug: Bug Fix",
-      "tag: enhancement": ":nail_care: Enhancement",
-      "tag: documentation": ":memo: Documentation",
-      "tag: internal": ":house: Internal",
-      "tag: underlying tools": ":hammer: Underlying Tools"
+      "feat": ":rocket: New Feature",
+      "fix": ":bug: Bug Fix"
     },
     "cacheDir": ".changelog"
   },
@@ -19,6 +14,7 @@
     "publish": {
       "npmClient": "npm",
       "verifyAccess": false,
+      "conventionalCommits": true,
       "ignoreChanges": ["*.md", "tests/*"],
       "message": "chore(release): publish",
       "registry": "https://registry.npmjs.org"
