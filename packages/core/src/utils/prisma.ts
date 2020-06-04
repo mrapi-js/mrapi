@@ -132,7 +132,7 @@ export const prepare = async (options: MrapiOptions, cwd = process.cwd()) => {
   }
 }
 
-export const getModels = async (options: MrapiOptions, cwd = process.cwd()) => {
+export const getModelNames = async (options: MrapiOptions, cwd = process.cwd()) => {
   const models = []
   const schemaPath = join(cwd, options.database.schemaOutput)
   const content = await fs.readFileSync(schemaPath, 'utf8')

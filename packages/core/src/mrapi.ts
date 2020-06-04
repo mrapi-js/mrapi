@@ -4,6 +4,7 @@ import fastify from 'fastify'
 import { getDBClient } from './db'
 import { loadConfig } from './utils/tools'
 import { MrapiOptions, App, DBClient } from './types'
+import { createLogger } from './utils/logger'
 
 process.on('unhandledRejection', (error) => {
   console.error(error)
@@ -18,7 +19,12 @@ export class Mrapi {
 
   constructor(public options?: MrapiOptions) {
     this.options = loadConfig(this.cwd, options)
-    this.app = fastify(this.options.server.options)
+    const logger = createLogger(this.options.server.options?.logger)
+    delete this.options.server.options.logger
+    this.app = fastify({
+      logger,
+      ...this.options.server.options,
+    })
   }
 
   async init() {
@@ -118,5 +124,3 @@ export class Mrapi {
     }
   }
 }
-
-export const mrapi = new Mrapi()

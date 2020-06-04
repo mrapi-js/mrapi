@@ -53,6 +53,11 @@ module.exports = {
       custom: {
         path: 'src/openapi',
       },
+      schema: {
+        // methods: findMany, findOne, create, update, delete
+        User: ['findMany'],
+        Role: ['findMany'],
+      },
       // https://gitlab.com/m03geek/fastify-oas#plugin-options
       documentation: {
         enable: true,

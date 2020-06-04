@@ -6,7 +6,6 @@ import { PrismaClient } from '@prisma/client'
 
 import * as fastify from 'fastify'
 import fastifyGQL from 'fastify-gql'
-import fastifyCompress from 'fastify-compress'
 import { Http2ServerRequest, Http2ServerResponse } from 'http2'
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 
@@ -19,10 +18,10 @@ export type Request = FastifyRequest<HttpRequest>
 export type Reply = FastifyReply<HttpResponse>
 export type App = FastifyInstance<Server, IncomingMessage, ServerResponse>
 export type Context = {
+  app: App
   request: Request
   reply: Reply
   prisma: PrismaClient
-  app: App
 }
 
 export interface ContextWithPrisma extends Context {

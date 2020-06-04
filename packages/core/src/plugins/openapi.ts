@@ -17,7 +17,7 @@ import pluralize from 'pluralize'
 
 import { App, Request, Reply } from '../types'
 import { parseFilter } from '../utils/filters'
-import { getModels } from '../utils/prisma'
+import { getModelNames } from '../utils/prisma'
 import { getCustomRoutes } from '../utils/routes'
 import { FastifyOASOptions } from 'fastify-oas'
 
@@ -39,7 +39,7 @@ export default async (app: App, config: OpenapiOptions, db, cwd, options) => {
     app.register(require('fastify-oas'), config.documentation.options)
   }
 
-  const names = await getModels(options)
+  const names = await getModelNames(options)
   const userConfig = config.schema
   // check user config
   if (userConfig) {
@@ -131,7 +131,6 @@ function coreAPIs(models, db) {
           },
         })
       }
-
       if (methods.includes('findOne')) {
         app.get(`/${api}/:id`, async (request: Request) => {
           try {

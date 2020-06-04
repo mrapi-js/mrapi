@@ -1,14 +1,15 @@
 import { formatError, GraphQLError } from 'graphql'
 
-import { Request, Reply } from '../types'
+import { Request, Reply, MrapiOptions } from '../types'
 import { createSchema } from '../utils/schema'
+import { getModelNames } from '../utils/prisma'
 
-export default async (app, option, db, cwd) => {
-  const schema = await createSchema(option, cwd)
-  const options = option
-  delete options.buildSchema
+export default async (app, config, db, cwd, options: MrapiOptions) => {
+  const modelNames = await getModelNames(options)
+  const schema = await createSchema(config, cwd, modelNames)
+  delete config.buildSchema
 
-  if (options.noIntrospection) {
+  if (config.noIntrospection) {
     app.addHook('preValidation', (request, reply, done) => {
       if (request.body && request.body.query) {
         // disable GraphQL Introspection
@@ -63,7 +64,7 @@ export default async (app, option, db, cwd) => {
         return returns
       }
     },
-    ...options,
+    ...config,
     schema,
     context: (request: Request, reply: Reply) => {
       return {
