@@ -1,3 +1,6 @@
+import { join } from 'path'
+import { MrapiOptions, DBConfig, ServerConfig } from './types'
+
 export const defaults = {
   server: {
     options: {
@@ -98,4 +101,64 @@ export const defaults = {
     },
   },
   hooks: {},
+}
+
+export const loadConfig = (
+  cwd: string,
+  { server, database, plugins, hooks }: MrapiOptions = {
+    server: null,
+    database: null,
+  },
+) => {
+  let serverConfig = server
+  let databaseConfig = database
+  let pluginsConfig = plugins
+  let hooksConfig = hooks
+
+  if (!serverConfig) {
+    try {
+      const file = join(cwd, 'config/server')
+      const config = require(file)
+      serverConfig = config.default || config
+    } catch (err) {
+      serverConfig = defaults.server
+    }
+  }
+
+  if (!databaseConfig) {
+    try {
+      const file = join(cwd, 'config/database')
+      const config = require(file)
+      databaseConfig = config.default || config
+    } catch (err) {
+      databaseConfig = defaults.database
+    }
+  }
+
+  if (!pluginsConfig) {
+    try {
+      const file = join(cwd, 'config/plugins')
+      const config = require(file)
+      pluginsConfig = config.default || config
+    } catch (err) {
+      pluginsConfig = defaults.plugins
+    }
+  }
+
+  if (!hooksConfig) {
+    try {
+      const file = join(cwd, 'config/hooks')
+      const config = require(file)
+      hooksConfig = config.default || config
+    } catch (err) {
+      hooksConfig = defaults.hooks
+    }
+  }
+
+  return {
+    server: serverConfig as ServerConfig,
+    database: databaseConfig as DBConfig,
+    plugins: pluginsConfig,
+    hooks: hooksConfig,
+  }
 }

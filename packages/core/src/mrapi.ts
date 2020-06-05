@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import fastify from 'fastify'
 
 import { getDBClient } from './db'
-import { loadConfig } from './utils/tools'
+import { loadConfig } from './config'
 import { MrapiOptions, App, DBClient } from './types'
 import { createLogger } from './utils/logger'
 
@@ -113,10 +113,10 @@ export class Mrapi {
     try {
       return this.app.close().then(
         () => {
-          console.log('successfully closed!')
+          this.app.log.info('successfully closed!')
         },
         (err) => {
-          console.log('an error happened', err)
+          this.app.log.error('an error happened', err)
         },
       )
     } catch (err) {

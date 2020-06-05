@@ -2,10 +2,11 @@ import { formatError, GraphQLError } from 'graphql'
 
 import { Request, Reply, MrapiOptions } from '../types'
 import { createSchema } from '../utils/schema'
-import { getModelNames } from '../utils/prisma'
+import { getDmmf } from '../utils/prisma'
 
 export default async (app, config, db, cwd, options: MrapiOptions) => {
-  const modelNames = await getModelNames(options)
+  const dmmf = await getDmmf(options)
+  const modelNames = dmmf.datamodel.models.map((m) => m.name)
   const schema = await createSchema(config, cwd, modelNames)
   delete config.buildSchema
 

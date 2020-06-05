@@ -1,4 +1,5 @@
 import pino from 'pino'
+import { loadConfig } from '../config'
 
 const serializers = {
   req: function asReqValue(req) {
@@ -18,21 +19,30 @@ const serializers = {
     }
   },
 }
-export function createLogger(options, stream = null) {
-  const opts = {
+export function createLogger(options?: Record<string, any>, stream = null) {
+  let opts = options
+  if (!opts) {
+    const tmp = loadConfig(process.cwd())
+    if (tmp) {
+      opts = tmp.server?.options?.logger || {}
+    }
+  }
+  const config: Record<string, any> = {
     serializers: {
       ...serializers,
-      ...(options.serializers || {}),
+      ...(opts?.serializers || {}),
     },
-    ...options,
+    ...opts,
   }
 
-  stream = stream || opts.stream
-  delete opts.stream
+  stream = stream || config.stream
+  delete config.stream
 
-  if (opts.file) {
-    stream = pino.destination(opts.file)
-    delete opts.file
+  if (config.file) {
+    stream = pino.destination(config.file)
+    delete config.file
   }
-  return pino(opts, stream)
+  return pino(config, stream)
 }
+
+export const log = createLogger()

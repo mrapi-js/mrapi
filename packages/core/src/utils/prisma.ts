@@ -3,17 +3,69 @@ import { join, dirname } from 'path'
 import execa, { Options as ExecaOptions } from 'execa'
 
 import { MrapiOptions } from '../types'
-import { resolveFromCurrent, checkPrismaSchema } from './tools'
+import { requireFromProject } from './tools'
 
-function getPrismaCli() {
-  // return resolveFromCurrent('@prisma/cli/build/index.js')
-  return 'prisma'
+const PRISMA_CLIENT = '.prisma/client'
+
+export const checkPrismaClient = () => {
+  // from prisma-beta.4, Prisma Client is now generated into a folder called node_modules/.prisma
+  // https://github.com/prisma/prisma/releases/tag/2.0.0-beta.4
+  try {
+    const client = requireFromProject(PRISMA_CLIENT)
+    return client && !!client.dmmf ? client : false
+  } catch (err) {
+    return false
+  }
+}
+
+export const checkPrismaSchema = (database: any, cwd = process.cwd()) => {
+  const schemaFilePath = join(
+    cwd,
+    database?.schemaOutput || 'prisma/schema.prisma',
+  )
+  return fs.pathExists(schemaFilePath)
+}
+
+export const prepare = async (options: MrapiOptions, cwd = process.cwd()) => {
+  if (!(await checkPrismaSchema(options.database, cwd))) {
+    await generate(options, cwd)
+    await migrate.save(options, cwd, '')
+    await migrate.up(options, cwd, '')
+  }
+}
+
+export const getDmmf = async (options: MrapiOptions, cwd = process.cwd()) => {
+  const client = checkPrismaClient()
+  if (client) {
+    return client.dmmf
+  }
+
+  const models = []
+  const schemaPath = join(cwd, options.database.schemaOutput)
+  const content = await fs.readFileSync(schemaPath, 'utf8')
+  const lines = content.split(`
+`)
+  for (let line of lines) {
+    const clearedLine = line.replace(/[\n\r]/g, '')
+    if (!clearedLine) {
+      continue
+    }
+    const lineArray = clearedLine.split(' ')
+    const filteredArray = lineArray.filter((v) => v)
+    if (filteredArray[0] === 'model' && filteredArray[1]) {
+      const name = filteredArray[1]
+      if (!models.includes(name)) {
+        models.push(name)
+      }
+    }
+  }
+
+  return models
 }
 
 export const runPrisma = async (cmd: string, options?: ExecaOptions) => {
-  const prismaCli = getPrismaCli()
   const args = cmd.split(' ').filter(Boolean)
-  return execa(prismaCli, args, options)
+  return execa('prisma', args, options)
 }
 
 // create schema.prisma file
@@ -122,36 +174,4 @@ export const studio = async (
     preferLocal: true,
     stdout: 'inherit',
   })
-}
-
-export const prepare = async (options: MrapiOptions, cwd = process.cwd()) => {
-  if (!(await checkPrismaSchema(options.database, cwd))) {
-    await generate(options, cwd)
-    await migrate.save(options, cwd, '')
-    await migrate.up(options, cwd, '')
-  }
-}
-
-export const getModelNames = async (options: MrapiOptions, cwd = process.cwd()) => {
-  const models = []
-  const schemaPath = join(cwd, options.database.schemaOutput)
-  const content = await fs.readFileSync(schemaPath, 'utf8')
-  const lines = content.split(`
-`)
-  for (let line of lines) {
-    const clearedLine = line.replace(/[\n\r]/g, '')
-    if (!clearedLine) {
-      continue
-    }
-    const lineArray = clearedLine.split(' ')
-    const filteredArray = lineArray.filter((v) => v)
-    if (filteredArray[0] === 'model' && filteredArray[1]) {
-      const name = filteredArray[1]
-      if (!models.includes(name)) {
-        models.push(name)
-      }
-    }
-  }
-
-  return models
 }

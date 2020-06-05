@@ -2,10 +2,10 @@ module.exports = {
   // https://www.fastify.io/docs/latest/Server/
   options: {
     logger: {
-      prettyPrint: true,
+      prettyPrint: process.env.NODE_ENV === 'prodcution' ? false : true,
       level: process.env.NODE_ENV === 'prodcution' ? 'info' : 'debug',
     },
-    disableRequestLogging: true,
+    disableRequestLogging: false,
   },
   listen: {
     host: 'localhost',

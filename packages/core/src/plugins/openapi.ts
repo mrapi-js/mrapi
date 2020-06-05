@@ -17,7 +17,7 @@ import pluralize from 'pluralize'
 
 import { App, Request, Reply } from '../types'
 import { parseFilter } from '../utils/filters'
-import { getModelNames } from '../utils/prisma'
+import { getDmmf } from '../utils/prisma'
 import { getCustomRoutes } from '../utils/routes'
 import { FastifyOASOptions } from 'fastify-oas'
 
@@ -39,19 +39,22 @@ export default async (app: App, config: OpenapiOptions, db, cwd, options) => {
     app.register(require('fastify-oas'), config.documentation.options)
   }
 
-  const names = await getModelNames(options)
+  const dmmf = await getDmmf(options)
+  let models = JSON.parse(JSON.stringify(dmmf.datamodel.models))
+  const mappings = JSON.parse(JSON.stringify(dmmf.mappings))
+  const modelNames = models.map((m) => m.name)
   const userConfig = config.schema
   // check user config
   if (userConfig) {
     for (let m of Object.keys(userConfig)) {
-      if (!names.includes(m)) {
+      if (!modelNames.includes(m)) {
         app.log.warn(`model '${m}' not found`)
       }
     }
   }
 
-  const models: { model: string; api: string; methods: string[] }[] = []
-  for (let name of names) {
+  // const models: { model: string; api: string; methods: string[] }[] = []
+  for (let name of modelNames) {
     if (userConfig && !userConfig[name]) {
       continue
     }
@@ -70,7 +73,7 @@ export default async (app: App, config: OpenapiOptions, db, cwd, options) => {
 
   // core APIs
   if (models && models.length > 0) {
-    app.register(coreAPIs(models, db), {
+    app.register(coreAPIs(models, mappings, db), {
       prefix,
     })
   }
@@ -91,7 +94,7 @@ export default async (app: App, config: OpenapiOptions, db, cwd, options) => {
 }
 
 // TODO: route schema
-function coreAPIs(models, db) {
+function coreAPIs(models, mappings, db) {
   return (app, opts, done) => {
     for (let { model, api, methods } of models) {
       if (methods.includes('findMany')) {
@@ -228,4 +231,59 @@ function customAPIs(routes, db) {
     }
     done()
   }
+}
+
+function generateCoreRoutes(models, mappings, db) {
+  let routes = []
+
+  for (let { model, api, methods } of models) {
+    for (let method of methods) {
+      switch (method) {
+        case 'findMany':
+          routes.push({
+            method: 'GET',
+            url: `/${api}`,
+            schema: {
+              querystring: {
+                select: { type: 'string' },
+                include: { type: 'string' },
+                orderBy: { type: 'string' },
+              },
+            },
+            async handler(request: Request, reply: Reply) {
+              try {
+                const params = parseFilter(request.query, {
+                  filtering: true,
+                  pagination: true,
+                  sorting: true,
+                  selecting: true,
+                })
+                reply.send({
+                  code: 0,
+                  data: {
+                    list: await db[model].findMany(params),
+                    total: await db[model].count({
+                      where: params.where || {},
+                    }),
+                  },
+                })
+              } catch (err) {
+                reply.send({
+                  code: -1,
+                  message: err.message,
+                })
+              }
+            },
+          })
+          break
+        case 'findOne':
+          routes.push({})
+          break
+        default:
+          break
+      }
+    }
+  }
+
+  return routes
 }

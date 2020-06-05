@@ -11,21 +11,11 @@ async function main() {
     plugins: {
       ...plugins,
       'builtIn:graphql': {
-        enable: true,
+        ...plugins['builtIn:graphql'],
         options: {
-          path: '/graphql',
-          ide: 'playground',
-          noIntrospection: false,
-          // ! important: temporary disable graphql-jit, fix memory leak caused by 'very long string'
-          // jit: 1,
-          queryDepth: 100,
+          ...plugins['builtIn:graphql'].options,
           buildSchema: {
-            resolvers: {
-              generated: '../src/graphql/generated',
-              custom: './src/graphql/resolvers',
-            },
-            emitSchemaFile: 'exports/schema.graphql',
-            validate: false,
+            ...plugins['builtIn:graphql'].options.buildSchema,
             globalMiddlewares: [ErrorMiddleware],
           },
         },

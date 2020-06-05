@@ -1,11 +1,13 @@
-import { requireFromProject, checkPrismaClient } from './utils/tools'
+import { requireFromProject } from './utils/tools'
+import { checkPrismaClient } from './utils/prisma'
 import { generate } from './utils/prisma'
+import { log } from './utils/logger'
 
 export const getDBClient = async ({ database, server }: any) => {
   // load '@prisma/client' from user's project folder
   const clientValid = checkPrismaClient()
   if (!clientValid) {
-    console.log(`prisma client isn't ready. generate now...`)
+    log.warn(`prisma client isn't ready. generate now...`)
     await generate({ database, server })
   }
   const { PrismaClient } = requireFromProject('@prisma/client')
@@ -19,18 +21,18 @@ export const getDBClient = async ({ database, server }: any) => {
       }
     : {}
   if (Object.keys(datasources).length > 0) {
-    console.log(`[mrapi] connected to ${datasources.db}`)
+    log.info(`[mrapi] connected to ${datasources.db}`)
   }
   return new PrismaClient({
     ...(database.prismaClient || {}),
     ...datasources,
-    // fix prisma query bug
     __internal: {
       hooks: {
         beforeRequest(opts) {
           if (!opts.document || opts.document.type !== 'query') {
             return
           }
+          // fix prisma query bug: skip: -1,  PANIC: called `Result::unwrap() TryFromIntError`
           const children = opts.document.children
           for (let child of children) {
             const args = child.args.args

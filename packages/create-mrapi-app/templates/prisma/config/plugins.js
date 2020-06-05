@@ -32,7 +32,13 @@ module.exports = {
     enable: true,
     options: {
       path: '/graphql',
-      ide: 'playground',
+      schema: {
+        // methods: findMany, findOne, create, update, upsert, updateMany, delete, deleteMany, aggregate
+        User: ['findMany', 'create', 'aggregate'],
+        Role: ['findMany', 'create', 'aggregate'],
+      },
+      ide: process.env.NODE_ENV === 'production' ? false : 'playground',
+      noIntrospection: process.env.NODE_ENV === 'production' ? true : false,
       // ! important: temporary disable graphql-jit, fix memory leak caused by 'very long string'
       // jit: 1,
       queryDepth: 100,
@@ -50,13 +56,13 @@ module.exports = {
     enable: false,
     options: {
       prefix: '/api',
-      custom: {
-        path: 'src/openapi',
-      },
       schema: {
         // methods: findMany, findOne, create, update, delete
         User: ['findMany'],
         Role: ['findMany'],
+      },
+      custom: {
+        path: 'src/openapi',
       },
       // https://gitlab.com/m03geek/fastify-oas#plugin-options
       documentation: {

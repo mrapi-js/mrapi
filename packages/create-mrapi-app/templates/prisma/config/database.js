@@ -12,6 +12,6 @@ module.exports = {
   schema: './config/schema.prisma',
   schemaOutput: './prisma/schema.prisma',
   prismaClient: {
-    log: ['query'],
+    log: process.env.NODE_ENV === 'production' ? [] : ['query'],
   },
 }
