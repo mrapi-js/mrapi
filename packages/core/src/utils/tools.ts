@@ -3,7 +3,6 @@ import { log } from './logger'
 
 export const requireFromProject = (name: string, cwd = process.cwd()) => {
   try {
-    log.warn(`requireFromProject ${name} from ${cwd}`)
     return require(resolveFromProject(name, cwd))
   } catch (err) {
     const { message } = err

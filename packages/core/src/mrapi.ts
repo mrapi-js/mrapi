@@ -59,7 +59,7 @@ export class Mrapi {
             this.cwd,
             this.options,
           )
-          this.app.log.debug(`register plugin:`, key)
+          this.app.log.debug(`register plugin: ${key}`)
           if (
             ret &&
             ret.callbackAfterReady &&
@@ -70,7 +70,7 @@ export class Mrapi {
         } else {
           const pluginPath = require.resolve(key)
           this.app.register(require(pluginPath), val.options)
-          this.app.log.debug(`register plugin:`, key)
+          this.app.log.debug(`register plugin: ${key}`)
         }
       } catch (err) {
         this.app.log.error(err)

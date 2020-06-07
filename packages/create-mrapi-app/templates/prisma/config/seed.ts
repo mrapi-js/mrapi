@@ -14,7 +14,7 @@ async function main() {
       email: 'alice@prisma.io',
       name: 'Alice',
       password: '111111',
-      Role: {
+      role: {
         connect: {
           id: role.id,
         },

@@ -2,6 +2,7 @@ import * as fs from 'fs-extra'
 import { join, dirname } from 'path'
 import execa, { Options as ExecaOptions } from 'execa'
 
+import { log } from './logger'
 import { MrapiOptions } from '../types'
 import { requireFromProject } from './tools'
 
@@ -34,33 +35,62 @@ export const prepare = async (options: MrapiOptions, cwd = process.cwd()) => {
   }
 }
 
-export const getDmmf = async (options: MrapiOptions, cwd = process.cwd()) => {
+export const getModels = async (userConfig?: Record<string, string[]>) => {
   const client = checkPrismaClient()
-  if (client) {
-    return client.dmmf
+  const dmmf = client ? client.dmmf : null
+  // console.log(JSON.stringify(dmmf))
+  if (!dmmf) {
+    return null
+  }
+  let models = JSON.parse(JSON.stringify(dmmf.datamodel.models))
+  const mappings = JSON.parse(JSON.stringify(dmmf.mappings))
+  models = models
+    .map((model) => {
+      const mapping = mappings.find((m) => m.model === model.name)
+      if (mapping) {
+        return {
+          ...model,
+          api: mapping.plural,
+          methods: Object.keys(mapping)
+            .map((key) => (['model', 'plural'].includes(key) ? null : key))
+            .filter(Boolean),
+        }
+      }
+      return null
+    })
+    .filter(Boolean)
+
+  if (!userConfig) {
+    return models
   }
 
-  const models = []
-  const schemaPath = join(cwd, options.database.schemaOutput)
-  const content = await fs.readFileSync(schemaPath, 'utf8')
-  const lines = content.split(`
-`)
-  for (let line of lines) {
-    const clearedLine = line.replace(/[\n\r]/g, '')
-    if (!clearedLine) {
+  let modelsCopy = []
+  for (let name of Object.keys(userConfig)) {
+    const model = models.find((m) => m.name === name)
+    if (!model) {
+      log.warn(`model '${name}' not found`)
       continue
     }
-    const lineArray = clearedLine.split(' ')
-    const filteredArray = lineArray.filter((v) => v)
-    if (filteredArray[0] === 'model' && filteredArray[1]) {
-      const name = filteredArray[1]
-      if (!models.includes(name)) {
-        models.push(name)
-      }
+
+    let methods = userConfig[name]
+    if (!Array.isArray(methods)) {
+      log.warn(`methods should be array, get '${methods}'`)
+      continue
     }
+
+    const tmp = JSON.parse(JSON.stringify(model))
+    tmp.methods = methods.filter((m) => {
+      if (!model.methods.includes(m)) {
+        log.warn(`method '${name}.${m}' not found`)
+        return false
+      }
+      return true
+    })
+
+    modelsCopy.push(tmp)
   }
 
-  return models
+  return modelsCopy
 }
 
 export const runPrisma = async (cmd: string, options?: ExecaOptions) => {
@@ -76,7 +106,7 @@ export const create = async (
   if (!database || !database.schema) {
     throw new Error('database.schema is required')
   }
-  console.log('[mrapi] creating schema.prisma ...')
+  log.info('[mrapi] creating schema.prisma ...')
   const prismaFilePath = join(cwd, database.schema)
   const userSchemaContent = await fs.readFile(prismaFilePath, 'utf8')
   const URL =
@@ -112,7 +142,7 @@ TYPE_GRAPHQL_OUTPUT="${TYPE_GRAPHQL_OUTPUT}"
 export const generate = async (options: MrapiOptions, cwd = process.cwd()) => {
   await create(options, cwd)
 
-  console.log('[mrapi] prisma generate...')
+  log.info('[mrapi] prisma generate...')
   const envPath = join(dirname(options.database.schemaOutput), '.env')
   require('dotenv').config({
     path: envPath,
@@ -141,7 +171,7 @@ export const migrate = {
       await create(options, cwd)
     }
 
-    console.log('prisma migrate save...')
+    log.info('prisma migrate save...')
     const schemaFilePath = join(cwd, options.database.schemaOutput)
     await runPrisma(
       `migrate save --create-db --name '' --experimental --schema=${schemaFilePath}`,
@@ -157,7 +187,7 @@ export const migrate = {
     }
 
     const schemaFilePath = join(cwd, options.database.schemaOutput)
-    console.log('prisma migrate up...')
+    log.info('prisma migrate up...')
     await runPrisma(`migrate up --experimental --schema=${schemaFilePath}`, {
       preferLocal: true,
       stdout: 'inherit',

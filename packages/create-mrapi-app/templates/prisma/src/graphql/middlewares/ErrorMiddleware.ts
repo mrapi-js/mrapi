@@ -2,19 +2,21 @@ import { Context } from '@mrapi/core'
 import { MiddlewareFn } from 'type-graphql'
 
 export const ErrorMiddleware: MiddlewareFn<Context> = async (
-  { context, info },
+  { context },
   next,
 ) => {
-  const { request, reply, app } = context
-  const { log } = app
+  const { request, app } = context
   try {
     return await next()
-  } catch (err) {
-    if (info) {
-      log.error('GraphQL:', info.operation?.operation, info.fieldName)
-      console.log('cookies:', request.cookies)
-      console.log('body:', request.body)
-    }
-    throw err
+  } catch (error) {
+    app.log.error({
+      error: error.toString(),
+      reqId: request.id,
+      body: request.body,
+      cookies: request.cookies,
+      params: request.params,
+      query: request.query,
+    })
+    throw error
   }
 }

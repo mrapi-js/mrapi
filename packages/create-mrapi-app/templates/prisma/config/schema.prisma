@@ -5,7 +5,7 @@ model User {
   password  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  Role      Role?    @relation(fields: [roleId], references: [id])
+  role      Role?    @relation(fields: [roleId], references: [id])
   roleId    String?
 }
 
