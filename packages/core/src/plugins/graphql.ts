@@ -10,30 +10,21 @@ export default async (app, config, db, cwd, options: MrapiOptions) => {
   const schema = await createSchema(config, cwd, modelNames)
   delete config.buildSchema
 
+  // disable GraphQL Introspection
   if (config.noIntrospection) {
     app.addHook('preValidation', (request, reply, done) => {
-      if (request.body && request.body.query) {
-        // disable GraphQL Introspection
-        // https://graphql.org/learn/introspection/
-        const strArr = [
-          '__schema',
-          // '__type',
-          // '__Type',
-          '__TypeKind',
-          '__Field',
-          '__InputValue',
-          '__EnumValue',
-          '__Directive',
-        ]
-        if (strArr.find((str) => request.body.query.includes(str))) {
-          done({
-            errors: [
-              {
-                message: 'GraphQL introspection is not allowed',
-              },
-            ],
-            data: null,
-          })
+      const queryString =
+        // POST
+        request.body && request.body.query
+          ? request.body.query
+          : // GET
+          request.query && request.query.query
+          ? request.query.query
+          : null
+      if (queryString) {
+        const message = checkIntrospectionQuery(queryString)
+        if (message) {
+          done(message)
         }
       }
       done()
@@ -76,4 +67,31 @@ export default async (app, config, db, cwd, options: MrapiOptions) => {
       }
     },
   })
+}
+
+// https://graphql.org/learn/introspection/
+function checkIntrospectionQuery(queryString: string) {
+  if (!queryString) {
+    return null
+  }
+  const strArr = [
+    '__schema',
+    '__TypeKind',
+    '__Field',
+    '__InputValue',
+    '__EnumValue',
+    '__Directive',
+  ]
+
+  if (strArr.find((str) => queryString.includes(str))) {
+    return {
+      errors: [
+        {
+          message: 'GraphQL introspection is not allowed',
+        },
+      ],
+      data: null,
+    }
+  }
+  return null
 }

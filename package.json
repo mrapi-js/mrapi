@@ -16,11 +16,11 @@
     "tsc": "tsc"
   },
   "devDependencies": {
-    "lerna": "^3.22.0",
+    "lerna": "^3.22.1",
     "lerna-changelog": "^1.0.1"
   },
   "resolutions": {
-    "graphql": "15.0.0"
+    "graphql": "15.1.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

@@ -6,8 +6,8 @@
   "author": "mrapi",
   "license": "MIT",
   "scripts": {
-    "dev": "cross-env DEBUG=prisma:query ts-node-dev --respawn --transpileOnly ./src/app.ts",
-    "debug": "cross-env DEBUG=prisma:query ts-node-dev --inspect --respawn --transpileOnly ./src/app.ts",
+    "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
+    "debug": "ts-node-dev --inspect --respawn --transpileOnly ./src/app.ts",
     "build": "tsc",
     "start": "cross-env NODE_ENV=production node dist/app",
     "generate": "mrapi generate",
@@ -19,16 +19,16 @@
     "db:seed": "ts-node config/seed"
   },
   "dependencies": {
-    "@mrapi/core": "^0.4.1"
+    "@mrapi/core": "^0.5.0"
   },
   "devDependencies": {
-    "@mrapi/cli": "^0.4.1",
+    "@mrapi/cli": "^0.5.0",
     "cross-env": "^7.0.2",
     "typescript": "^3.9.5",
     "ts-node-dev": "^1.0.0-pre.44"
   },
   "resolutions": {
-    "graphql": "15.0.0"
+    "graphql": "15.1.0"
   },
   "prettier": {
     "semi": false,

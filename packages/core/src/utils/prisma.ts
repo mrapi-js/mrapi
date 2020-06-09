@@ -38,7 +38,6 @@ export const prepare = async (options: MrapiOptions, cwd = process.cwd()) => {
 export const getModels = async (userConfig?: Record<string, string[]>) => {
   const client = checkPrismaClient()
   const dmmf = client ? client.dmmf : null
-  // console.log(JSON.stringify(dmmf))
   if (!dmmf) {
     return null
   }
@@ -100,11 +99,14 @@ export const runPrisma = async (cmd: string, options?: ExecaOptions) => {
 
 // create schema.prisma file
 export const create = async (
-  { database, server, plugins }: MrapiOptions,
+  { database, plugins }: MrapiOptions,
   cwd = process.cwd(),
 ) => {
   if (!database || !database.schema) {
     throw new Error('database.schema is required')
+  }
+  if (!plugins) {
+    throw new Error('plugins is required')
   }
   log.info('[mrapi] creating schema.prisma ...')
   const prismaFilePath = join(cwd, database.schema)
@@ -112,7 +114,8 @@ export const create = async (
   const URL =
     database.url ||
     `${database.provider}://${database.user}:${database.password}@${database.host}:${database.port}/${database.database}`
-  const TYPE_GRAPHQL_PROVIDER = 'node_modules/typegraphql-prisma/generator.js'
+  const TYPE_GRAPHQL_PROVIDER =
+    'node_modules/@mrapi/typegraphql-prisma/lib/generator.js'
   const TYPE_GRAPHQL_OUTPUT =
     plugins['builtIn:graphql']?.options?.buildSchema?.resolvers?.generated ||
     '../src/generated'

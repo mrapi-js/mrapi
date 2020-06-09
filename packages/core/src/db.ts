@@ -3,12 +3,12 @@ import { checkPrismaClient } from './utils/prisma'
 import { generate } from './utils/prisma'
 import { log } from './utils/logger'
 
-export const getDBClient = async ({ database, server }: any) => {
+export const getDBClient = async ({ database, server, plugins }: any) => {
   // load '@prisma/client' from user's project folder
   const clientValid = checkPrismaClient()
   if (!clientValid) {
     log.warn(`prisma client isn't ready. generate now...`)
-    await generate({ database, server })
+    await generate({ database, server, plugins })
   }
   const { PrismaClient } = requireFromProject('@prisma/client')
   const datasources = process.env.DB_URL

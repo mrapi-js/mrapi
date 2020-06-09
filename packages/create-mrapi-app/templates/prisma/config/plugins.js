@@ -1,3 +1,5 @@
+const pkg = require('../package.json')
+
 module.exports = {
   // https://github.com/fastify/fastify-cookie#example
   'fastify-cookie': {
@@ -32,11 +34,11 @@ module.exports = {
     enable: true,
     options: {
       path: '/graphql',
-      schema: {
-        // methods: findMany, findOne, create, update, upsert, updateMany, delete, deleteMany, aggregate
-        User: ['findMany', 'create', 'aggregate'],
-        Role: ['findMany', 'create', 'aggregate'],
-      },
+      // schema: {
+      //   // methods: findMany, findOne, create, update, upsert, updateMany, delete, deleteMany, aggregate
+      //   User: ['findMany', 'create', 'aggregate'],
+      //   Role: ['findMany', 'create', 'aggregate'],
+      // },
       ide: process.env.NODE_ENV === 'production' ? false : 'playground',
       noIntrospection: process.env.NODE_ENV === 'production' ? true : false,
       // ! important: temporary disable graphql-jit, fix memory leak caused by 'very long string'
@@ -53,14 +55,14 @@ module.exports = {
     },
   },
   'builtIn:openapi': {
-    enable: false,
+    enable: true,
     options: {
       prefix: '/api',
-      schema: {
-        // methods: findMany, findOne, create, update, delete
-        User: ['findMany'],
-        Role: ['findMany'],
-      },
+      // schema: {
+      //   // methods: findMany, findOne, create, update, delete
+      //   User: ['findMany'],
+      //   Role: ['findMany'],
+      // },
       custom: {
         path: 'src/openapi',
       },
@@ -71,16 +73,18 @@ module.exports = {
           routePrefix: '/documentation',
           swagger: {
             info: {
-              title: 'Test swagger',
-              description: 'testing the fastify swagger api',
-              version: '0.1.0',
-            },
-            externalDocs: {
-              url: 'https://swagger.io',
-              description: 'Find more info here',
+              title: pkg.name,
+              description: pkg.description,
+              version: pkg.version,
             },
             consumes: ['application/json'],
             produces: ['application/json'],
+            servers: [
+              {
+                url: 'http://127.0.0.1:1358',
+                description: 'Local Server',
+              },
+            ],
           },
           exposeRoute: true,
         },

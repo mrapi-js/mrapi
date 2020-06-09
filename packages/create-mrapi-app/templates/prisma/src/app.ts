@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import { Mrapi, Request, Reply } from '@mrapi/core'
-import { ErrorMiddleware } from './graphql/middlewares/ErrorMiddleware'
+import { LogAccessMiddleware } from './graphql/middlewares/LogAccessMiddleware'
 
 const plugins = require('../config/plugins')
 
@@ -16,7 +16,7 @@ async function main() {
           ...plugins['builtIn:graphql'].options,
           buildSchema: {
             ...plugins['builtIn:graphql'].options.buildSchema,
-            globalMiddlewares: [ErrorMiddleware],
+            globalMiddlewares: [LogAccessMiddleware],
           },
         },
       },

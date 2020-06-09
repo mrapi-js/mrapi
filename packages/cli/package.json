@@ -12,7 +12,7 @@
   "author": "neikvon",
   "license": "MIT",
   "scripts": {
-    "build": "tsc",
+    "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
     "prisma": "prisma",
     "clean": "rm -rf ./lib"
