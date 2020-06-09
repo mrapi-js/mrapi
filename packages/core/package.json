@@ -13,7 +13,7 @@
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
     "prisma": "prisma",
-    "clean": "rm -rf ./lib"
+    "clean": "rm -rf ./lib && rm -rf ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "@prisma/cli": "2.0.0-beta.6",

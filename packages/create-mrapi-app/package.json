@@ -15,7 +15,7 @@
   "scripts": {
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
-    "clean": "rm -rf ./lib"
+    "clean": "rm -rf ./lib && rm -rf ./tsconfig.tsbuildinfo"
   },
   "prettier": {
     "semi": false,

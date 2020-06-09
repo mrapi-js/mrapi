@@ -10,7 +10,7 @@
     "watch": "lerna run --parallel watch --no-private",
     "bootstrap": "lerna bootstrap",
     "postinstall": "npm run bootstrap",
-    "pub": "npm run build && lerna publish --conventional-commits --ignore-changes=mrapi-app",
+    "pub": "npm run clean && npm run build && lerna publish --conventional-commits --ignore-changes=mrapi-app",
     "changelog": "lerna-changelog",
     "lerna": "lerna",
     "tsc": "tsc"

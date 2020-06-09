@@ -15,7 +15,7 @@
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
     "prisma": "prisma",
-    "clean": "rm -rf ./lib"
+    "clean": "rm -rf ./lib && rm -rf ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
     "@mrapi/core": "^0.4.1",
