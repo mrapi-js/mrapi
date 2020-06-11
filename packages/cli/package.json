@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/cli",
-  "version": "0.5.0",
+  "version": "0.6.0-alpha.0",
   "main": "lib/index.js",
   "bin": {
     "mrapi": "./bin/run"
@@ -18,7 +18,7 @@
     "clean": "rm -rf ./lib && rm -rf ./tsconfig.tsbuildinfo"
   },
   "dependencies": {
-    "@mrapi/core": "^0.5.0",
+    "@mrapi/core": "^0.6.0-alpha.0",
     "commander": "^5.1.0",
     "execa": "^4.0.2",
     "fs-extra": "^9.0.1"

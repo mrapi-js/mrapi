@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/core",
-  "version": "0.5.0",
+  "version": "0.6.0-alpha.0",
   "main": "lib/index.js",
   "author": "neikvon",
   "license": "MIT",
@@ -34,8 +34,8 @@
     "fastify-static": "^2.7.0",
     "fs-extra": "^9.0.1",
     "graphql": "15.1.0",
-    "graphql-type-json": "^0.3.2",
     "graphql-query-complexity": "^0.6.0",
+    "graphql-type-json": "^0.3.2",
     "pino": "^6.3.2",
     "pino-pretty": "^4.0.0",
     "prisma-multi-tenant": "2.0.0-beta.6",

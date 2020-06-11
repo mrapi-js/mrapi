@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.6.0-alpha.0](https://github.com/mrapi-js/mrapi/compare/create-mrapi-app@0.5.0...create-mrapi-app@0.6.0-alpha.0) (2020-06-11)
+
+
+### Features
+
+* **core:** multiTenant supports ([191e8b8](https://github.com/mrapi-js/mrapi/commit/191e8b8922662cfd20e0e5ecb6fa3695bbb73364))
+
+
+
+
+
 # [0.5.0](https://github.com/mrapi-js/mrapi/compare/create-mrapi-app@0.4.2...create-mrapi-app@0.5.0) (2020-06-09)
 
 
