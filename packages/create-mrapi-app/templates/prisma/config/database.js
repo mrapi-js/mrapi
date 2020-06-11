@@ -14,4 +14,13 @@ module.exports = {
   prismaClient: {
     log: process.env.NODE_ENV === 'production' ? [] : ['query'],
   },
+  // multiTenant: {
+  //   management: {
+  //     provider: 'sqlite',
+  //     url: 'file:management.db',
+  //   },
+  //   identifier: {
+  //     headers: 'tenantId',
+  //   },
+  // },
 }

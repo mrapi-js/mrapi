@@ -2,6 +2,11 @@ import { requireFromProject } from './utils/tools'
 import { checkPrismaClient } from './utils/prisma'
 import { generate } from './utils/prisma'
 import { log } from './utils/logger'
+import execa, { Options as ExecaOptions } from 'execa'
+
+import { MultiTenant } from 'prisma-multi-tenant'
+import { PrismaClient as PrismaClientType } from '@prisma/client'
+import migrate from 'prisma-multi-tenant/build/cli/commands/migrate'
 
 export const getDBClient = async ({ database, server, plugins }: any) => {
   // load '@prisma/client' from user's project folder
@@ -23,7 +28,7 @@ export const getDBClient = async ({ database, server, plugins }: any) => {
   if (Object.keys(datasources).length > 0) {
     log.info(`[mrapi] connected to ${datasources.db}`)
   }
-  return new PrismaClient({
+  const clientOptions = {
     ...(database.prismaClient || {}),
     ...datasources,
     __internal: {
@@ -49,5 +54,39 @@ export const getDBClient = async ({ database, server, plugins }: any) => {
         },
       },
     },
-  })
+  }
+
+  if (database.multiTenant) {
+    log.info(`[mrapi] using multiple tenants`)
+    process.env.MANAGEMENT_PROVIDER = database.provider
+    process.env.MANAGEMENT_URL = database.multiTenant.management?.url
+    // const migrate = require('../../../node_modules/prisma-multi-tenant/build/cli/commands/migrate.js')
+    //   .default
+
+    await migrate.migrateManagement('up', '--create-db')
+
+    // const managementDatasource = process.env.MANAGEMENT_URL
+    //   ? {
+    //       db: process.env.MANAGEMENT_URL,
+    //     }
+    //   : database.multiTenant.management?.url
+    //   ? {
+    //       db: database.multiTenant.management.url,
+    //     }
+    //   : {}
+    const multiTenant = new MultiTenant<PrismaClientType>({
+      tenantOptions: clientOptions,
+      PrismaClientManagement: new PrismaClient({
+        ...(database.prismaClient || {}),
+        // ...managementDatasource,
+      }),
+    })
+    return { multiTenant }
+  }
+
+  log.info(`[mrapi] using single prisma client`)
+
+  return {
+    prismaClient: new PrismaClient(clientOptions),
+  }
 }

@@ -4,10 +4,17 @@ import { Request, Reply, MrapiOptions } from '../types'
 import { createSchema } from '../utils/schema'
 import { getModels } from '../utils/prisma'
 
-export default async (app, config, db, cwd, options: MrapiOptions) => {
+export default async (
+  app,
+  config,
+  { prismaClient, multiTenant },
+  cwd,
+  options: MrapiOptions,
+) => {
   const models = await getModels(config.schema)
   const modelNames = models.map((m) => m.name)
   const schema = await createSchema(config, cwd, modelNames)
+  console.log({ schema })
   delete config.buildSchema
 
   // disable GraphQL Introspection
@@ -59,6 +66,13 @@ export default async (app, config, db, cwd, options: MrapiOptions) => {
     ...config,
     schema,
     context: (request: Request, reply: Reply) => {
+      let db = prismaClient
+      console.log({ db })
+      if (!db) {
+        const identifier = options.database?.multiTenant?.identifier
+        const tenantId = request.headers[identifier.headers]
+        db = multiTenant.get(tenantId)
+      }
       return {
         request,
         reply,

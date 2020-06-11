@@ -12,6 +12,12 @@ export const run = async () => {
 
   program.version(pkg.version, '-v, --version')
   program
+    .command('create')
+    .description('Create prisma folder')
+    .action(async () => {
+      await prismaUtils.create(loadConfig(cwd), cwd)
+    })
+  program
     .command('generate')
     .description('Generate DB schema and resolvers')
     .option('-w, --watch', 'Watch file changes', false)

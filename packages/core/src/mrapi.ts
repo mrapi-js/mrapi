@@ -3,7 +3,7 @@ import fastify from 'fastify'
 
 import { getDBClient } from './db'
 import { loadConfig } from './config'
-import { MrapiOptions, App, DBClient } from './types'
+import { MrapiOptions, App, PrismaClient, MultiTenant } from './types'
 import { createLogger } from './utils/logger'
 
 process.on('unhandledRejection', (error) => {
@@ -14,7 +14,8 @@ process.on('unhandledRejection', (error) => {
 export class Mrapi {
   cwd = process.cwd()
   app: App
-  db: DBClient
+  prismaClient: PrismaClient
+  multiTenant: MultiTenant<PrismaClient>
   callbacksAfterReady: Function[] = []
 
   constructor(public options?: MrapiOptions) {
@@ -32,7 +33,9 @@ export class Mrapi {
       const { prepare } = require('./utils/prisma')
       await prepare(this.options, this.cwd)
     }
-    this.db = await getDBClient(this.options)
+    const { prismaClient, multiTenant } = await getDBClient(this.options)
+    this.prismaClient = prismaClient
+    this.multiTenant = multiTenant
 
     // load middleware
     await this.registerPlugins()
@@ -55,7 +58,7 @@ export class Mrapi {
           const ret = await plugin(
             this.app,
             val.options,
-            this.db,
+            { prismaClient: this.prismaClient, multiTenant: this.multiTenant },
             this.cwd,
             this.options,
           )

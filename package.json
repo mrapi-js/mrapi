@@ -8,12 +8,16 @@
     "clean": "lerna run clean",
     "build": "lerna run build",
     "watch": "lerna run --parallel watch --no-private",
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap --hoist",
     "postinstall": "npm run bootstrap",
     "pub": "npm run clean && npm run build && lerna publish --conventional-commits --ignore-changes=mrapi-app",
     "changelog": "lerna-changelog",
     "lerna": "lerna",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "example:create": "lerna run mrapi:create --stream",
+    "example:generate": "lerna run mrapi:generate --stream",
+    "example:db": "lerna run db:save --stream && lerna run db:up --stream",
+    "example:dev": "lerna run dev --stream"
   },
   "devDependencies": {
     "lerna": "^3.22.1",
