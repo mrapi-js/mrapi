@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.7.0-alpha.0](https://github.com/mrapi-js/mrapi/compare/create-mrapi-app@0.6.0-alpha.0...create-mrapi-app@0.7.0-alpha.0) (2020-06-11)
+
+**Note:** Version bump only for package create-mrapi-app
+
+
+
+
+
 # [0.6.0-alpha.0](https://github.com/mrapi-js/mrapi/compare/create-mrapi-app@0.5.0...create-mrapi-app@0.6.0-alpha.0) (2020-06-11)
 
 
