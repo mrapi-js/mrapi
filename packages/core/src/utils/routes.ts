@@ -1,5 +1,6 @@
 import { join } from 'path'
 import { pathExists } from 'fs-extra'
+
 import { getSrcDirFromTSConfig, getDistDirFromTSConfig } from './tools'
 
 export const getCustomRoutes = async (config: any, cwd = process.cwd()) => {

@@ -57,7 +57,8 @@
     "trailingComma": "all"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "lib"
   },
   "engines": {
     "node": ">= 10.3"

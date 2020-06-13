@@ -13,11 +13,13 @@
   // deleteMany({ where: {} })
 */
 
-import { App, Request, Reply } from '../types'
-import { parseFilter } from '../utils/filters'
-import { getModels } from '../utils/prisma'
-import { getCustomRoutes } from '../utils/routes'
 import { FastifyOASOptions } from 'fastify-oas'
+
+import { getDBClient } from '../db'
+import { getModels } from '../utils/prisma'
+import { parseFilter } from '../utils/filters'
+import { getCustomRoutes } from '../utils/routes'
+import { App, Request, Reply, MrapiOptions } from '../types'
 
 type OpenapiOptions = {
   prefix?: string
@@ -31,7 +33,13 @@ type OpenapiOptions = {
   }
 }
 
-export default async (app: App, config: OpenapiOptions, db, cwd, options) => {
+export default async (
+  app: App,
+  config: OpenapiOptions,
+  { prismaClient, multiTenant },
+  cwd,
+  options: MrapiOptions,
+) => {
   // documentation
   if (config.documentation?.enable) {
     app.register(require('fastify-oas'), config.documentation.options)
@@ -41,7 +49,12 @@ export default async (app: App, config: OpenapiOptions, db, cwd, options) => {
   prefix = prefix.startsWith('/') ? prefix : `/${prefix}`
 
   // core APIs
-  const coreRoutes = generateCoreRoutes(models, db)
+  const coreRoutes = generateCoreRoutes({
+    models,
+    prismaClient,
+    multiTenant,
+    options,
+  })
   if (coreRoutes && coreRoutes.length > 0) {
     app.register(coreAPIs(coreRoutes), {
       prefix,
@@ -51,9 +64,12 @@ export default async (app: App, config: OpenapiOptions, db, cwd, options) => {
   // custom APIs
   const customRoutes = await getCustomRoutes(config, cwd)
   if (customRoutes && customRoutes.length > 0) {
-    app.register(customAPIs(customRoutes, db), {
-      prefix,
-    })
+    app.register(
+      customAPIs({ routes: customRoutes, prismaClient, multiTenant, options }),
+      {
+        prefix,
+      },
+    )
   }
 
   if (config.documentation?.enable) {
@@ -72,20 +88,29 @@ function coreAPIs(routes) {
   }
 }
 
-function customAPIs(routes, db) {
+function customAPIs({ routes, prismaClient, multiTenant, options }) {
   return (app: App, opts, done) => {
     for (let route of routes) {
       app.route({
         ...route,
-        handler: (request: Request, reply: Reply) =>
-          route.handler({ app, request, reply, prisma: db }),
+        handler: async (request: Request, reply: Reply) => {
+          const client = await getDBClient({
+            prismaClient,
+            multiTenant,
+            options,
+            request,
+            reply,
+          })
+
+          return route.handler({ app, request, reply, prisma: client })
+        },
       })
     }
     done()
   }
 }
 
-function generateCoreRoutes(models, db) {
+function generateCoreRoutes({ models, prismaClient, multiTenant, options }) {
   let routes = []
 
   for (let { name, api, methods, fields, documentation } of models) {
@@ -140,8 +165,16 @@ function generateCoreRoutes(models, db) {
               type: 'object',
               additionalProperties: true,
             },
-            async handler(request: Request) {
+            async handler(request: Request, reply: Reply) {
               try {
+                const client = await getDBClient({
+                  prismaClient,
+                  multiTenant,
+                  options,
+                  request,
+                  reply,
+                })
+
                 const params = parseFilter(request.query, {
                   filtering: true,
                   pagination: true,
@@ -151,8 +184,8 @@ function generateCoreRoutes(models, db) {
                 return {
                   code: 0,
                   data: {
-                    list: await db[modelName].findMany(params),
-                    total: await db[modelName].count({
+                    list: await client[modelName].findMany(params),
+                    total: await client[modelName].count({
                       where: params.where || {},
                     }),
                   },
@@ -182,11 +215,19 @@ function generateCoreRoutes(models, db) {
               },
               query: queryParams,
             },
-            async handler(request: Request) {
+            async handler(request: Request, reply: Reply) {
               try {
+                const client = await getDBClient({
+                  prismaClient,
+                  multiTenant,
+                  options,
+                  request,
+                  reply,
+                })
+
                 return {
                   code: 0,
-                  data: await db[modelName].findOne({
+                  data: await client[modelName].findOne({
                     where: request.params,
                     ...parseFilter(request.query, {
                       selecting: true,
@@ -225,11 +266,19 @@ function generateCoreRoutes(models, db) {
                 },
               },
             },
-            async handler(request: Request) {
+            async handler(request: Request, reply: Reply) {
               try {
+                const client = await getDBClient({
+                  prismaClient,
+                  multiTenant,
+                  options,
+                  request,
+                  reply,
+                })
+
                 return {
                   code: 0,
-                  data: await db[modelName].create({
+                  data: await client[modelName].create({
                     data: request.body,
                     ...parseFilter(request.query, {
                       selecting: true,
@@ -260,11 +309,19 @@ function generateCoreRoutes(models, db) {
                 },
               },
             },
-            async handler(request: Request) {
+            async handler(request: Request, reply: Reply) {
               try {
+                const client = await getDBClient({
+                  prismaClient,
+                  multiTenant,
+                  options,
+                  request,
+                  reply,
+                })
+
                 return {
                   code: 0,
-                  data: await db[modelName].update({
+                  data: await client[modelName].update({
                     where: request.params,
                     data: request.body,
                     ...parseFilter(request.query, {
@@ -296,11 +353,19 @@ function generateCoreRoutes(models, db) {
                 },
               },
             },
-            async handler(request: Request) {
+            async handler(request: Request, reply: Reply) {
               try {
+                const client = await getDBClient({
+                  prismaClient,
+                  multiTenant,
+                  options,
+                  request,
+                  reply,
+                })
+
                 return {
                   code: 0,
-                  data: await db[modelName].delete({
+                  data: await client[modelName].delete({
                     where: request.params,
                     ...parseFilter(request.query, {
                       selecting: true,

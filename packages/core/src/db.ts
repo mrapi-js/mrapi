@@ -1,14 +1,18 @@
 import { requireFromProject } from './utils/tools'
 import { checkPrismaClient } from './utils/prisma'
-import { generate } from './utils/prisma'
+import { generate, getUrlAndProvider } from './utils/prisma'
 import { log } from './utils/logger'
-import execa, { Options as ExecaOptions } from 'execa'
+import { MrapiOptions, Request, Reply } from './types'
 
 import { MultiTenant } from 'prisma-multi-tenant'
 import { PrismaClient as PrismaClientType } from '@prisma/client'
 import migrate from 'prisma-multi-tenant/build/cli/commands/migrate'
 
-export const getDBClient = async ({ database, server, plugins }: any) => {
+export const getDBClients = async ({
+  database,
+  server,
+  plugins,
+}: MrapiOptions) => {
   // load '@prisma/client' from user's project folder
   const clientValid = checkPrismaClient()
   if (!clientValid) {
@@ -16,9 +20,50 @@ export const getDBClient = async ({ database, server, plugins }: any) => {
     await generate({ database, server, plugins })
   }
   const { PrismaClient } = requireFromProject('@prisma/client')
-  const datasources = process.env.DB_URL
+
+  if (database.multiTenant) {
+    const managementInfo = getUrlAndProvider(
+      database.multiTenant.management.url,
+    )
+    log.info(
+      `[mrapi] using multiple tenants, management database url: ${managementInfo.url}`,
+    )
+    process.env.MANAGEMENT_URL = managementInfo.url
+    process.env.MANAGEMENT_PROVIDER = managementInfo.provider
+    await migrate.migrateManagement('up', '--create-db')
+
+    process.env.verbose = 'false'
+    const multiTenant = new MultiTenant<PrismaClientType>({
+      tenantOptions: {
+        ...(database.prismaClient || {}),
+      },
+    })
+
+    if (Array.isArray(database.multiTenant.tenants)) {
+      for (let tenant of database.multiTenant.tenants) {
+        const name = tenant.name.trim()
+        if (!(await multiTenant.existsTenant(name))) {
+          const tenantInfo = getUrlAndProvider(tenant.url)
+          await multiTenant.createTenant(
+            {
+              name,
+              url: tenantInfo.url,
+              provider: tenantInfo.provider,
+            },
+            {
+              datasources: { db: tenant.url },
+            },
+          )
+        }
+      }
+    }
+
+    return { multiTenant }
+  }
+
+  const datasources = process.env.DATABASE_URL
     ? {
-        db: process.env.DB_URL,
+        db: process.env.DATABASE_URL,
       }
     : database.url
     ? {
@@ -30,7 +75,7 @@ export const getDBClient = async ({ database, server, plugins }: any) => {
   }
   const clientOptions = {
     ...(database.prismaClient || {}),
-    ...datasources,
+    datasources,
     __internal: {
       hooks: {
         beforeRequest(opts) {
@@ -56,37 +101,53 @@ export const getDBClient = async ({ database, server, plugins }: any) => {
     },
   }
 
-  if (database.multiTenant) {
-    log.info(`[mrapi] using multiple tenants`)
-    process.env.MANAGEMENT_PROVIDER = database.provider
-    process.env.MANAGEMENT_URL = database.multiTenant.management?.url
-    // const migrate = require('../../../node_modules/prisma-multi-tenant/build/cli/commands/migrate.js')
-    //   .default
-
-    await migrate.migrateManagement('up', '--create-db')
-
-    // const managementDatasource = process.env.MANAGEMENT_URL
-    //   ? {
-    //       db: process.env.MANAGEMENT_URL,
-    //     }
-    //   : database.multiTenant.management?.url
-    //   ? {
-    //       db: database.multiTenant.management.url,
-    //     }
-    //   : {}
-    const multiTenant = new MultiTenant<PrismaClientType>({
-      tenantOptions: clientOptions,
-      PrismaClientManagement: new PrismaClient({
-        ...(database.prismaClient || {}),
-        // ...managementDatasource,
-      }),
-    })
-    return { multiTenant }
-  }
-
   log.info(`[mrapi] using single prisma client`)
 
   return {
     prismaClient: new PrismaClient(clientOptions),
   }
+}
+
+export const getDBClient = async ({
+  prismaClient,
+  multiTenant,
+  options,
+  request,
+  reply,
+}: {
+  prismaClient: PrismaClientType
+  multiTenant: MultiTenant<PrismaClientType>
+  options: MrapiOptions
+  request: Request
+  reply: Reply
+}) => {
+  let client = prismaClient
+  if (client) {
+    return client
+  }
+
+  const identifier = options.database.multiTenant.identifier
+  if (!identifier) {
+    throw new Error(`'multiTenant.identifier' is required`)
+  }
+  if (typeof identifier !== 'function') {
+    throw new Error(`'multiTenant.identifier' should be a function`)
+  }
+
+  let tenantId = await identifier(request, reply)
+  if (tenantId) {
+    try {
+      client = await multiTenant.get(tenantId)
+    } catch (err) {
+      throw new Error(`get tenant client error. ${err}`)
+    }
+  } else {
+    throw new Error(`tenant id is required`)
+  }
+
+  if (!client) {
+    throw new Error(`cannot resolve multiple tenant client`)
+  }
+
+  return client
 }

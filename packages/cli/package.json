@@ -30,7 +30,8 @@
     "trailingComma": "all"
   },
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "directory": "lib"
   },
   "repository": {
     "type": "git",

@@ -1,8 +1,8 @@
-import { Http2Server } from 'http2'
-import { Server, IncomingMessage, ServerResponse } from 'http'
-import { ExecutionResult } from 'graphql'
 import * as fastify from 'fastify'
+import { Http2Server } from 'http2'
 import fastifyGQL from 'fastify-gql'
+import { ExecutionResult } from 'graphql'
+import { Server, IncomingMessage, ServerResponse } from 'http'
 import { Http2ServerRequest, Http2ServerResponse } from 'http2'
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 
@@ -25,17 +25,22 @@ export type Context = {
   prisma: PrismaClient
 }
 
-export interface ContextWithPrisma extends Context {
-  prisma: PrismaClient
-}
-
 export enum DBEngine {
   prisma = 'prisma',
   typeorm = 'typeorm',
 }
-// export type DBClient = PrismaClient
-// export type MultiTenant = MultiTenant<PrismaClient>
 
+export enum DBProvider {
+  postgresql = 'postgresql',
+  mysql = 'mysql',
+  sqlite = 'sqlite',
+}
+
+export type TenantOptions = {
+  name: string
+  provider: string
+  url: string
+}
 export type DBConfig = {
   provider: string
   client: string
@@ -47,14 +52,13 @@ export type DBConfig = {
   user?: string
   password?: string
   url?: string
+  prismaClient?: {}
   multiTenant?: {
     management: {
-      provider: string
       url: string
     }
-    identifier: {
-      headers?: string
-    }
+    tenants: TenantOptions[]
+    identifier: (request: Request, reply: Reply) => string | void
   }
 }
 

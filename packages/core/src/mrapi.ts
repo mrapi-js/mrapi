@@ -1,10 +1,11 @@
 import 'reflect-metadata'
 import fastify from 'fastify'
 
-import { getDBClient } from './db'
+import { getDBClients } from './db'
 import { loadConfig } from './config'
 import { MrapiOptions, App, PrismaClient, MultiTenant } from './types'
 import { createLogger } from './utils/logger'
+import { initPrisma } from './utils/prisma'
 
 process.on('unhandledRejection', (error) => {
   console.error(error)
@@ -30,14 +31,13 @@ export class Mrapi {
 
   async init() {
     if (this.options.database.client === 'prisma') {
-      const { prepare } = require('./utils/prisma')
-      await prepare(this.options, this.cwd)
+      const { prismaClient, multiTenant } = await getDBClients(this.options)
+      this.prismaClient = prismaClient
+      this.multiTenant = multiTenant
+    } else {
+      throw new Error('mrapi only supports prisma currently')
     }
-    const { prismaClient, multiTenant } = await getDBClient(this.options)
-    this.prismaClient = prismaClient
-    this.multiTenant = multiTenant
 
-    // load middleware
     await this.registerPlugins()
     await this.registerHooks()
   }

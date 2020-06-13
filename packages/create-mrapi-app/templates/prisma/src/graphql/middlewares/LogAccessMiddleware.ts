@@ -5,14 +5,17 @@ export const LogAccessMiddleware: MiddlewareFn<Context> = async (
   { context, info },
   next,
 ) => {
+  const startTime = Date.now()
   const { request } = context
   const prefix = 'GraphQL: '
-  const apiName = `${info.parentType.name}.${info.fieldName}`
-  const startTime = Date.now()
-  request.log.info(`${prefix}-> ${apiName}`)
+  const actionType = info.parentType.name
+  const apiName = `${actionType}.${info.fieldName}`
+  const needLog = ['Query', 'Mutation', 'Subscription'].includes(actionType)
+  needLog && request.log.info(`${prefix}-> ${apiName}`)
   try {
     await next()
-    request.log.info(`${prefix}<- ${apiName} [${Date.now() - startTime} ms]`)
+    needLog &&
+      request.log.info(`${prefix}<- ${apiName} [${Date.now() - startTime} ms]`)
   } catch (error) {
     request.log.error(
       `${prefix}<- ${apiName} [${

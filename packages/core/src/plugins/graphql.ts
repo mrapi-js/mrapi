@@ -1,8 +1,9 @@
 import { formatError, GraphQLError } from 'graphql'
 
-import { Request, Reply, MrapiOptions } from '../types'
-import { createSchema } from '../utils/schema'
+import { getDBClient } from '../db'
 import { getModels } from '../utils/prisma'
+import { createSchema } from '../utils/schema'
+import { Request, Reply, MrapiOptions } from '../types'
 
 export default async (
   app,
@@ -14,7 +15,6 @@ export default async (
   const models = await getModels(config.schema)
   const modelNames = models.map((m) => m.name)
   const schema = await createSchema(config, cwd, modelNames)
-  console.log({ schema })
   delete config.buildSchema
 
   // disable GraphQL Introspection
@@ -65,18 +65,19 @@ export default async (
     },
     ...config,
     schema,
-    context: (request: Request, reply: Reply) => {
-      let db = prismaClient
-      console.log({ db })
-      if (!db) {
-        const identifier = options.database?.multiTenant?.identifier
-        const tenantId = request.headers[identifier.headers]
-        db = multiTenant.get(tenantId)
-      }
+    context: async (request: Request, reply: Reply) => {
+      const client = await getDBClient({
+        prismaClient,
+        multiTenant,
+        options,
+        request,
+        reply,
+      })
+
       return {
         request,
         reply,
-        prisma: db,
+        prisma: client,
         app: app,
       }
     },

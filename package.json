@@ -17,11 +17,13 @@
     "example:create": "lerna run mrapi:create --stream",
     "example:generate": "lerna run mrapi:generate --stream",
     "example:db": "lerna run db:save --stream && lerna run db:up --stream",
-    "example:dev": "lerna run dev --stream"
+    "example:dev": "lerna run dev --stream",
+    "test": "lerna run test --stream -- --colors"
   },
   "devDependencies": {
     "lerna": "^3.22.1",
-    "lerna-changelog": "^1.0.1"
+    "lerna-changelog": "^1.0.1",
+    "jest": "^26.0.1"
   },
   "resolutions": {
     "graphql": "15.1.0"
