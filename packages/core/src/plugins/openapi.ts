@@ -160,6 +160,10 @@ function generateCoreRoutes({
     }
 
     const id = findInArray(fields, 'name', 'id')
+    if (!id) {
+      throw new Error(`table '${modelName}' should have 'id' field`)
+    }
+
     const idObject = {
       type: id.type === 'String' ? 'string' : 'integer',
       description: id.documentation,
