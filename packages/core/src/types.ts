@@ -42,15 +42,9 @@ export type TenantOptions = {
   url: string
 }
 export type DBConfig = {
-  provider: string
   client: string
   schema: string
   schemaOutput: string
-  host?: string
-  port?: number
-  database?: string
-  user?: string
-  password?: string
   url?: string
   prismaClient?: {}
   multiTenant?: {
@@ -78,9 +72,6 @@ export type MrapiOptions = {
   hooks?: Hooks
 }
 
-type originCallback = (err: Error | null, allow: boolean) => void
-type originFunction = (origin: string, callback: originCallback) => void
-type originType = string | boolean | RegExp
 type ValueOrArray<T> = T | ArrayOfValueOrArray<T>
 interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}
 

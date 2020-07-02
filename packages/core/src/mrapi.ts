@@ -5,7 +5,6 @@ import { getDBClients } from './db'
 import { loadConfig } from './config'
 import { MrapiOptions, App, PrismaClient, MultiTenant } from './types'
 import { createLogger } from './utils/logger'
-import { initPrisma } from './utils/prisma'
 
 process.on('unhandledRejection', (error) => {
   console.error(error)
@@ -118,7 +117,7 @@ export class Mrapi {
         () => {
           this.app.log.info('successfully closed!')
         },
-        (err) => {
+        (err: any) => {
           this.app.log.error('an error happened', err)
         },
       )

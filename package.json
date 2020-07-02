@@ -5,30 +5,31 @@
     "examples/*"
   ],
   "scripts": {
-    "clean": "lerna run clean",
-    "build": "lerna run build",
-    "watch": "lerna run --parallel watch --no-private",
-    "bootstrap": "lerna bootstrap --hoist",
-    "postinstall": "npm run bootstrap",
+    "clean": "pnpm recursive run clean && rm -rf node_modules",
+    "build": "pnpm run --parallel build",
+    "watch": "pnpm run --parallel watch",
+    "bootstrap": "lerna bootstrap",
     "pub": "npm run clean && npm run build && lerna publish --conventional-commits --ignore-changes=mrapi-app",
-    "changelog": "lerna-changelog",
-    "lerna": "lerna",
     "tsc": "tsc",
-    "example:create": "lerna run mrapi:create --stream",
-    "example:generate": "lerna run mrapi:generate --stream",
-    "example:db": "lerna run db:save --stream && lerna run db:up --stream",
-    "example:dev": "lerna run dev --stream",
-    "test": "lerna run test --stream -- --colors"
+    "example:basic:generate": "pnpm run generate --filter ./examples/basic",
+    "example:basic:dev": "pnpm run dev --filter ./examples/basic",
+    "example:basic:db-save": "pnpm run db:save --filter ./examples/basic",
+    "example:basic:db-up": "pnpm run db:up --filter ./examples/basic",
+    "example:basic:db-seed": "pnpm run db:seed --filter ./examples/basic",
+    "example:multi-tenant:generate": "pnpm run generate --filter ./examples/multi-tenant",
+    "example:multi-tenant:dev": "pnpm run dev --filter ./examples/multi-tenant",
+    "example:multi-tenant:db-save": "pnpm run db:save --filter ./examples/multi-tenant",
+    "example:multi-tenant:db-up": "pnpm run db:up --filter ./examples/multi-tenant",
+    "example:multi-tenant:db-seed": "pnpm run db:seed --filter ./examples/multi-tenant"
   },
   "devDependencies": {
-    "lerna": "^3.22.1",
-    "lerna-changelog": "^1.0.1",
-    "jest": "^26.0.1"
+    "jest": "^26.1.0"
   },
   "resolutions": {
-    "graphql": "15.1.0"
+    "graphql": "15.2.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
-  }
+  },
+  "__npminstall_done": false
 }

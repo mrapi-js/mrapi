@@ -1,5 +1,7 @@
-import { join } from 'path'
+import { join, dirname } from 'path'
 import { log } from './logger'
+import { exec, spawn } from 'child_process'
+import findUp from 'find-up'
 
 export const requireFromProject = (name: string, cwd = process.cwd()) => {
   try {
@@ -51,4 +53,112 @@ export const getSrcDirFromTSConfig = (cwd = process.cwd()) => {
 export const getDistDirFromTSConfig = (cwd = process.cwd()) => {
   const config = getTSConfig(cwd)
   return strip(config?.compilerOptions?.outDir || 'dist')
+}
+
+let nodeModules: string
+export const getNodeModules = (): string => {
+  if (nodeModules) return nodeModules
+
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
+  const findNodeModules = require('find-node-modules')
+  nodeModules = findNodeModules({ cwd: process.cwd(), relative: false })[0]
+
+  return nodeModules
+}
+
+export const getPrismaCliPath = (): string => {
+  return resolveFromCurrent('@prisma/cli')
+}
+
+export const getPMTCliPath = (): Promise<string> => {
+  return getBinPath('prisma-multi-tenant')
+}
+
+export const runShell = (
+  cmd: string,
+  options?: { cwd: string; env?: { [name: string]: string | undefined } },
+): Promise<string | Buffer> => {
+  if (process.env.verbose == 'true') {
+    console.log('  $> ' + cmd)
+  }
+
+  return new Promise((resolve, reject) => {
+    exec(
+      cmd,
+      options,
+      (
+        error: Error | null,
+        stdout: string | Buffer,
+        stderr: string | Buffer,
+      ) => {
+        // console.log({ error, stdout, stderr })
+        if (process.env.verbose == 'true') {
+          console.log(stderr || stdout)
+        }
+        if (error) reject(error)
+        resolve(stdout)
+      },
+    )
+  })
+}
+
+export const spawnShell = (cmd: string): Promise<number> => {
+  const [command, ...commandArguments] = cmd.split(' ')
+  return new Promise((resolve) =>
+    spawn(command, commandArguments, {
+      stdio: 'inherit',
+      env: process.env,
+      shell: true,
+    }).on('exit', (exitCode: number) => resolve(exitCode)),
+  )
+}
+
+export const getPkgPath = (name: string) => {
+  if (!name) {
+    return ''
+  }
+  const pkgPath = resolveFromCurrent(name)
+  if (!pkgPath) {
+    return ''
+  }
+  return findUp('package.json', { cwd: pkgPath })
+}
+
+export const getPkgJson = async (name: string) => {
+  const pkgPath = await getPkgPath(name)
+  if (!pkgPath) {
+    return null
+  }
+  return require(pkgPath)
+}
+
+export const getPkgJsonAndPath = async (name: string) => {
+  const pkgPath = await getPkgPath(name)
+  if (!pkgPath) {
+    return null
+  }
+  return {
+    json: require(pkgPath),
+    path: pkgPath,
+  }
+}
+
+export const getBinPath = async (name: string) => {
+  const pkg = await getPkgJsonAndPath(name)
+  if (!pkg) {
+    return ''
+  }
+  const { json, path } = pkg
+  if (!json || !path) {
+    return ''
+  }
+
+  const { bin } = json
+  if (typeof bin === 'string') {
+    return bin
+  }
+
+  console.log({ bin })
+
+  return join(dirname(path), bin[name])
 }

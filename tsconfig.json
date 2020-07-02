@@ -1,19 +1,36 @@
 {
   "compilerOptions": {
+    "incremental": true,
+
+    "outDir": "lib",
     "baseUrl": ".",
-    "target": "es6",
+
+    "target": "es2018",
     "module": "commonjs",
-    "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
-    "sourceMap": true,
+    "moduleResolution": "node",
+    "lib": ["esnext"],
+    "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
+    "importHelpers": true,
     "resolveJsonModule": true,
+    "sourceMap": true,
     "declaration": true,
+
+    "suppressImplicitAnyIndexErrors": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+
     "composite": true,
     "paths": {
-      "create-mrapi-app": ["packages/create-mrapi-app/src"],
-      "@mrapi/cli": ["packages/cli/src"],
-      "@mrapi/core": ["packages/core/src"]
+      "@mrapi/core": ["packages/core/src/index.ts"],
+      "@mrapi/cli": ["packages/cli/src/index.ts"],
+      "create-mrapi-app": ["packages/create-mrapi-app/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "lib"]
+  "include": ["packages"],
+  "exclude": ["**/node_modules", "**/lib"]
 }

@@ -2,7 +2,7 @@ import pino from 'pino'
 import { loadConfig } from '../config'
 
 const serializers = {
-  req: function asReqValue(req) {
+  req: function asReqValue(req: any) {
     return {
       method: req.method,
       url: req.url,
@@ -13,13 +13,16 @@ const serializers = {
     }
   },
   err: pino.stdSerializers.err,
-  res: function asResValue(reply) {
+  res: function asResValue(reply: any) {
     return {
       statusCode: reply.statusCode,
     }
   },
 }
-export function createLogger(options?: Record<string, any>, stream = null) {
+export function createLogger(
+  options?: Record<string, any>,
+  stream: any = null,
+) {
   let opts = options
   if (!opts) {
     const tmp = loadConfig(process.cwd())

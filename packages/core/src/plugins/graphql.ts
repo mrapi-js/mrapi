@@ -3,39 +3,52 @@ import { formatError, GraphQLError } from 'graphql'
 import { getDBClient } from '../db'
 import { getModels } from '../utils/prisma'
 import { createSchema } from '../utils/schema'
-import { Request, Reply, MrapiOptions } from '../types'
+import {
+  App,
+  Request,
+  Reply,
+  MrapiOptions,
+  PrismaClient,
+  MultiTenant,
+} from '../types'
 
 export default async (
-  app,
-  config,
-  { prismaClient, multiTenant },
-  cwd,
+  app: App,
+  config: any,
+  {
+    prismaClient,
+    multiTenant,
+  }: { prismaClient: PrismaClient; multiTenant: MultiTenant<PrismaClient> },
+  cwd = process.cwd(),
   options: MrapiOptions,
 ) => {
   const models = await getModels(config.schema)
-  const modelNames = models.map((m) => m.name)
+  const modelNames = models.map((m: Record<string, any>) => m.name)
   const schema = await createSchema(config, cwd, modelNames)
   delete config.buildSchema
 
   // disable GraphQL Introspection
   if (config.noIntrospection) {
-    app.addHook('preValidation', (request, reply, done) => {
-      const queryString =
-        // POST
-        request.body && request.body.query
-          ? request.body.query
-          : // GET
-          request.query && request.query.query
-          ? request.query.query
-          : null
-      if (queryString) {
-        const message = checkIntrospectionQuery(queryString)
-        if (message) {
-          done(message)
+    app.addHook(
+      'preValidation',
+      (request: Request, reply: Reply, done: (err?: Error) => void) => {
+        const queryString =
+          // POST
+          request.body && request.body.query
+            ? request.body.query
+            : // GET
+            request.query && request.query.query
+            ? request.query.query
+            : null
+        if (queryString) {
+          const message = checkIntrospectionQuery(queryString)
+          if (message) {
+            done(new Error(message))
+          }
         }
-      }
-      done()
-    })
+        done()
+      },
+    )
   }
 
   // https://github.com/mcollina/fastify-gql#plugin-options
@@ -59,20 +72,25 @@ export default async (
 
       if (!reply.sent) {
         reply.send(returns)
-      } else {
-        return returns
+        return null
       }
+      return returns
     },
     ...config,
     schema,
     context: async (request: Request, reply: Reply) => {
-      const client = await getDBClient({
-        prismaClient,
-        multiTenant,
-        options,
-        request,
-        reply,
-      })
+      // graphql playground
+      const isIntrospectionQuery =
+        request.body.operationName === 'IntrospectionQuery'
+      const client = isIntrospectionQuery
+        ? null
+        : await getDBClient({
+            prismaClient,
+            multiTenant,
+            options,
+            request,
+            reply,
+          })
 
       return {
         request,
@@ -99,14 +117,7 @@ function checkIntrospectionQuery(queryString: string) {
   ]
 
   if (strArr.find((str) => queryString.includes(str))) {
-    return {
-      errors: [
-        {
-          message: 'GraphQL introspection is not allowed',
-        },
-      ],
-      data: null,
-    }
+    return 'GraphQL introspection is not allowed'
   }
   return null
 }

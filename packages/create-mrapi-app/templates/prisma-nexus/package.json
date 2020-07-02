@@ -15,10 +15,10 @@
     "db:ui": "mrapi db:ui"
   },
   "dependencies": {
-    "@mrapi/core": "0.0.1-alpha.2"
+    "@mrapi/core": "workspace:*"
   },
   "devDependencies": {
-    "@mrapi/cli": "0.0.1-alpha.2",
+    "@mrapi/cli": "workspace:*",
     "typescript": "^3.8.3",
     "ts-node-dev": "^1.0.0-pre.44"
   },

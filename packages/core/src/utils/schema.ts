@@ -18,7 +18,7 @@ export const createSchema = (
     ? config.resolvers.generated.replace('../', '')
     : config.resolvers.generated.replace(`../${src}`, dist)
 
-  let crudFilePath = []
+  let crudFilePath: string[] = []
   if (
     option.schema &&
     Object.prototype.toString.call(option.schema) === '[object Object]'

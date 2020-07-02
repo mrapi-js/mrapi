@@ -3,11 +3,12 @@ import { PrismaClient as PrismaClientType } from '@prisma/client'
 import migrate from 'prisma-multi-tenant/build/cli/commands/migrate'
 import { getUrlAndProvider } from './utils/prisma'
 import { log } from './utils/logger'
+import { DBConfig } from './types'
 
 export class Tenant {
   multiTenant: MultiTenant<PrismaClientType>
 
-  constructor(public config) {
+  constructor(public config: DBConfig) {
     this.multiTenant = new MultiTenant<PrismaClientType>({
       tenantOptions: {
         ...(config.prismaClient || {}),

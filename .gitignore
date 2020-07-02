@@ -5,5 +5,6 @@ lib
 node_modules
 tmp/
 *.tsbuildinfo
-examples/
 *.log
+package-lock.json
+yarn.lock

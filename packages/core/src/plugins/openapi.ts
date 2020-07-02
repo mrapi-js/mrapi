@@ -19,7 +19,14 @@ import { getDBClient } from '../db'
 import { getModels } from '../utils/prisma'
 import { parseFilter } from '../utils/filters'
 import { getCustomRoutes } from '../utils/routes'
-import { App, Request, Reply, MrapiOptions } from '../types'
+import {
+  App,
+  Request,
+  Reply,
+  MrapiOptions,
+  PrismaClient,
+  MultiTenant,
+} from '../types'
 
 type OpenapiOptions = {
   prefix?: string
@@ -36,8 +43,11 @@ type OpenapiOptions = {
 export default async (
   app: App,
   config: OpenapiOptions,
-  { prismaClient, multiTenant },
-  cwd,
+  {
+    prismaClient,
+    multiTenant,
+  }: { prismaClient: PrismaClient; multiTenant: MultiTenant<PrismaClient> },
+  cwd = process.cwd(),
   options: MrapiOptions,
 ) => {
   // documentation
@@ -77,10 +87,12 @@ export default async (
       callbackAfterReady: app.oas,
     }
   }
+
+  return null
 }
 
-function coreAPIs(routes) {
-  return (app: App, opts, done) => {
+function coreAPIs(routes: any[]) {
+  return (app: App, opts: any, done: () => void) => {
     for (let route of routes) {
       app.route(route)
     }
@@ -88,8 +100,18 @@ function coreAPIs(routes) {
   }
 }
 
-function customAPIs({ routes, prismaClient, multiTenant, options }) {
-  return (app: App, opts, done) => {
+function customAPIs({
+  routes,
+  prismaClient,
+  multiTenant,
+  options,
+}: {
+  routes: any[]
+  prismaClient: PrismaClient
+  multiTenant: MultiTenant<PrismaClient>
+  options: any
+}) {
+  return (app: App, opts: any, done: () => void) => {
     for (let route of routes) {
       app.route({
         ...route,
@@ -110,17 +132,22 @@ function customAPIs({ routes, prismaClient, multiTenant, options }) {
   }
 }
 
-function generateCoreRoutes({ models, prismaClient, multiTenant, options }) {
+function generateCoreRoutes({
+  models,
+  prismaClient,
+  multiTenant,
+  options,
+}: any) {
   let routes = []
 
   for (let { name, api, methods, fields, documentation } of models) {
     const modelName = name.charAt(0).toLowerCase() + name.slice(1)
     const scalarFields = fields
-      .filter((f) => f.kind === 'scalar')
-      .map((f) => f.name)
+      .filter((f: any) => f.kind === 'scalar')
+      .map((f: any) => f.name)
     const relationFields = fields
-      .filter((f) => f.kind === 'object')
-      .map((f) => f.name)
+      .filter((f: any) => f.kind === 'object')
+      .map((f: any) => f.name)
     const queryParams = {
       select: {
         type: 'string',
@@ -391,6 +418,6 @@ function generateCoreRoutes({ models, prismaClient, multiTenant, options }) {
   return routes
 }
 
-function findInArray(arr, keyName, key) {
-  return arr.find((a) => a[keyName] === key)
+function findInArray(arr: any[], keyName: string, key: string) {
+  return arr.find((a: Record<string, any>) => a[keyName] === key)
 }

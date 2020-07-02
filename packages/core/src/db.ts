@@ -78,7 +78,7 @@ export const getDBClients = async ({
     datasources,
     __internal: {
       hooks: {
-        beforeRequest(opts) {
+        beforeRequest(opts: any) {
           if (!opts.document || opts.document.type !== 'query') {
             return
           }

@@ -15,10 +15,10 @@
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
     "prisma": "prisma",
-    "clean": "rm -rf ./lib && rm -rf ./tsconfig.tsbuildinfo"
+    "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
   "dependencies": {
-    "@mrapi/core": "^0.6.0-alpha.0",
+    "@mrapi/core": "workspace:*",
     "commander": "^5.1.0",
     "execa": "^4.0.2",
     "fs-extra": "^9.0.1"
@@ -41,5 +41,8 @@
     "url": "https://github.com/mrapi-js/mrapi/issues"
   },
   "homepage": "https://github.com/mrapi-js/mrapi#readme",
-  "gitHead": "38fd5b78bfd78e63f3f8d0d394a6f7d53eb234b1"
+  "gitHead": "38fd5b78bfd78e63f3f8d0d394a6f7d53eb234b1",
+  "devDependencies": {
+    "typescript": "^3.9.5"
+  }
 }
