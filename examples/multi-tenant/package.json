@@ -1,6 +1,7 @@
 {
   "name": "multi-tenant",
   "version": "0.0.1",
+  "private": true,
   "description": "API project base on mrapi",
   "main": "index.js",
   "author": "mrapi",

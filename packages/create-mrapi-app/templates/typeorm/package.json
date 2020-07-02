@@ -1,10 +1,10 @@
 {
   "name": "my-mrapi-app",
   "version": "1.0.0",
+  "private": true,
   "main": "index.js",
   "author": "mrapi",
   "license": "MIT",
-  "private": true,
   "scripts": {
     "dev": "DEBUG=* ts-node ./src/app.ts",
     "build": "mrapi build",
