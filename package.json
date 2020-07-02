@@ -1,4 +1,5 @@
 {
+  "name": "mrapi-workspace",
   "private": true,
   "workspaces": [
     "packages/*",
