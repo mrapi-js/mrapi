@@ -1,6 +1,6 @@
 {
   "name": "mrapi-workspace",
-  "version": "0.0.0",
+  "version": "0.6.0",
   "private": true,
   "workspaces": [
     "packages/*",
@@ -10,6 +10,8 @@
     "clean": "pnpm recursive run clean && rm -rf node_modules",
     "build": "pnpm run --parallel build",
     "watch": "pnpm run --parallel watch",
+    "publish": "ts-node scripts/publish.ts",
+    "publish:dry": "DRY_RUN=true ts-node scripts/publish.ts",
     "example:basic:generate": "pnpm run generate --filter ./examples/basic",
     "example:basic:dev": "pnpm run dev --filter ./examples/basic",
     "example:basic:db-save": "pnpm run db:save --filter ./examples/basic",
@@ -22,13 +24,24 @@
     "example:multi-tenant:db-seed": "pnpm run db:seed --filter ./examples/multi-tenant"
   },
   "devDependencies": {
-    "jest": "^26.1.0"
+    "chalk": "^4.1.0",
+    "execa": "^4.0.2",
+    "jest": "^26.1.0",
+    "semver": "^7.3.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.6"
   },
   "resolutions": {
     "graphql": "15.2.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
   },
   "__npminstall_done": false
 }
