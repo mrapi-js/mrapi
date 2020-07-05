@@ -116,7 +116,7 @@ async function publish(dryRun: boolean) {
     await run(process.cwd(), `git add .`)
     await run(
       process.cwd(),
-      `git commit -am chore(release): ${newVersion} update packages`,
+      `git commit -am "chore(release): ${newVersion} update packages"`,
     )
     await run(process.cwd(), `git push --quiet`)
   }
