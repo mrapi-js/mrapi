@@ -6,9 +6,10 @@ import { promises as fs } from 'fs'
 // const rootDir = process.cwd()
 const packages = ['core', 'cli', 'create-mrapi-app']
 
-async function getLatestTag() {
+async function getLatestVersion() {
   const childProcessResult = await execa.command('git describe --abbrev=0')
-  return childProcessResult.stdout.toString()
+  const version = childProcessResult.stdout.toString()
+  return version.startsWith('v') ? version.slice(1) : version
 }
 
 async function writeVersion(pkgDir: string, version: string, dryRun?: boolean) {
@@ -96,7 +97,7 @@ async function publish(dryRun: boolean) {
     chalk.blueBright(packages.map((o, i) => `  ${i + 1}. ${o}`).join('\n')),
   )
   const info = await getPackagesInfo(packages)
-  const newVersion = await getLatestTag()
+  const newVersion = await getLatestVersion()
 
   for (let [name, obj] of Object.entries(info)) {
     const tag = ''

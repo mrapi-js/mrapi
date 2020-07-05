@@ -1,41 +1,56 @@
 # Contribute to Mrapi
 
-## Development Workflow
+## Development
 
-1. Fork & clone
-1. Install the dependencies
-
-   ```bash
-   yarn
-   ```
-
-1. Start a watch server
+1. Setup
 
    ```bash
-   yarn watch
+   git clone https://github.com/mrapi-js/mrapi.git
+   cd mrapi
+   npm i -g pnpm
+   pnpm i --ignore-scripts
    ```
 
-## Link packages & usage
-
-- link
+1. Start development
 
    ```bash
-   cd packages/create-mrapi-app
-   yarn link
-
-   cd ../cli
-   yarn link
-
-   cd ../core
-   yarn link
+   pnpm run watch
    ```
 
-- create a demo app
+## Run example
 
-  ```bash
-  cd path/to/empty/folder
-  yarn create mrapi api-demo
+```bash
+cd examples/basic # or examples/multi-tenant
+pnpm i
 
-  cd api-demo
-  yarn dev
-  ```
+pnpm run dev
+```
+
+
+## Git Commit
+
+1. Add commit plugin
+
+   docs: https://github.com/fbi-templates/fbi-task-commit#usage
+
+   ```bash
+   # install fbi
+   npm i -g fbi
+
+   # add commit plugin
+   fbi add https://github.com/fbi-templates/fbi-task-commit.git
+   ```
+
+2. Commit
+
+   ```bash
+   fbi commit
+
+   # if you wanna release new version, please check 'Bump the package version? Yes'
+   ```
+
+## List of packages
+
+- cli
+- core
+- create-mrapi-app
