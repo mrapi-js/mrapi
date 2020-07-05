@@ -100,15 +100,18 @@ async function publish(dryRun: boolean) {
   const newVersion = await getLatestVersion()
 
   for (let [name, obj] of Object.entries(info)) {
-    const tag = ''
     console.log(
       `\nPublishing ${chalk.magentaBright(`${name}@${newVersion}`)} ${chalk.dim(
-        `on ${tag}`,
+        `on ${newVersion}`,
       )}`,
     )
     await writeVersion(obj.path, newVersion, dryRun)
     await run(obj.path, `pnpm run build`, dryRun)
-    await run(obj.path, `pnpm publish --no-git-checks --tag ${tag}`, dryRun)
+    await run(
+      obj.path,
+      `pnpm publish --no-git-checks --tag ${newVersion}`,
+      dryRun,
+    )
   }
 }
 
