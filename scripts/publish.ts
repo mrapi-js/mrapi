@@ -110,6 +110,16 @@ async function publish(dryRun: boolean) {
     await run(obj.path, `pnpm run build`, dryRun)
     await run(obj.path, `pnpm publish --no-git-checks --tag ${tag}`, dryRun)
   }
+
+  if (!dryRun) {
+    // git push
+    await run(process.cwd(), `git add .`)
+    await run(
+      process.cwd(),
+      `git commit -am chore(release): ${newVersion} update packages`,
+    )
+    await run(process.cwd(), `git push --quiet`)
+  }
 }
 
 if (!module.parent) {
