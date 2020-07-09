@@ -1,6 +1,6 @@
 {
   "name": "create-mrapi-app",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "main": "index.js",
   "bin": {
     "create-mrapi-app": "./bin/run"
