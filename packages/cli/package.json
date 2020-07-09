@@ -20,7 +20,7 @@
   "dependencies": {
     "@mrapi/core": "workspace:*",
     "commander": "^5.1.0",
-    "execa": "^4.0.2",
+    "execa": "^4.0.3",
     "fs-extra": "^9.0.1"
   },
   "prettier": {

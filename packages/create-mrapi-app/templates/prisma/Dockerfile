@@ -3,18 +3,16 @@ FROM node:13
 WORKDIR /usr/src/app
 
 COPY ./package.json ./
-COPY ./yarn.lock ./
 
-RUN yarn install
+RUN npm install
 
 COPY . .
 
 ENV NODE_ENV production
 ENV DB_URL "mysql://root:123456@127.0.0.1:3306/mrapi_db"
 
-RUN yarn generate
-RUN yarn build
+RUN npm run gen && npm run build && npm run db:save && npm run db:up
 
 EXPOSE 3001
 
-CMD ["yarn", "start"]
+CMD ["npm", "run", "start:prod"]

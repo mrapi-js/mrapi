@@ -3,13 +3,9 @@ import fastify from 'fastify'
 
 import { getDBClients } from './db'
 import { loadConfig } from './config'
-import { MrapiOptions, App, PrismaClient, MultiTenant } from './types'
 import { createLogger } from './utils/logger'
-
-process.on('unhandledRejection', (error) => {
-  console.error(error)
-  process.exit(1)
-})
+import { bindExitEvent } from './utils/exit'
+import { MrapiOptions, App, PrismaClient, MultiTenant } from './types'
 
 export class Mrapi {
   cwd = process.cwd()
@@ -33,6 +29,7 @@ export class Mrapi {
       const { prismaClient, multiTenant } = await getDBClients(this.options)
       this.prismaClient = prismaClient
       this.multiTenant = multiTenant
+      bindExitEvent(this.prismaClient || this.multiTenant)
     } else {
       throw new Error('mrapi only supports prisma currently')
     }

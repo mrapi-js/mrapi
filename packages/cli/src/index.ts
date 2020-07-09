@@ -46,6 +46,10 @@ export const run = async () => {
     .option('-p, --port <number>', 'The port number to start Studio on', '5555')
     .description('Start database management ui')
     .action((cmdObj) => prismaUtils.studio(loadConfig(cwd), cwd, cmdObj))
+  program
+    .command('db:introspect')
+    .description('Get the datamodel of your database')
+    .action((cmdObj) => prismaUtils.introspect(loadConfig(cwd), cwd, cmdObj))
 
   program
     .command('dev')

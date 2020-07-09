@@ -3,13 +3,8 @@ import { join, dirname } from 'path'
 import execa, { Options as ExecaOptions } from 'execa'
 
 import { log } from './logger'
-import {
-  requireFromProject,
-  getPrismaCliPath,
-  getPMTCliPath,
-  resolveFromCurrent,
-} from './tools'
 import { MrapiOptions, DBProvider } from '../types'
+import { requireFromProject, getNodeModules } from './tools'
 
 const PRISMA_CLIENT = '.prisma/client'
 
@@ -105,15 +100,32 @@ export const getModels = async (userConfig?: Record<string, string[]>) => {
 }
 
 export const runPrisma = async (cmd: string, options?: ExecaOptions) => {
-  const args = cmd.split(' ').filter(Boolean)
-  const prismaCliPath = getPrismaCliPath()
-  return execa(prismaCliPath, args)
+  const cmdStr =
+    'npx prisma ' +
+    (cmd.includes('migrate') || cmd.includes('studio')
+      ? cmd + ' --experimental'
+      : cmd)
+
+  log.debug(`[EXEC] ${cmdStr}...`)
+  await execa.command(cmdStr, {
+    stdout: 'inherit',
+    stdin: 'inherit',
+    ...options,
+  })
+  log.debug(`[DONE] ${cmdStr}`)
 }
 
 export const runPMT = async (cmd: string, options?: ExecaOptions) => {
-  const PMTPath = await getPMTCliPath()
-  const args = cmd.split(' ').filter(Boolean)
-  return execa(PMTPath, args, options)
+  const cmdStr = `npx prisma-multi-tenant ${cmd}`
+
+  log.debug(`[EXEC] ${cmdStr}...`)
+  await execa.command(cmdStr, {
+    stdin: 'inherit',
+    stdout: 'inherit',
+    cwd: process.cwd(),
+    ...options,
+  })
+  log.debug(`[DONE] ${cmdStr}`)
 }
 
 export const create = async (
@@ -126,14 +138,18 @@ export const create = async (
   if (!plugins) {
     throw new Error('plugins is required')
   }
-  log.info('[mrapi] creating schema.prisma ...')
+  log.debug('creating schema.prisma...')
   const isMultiTenant = !!database.multiTenant
   const prismaFilePath = join(cwd, database.schema)
   const userSchemaContent = await fs.readFile(prismaFilePath, 'utf8')
   const info = isMultiTenant
     ? getUrlAndProvider(database.multiTenant.tenants[0].url)
     : getUrlAndProvider(database.url)
-  const typegraphqlPrismaPath = resolveFromCurrent('@mrapi/typegraphql-prisma')
+
+  const typegraphqlPrismaPath = `node ${join(
+    getNodeModules(),
+    '@mrapi/typegraphql-prisma/lib/cli/generator.js',
+  )}`
   const TYPE_GRAPHQL_PROVIDER = typegraphqlPrismaPath
   const TYPE_GRAPHQL_OUTPUT =
     plugins['builtIn:graphql']?.options?.buildSchema?.resolvers?.generated ||
@@ -151,6 +167,7 @@ export const create = async (
     userSchemaContent
   const schemaOutput = join(cwd, database.schemaOutput)
   await fs.outputFile(schemaOutput, schema)
+  log.debug('schema.prisma created')
 
   // .env file
   const envPath = join(dirname(database.schemaOutput), '.env')
@@ -175,7 +192,6 @@ MANAGEMENT_URL="${managementInfo.url}"
 export const generate = async (options: MrapiOptions, cwd = process.cwd()) => {
   await create(options, cwd)
 
-  log.info('[mrapi] prisma generate...')
   const envPath = join(dirname(options.database.schemaOutput), '.env')
   require('dotenv').config({
     path: envPath,
@@ -183,17 +199,11 @@ export const generate = async (options: MrapiOptions, cwd = process.cwd()) => {
   try {
     const isMultiTenant = !!options.database.multiTenant
     if (isMultiTenant) {
-      await runPMT('generate', {
-        preferLocal: true,
-        stdout: 'ignore',
-      })
-      log.info('[mrapi] prisma multiple tenants generated')
+      await runPMT('generate')
+      log.debug('prisma multiple tenants generated')
     } else {
-      await runPrisma('generate', {
-        preferLocal: true,
-        stdout: 'inherit',
-      })
-      log.info('[mrapi] prisma client generated')
+      await runPrisma('generate')
+      log.debug('prisma client generated')
     }
   } catch (err) {
     if (!err.message.includes('defined any model in your schema.prisma')) {
@@ -216,17 +226,9 @@ export const migrate = {
 
     const isMultiTenant = !!options.database.multiTenant
     if (isMultiTenant) {
-      log.info(`prisma-multi-tenant migrate ${name} save...`)
-      await runPMT(`migrate ${name} save`, {
-        preferLocal: true,
-        stdout: 'ignore',
-      })
+      await runPMT(name ? `migrate ${name} save` : 'migrate save')
     } else {
-      log.info('prisma migrate save...')
-      await runPrisma('migrate save --experimental', {
-        preferLocal: true,
-        stdout: 'inherit',
-      })
+      await runPrisma('migrate save')
     }
   },
   up: async (
@@ -241,17 +243,27 @@ export const migrate = {
 
     const isMultiTenant = !!options.database.multiTenant
     if (isMultiTenant) {
-      log.info(`prisma-multi-tenant migrate ${name} up...`)
-      await runPMT(`migrate ${name} up`, {
-        preferLocal: true,
-        stdout: 'ignore',
-      })
+      await runPMT(`migrate management up`)
+      await runPMT(name ? `migrate ${name} up` : 'migrate up')
     } else {
-      log.info('prisma migrate up...')
-      await runPrisma(`migrate up --experimental`, {
-        preferLocal: true,
-        stdout: 'inherit',
-      })
+      await runPrisma('migrate up')
+    }
+  },
+  down: async (
+    options: MrapiOptions,
+    cwd = process.cwd(),
+    name = '',
+    config = {},
+  ) => {
+    if (!(await checkPrismaSchema(options.database, cwd))) {
+      await create(options, cwd)
+    }
+
+    const isMultiTenant = !!options.database.multiTenant
+    if (isMultiTenant) {
+      await runPMT(name ? `migrate ${name} down` : 'migrate down')
+    } else {
+      await runPrisma('migrate down')
     }
   },
 }
@@ -264,17 +276,22 @@ export const studio = async (
 ) => {
   const isMultiTenant = !!options.database.multiTenant
   if (isMultiTenant) {
-    log.info(`prisma-multi-tenant studio ${name}...`)
-    await runPMT(`studio ${name}`, {
-      preferLocal: true,
-      stdout: 'ignore',
-    })
+    await runPMT(`studio ${name}`)
   } else {
-    await runPrisma('studio --experimental', {
-      preferLocal: true,
-      stdout: 'inherit',
-    })
+    await runPrisma('studio')
   }
+}
+
+export const introspect = async (
+  options: MrapiOptions,
+  cwd = process.cwd(),
+  name = '',
+  config = {},
+) => {
+  if (!(await checkPrismaSchema(options.database, cwd))) {
+    await create(options, cwd)
+  }
+  await runPrisma('introspect')
 }
 
 export const getUrlAndProvider = (url: string) => {
@@ -302,7 +319,7 @@ export const getUrlAndProvider = (url: string) => {
       break
     default:
       throw new Error(
-        `Unrecognized '${str}' provider. Known providers: ${DBProvider.mysql}, ${DBProvider.postgresql}, DBProvider.sqlite`,
+        `Unrecognized '${str}' provider. Known providers: ${DBProvider.mysql}, ${DBProvider.postgresql}, ${DBProvider.sqlite}`,
       )
   }
 

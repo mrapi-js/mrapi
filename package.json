@@ -25,14 +25,14 @@
   },
   "devDependencies": {
     "chalk": "^4.1.0",
-    "execa": "^4.0.2",
+    "execa": "^4.0.3",
     "jest": "^26.1.0",
     "semver": "^7.3.2",
     "ts-node": "^8.10.2",
     "typescript": "^3.9.6"
   },
   "resolutions": {
-    "graphql": "15.2.0"
+    "graphql": "15.3.0"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

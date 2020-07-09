@@ -3,7 +3,6 @@ import { Mrapi } from '@mrapi/core'
 import { PrismaClient } from '@prisma/client'
 
 async function main() {
-  console.log('in')
   const mrapi = new Mrapi({
     server: require('./server'),
     database: require('./database'),
@@ -16,12 +15,11 @@ async function main() {
       const client = await mrapi.multiTenant.get('client-dev')
       await action(client)
     })
-    .finally(() => {
+    .finally(async () => {
+      await mrapi.multiTenant.disconnect()
       process.exit(0)
     })
 }
-
-// const prisma = new PrismaClient()
 
 async function action(prisma: PrismaClient) {
   const role = await prisma.role.create({
@@ -36,6 +34,7 @@ async function action(prisma: PrismaClient) {
       email: 'shaw@qq.com',
       name: 'shaw',
       password: '111111',
+      age: 20,
       role: {
         connect: {
           id: role.id,

@@ -19,6 +19,7 @@ export const getDBClients = async ({
     log.warn(`prisma client isn't ready. generate now...`)
     await generate({ database, server, plugins })
   }
+  log.info({ prismaVersion: clientValid.prismaVersion })
   const { PrismaClient } = requireFromProject('@prisma/client')
 
   if (database.multiTenant) {
@@ -26,7 +27,7 @@ export const getDBClients = async ({
       database.multiTenant.management.url,
     )
     log.info(
-      `[mrapi] using multiple tenants, management database url: ${managementInfo.url}`,
+      `using multiple tenants, management database url: ${managementInfo.url}`,
     )
     process.env.MANAGEMENT_URL = managementInfo.url
     process.env.MANAGEMENT_PROVIDER = managementInfo.provider
@@ -71,7 +72,7 @@ export const getDBClients = async ({
       }
     : {}
   if (Object.keys(datasources).length > 0) {
-    log.info(`[mrapi] connected to ${datasources.db}`)
+    log.info(`connected to ${datasources.db}`)
   }
   const clientOptions = {
     ...(database.prismaClient || {}),
@@ -101,7 +102,7 @@ export const getDBClients = async ({
     },
   }
 
-  log.info(`[mrapi] using single prisma client`)
+  log.info(`using single prisma client`)
 
   return {
     prismaClient: new PrismaClient(clientOptions),

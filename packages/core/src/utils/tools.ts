@@ -67,7 +67,7 @@ export const getNodeModules = (): string => {
 }
 
 export const getPrismaCliPath = (): string => {
-  return resolveFromCurrent('@prisma/cli')
+  return resolveFromProject('@prisma/cli')
 }
 
 export const getPMTCliPath = (): Promise<string> => {
@@ -91,7 +91,6 @@ export const runShell = (
         stdout: string | Buffer,
         stderr: string | Buffer,
       ) => {
-        // console.log({ error, stdout, stderr })
         if (process.env.verbose == 'true') {
           console.log(stderr || stdout)
         }
@@ -157,8 +156,6 @@ export const getBinPath = async (name: string) => {
   if (typeof bin === 'string') {
     return bin
   }
-
-  console.log({ bin })
 
   return join(dirname(path), bin[name])
 }

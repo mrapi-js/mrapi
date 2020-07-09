@@ -21,7 +21,7 @@ export class Tenant {
       this.config.multiTenant.management.url,
     )
     log.info(
-      `[mrapi] using multiple tenants, management database url: ${managementInfo.url}`,
+      `using multiple tenants, management database url: ${managementInfo.url}`,
     )
     process.env.MANAGEMENT_URL = managementInfo.url
     process.env.MANAGEMENT_PROVIDER = managementInfo.provider

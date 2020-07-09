@@ -1,32 +1,11 @@
 import 'reflect-metadata'
-import { Mrapi, Request, Reply } from '@mrapi/core'
-import { LogAccessMiddleware } from './graphql/middlewares/LogAccessMiddleware'
-
-const plugins = require('../config/plugins')
+import { Mrapi } from '@mrapi/core'
 
 async function main() {
   const mrapi = new Mrapi({
     server: require('../config/server'),
     database: require('../config/database'),
-    plugins: {
-      ...plugins,
-      'builtIn:graphql': {
-        ...plugins['builtIn:graphql'],
-        options: {
-          ...plugins['builtIn:graphql'].options,
-          buildSchema: {
-            ...plugins['builtIn:graphql'].options.buildSchema,
-            globalMiddlewares: [LogAccessMiddleware],
-          },
-        },
-      },
-    },
-    hooks: {
-      onRequest(request: Request, reply: Reply, done: () => void) {
-        // Some code
-        done()
-      },
-    },
+    plugins: require('../config/plugins'),
   })
   mrapi
     .start()

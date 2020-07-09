@@ -16,42 +16,42 @@
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
   "dependencies": {
-    "@mrapi/typegraphql-prisma": "0.4.0",
-    "@prisma/cli": "2.0.0-beta.6",
-    "@prisma/client": "2.0.0-beta.6",
+    "@mrapi/typegraphql-prisma": "0.6.0",
+    "@prisma/cli": "2.2.0",
+    "@prisma/client": "2.2.0",
     "@types/graphql-type-json": "^0.3.2",
     "class-validator": "^0.12.2",
     "dotenv": "^8.2.0",
-    "execa": "^4.0.2",
+    "execa": "^4.0.3",
     "fastify": "^2.15.1",
     "fastify-compress": "^2.0.1",
     "fastify-cookie": "^3.6.1",
     "fastify-cors": "^3.0.3",
     "fastify-formbody": "^3.2.0",
-    "fastify-gql": "^4.1.0",
+    "fastify-gql": "^4.3.0",
     "fastify-helmet": "^3.0.2",
     "fastify-oas": "^2.7.0",
     "fastify-static": "^2.7.0",
     "find-node-modules": "^2.0.0",
     "find-up": "^4.1.0",
     "fs-extra": "^9.0.1",
-    "graphql": "15.2.0",
+    "graphql": "15.3.0",
     "graphql-query-complexity": "^0.6.0",
     "graphql-type-json": "^0.3.2",
     "pino": "^6.3.2",
     "pino-pretty": "^4.0.0",
-    "prisma-multi-tenant": "2.0.0-beta.6",
+    "prisma-multi-tenant": "2.0.0",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "1.0.0-rc.3"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.1",
-    "@types/node": "^14.0.13",
+    "@types/node": "*",
     "@types/pino": "^6.3.0",
-    "graphql-tools": "^6.0.10",
+    "graphql-tools": "^6.0.12",
     "nodemon": "^2.0.4",
     "tslib": "^2.0.0",
-    "typescript": "^3.9.5"
+    "typescript": "^3.9.6"
   },
   "prettier": {
     "semi": false,
@@ -67,7 +67,7 @@
     "node": ">= 10.3"
   },
   "resolutions": {
-    "graphql": "15.2.0"
+    "graphql": "15.3.0"
   },
   "repository": {
     "type": "git",

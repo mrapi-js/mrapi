@@ -9,32 +9,34 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpileOnly ./src/app.ts",
     "debug": "ts-node-dev --inspect --respawn --transpileOnly ./src/app.ts",
+    "restart": "npm run gen && npm run db:save && npm run db:up && npm run dev",
     "build": "tsc",
     "start": "cross-env NODE_ENV=production node dist/app",
-    "generate": "cross-env verbose=true mrapi generate",
-    "help": "mrapi --help",
+    "gen": "cross-env verbose=true mrapi generate",
     "db:save": "mrapi db:save",
     "db:up": "mrapi db:up",
     "db:down": "npx prisma migrate down --experimental",
-    "db:ui": "npx prisma studio --experimental",
+    "db:ui": "mrapi db:ui",
     "db:introspect": "npx prisma introspect && npx prisma generate",
-    "db:seed": "../../node_modules/.pnpm/ts-node@8.10.2_typescript@3.9.5/node_modules/ts-node/dist/bin.js config/seed2"
+    "db:seed": "../../node_modules/.pnpm/ts-node@8.10.2_typescript@3.9.5/node_modules/ts-node/dist/bin.js config/seed",
+    "clean": "rm -rf dist && rm -rf prisma && rm -rf node_modules && rm -rf src/graphql/generated && rm -rf exports"
   },
   "dependencies": {
     "@mrapi/core": "workspace:*",
-    "@prisma/cli": "2.0.0-beta.6",
-    "@prisma/client": "^2.0.0-beta.6",
-    "prisma-multi-tenant": "2.0.0-beta.6",
+    "@prisma/cli": "2.2.0",
+    "@prisma/client": "^2.2.0",
+    "prisma-multi-tenant": "2.0.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@mrapi/cli": "workspace:*",
     "cross-env": "^7.0.2",
-    "ts-node-dev": "1.0.0-pre.47",
-    "typescript": "^3.9.5"
+    "ts-node-dev": "1.0.0-pre.50",
+    "@mrapi/typegraphql-prisma": "0.6.0",
+    "typescript": "^3.9.6"
   },
   "resolutions": {
-    "graphql": "15.2.0"
+    "graphql": "15.3.0"
   },
   "prettier": {
     "semi": false,
