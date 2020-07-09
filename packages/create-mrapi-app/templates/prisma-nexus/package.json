@@ -1,5 +1,5 @@
 {
-  "name": "mrapi-app",
+  "name": "mrapi-prisma-nexus-app",
   "version": "0.0.0",
   "private": true,
   "main": "index.js",
@@ -16,10 +16,10 @@
     "db:ui": "mrapi db:ui"
   },
   "dependencies": {
-    "@mrapi/core": "workspace:*"
+    "@mrapi/core": "0.8.0"
   },
   "devDependencies": {
-    "@mrapi/cli": "workspace:*",
+    "@mrapi/cli": "0.8.0",
     "typescript": "^3.8.3",
     "ts-node-dev": "^1.0.0-pre.44"
   },

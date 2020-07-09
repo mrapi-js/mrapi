@@ -1,5 +1,5 @@
 {
-  "name": "mrapi-app",
+  "name": "mrapi-prisma-app",
   "version": "0.0.1",
   "private": true,
   "description": "API project base on mrapi",
@@ -21,10 +21,10 @@
     "db:seed": "ts-node config/seed"
   },
   "dependencies": {
-    "@mrapi/core": "workspace:*"
+    "@mrapi/core": "0.8.0"
   },
   "devDependencies": {
-    "@mrapi/cli": "workspace:*",
+    "@mrapi/cli": "0.8.0",
     "cross-env": "7.0.2",
     "typescript": "3.9.6",
     "ts-node-dev": "1.0.0-pre.50"

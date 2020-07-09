@@ -4,7 +4,8 @@ import { join } from 'path'
 import { promises as fs } from 'fs'
 
 // const rootDir = process.cwd()
-const packages = ['core', 'cli', 'create-mrapi-app']
+const PACKAGES = ['core', 'cli', 'create-mrapi-app']
+const DEPS = ['@mrapi/core', '@mrapi/cli']
 
 async function getLatestVersion() {
   const childProcessResult = await execa.command('git describe --abbrev=0')
@@ -28,14 +29,13 @@ async function writeVersion(pkgDir: string, version: string, dryRun?: boolean) {
   }
 }
 
-async function getPackagesInfo(packages: string[]) {
+async function getPackagesInfo(packages: string[], rootDir = 'packages') {
   const info: Record<string, { name: string; path: string }> = {}
 
   for (let name of packages) {
-    const pkgDir = join('packages', name)
+    const pkgDir = join(rootDir, name)
     const pkg: any = require(join('../', pkgDir, 'package.json'))
-    // const dependencies = pkg.dependencies
-    // const devDependencies = pkg.devDependencies
+
     info[pkg.name] = {
       name: pkg.name,
       path: pkgDir,
@@ -43,6 +43,36 @@ async function getPackagesInfo(packages: string[]) {
   }
 
   return info
+}
+
+async function updateTemplatesDeps(newVersion: string, dryRun: boolean) {
+  if (dryRun) {
+    return
+  }
+  const info = await getPackagesInfo(
+    ['prisma', 'multi-tenant', 'prisma-nexus', 'typeorm'],
+    'packages/create-mrapi-app/templates',
+  )
+
+  for (let [_name, obj] of Object.entries(info)) {
+    const pkgJsonPath = join(obj.path, 'package.json')
+    const file = await fs.readFile(pkgJsonPath, 'utf-8')
+    const pkg = JSON.parse(file)
+    const dependencies = pkg.dependencies || {}
+    const devDependencies = pkg.devDependencies || {}
+
+    for (let [key, _version] of Object.entries(dependencies)) {
+      if (DEPS.includes(key)) {
+        pkg.dependencies[key] = newVersion
+      }
+    }
+    for (let [key, _version] of Object.entries(devDependencies)) {
+      if (DEPS.includes(key)) {
+        pkg.devDependencies[key] = newVersion
+      }
+    }
+    await fs.writeFile(pkgJsonPath, JSON.stringify(pkg, null, 2))
+  }
 }
 
 /**
@@ -94,9 +124,9 @@ async function publish(dryRun: boolean) {
   }
   console.log(chalk.blueBright(`Publish order:`))
   console.log(
-    chalk.blueBright(packages.map((o, i) => `  ${i + 1}. ${o}`).join('\n')),
+    chalk.blueBright(PACKAGES.map((o, i) => `  ${i + 1}. ${o}`).join('\n')),
   )
-  const info = await getPackagesInfo(packages)
+  const info = await getPackagesInfo(PACKAGES)
   const newVersion = await getLatestVersion()
   const tag = 'latest'
 
@@ -110,6 +140,8 @@ async function publish(dryRun: boolean) {
     await run(obj.path, `pnpm run build`, dryRun)
     await run(obj.path, `pnpm publish --no-git-checks --tag ${tag}`, dryRun)
   }
+
+  await updateTemplatesDeps(newVersion, dryRun)
 
   if (!dryRun) {
     // git push
