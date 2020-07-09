@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.8.0"></a>
+# [0.8.0](https://github.com/mrapi-js/mrapi/compare/v0.7.5...v0.8.0) (2020-07-09)
+
+
+### Features
+
+* support prisma v2.2.0 ([76e8d97](https://github.com/mrapi-js/mrapi/commit/76e8d97))
+
+
+
 <a name="0.7.5"></a>
 ## [0.7.5](https://github.com/mrapi-js/mrapi/compare/v0.7.4...v0.7.5) (2020-07-05)
 
