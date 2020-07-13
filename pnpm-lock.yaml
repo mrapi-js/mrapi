@@ -60,20 +60,41 @@ importers:
       typescript: ^3.9.6
   packages/cli:
     dependencies:
+      '@mrapi/common': 'link:../common'
       '@mrapi/core': 'link:../core'
+      '@mrapi/multi-tenant': 'link:../multi-tenant'
       commander: 5.1.0
+      dotenv: 8.2.0
       execa: 4.0.3
       fs-extra: 9.0.1
     devDependencies:
+      '@prisma/cli': 2.2.0
+      tslib: 2.0.0
       typescript: 3.9.6
     specifiers:
+      '@mrapi/common': 'workspace:*'
       '@mrapi/core': 'workspace:*'
+      '@mrapi/multi-tenant': 'workspace:*'
+      '@prisma/cli': ^2.2.0
       commander: ^5.1.0
+      dotenv: ^8.2.0
       execa: ^4.0.3
       fs-extra: ^9.0.1
-      typescript: ^3.9.5
+      tslib: ^2.0.0
+      typescript: ^3.9.6
+  packages/common:
+    dependencies:
+      find-node-modules: 2.0.0
+    devDependencies:
+      tslib: 2.0.0
+      typescript: 3.9.6
+    specifiers:
+      find-node-modules: ^2.0.0
+      tslib: ^2.0.0
+      typescript: ^3.9.6
   packages/core:
     dependencies:
+      '@mrapi/multi-tenant': 'link:../multi-tenant'
       '@mrapi/typegraphql-prisma': 0.6.0_9ca5339234341a1927637ad14bf3576f
       '@prisma/cli': 2.2.0
       '@prisma/client': 2.2.0_@prisma+cli@2.2.0
@@ -98,7 +119,6 @@ importers:
       graphql-type-json: 0.3.2_graphql@15.3.0
       pino: 6.3.2
       pino-pretty: 4.0.0
-      prisma-multi-tenant: 2.0.0_@prisma+cli@2.2.0
       reflect-metadata: 0.1.13
       type-graphql: 1.0.0-rc.3_baefff1eb1c0eba9c5a3dcea293c81c7
     devDependencies:
@@ -110,6 +130,7 @@ importers:
       tslib: 2.0.0
       typescript: 3.9.6
     specifiers:
+      '@mrapi/multi-tenant': 'workspace:*'
       '@mrapi/typegraphql-prisma': 0.6.0
       '@prisma/cli': 2.2.0
       '@prisma/client': 2.2.0
@@ -139,7 +160,6 @@ importers:
       nodemon: ^2.0.4
       pino: ^6.3.2
       pino-pretty: ^4.0.0
-      prisma-multi-tenant: 2.0.0
       reflect-metadata: ^0.1.13
       tslib: ^2.0.0
       type-graphql: 1.0.0-rc.3
@@ -163,8 +183,8 @@ importers:
       ts-node-dev: 1.0.0-pre.50_typescript@3.9.6
       typescript: 3.9.6
     specifiers:
-      '@mrapi/cli': 'workspace:*'
-      '@mrapi/core': 'workspace:*'
+      '@mrapi/cli': 0.8.1
+      '@mrapi/core': 0.8.1
       cross-env: 7.0.2
       ts-node-dev: 1.0.0-pre.50
       typescript: 3.9.6
@@ -177,8 +197,8 @@ importers:
       ts-node-dev: 1.0.0-pre.50_typescript@3.9.6
       typescript: 3.9.6
     specifiers:
-      '@mrapi/cli': 'workspace:*'
-      '@mrapi/core': 'workspace:*'
+      '@mrapi/cli': 0.8.1
+      '@mrapi/core': 0.8.1
       cross-env: 7.0.2
       ts-node-dev: 1.0.0-pre.50
       typescript: 3.9.6
@@ -190,8 +210,8 @@ importers:
       ts-node-dev: 1.0.0-pre.50_typescript@3.9.6
       typescript: 3.9.6
     specifiers:
-      '@mrapi/cli': 'workspace:*'
-      '@mrapi/core': 'workspace:*'
+      '@mrapi/cli': 0.8.1
+      '@mrapi/core': 0.8.1
       ts-node-dev: ^1.0.0-pre.44
       typescript: ^3.8.3
   packages/create-mrapi-app/templates/typeorm:
@@ -203,11 +223,21 @@ importers:
       ts-node: 8.10.2_typescript@3.9.6
       typescript: 3.9.6
     specifiers:
-      '@mrapi/cli': 'workspace:*'
-      '@mrapi/core': 'workspace:*'
+      '@mrapi/cli': 0.8.1
+      '@mrapi/core': 0.8.1
       nodemon: ^2.0.2
       ts-node: ^8.8.1
       typescript: ^3.8.3
+  packages/multi-tenant:
+    dependencies:
+      '@mrapi/common': 'link:../common'
+    devDependencies:
+      tslib: 2.0.0
+      typescript: 3.9.6
+    specifiers:
+      '@mrapi/common': 'workspace:*'
+      tslib: ^2.0.0
+      typescript: ^3.9.6
 lockfileVersion: 5.1
 packages:
   /@apexearth/copy/1.4.5:

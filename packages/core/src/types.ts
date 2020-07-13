@@ -7,7 +7,7 @@ import { Http2ServerRequest, Http2ServerResponse } from 'http2'
 import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
 
 import { PrismaClient } from '@prisma/client'
-export { MultiTenant } from 'prisma-multi-tenant'
+// export { MultiTenant } from 'prisma-multi-tenant'
 export { PrismaClient }
 
 export type HttpServer = Server | Http2Server

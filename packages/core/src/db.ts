@@ -4,9 +4,9 @@ import { generate, getUrlAndProvider } from './utils/prisma'
 import { log } from './utils/logger'
 import { MrapiOptions, Request, Reply } from './types'
 
-import { MultiTenant } from 'prisma-multi-tenant'
+import { MultiTenant } from '@mrapi/multi-tenant'
 import { PrismaClient as PrismaClientType } from '@prisma/client'
-import migrate from 'prisma-multi-tenant/build/cli/commands/migrate'
+// import migrate from 'prisma-multi-tenant/build/cli/commands/migrate'
 
 export const getDBClients = async ({
   database,
@@ -29,9 +29,9 @@ export const getDBClients = async ({
     log.info(
       `using multiple tenants, management database url: ${managementInfo.url}`,
     )
-    process.env.MANAGEMENT_URL = managementInfo.url
-    process.env.MANAGEMENT_PROVIDER = managementInfo.provider
-    await migrate.migrateManagement('up', '--create-db')
+    // process.env.MANAGEMENT_URL = managementInfo.url
+    // process.env.MANAGEMENT_PROVIDER = managementInfo.provider
+    // await migrate.migrateManagement('up', '--create-db')
 
     process.env.verbose = 'false'
     const multiTenant = new MultiTenant<PrismaClientType>({

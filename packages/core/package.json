@@ -16,6 +16,7 @@
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
   "dependencies": {
+    "@mrapi/multi-tenant": "workspace:*",
     "@mrapi/typegraphql-prisma": "0.6.0",
     "@prisma/cli": "2.2.0",
     "@prisma/client": "2.2.0",
@@ -40,7 +41,6 @@
     "graphql-type-json": "^0.3.2",
     "pino": "^6.3.2",
     "pino-pretty": "^4.0.0",
-    "prisma-multi-tenant": "2.0.0",
     "reflect-metadata": "^0.1.13",
     "type-graphql": "1.0.0-rc.3"
   },

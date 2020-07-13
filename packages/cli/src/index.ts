@@ -1,7 +1,8 @@
 import { loadConfig, prismaUtils } from '@mrapi/core'
-import { join } from 'path'
 import { Command } from 'commander'
-import { watchFile, pathExists } from 'fs-extra'
+import generate from './commands/generate'
+import generate from './commands/generate'
+
 const pkg = require('../package.json')
 
 export const run = async () => {
@@ -21,17 +22,18 @@ export const run = async () => {
     .command('generate')
     .description('Generate DB schema and resolvers')
     .option('-w, --watch', 'Watch file changes', false)
-    .action(async () => {
-      await prismaUtils.generate(loadConfig(cwd), cwd)
+    .action(async (cmdObj) => {
+      await generate(loadConfig(cwd), cwd, cmdObj)
+      // await prismaUtils.generate(loadConfig(cwd), cwd)
 
-      const prismaFile = join(cwd, 'config/schema.prisma')
+      // const prismaFile = join(cwd, 'config/schema.prisma')
 
-      if (await pathExists(prismaFile)) {
-        watchFile(prismaFile, (curr, prev) => {
-          console.log(`the current mtime is: ${curr.mtime}`)
-          console.log(`the previous mtime was: ${prev.mtime}`)
-        })
-      }
+      // if (await pathExists(prismaFile)) {
+      //   watchFile(prismaFile, (curr, prev) => {
+      //     console.log(`the current mtime is: ${curr.mtime}`)
+      //     console.log(`the previous mtime was: ${prev.mtime}`)
+      //   })
+      // }
     })
   program
     .command('db:save [name]')
