@@ -1,4 +1,4 @@
-# RESTFul API
+# OpenAPI (RESTFul API)
 
 ## Setup
 

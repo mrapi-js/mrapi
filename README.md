@@ -1,15 +1,13 @@
 # mrapi (WIP)
 
-## Features
+## Core features
 
 - **TypeScript**: write GraphQL APIs based on [TypeGraphQL](https://github.com/MichalLytek/type-graphql)
 - **Code generation**: Generate basic CRUD APIs with [Prisma 2](https://github.com/prisma/prisma) & [typegraphql-prisma](https://www.npmjs.com/package/typegraphql-prisma)
 - **Database toolkit**: execute database introspection and migrations via [Prisma 2 CLI](https://github.com/prisma/prisma/blob/master/src/packages/cli/README.md)
 - **Supported databases**: PostgreSQL, MySQL, and SQLite.
 
-## Getting Started
-
-### Requirements
+## Requirements
 
 **Node:**
 
@@ -22,27 +20,39 @@
 - PostgreSQL >= 10
 - SQLite >= 3
 
-### Installation
+## Quick start
 
-create a Mrapi project
+Create a Mrapi project
 
 ```bash
 yarn create mrapi-app my-project
-```
 
-**or**
-
-```bash
+# or
 npx create-mrapi-app my-project
+
+# or
+pnpx create-mrapi-app my-project
 ```
 
-### Run
+To start the app in dev mode:
 
 ```bash
-yarn dev
+npm start
 ```
 
-## APIs
+## Documentation
 
-- GraphQL API (TODO)
-- [RESTFul API](./docs/restful-api.md)
+- [ ] [Getting Started](./docs/Getting-Started.md)
+- [ ] [Mrapi](./docs/Mrapi.md)
+- [ ] Configuration
+  - [ ] [server](./docs/Configuration/server.md)
+  - [ ] [database](./docs/Configuration/database.md)
+  - [ ] [plugins](./docs/Configuration/plugins.md)
+- [ ] [GraphQL API](./docs/GraphQL-API.md)
+- [x] [OpenAPI](./docs/OpenAPI.md)
+- [ ] [CLI](./docs/CLI.md)
+- [ ] [Deployment](./docs/Deployment.md)
+
+## License
+
+Licensed under [MIT](./LICENSE).
