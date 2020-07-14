@@ -14,19 +14,13 @@
 */
 
 import { FastifyOASOptions } from 'fastify-oas'
+import { MultiTenant } from '@mrapi/multi-tenant'
 
 import { getDBClient } from '../db'
 import { getModels } from '../utils/prisma'
 import { parseFilter } from '../utils/filters'
 import { getCustomRoutes } from '../utils/routes'
-import {
-  App,
-  Request,
-  Reply,
-  MrapiOptions,
-  PrismaClient,
-  MultiTenant,
-} from '../types'
+import { App, Request, Reply, MrapiOptions, PrismaClient } from '../types'
 
 type OpenapiOptions = {
   prefix?: string

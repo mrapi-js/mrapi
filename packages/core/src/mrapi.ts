@@ -1,11 +1,12 @@
 import 'reflect-metadata'
 import fastify from 'fastify'
+import { MultiTenant } from '@mrapi/multi-tenant'
 
 import { getDBClients } from './db'
 import { loadConfig } from './config'
 import { createLogger } from './utils/logger'
 import { bindExitEvent } from './utils/exit'
-import { MrapiOptions, App, PrismaClient, MultiTenant } from './types'
+import { MrapiOptions, App, PrismaClient } from './types'
 
 export class Mrapi {
   cwd = process.cwd()

@@ -7,9 +7,7 @@ export const runShell = (
   cmd: string,
   options?: ExecOptions,
 ): Promise<string | Buffer> => {
-  if (process.env.verbose == 'true') {
-    console.log('[CMD] ' + cmd)
-  }
+  console.log('[CMD] ' + cmd)
 
   return new Promise((resolve, reject) => {
     exec(
@@ -37,12 +35,15 @@ export const spawnShell = (
   cmd: string,
   options?: SpawnOptions,
 ): Promise<number> => {
+  console.log('[CMD] ' + cmd)
+
   const [command, ...commandArguments] = cmd.split(' ')
   return new Promise((resolve) =>
     spawn(command, commandArguments, {
       stdio: 'inherit',
       env: process.env,
       shell: true,
+      cwd: process.cwd(),
       ...options,
     }).on('exit', (exitCode: number) => resolve(exitCode)),
   )
@@ -89,12 +90,17 @@ export const useYarn = (): Promise<boolean> => {
   return pathExists(process.cwd() + '/yarn.lock')
 }
 
-export const runPrisma = async (cmd: string, options?: ExecOptions) => {
+export const runPrisma = async (cmd: string, options?: SpawnOptions) => {
   const cmdStr =
     'npx prisma ' +
     (cmd.includes('migrate') || cmd.includes('studio')
       ? cmd + ' --experimental'
       : cmd)
 
-  await runShell(cmdStr, options)
+  try {
+    await spawnShell(cmdStr, options)
+  } catch (err) {
+    console.error(err)
+    process.exit(1)
+  }
 }
