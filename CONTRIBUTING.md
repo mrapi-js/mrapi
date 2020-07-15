@@ -8,7 +8,7 @@
    git clone https://github.com/mrapi-js/mrapi.git
    cd mrapi
    npm i -g pnpm
-   pnpm i --ignore-scripts
+   pnpm i
    ```
 
 1. Start development

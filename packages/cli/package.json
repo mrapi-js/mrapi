@@ -22,16 +22,14 @@
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
   "dependencies": {
+    "@mrapi/core": "workspace:*",
     "@mrapi/common": "workspace:*",
     "@mrapi/multi-tenant": "workspace:*",
-    "@mrapi/core": "workspace:*",
     "commander": "^5.1.0",
-    "dotenv": "^8.2.0",
-    "execa": "^4.0.3",
-    "fs-extra": "^9.0.1"
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.2.0",
+    "@prisma/cli": "^2.2.2",
     "tslib": "^2.0.0",
     "typescript": "^3.9.6"
   },

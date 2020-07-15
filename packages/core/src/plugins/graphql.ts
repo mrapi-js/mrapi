@@ -1,16 +1,10 @@
 import { formatError, GraphQLError } from 'graphql'
+import { MultiTenant } from '@mrapi/multi-tenant'
 
 import { getDBClient } from '../db'
 import { getModels } from '../utils/prisma'
 import { createSchema } from '../utils/schema'
-import {
-  App,
-  Request,
-  Reply,
-  MrapiOptions,
-  PrismaClient,
-  MultiTenant,
-} from '../types'
+import { App, Request, Reply, MrapiOptions, PrismaClient } from '../types'
 
 export default async (
   app: App,

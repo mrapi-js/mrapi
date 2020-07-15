@@ -1,11 +1,21 @@
 import 'reflect-metadata'
-import fastify from 'fastify'
+import pino from 'pino'
+import fastify, { FastifyLoggerInstance } from 'fastify'
+import { MultiTenant } from '@mrapi/multi-tenant'
 
 import { getDBClients } from './db'
 import { loadConfig } from './config'
 import { createLogger } from './utils/logger'
 import { bindExitEvent } from './utils/exit'
-import { MrapiOptions, App, PrismaClient, MultiTenant } from './types'
+import {
+  MrapiOptions,
+  App,
+  PrismaClient,
+  HttpLogger,
+  HttpServer,
+  HttpRequest,
+  HttpReply,
+} from './types'
 
 export class Mrapi {
   cwd = process.cwd()
@@ -16,9 +26,16 @@ export class Mrapi {
 
   constructor(public options?: MrapiOptions) {
     this.options = loadConfig(this.cwd, options)
-    const logger = createLogger(this.options.server.options?.logger)
+
+    let logger
+    const loggerOptions = this.options.server.options?.logger
+    if (loggerOptions instanceof pino) {
+      logger = loggerOptions
+    } else {
+      logger = createLogger(this.options.server.options?.logger)
+    }
     delete this.options.server.options.logger
-    this.app = fastify({
+    this.app = fastify<HttpServer, HttpRequest, HttpReply, HttpLogger>({
       logger,
       ...this.options.server.options,
     })

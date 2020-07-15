@@ -23,15 +23,15 @@
   },
   "dependencies": {
     "@mrapi/core": "workspace:*",
-    "@prisma/cli": "2.2.0",
-    "@prisma/client": "^2.2.0",
+    "@prisma/cli": "2.2.2",
+    "@prisma/client": "^2.2.2",
     "prisma-multi-tenant": "2.0.0",
     "reflect-metadata": "^0.1.13"
   },
   "devDependencies": {
     "@mrapi/cli": "workspace:*",
     "cross-env": "^7.0.2",
-    "ts-node-dev": "1.0.0-pre.50",
+    "ts-node-dev": "1.0.0-pre.51",
     "@mrapi/typegraphql-prisma": "0.6.0",
     "typescript": "^3.9.6"
   },

@@ -7,6 +7,9 @@
     "watch": "tsc --preserveWatchOutput --watch",
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
+  "dependencies": {
+    "find-node-modules": "^2.0.0"
+  },
   "devDependencies": {
     "tslib": "^2.0.0",
     "typescript": "^3.9.6"
@@ -23,8 +26,5 @@
   "bugs": {
     "url": "https://github.com/mrapi-js/mrapi/issues"
   },
-  "homepage": "https://github.com/mrapi-js/mrapi#readme",
-  "dependencies": {
-    "find-node-modules": "^2.0.0"
-  }
+  "homepage": "https://github.com/mrapi-js/mrapi#readme"
 }
