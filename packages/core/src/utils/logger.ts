@@ -1,5 +1,6 @@
 import pino from 'pino'
 import { loadConfig } from '../config'
+import { HttpLogger, HttpLoggerOptions } from '../types'
 
 const serializers = {
   req: function asReqValue(req: any) {
@@ -20,9 +21,10 @@ const serializers = {
   },
 }
 export function createLogger(
-  options?: Record<string, any>,
+  // options?: Record<string, any>,
+  options?: boolean | HttpLoggerOptions,
   stream: any = null,
-) {
+): HttpLogger {
   let opts = options
   if (!opts) {
     const tmp = loadConfig(process.cwd())
