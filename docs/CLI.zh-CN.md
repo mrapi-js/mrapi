@@ -132,7 +132,7 @@ $ mrapi studio name --port=5556
 
 ### introspect
 
-内省数据库并从中生成数据模型。基本上，它分析你(已经存在的)的数据库并自动为你创建 Prisma schema 文件。比较适合你已经有一个现有的应用程序并想开始使用 Prisma 的情况。请注意，此命令将根据你的数据库结构同步 Prisma schema 文件。这通常适用于不使用 Prisma Migrate 构建数据库的情况。
+内省（introspection）数据库并从中生成数据模型。基本上，它分析你(已经存在的)的数据库并自动为你创建 Prisma schema 文件。比较适合你已经有一个现有的应用程序并想开始使用 Prisma 的情况。请注意，此命令将根据你的数据库结构同步 Prisma schema 文件。这通常适用于不使用 Prisma Migrate 构建数据库的情况。
 
 [更多详情](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-cli/command-reference#introspect)
 

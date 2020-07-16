@@ -1,5 +1,7 @@
 # mrapi (WIP)
 
+[简体中文](./README.zh-CN.md)
+
 ## Core features
 
 - **TypeScript**: write GraphQL APIs based on [TypeGraphQL](https://github.com/MichalLytek/type-graphql)
