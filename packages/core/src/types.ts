@@ -1,27 +1,39 @@
-import * as fastify from 'fastify'
-import { Http2Server } from 'http2'
-import fastifyGQL from 'fastify-gql'
-import { ExecutionResult } from 'graphql'
-import { Server, IncomingMessage, ServerResponse } from 'http'
-import { Http2ServerRequest, Http2ServerResponse } from 'http2'
-import { FastifyRequest, FastifyReply, FastifyInstance } from 'fastify'
+import * as http from 'http'
+import * as http2 from 'http2'
+import * as https from 'https'
 
+// import * as fastify from 'fastify'
+// import FastifyGQLPlugin from 'fastify-gql'
+// import { ExecutionResult } from 'graphql'
+import {
+  FastifyRequest,
+  FastifyReply,
+  FastifyInstance,
+  RawRequestDefaultExpression,
+  RawReplyDefaultExpression,
+  FastifyLoggerInstance,
+  FastifyServerOptions,
+  RawServerBase,
+  FastifyLoggerOptions,
+} from 'fastify'
 import { PrismaClient } from '@prisma/client'
-// export { MultiTenant } from 'prisma-multi-tenant'
+import { Logger, LoggerOptions } from 'pino'
+
 export { PrismaClient }
 
-export type HttpServer = Server | Http2Server
-export type HttpRequest = IncomingMessage | Http2ServerRequest
-export type HttpResponse = ServerResponse | Http2ServerResponse
+export type HttpServer = RawServerBase
+export type HttpRequest = RawRequestDefaultExpression<HttpServer>
+export type HttpReply = RawReplyDefaultExpression<HttpServer>
+export type HttpLogger = Logger | FastifyLoggerInstance
+export type HttpLoggerOptions = LoggerOptions | FastifyLoggerOptions
+
+type App = FastifyInstance<HttpServer, HttpRequest, HttpReply, HttpLogger>
 
 export type Hooks = Record<string, any>
-export type Request = FastifyRequest<HttpRequest>
-export type Reply = FastifyReply<HttpResponse>
-export type App = FastifyInstance<Server, IncomingMessage, ServerResponse>
 export type Context = {
   app: App
-  request: Request
-  reply: Reply
+  request: FastifyRequest
+  reply: FastifyReply
   prisma: PrismaClient
 }
 
@@ -52,17 +64,13 @@ export type DBConfig = {
       url: string
     }
     tenants: TenantOptions[]
-    identifier: (request: Request, reply: Reply) => string | void
+    identifier: (request: FastifyRequest, reply: FastifyReply) => string | void
   }
 }
 
 export type ServerConfig = {
-  options:
-    | fastify.ServerOptionsAsHttp
-    | fastify.ServerOptionsAsSecureHttp
-    | fastify.ServerOptionsAsHttp2
-    | fastify.ServerOptionsAsSecureHttp2
-  listen: fastify.ListenOptions
+  options: FastifyServerOptions
+  listen: any
 }
 
 export type MrapiOptions = {
@@ -75,96 +83,87 @@ export type MrapiOptions = {
 type ValueOrArray<T> = T | ArrayOfValueOrArray<T>
 interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}
 
-declare module 'fastify' {
-  // fastify-oas
-  interface FastifyInstance<HttpServer, HttpRequest, HttpResponse> {
-    /**
-     * Init OpenApi plugin
-     */
-    oas(): Promise<void>
-  }
+// declare module 'fastify' {
+//   // fastify-oas
+//   interface FastifyInstance {
+//     /**
+//      * Init OpenApi plugin
+//      */
+//     oas(): Promise<void>
+//   }
 
-  // from fastify-cookie
-  interface FastifyRequest<
-    HttpRequest,
-    Query = fastify.DefaultQuery,
-    Params = fastify.DefaultParams,
-    Headers = fastify.DefaultHeaders,
-    Body = any
-  > {
-    /**
-     * Request cookies
-     */
-    cookies: { [cookieName: string]: string }
-  }
+//   // from fastify-cookie
+//   interface FastifyRequest {
+//     /**
+//      * Request cookies
+//      */
+//     cookies: { [cookieName: string]: string }
+//   }
 
-  interface CookieSerializeOptions {
-    domain?: string
-    encode?(val: string): string
-    expires?: Date
-    httpOnly?: boolean
-    maxAge?: number
-    path?: string
-    sameSite?: boolean | 'lax' | 'strict' | 'none'
-    secure?: boolean
-    signed?: boolean
-  }
+//   interface CookieSerializeOptions {
+//     domain?: string
+//     encode?(val: string): string
+//     expires?: Date
+//     httpOnly?: boolean
+//     maxAge?: number
+//     path?: string
+//     sameSite?: boolean | 'lax' | 'strict' | 'none'
+//     secure?: boolean
+//     signed?: boolean
+//   }
 
-  interface FastifyReply<HttpResponse> {
-    /**
-     * Set response cookie
-     * @param name Cookie name
-     * @param value Cookie value
-     * @param options Serialize options
-     */
-    setCookie(
-      name: string,
-      value: string,
-      options?: CookieSerializeOptions,
-    ): fastify.FastifyReply<HttpResponse>
+//   interface FastifyReply {
+//     /**
+//      * Set response cookie
+//      * @param name Cookie name
+//      * @param value Cookie value
+//      * @param options Serialize options
+//      */
+//     setCookie(
+//       name: string,
+//       value: string,
+//       options?: CookieSerializeOptions,
+//     ): fastify.FastifyReply
 
-    /**
-     * clear response cookie
-     * @param name Cookie name
-     * @param options Serialize options
-     */
-    clearCookie(
-      name: string,
-      options?: CookieSerializeOptions,
-    ): fastify.FastifyReply<HttpResponse>
+//     /**
+//      * clear response cookie
+//      * @param name Cookie name
+//      * @param options Serialize options
+//      */
+//     clearCookie(
+//       name: string,
+//       options?: CookieSerializeOptions,
+//     ): fastify.FastifyReply
 
-    /**
-     * Unsigns the specified cookie using the secret provided.
-     * @param value Cookie value
-     */
-    unsignCookie(value: string): string | false
+//     /**
+//      * Unsigns the specified cookie using the secret provided.
+//      * @param value Cookie value
+//      */
+//     unsignCookie(value: string): string | false
 
-    // from fastify-gql
-    /**
-     * @param source GraphQL query string
-     * @param context request context
-     * @param variables request variables which will get passed to the executor
-     * @param operationName specify which operation will be run
-     */
-    graphql(
-      source: string,
-      context?: any,
-      variables?: { [key: string]: any },
-      operationName?: string,
-    ): Promise<ExecutionResult>
+//     // from fastify-gql
+//     /**
+//      * @param source GraphQL query string
+//      * @param context request context
+//      * @param variables request variables which will get passed to the executor
+//      * @param operationName specify which operation will be run
+//      */
+//     graphql(
+//       source: string,
+//       context?: any,
+//       variables?: { [key: string]: any },
+//       operationName?: string,
+//     ): Promise<ExecutionResult>
 
-    // from fastify-static
-    sendFile(
-      filename: string,
-      rootPath?: string,
-    ): fastify.FastifyReply<HttpResponse>
-  }
+//     // from fastify-static
+//     sendFile(filename: string, rootPath?: string): fastify.FastifyReply
+//   }
 
-  // from fastify-gql
-  interface FastifyInstance<HttpServer, HttpRequest, HttpResponse> {
-    /**
-     * GraphQL plugin
-     */
-    graphql: fastifyGQL.Plugin<HttpResponse>
-  }
-}
+//   // from fastify-gql
+//   interface FastifyInstance {
+//     /**
+//      * GraphQL plugin
+//      */
+//     graphql: FastifyGQLPlugin
+//   }
+// }
