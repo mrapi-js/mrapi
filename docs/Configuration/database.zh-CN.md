@@ -3,13 +3,13 @@
 此配置文件路径为 `config/database`，将用于：
 
 - 配合 [@mrapi/cli](../CLI.zh-CN.md) 生成 `Prisma Client` 配置文件
-- 生成[mrapi service](../Mrapi.zh-CN.md) 默认环境变量
+- 生成 [mrapi service](../Mrapi.zh-CN.md) 默认环境变量
 
 <!--
 export type TenantOptions = {
   name: string
   provider: string
-  url: string
+  url: string              // process.env.DATABASE_URL 可能会有坑
 }
 export type DBConfig = {
   client: string
@@ -36,15 +36,15 @@ prismaClient: {},
 
 ## 参数选项
 
-| 名称           | 描述 | 参数类型 | 默认值                   | 可选 |
-| -------------- | ---- | -------- | ------------------------ | ---- |
-| `provider`     |      | string   | "sqlite"                 |      |
-| `client`       |      | string   | "prisma"                 |      |
-| `schema`       |      | string   | "./config/schema.prisma" |      |
-| `schemaOutput` |      | string   | "./prisma/schema.prisma" |      |
-| `url`          |      | string   | "file:dev.db"            | √    |
-| `prismaClient` |      | {}       |                          | √    |
-| `multiTenant`  |      | {}       |                          | √    |
+| 名称           | 描述              | 参数类型 | 默认值                   | 可选 |
+| -------------- | ----------------- | -------- | ------------------------ | ---- |
+| `provider`     |                   | string   | "sqlite"                 |      |
+| `client`       | 目前仅支持 prisma | string   | "prisma"                 |      |
+| `schema`       |                   | string   | "./config/schema.prisma" |      |
+| `schemaOutput` |                   | string   | "./prisma/schema.prisma" |      |
+| `url`          |                   | string   | "file:dev.db"            | √    |
+| `prismaClient` |                   | {}       |                          | √    |
+| `multiTenant`  |                   | {}       |                          | √    |
 
 ### prismaClient
 

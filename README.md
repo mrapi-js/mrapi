@@ -47,7 +47,6 @@ npm start
 - [ ] [Getting Started](./docs/Getting-Started.md)
 - [ ] [Mrapi](./docs/Mrapi.md)
 - [ ] Configuration
-  - [ ] [server](./docs/Configuration/server.md)
   - [ ] [database](./docs/Configuration/database.md)
   - [ ] [plugins](./docs/Configuration/plugins.md)
 - [ ] [GraphQL API](./docs/GraphQL-API.md)
