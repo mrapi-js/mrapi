@@ -41,7 +41,7 @@ npm start
 - [x] [服务器方法](./docs/Mrapi.zh-CN.md)
 - [ ] 配置项
   - [x] [database](./docs/Configuration/database.zh-CN.md)
-  - [ ] [plugins](./docs/Configuration/plugins.zh-CN.md)
+  - [x] [plugins](./docs/Configuration/plugins.zh-CN.md)
 - [ ] [GraphQL API](./docs/GraphQL-API.zh-CN.md)
 - [x] [OpenAPI](./docs/OpenAPI.zh-CN.md)
 - [x] [CLI](./docs/CLI.zh-CN.md)
