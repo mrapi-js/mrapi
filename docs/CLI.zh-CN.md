@@ -46,6 +46,8 @@ Commands:
 
 单租户直接执行 [prisma generate](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-cli/command-reference#generate)，多租户使用 [prisma-multi-tenant generate](https://github.com/Errorname/prisma-multi-tenant/blob/master/docs/Complete_Documentation.md#generate)。
 
+**注意：** 生成的 `.env` 中的 `TYPE_GRAPHQL_OUTPUT` 与 [builtIn:graphql](./Configuration/plugins.zh-CN.md) 的 `buildSchema.resolvers.generated` 有关
+
 #### 参数选项
 
 | 描述                                                                                  | 简短的命令 | 完整的命令 | 默认 |

@@ -87,6 +87,8 @@ const serializers = {
 
 允许用户通过插件的方式扩展自身的功能，相关配置详情 [config/plugins](./Configuration/plugins.zh-CN.md)
 
+**注意**：配置项将自动调用 `.register(key, v.options)` 进行注册。
+
 ### `hooks`
 
 钩子 (hooks) 让你能够监听应用或请求/响应生命周期之上的特定事件。你必须在事件被触发之前注册相应的钩子，否则，事件将得不到处理。更多详情请查看 [Fastify Hooks](https://github.com/fastify/docs-chinese/blob/master/docs/Hooks.md)

@@ -85,7 +85,7 @@ export type MultiTenant = {
 }
 ```
 
-## 示例
+## 完整示例
 
 ### 单租户
 
