@@ -39,7 +39,7 @@ npm start
 
 - [ ] [入门](./docs/Getting-Started.zh-CN.md)
 - [x] [服务器方法](./docs/Mrapi.zh-CN.md)
-- [ ] 配置项
+- [x] 配置项
   - [x] [database](./docs/Configuration/database.zh-CN.md)
   - [x] [plugins](./docs/Configuration/plugins.zh-CN.md)
 - [ ] [GraphQL API](./docs/GraphQL-API.zh-CN.md)
