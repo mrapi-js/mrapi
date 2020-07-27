@@ -25,6 +25,8 @@
 
 - 默认值：`"file:dev.db"`
 
+**注意：**启用多租户时，可忽略此配置项
+
 ### client
 
 自动化数据构建器/解析器，目前仅支持 `“prisma”`
@@ -71,19 +73,21 @@
 import { FastifyRequest, FastifyReply } from 'fastify'
 
 type TenantOptions = {
-  name: string
+  name: string // 租户类别标识
   provider: string
   url: string
 }
 
 export type MultiTenant = {
   management: {
-    url: string
+    url: string // 此为多租户管理表的 db 地址（不同于 tenants 中的 db url）
   }
   tenants: TenantOptions[]
-  identifier: (request: FastifyRequest, reply: FastifyReply) => string | void
+  identifier: (request: FastifyRequest, reply: FastifyReply) => string | void // 获取租户分类的钩子函数，返回值对应 TenantOptions.name
 }
 ```
+
+**注意：**上面代码的注释说明很重要！
 
 ## 完整示例
 
@@ -91,7 +95,8 @@ export type MultiTenant = {
 
 ```js
 module.exports = {
-  url: process.env.DB_URL || 'file:dev.db',
+  provider: 'sqlite',
+  url: 'file:dev.db',
   client: 'prisma',
   schema: './config/schema.prisma',
   schemaOutput: './prisma/schema.prisma',
@@ -105,6 +110,7 @@ module.exports = {
 
 ```js
 module.exports = {
+  provider: 'sqlite',
   client: 'prisma',
   schema: './config/schema.prisma',
   schemaOutput: './prisma/schema.prisma',
@@ -117,10 +123,12 @@ module.exports = {
     },
     tenants: [
       {
+        provider: 'sqlite',
         name: 'client-dev',
         url: 'file:dev.db',
       },
       {
+        provider: 'sqlite',
         name: 'client-test',
         url: 'file:test.db',
       },
