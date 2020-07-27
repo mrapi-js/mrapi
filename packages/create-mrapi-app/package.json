@@ -24,6 +24,7 @@
     "trailingComma": "all"
   },
   "dependencies": {
+    "tslib": "^2.0.0",
     "fs-extra": "^9.0.1"
   },
   "repository": {
@@ -40,7 +41,6 @@
   },
   "gitHead": "38fd5b78bfd78e63f3f8d0d394a6f7d53eb234b1",
   "devDependencies": {
-    "tslib": "^2.0.0",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.7"
   }
 }

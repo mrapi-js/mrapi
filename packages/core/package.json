@@ -16,9 +16,8 @@
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
   "dependencies": {
-    "@mrapi/typegraphql-prisma": "0.6.0",
-    "@prisma/cli": "2.2.0",
-    "@prisma/client": "2.2.0",
+    "@prisma/cli": "2.3.0",
+    "@prisma/client": "2.3.0",
     "@types/graphql-type-json": "^0.3.2",
     "class-validator": "^0.12.2",
     "dotenv": "^8.2.0",
@@ -38,20 +37,21 @@
     "graphql": "15.3.0",
     "graphql-query-complexity": "^0.6.0",
     "graphql-type-json": "^0.3.2",
-    "pino": "^6.3.2",
-    "pino-pretty": "^4.0.0",
-    "prisma-multi-tenant": "2.0.0",
+    "pino": "^6.4.1",
+    "pino-pretty": "^4.1.0",
+    "prisma-multi-tenant": "2.1.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "1.0.0-rc.3"
+    "type-graphql": "1.0.0-rc.3",
+    "typegraphql-prisma": "0.4.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.1",
     "@types/node": "*",
     "@types/pino": "^6.3.0",
-    "graphql-tools": "^6.0.12",
+    "graphql-tools": "^6.0.15",
     "nodemon": "^2.0.4",
     "tslib": "^2.0.0",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.7"
   },
   "prettier": {
     "semi": false,

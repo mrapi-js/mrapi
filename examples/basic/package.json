@@ -22,15 +22,15 @@
   },
   "dependencies": {
     "@mrapi/core": "workspace:*",
-    "@prisma/client": "^2.2.0"
+    "@prisma/client": "^2.3.0"
   },
   "devDependencies": {
     "@mrapi/cli": "workspace:*",
-    "@prisma/cli": "^2.2.0",
+    "@prisma/cli": "^2.3.0",
     "cross-env": "^7.0.2",
     "ts-node-dev": "1.0.0-pre.50",
-    "@mrapi/typegraphql-prisma": "0.6.0",
-    "typescript": "^3.9.6"
+    "typegraphql-prisma": "0.4.0",
+    "typescript": "^3.9.7"
   },
   "resolutions": {
     "graphql": "15.3.0"
