@@ -4,7 +4,8 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["aggregateApi", "transactionApi", "distinct", "middlewares", "connectOrCreate"]
 }
 
 generator typegraphql {

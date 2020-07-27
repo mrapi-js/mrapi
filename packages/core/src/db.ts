@@ -2,7 +2,7 @@ import { requireFromProject } from './utils/tools'
 import { checkPrismaClient } from './utils/prisma'
 import { generate, getUrlAndProvider } from './utils/prisma'
 import { log } from './utils/logger'
-import { MrapiOptions, Request, Reply } from './types'
+import { MrapiOptions, HttpRequest, HttpReply } from './types'
 
 import { MultiTenant } from '@mrapi/multi-tenant'
 import { PrismaClient as PrismaClientType } from '@prisma/client'
@@ -119,8 +119,8 @@ export const getDBClient = async ({
   prismaClient: PrismaClientType
   multiTenant: MultiTenant<PrismaClientType>
   options: MrapiOptions
-  request: Request
-  reply: Reply
+  request: HttpRequest
+  reply: HttpReply
 }) => {
   let client = prismaClient
   if (client) {

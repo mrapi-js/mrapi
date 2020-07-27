@@ -15,12 +15,19 @@
 
 import { FastifyOASOptions } from 'fastify-oas'
 import { MultiTenant } from '@mrapi/multi-tenant'
+import { FastifyRequest } from 'fastify'
 
 import { getDBClient } from '../db'
 import { getModels } from '../utils/prisma'
 import { parseFilter } from '../utils/filters'
 import { getCustomRoutes } from '../utils/routes'
-import { App, Request, Reply, MrapiOptions, PrismaClient } from '../types'
+import {
+  App,
+  HttpRequest,
+  HttpReply,
+  MrapiOptions,
+  PrismaClient,
+} from '../types'
 
 type OpenapiOptions = {
   prefix?: string
@@ -109,7 +116,7 @@ function customAPIs({
     for (let route of routes) {
       app.route({
         ...route,
-        handler: async (request: Request, reply: Reply) => {
+        handler: async (request: HttpRequest, reply: HttpReply) => {
           const client = await getDBClient({
             prismaClient,
             multiTenant,
@@ -190,7 +197,7 @@ function generateCoreRoutes({
               type: 'object',
               additionalProperties: true,
             },
-            async handler(request: Request, reply: Reply) {
+            async handler(request: FastifyRequest, reply: HttpReply) {
               try {
                 const client = await getDBClient({
                   prismaClient,
@@ -240,7 +247,7 @@ function generateCoreRoutes({
               },
               query: queryParams,
             },
-            async handler(request: Request, reply: Reply) {
+            async handler(request: HttpRequest, reply: HttpReply) {
               try {
                 const client = await getDBClient({
                   prismaClient,
@@ -291,7 +298,7 @@ function generateCoreRoutes({
                 },
               },
             },
-            async handler(request: Request, reply: Reply) {
+            async handler(request: HttpRequest, reply: HttpReply) {
               try {
                 const client = await getDBClient({
                   prismaClient,
@@ -334,7 +341,7 @@ function generateCoreRoutes({
                 },
               },
             },
-            async handler(request: Request, reply: Reply) {
+            async handler(request: HttpRequest, reply: HttpReply) {
               try {
                 const client = await getDBClient({
                   prismaClient,
@@ -378,7 +385,7 @@ function generateCoreRoutes({
                 },
               },
             },
-            async handler(request: Request, reply: Reply) {
+            async handler(request: HttpRequest, reply: HttpReply) {
               try {
                 const client = await getDBClient({
                   prismaClient,

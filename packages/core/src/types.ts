@@ -1,10 +1,3 @@
-import * as http from 'http'
-import * as http2 from 'http2'
-import * as https from 'https'
-
-// import * as fastify from 'fastify'
-// import FastifyGQLPlugin from 'fastify-gql'
-// import { ExecutionResult } from 'graphql'
 import {
   FastifyRequest,
   FastifyReply,
@@ -12,22 +5,22 @@ import {
   RawRequestDefaultExpression,
   RawReplyDefaultExpression,
   FastifyLoggerInstance,
-  FastifyServerOptions,
   RawServerBase,
   FastifyLoggerOptions,
 } from 'fastify'
 import { PrismaClient } from '@prisma/client'
 import { Logger, LoggerOptions } from 'pino'
+import { Server, IncomingMessage, ServerResponse } from 'http'
 
 export { PrismaClient }
 
 export type HttpServer = RawServerBase
-export type HttpRequest = RawRequestDefaultExpression<HttpServer>
+export type HttpRequest = FastifyRequest // RawRequestDefaultExpression<HttpServer>
 export type HttpReply = RawReplyDefaultExpression<HttpServer>
 export type HttpLogger = Logger | FastifyLoggerInstance
 export type HttpLoggerOptions = LoggerOptions | FastifyLoggerOptions
 
-type App = FastifyInstance<HttpServer, HttpRequest, HttpReply, HttpLogger>
+export type App = FastifyInstance<Server, IncomingMessage, ServerResponse>
 
 export type Hooks = Record<string, any>
 export type Context = {
@@ -69,7 +62,8 @@ export type DBConfig = {
 }
 
 export type ServerConfig = {
-  options: FastifyServerOptions
+  // options: FastifyServerOptions
+  options: any
   listen: any
 }
 
