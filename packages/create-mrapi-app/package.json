@@ -1,6 +1,6 @@
 {
   "name": "create-mrapi-app",
-  "version": "0.8.0",
+  "version": "0.8.2",
   "main": "index.js",
   "bin": {
     "create-mrapi-app": "./bin/run"
@@ -24,8 +24,8 @@
     "trailingComma": "all"
   },
   "dependencies": {
-    "tslib": "^2.0.0",
-    "fs-extra": "^9.0.1"
+    "fs-extra": "^9.0.1",
+    "tslib": "^2.0.0"
   },
   "repository": {
     "type": "git",

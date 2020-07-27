@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/core",
-  "version": "0.8.0",
+  "version": "0.8.2",
   "main": "lib/index.js",
   "author": "neikvon",
   "license": "MIT",
