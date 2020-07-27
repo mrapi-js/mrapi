@@ -8,11 +8,12 @@
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
   "dependencies": {
-    "find-node-modules": "^2.0.0"
+    "find-node-modules": "^2.1.0",
+    "deepmerge": "^4.2.2"
   },
   "devDependencies": {
     "tslib": "^2.0.0",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.7"
   },
   "author": "neikvon",
   "license": "MIT",

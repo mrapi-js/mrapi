@@ -24,7 +24,7 @@ export default async (options: any, cwd = process.cwd()) => {
 
   const typegraphqlPrismaPath = `node ${join(
     getNodeModules(),
-    '@mrapi/typegraphql-prisma/lib/cli/generator.js',
+    'typegraphql-prisma/lib/cli/generator.js',
   )}`
   const TYPE_GRAPHQL_PROVIDER = typegraphqlPrismaPath
   const TYPE_GRAPHQL_OUTPUT =
