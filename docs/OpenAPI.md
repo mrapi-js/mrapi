@@ -50,18 +50,18 @@ path config: `config/plugins.js` => `builtIn:openapi.options.custom.path`
 
 ```ts
 // src/openapi/index.ts
-import { Context } from "@mrapi/core";
+import { Context } from '@mrapi/core'
 
 export default [
   {
-    method: "GET",
+    method: 'GET',
     url: `/test`,
     async handler({ app, request, reply, prisma }: Context) {
       reply.send({
         code: 0,
-        data: await prisma.user.findMany()
-      });
-    }
-  }
-];
+        data: await prisma.user.findMany(),
+      })
+    },
+  },
+]
 ```

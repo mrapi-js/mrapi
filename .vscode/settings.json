@@ -1,0 +1,134 @@
+{
+  // Plugins:
+  // vetur
+  // prettier
+  // prettier-standard
+  // standardjs
+  // JS "Standard" Linter
+  // common
+  "window.title": "${dirty} ${activeEditorMedium}${separator}${rootName}", // 自定义标题栏
+  "explorer.confirmDragAndDrop": true,
+  "explorer.openEditors.visible": 0, // 隐藏「打开的编辑器」窗格
+  "window.zoomLevel": 0,
+  "extensions.ignoreRecommendations": true,
+  "editor.minimap.maxColumn": 200,
+  "editor.smoothScrolling": true, // 平滑滚动
+  "editor.cursorBlinking": "phase",
+  "editor.cursorSmoothCaretAnimation": true,
+  "files.autoSave": "onFocusChange",
+  "files.insertFinalNewline": true, // 文件末尾另起一行
+  "files.trimTrailingWhitespace": true, // 剪裁尾部空格
+  // 禁用上传数据（崩溃报告、使用数据、错误）到 Microsoft 联机服务
+  "telemetry.enableCrashReporter": false,
+  "telemetry.enableTelemetry": false,
+  "workbench.colorTheme": "One Dark Pro",
+  "workbench.settings.enableNaturalLanguageSearch": false, // 禁用自然语言搜索，在你搜索设置时，该功能会把你的键盘动作发送给 Bing
+  // editor
+  "editor.fontSize": 13,
+  "editor.fontWeight": "300",
+  "editor.fontFamily": "Fira Code, Consolas, Source Code Pro, Menlo, Monaco, 'Courier New', monospace",
+  "editor.tabSize": 2,
+  "editor.wordSeparators": "`~!@#$%^&*()=+[{]}\\|;:'\",.<>/?",
+  "editor.lineHeight": 26,
+  "editor.wordWrapColumn": 400,
+  "editor.formatOnSave": true,
+  "editor.fontLigatures": true,
+  // "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // "editor.wordWrap": "wordWrapColumn",
+  /** ======= Start important! */
+  "files.associations": {
+    "*.wpy": "vue",
+    "*.css": "scss",
+    "*.prisma": "prisma",
+    "*.cjson": "jsonc",
+    "*.wxss": "css",
+    "*.wxs": "javascript",
+    "*.proto": "proto3"
+  },
+
+  // standard
+  "standard.enable": false,
+  "standard.autoFixOnSave": true,
+  // vetur
+  "vetur.validation.style": false,
+  "vetur.format.styleInitialIndent": true,
+  "vetur.format.scriptInitialIndent": true,
+  "vetur.format.options.tabSize": 2,
+  "vetur.format.options.useTabs": false,
+  "vetur.format.defaultFormatterOptions": {
+    "prettyhtml": {
+      "printWidth": 200,
+      "sortAttributes": true
+    },
+    "prettier": {
+      "semi": false,
+      "printWidth": 200,
+      "singleQuote": true,
+      "trailingComma": "none"
+    }
+  },
+  /** ======= End important! */
+  // emmit
+  "emmet.includeLanguages": {
+    "vue-html": "html",
+    "javascript": "javascriptreact",
+    "wxml": "html"
+  },
+  "importSorter.importStringConfiguration.hasSemicolon": false,
+  "javascript.updateImportsOnFileMove.enabled": "always",
+  "search.exclude": {
+    "**/node_modules": false,
+    "**/node_modules/**": true
+  },
+  "oneDarkPro.editorTheme": "Onedark Pro",
+  "workbench.iconTheme": "vscode-icons",
+  "oneDarkPro.vivid": true,
+  "problems.showCurrentInStatus": true,
+  "terminal.integrated.rendererType": "experimentalWebgl",
+  "dart.debugExternalLibraries": true,
+  "dart.debugSdkLibraries": false,
+  "typescript.updateImportsOnFileMove.enabled": "never",
+  "minapp-vscode.disableAutoConfig": true,
+  "[vue]": {
+    "editor.defaultFormatter": "octref.vetur"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "numso.prettier-standard-vscode"
+  },
+  "[graphql]": {
+    "editor.defaultFormatter": "numso.prettier-standard-vscode"
+  },
+  "[scss]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "git.ignoreLegacyWarning": true,
+  "terminal.integrated.shell.linux": "/bin/bash",
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "numso.prettier-standard-vscode"
+  },
+  "remote.SSH.showLoginTerminal": true
+}

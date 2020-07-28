@@ -31,6 +31,6 @@
       "create-mrapi-app": ["packages/create-mrapi-app/src/index.ts"]
     }
   },
-  "include": ["packages"],
+  "include": ["packages", "scripts", "typings/**/*.ts"],
   "exclude": ["**/node_modules", "**/lib"]
 }

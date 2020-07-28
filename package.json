@@ -12,16 +12,13 @@
     "watch": "pnpm run --parallel watch",
     "publish": "ts-node scripts/publish.ts",
     "publish:dry": "DRY_RUN=true ts-node scripts/publish.ts",
-    "example:basic:generate": "pnpm run generate --filter ./examples/basic",
-    "example:basic:dev": "pnpm run dev --filter ./examples/basic",
-    "example:basic:db-save": "pnpm run db:save --filter ./examples/basic",
-    "example:basic:db-up": "pnpm run db:up --filter ./examples/basic",
-    "example:basic:db-seed": "pnpm run db:seed --filter ./examples/basic",
-    "example:multi-tenant:generate": "pnpm run generate --filter ./examples/multi-tenant",
-    "example:multi-tenant:dev": "pnpm run dev --filter ./examples/multi-tenant",
-    "example:multi-tenant:db-save": "pnpm run db:save --filter ./examples/multi-tenant",
-    "example:multi-tenant:db-up": "pnpm run db:up --filter ./examples/multi-tenant",
-    "example:multi-tenant:db-seed": "pnpm run db:seed --filter ./examples/multi-tenant"
+    "eslint": "pnpm run eslint:packages && pnpm run eslint:scripts",
+    "eslint:packages": "eslint packages/**/*.ts",
+    "eslint:scripts": "eslint scripts/**/*.ts",
+    "prettier": "pnpm run prettier:packages && pnpm run prettier:scripts && pnpm run prettier:docs",
+    "prettier:packages": "prettier --write packages/**/*.ts",
+    "prettier:scripts": "prettier --write scripts/**/*.ts",
+    "prettier:docs": "prettier --write docs/* README.md README.zh-CN.md"
   },
   "devDependencies": {
     "chalk": "^4.1.0",
@@ -29,7 +26,17 @@
     "jest": "^26.1.0",
     "semver": "^7.3.2",
     "ts-node": "^8.10.2",
-    "typescript": "^3.9.6"
+    "typescript": "^3.9.6",
+    "@typescript-eslint/eslint-plugin": "3.7.1",
+    "eslint-config-standard-with-typescript": "18.0.2",
+    "eslint-plugin-node": "11.1.0",
+    "eslint-plugin-import": "2.22.0",
+    "eslint-plugin-promise": "4.2.1",
+    "eslint-plugin-standard": "4.0.1",
+    "eslint-config-prettier": "6.11.0",
+    "eslint-plugin-jest": "23.19.0",
+    "eslint": "7.5.0",
+    "prettier": "2.0.5"
   },
   "resolutions": {
     "graphql": "15.3.0"
