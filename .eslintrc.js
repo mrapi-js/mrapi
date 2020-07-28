@@ -14,5 +14,25 @@ module.exports = {
   // “error” or 2 - 将规则视为一个错误 (退出码为1，检查不通过)
   rules: {
     'comma-dangle': ['off', 'never'],
+    '@typescript-eslint/no-var-requires': 'off',
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        varsIgnorePattern: '^_',
+        argsIgnorePattern: '^_',
+        ignoreRestSiblings: true,
+        caughtErrorsIgnorePattern: '^ignore',
+      },
+    ],
+    '@typescript-eslint/restrict-template-expressions': [
+      'error',
+      { allowAny: true },
+    ],
+    '@typescript-eslint/strict-boolean-expressions': [
+      'error',
+      {
+        allowAny: true,
+      },
+    ],
   },
 }
