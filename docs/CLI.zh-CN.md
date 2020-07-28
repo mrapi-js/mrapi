@@ -46,7 +46,7 @@ Commands:
 
 单租户直接执行 [prisma generate](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-cli/command-reference#generate)，多租户使用 [prisma-multi-tenant generate](https://github.com/Errorname/prisma-multi-tenant/blob/master/docs/Complete_Documentation.md#generate)。
 
-**注意：** 生成的 `.env` 中的 `TYPE_GRAPHQL_OUTPUT` 与 [builtIn:graphql](./Configuration/plugins.zh-CN.md) 的 `buildSchema.resolvers.generated` 有关
+**注意:** 生成的 `.env` 中的 `TYPE_GRAPHQL_OUTPUT` 与 [builtIn:graphql](./Configuration/plugins.zh-CN.md) 的 `buildSchema.resolvers.generated` 有关
 
 #### 参数选项
 
@@ -86,7 +86,7 @@ $ mrapi migrate save [name] -- --create-db
 
 ##### save
 
-根据数据模型 data model 的更改创建新的迁移 migration。在这种情况下，它会自动记录所有更改(类似于 git diff)。所有更改仅在本地执行，而会直接改变数据库。但是，迁移记录已经写入数据库的\_Migration 表中(该表存储了项目的迁移历史记录)。
+根据数据模型 schema datamodel 的更改创建新的迁移 migration。在这种情况下，它会自动记录所有更改(类似于 git diff)。所有更改仅在本地执行，而会直接改变数据库。但是，迁移记录已经写入数据库的\_Migration 表中(该表存储了项目的迁移历史记录)。
 
 ##### up
 

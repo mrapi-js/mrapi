@@ -10,7 +10,7 @@
 
 ```js
 {
-  [plugin-name]: {
+  [pluginName]: {
     enable: true,
     options: {}
   },
@@ -18,11 +18,11 @@
 }
 ```
 
-### plugin-name
+### pluginName
 
 插件名称（文件索引路径）
 
-**注意：** 请确保 `require.resolve()` 能够找到
+**注意:** 请确保 `require.resolve()` 能够找到
 
 ### enable
 
@@ -77,7 +77,7 @@
 
 #### schema
 
-配置要使用的 `schema model`，默认为全部
+配置要使用的 `schema datamodel`，默认为全部
 
 #### buildSchema
 
@@ -159,7 +159,7 @@ type OpenapiOptions = {
 
 #### schema
 
-配置要使用的 `schema model`，默认为全部
+配置要使用的 `schema datamodel`，默认为全部
 
 #### documentation
 

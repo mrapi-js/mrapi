@@ -44,7 +44,7 @@ const mrapi = new Mrapi({
 
 用于初始化 `fastify` 实例，参数详情请查看 [FastifyServerOptions](https://github.com/fastify/docs-chinese/blob/master/docs/Server.md)
 
-**注意：**
+**注意:**
 
 - 默认值为 `{ prettyPrint: true }`，
 
@@ -87,7 +87,7 @@ const serializers = {
 
 允许用户通过插件的方式扩展自身的功能，相关配置详情 [config/plugins](./Configuration/plugins.zh-CN.md)
 
-**注意**：配置项将自动调用 `.register(key, v.options)` 进行注册。
+**注意:**配置项将自动调用 `.register(key, v.options)` 进行注册。
 
 ### `hooks`
 
@@ -95,7 +95,7 @@ const serializers = {
 
 - 默认值：`{}`
 
-**注意**：配置项中的钩子将自动调用 `.addHook(key, cb)` 进行注册。
+**注意:**配置项中的钩子将自动调用 `.addHook(key, cb)` 进行注册。
 
 ## 实例
 
