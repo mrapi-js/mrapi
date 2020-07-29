@@ -130,14 +130,14 @@ class Generate {
       // 2. Generate Management Prisma Client
       await this.generateManagement(args ? args.secondary : '')
 
-      console.log(`\n✅  {green Prisma Clients have been generated!}\n`)
+      console.log('\n✅  {green Prisma Clients have been generated!}\n')
     } else {
       console.log('\n  Generating Prisma Client for management')
 
       await this.generateManagement(args.secondary)
 
       console.log(
-        `\n✅  {green Prisma Client for management has been generated!}\n`,
+        '\n✅  {green Prisma Client for management has been generated!}\n',
       )
 
       console.log('\n  Generating and watching Prisma Client for tenants')
@@ -172,11 +172,11 @@ class Migrate {
     if (action === 'save') {
       // A. Save on default tenant
       if (!name) {
-        console.log(`\n  Saving migration with default tenant...\n`)
+        console.log('\n  Saving migration with default tenant...\n')
 
         await this.migrateSave(management, undefined, migrateArgs, prismaArgs)
 
-        console.log(`\n✅  {green Successfuly saved the migration}\n`)
+        console.log('\n✅  {green Successfuly saved the migration}\n')
         return
       }
 
@@ -190,7 +190,7 @@ class Migrate {
 
       await this.migrateSave(management, name, migrateArgs, prismaArgs)
 
-      console.log(`\n✅  {green Successfuly saved the migration}\n`)
+      console.log('\n✅  {green Successfuly saved the migration}\n')
     } else {
       // D. Migrate up or down on all tenants
       if (!name) {

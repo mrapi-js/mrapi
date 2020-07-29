@@ -243,7 +243,7 @@ export const migrate = {
 
     const isMultiTenant = !!options.database.multiTenant
     if (isMultiTenant) {
-      await runPMT(`migrate management up`)
+      await runPMT('migrate management up')
       await runPMT(name ? `migrate ${name} up` : 'migrate up')
     } else {
       await runPrisma('migrate up')
@@ -297,7 +297,7 @@ export const introspect = async (
 export const getUrlAndProvider = (url: string) => {
   const _url = url.trim()
   if (!_url) {
-    throw new Error(`database url can not be empty`)
+    throw new Error('database url can not be empty')
   }
   const str = _url.split(':')[0]
   if (!str) {

@@ -187,11 +187,11 @@ function generateCoreRoutes({
                 },
                 skip: {
                   type: 'integer',
-                  description: `pageSize * pageIndex`,
+                  description: 'pageSize * pageIndex',
                 },
                 first: {
                   type: 'integer',
-                  description: `pageSize`,
+                  description: 'pageSize',
                 },
               },
               type: 'object',

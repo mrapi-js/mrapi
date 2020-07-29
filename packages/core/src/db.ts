@@ -16,7 +16,7 @@ export const getDBClients = async ({
   // load '@prisma/client' from user's project folder
   const clientValid = checkPrismaClient()
   if (!clientValid) {
-    log.warn(`prisma client isn't ready. generate now...`)
+    log.warn('prisma client is not ready. generate now...')
     await generate({ database, server, plugins })
   }
   log.info({ prismaVersion: clientValid.prismaVersion })
@@ -102,7 +102,7 @@ export const getDBClients = async ({
     },
   }
 
-  log.info(`using single prisma client`)
+  log.info('using single prisma client')
 
   return {
     prismaClient: new PrismaClient(clientOptions),
@@ -129,10 +129,10 @@ export const getDBClient = async ({
 
   const identifier = options.database.multiTenant.identifier
   if (!identifier) {
-    throw new Error(`'multiTenant.identifier' is required`)
+    throw new Error('"multiTenant.identifier" is required')
   }
   if (typeof identifier !== 'function') {
-    throw new Error(`'multiTenant.identifier' should be a function`)
+    throw new Error('"multiTenant.identifier" should be a function')
   }
 
   const tenantId = await identifier(request, reply)
@@ -143,11 +143,11 @@ export const getDBClient = async ({
       throw new Error(`get tenant client error. ${err}`)
     }
   } else {
-    throw new Error(`tenant id is required`)
+    throw new Error('tenant id is required')
   }
 
   if (!client) {
-    throw new Error(`cannot resolve multiple tenant client`)
+    throw new Error('cannot resolve multiple tenant client')
   }
 
   return client

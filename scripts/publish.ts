@@ -125,10 +125,12 @@ async function run(
 async function publish(dryRun: boolean) {
   if (dryRun) {
     console.log(
-      chalk.blue.bold(`\nThe DRY_RUN env var is set, so we'll do a dry run!\n`),
+      chalk.blue.bold(
+        '\nThe DRY_RUN env var is set, so we will do a dry run!\n',
+      ),
     )
   }
-  console.log(chalk.blueBright(`Publish order:`))
+  console.log(chalk.blueBright('Publish order:'))
   console.log(
     chalk.blueBright(PACKAGES.map((o, i) => `  ${i + 1}. ${o}`).join('\n')),
   )
@@ -143,7 +145,7 @@ async function publish(dryRun: boolean) {
       )}`,
     )
     await writeVersion(obj.path, newVersion, dryRun)
-    await run(obj.path, `pnpm run build`, dryRun)
+    await run(obj.path, 'pnpm run build', dryRun)
     await run(obj.path, `pnpm publish --no-git-checks --tag ${tag}`, dryRun)
   }
 
@@ -151,12 +153,12 @@ async function publish(dryRun: boolean) {
 
   if (!dryRun) {
     // git push
-    await run(process.cwd(), `git add .`)
+    await run(process.cwd(), 'git add .')
     await run(
       process.cwd(),
       `git commit -am "chore(release): ${newVersion} update packages"`,
     )
-    await run(process.cwd(), `git push --quiet`)
+    await run(process.cwd(), 'git push --quiet')
   }
 }
 

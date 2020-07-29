@@ -33,7 +33,7 @@ export const getNodeModules = (): string => {
 export const getUrlAndProvider = (url: string) => {
   const _url = url.trim()
   if (!_url) {
-    throw new Error(`database url can not be empty`)
+    throw new Error('database url can not be empty')
   }
   const str = _url.split(':')[0]
   if (!str) {

@@ -57,7 +57,7 @@ class MultiTenant<PrismaClient extends { disconnect: () => Promise<void> }> {
     if (this.options.PrismaClient) {
       return this.options.PrismaClient
     }
-    return requireDistant(`@prisma/client`).PrismaClient
+    return requireDistant('@prisma/client').PrismaClient
   }
 
   async get(name: string, options?: any): Promise<PrismaClient & WithMeta> {

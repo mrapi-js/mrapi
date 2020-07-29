@@ -13,7 +13,9 @@ module.exports = {
   // “warn” or 1 - 将规则视为一个警告（并不会导致检查不通过）
   // “error” or 2 - 将规则视为一个错误 (退出码为1，检查不通过)
   rules: {
-    'comma-dangle': ['off', 'never'],
+    semi: ['error', 'never'],
+    quotes: ['error', 'single'],
+    'comma-dangle': ['error', 'always-multiline'],
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/no-unused-vars': [
       'error',

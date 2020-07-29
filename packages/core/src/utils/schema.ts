@@ -9,7 +9,7 @@ export const createSchema = async (
 ) => {
   const config = option.buildSchema
   if (!config) {
-    throw new Error(`'buildSchema' not found`)
+    throw new Error('"buildSchema" not found')
   }
   const isDev = process.env.NODE_ENV !== 'production'
   const src = getSrcDirFromTSConfig()
