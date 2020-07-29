@@ -26,12 +26,26 @@ module.exports = {
     ],
     '@typescript-eslint/restrict-template-expressions': [
       'error',
-      { allowAny: true },
+      { allowAny: true, allowNullish: true, allowBoolean: true },
     ],
-    '@typescript-eslint/strict-boolean-expressions': [
+    '@typescript-eslint/strict-boolean-expressions': 'off',
+    '@typescript-eslint/explicit-function-return-type': 'off',
+    'default-param-last': 'off',
+    '@typescript-eslint/default-param-last': 'off',
+    '@typescript-eslint/promise-function-async': [
       'error',
       {
-        allowAny: true,
+        allowedPromiseNames: ['Thenable'],
+        checkArrowFunctions: true,
+        checkFunctionDeclarations: true,
+        checkFunctionExpressions: true,
+        checkMethodDeclarations: true,
+      },
+    ],
+    '@typescript-eslint/no-misused-promises': [
+      'error',
+      {
+        checksVoidReturn: false,
       },
     ],
   },

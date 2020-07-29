@@ -3,13 +3,13 @@ import { join } from 'path'
 import { exec, spawn, SpawnOptions, ExecOptions } from 'child_process'
 import { pathExists, getNodeModules } from './utils'
 
-export const runShell = (
+export const runShell = async (
   cmd: string,
   options?: ExecOptions,
 ): Promise<string | Buffer> => {
   console.log('[CMD] ' + cmd)
 
-  return new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     exec(
       cmd,
       {
@@ -21,7 +21,7 @@ export const runShell = (
         stdout: string | Buffer,
         stderr: string | Buffer,
       ) => {
-        if (process.env.verbose == 'true') {
+        if (process.env.verbose === 'true') {
           console.log(stderr || stdout)
         }
         if (error) reject(error)
@@ -31,14 +31,14 @@ export const runShell = (
   })
 }
 
-export const spawnShell = (
+export const spawnShell = async (
   cmd: string,
   options?: SpawnOptions,
 ): Promise<number> => {
   console.log('[CMD] ' + cmd)
 
   const [command, ...commandArguments] = cmd.split(' ')
-  return new Promise((resolve) =>
+  return await new Promise((resolve) =>
     spawn(command, commandArguments, {
       stdio: 'inherit',
       env: process.env,
@@ -53,8 +53,8 @@ export const getPrismaCliPath = (): string => {
   return join(getNodeModules(), '@prisma/cli/build/index.js')
 }
 
-export const readFile = (path: string): Promise<string> => {
-  return new Promise((resolve, reject) => {
+export const readFile = async (path: string): Promise<string> => {
+  return await new Promise((resolve, reject) => {
     fs.readFile(path, 'utf8', (err, data) => {
       if (err) reject(err)
       resolve(data)
@@ -62,8 +62,11 @@ export const readFile = (path: string): Promise<string> => {
   })
 }
 
-export const writeFile = (path: string, content: string): Promise<void> => {
-  return new Promise((resolve, reject) => {
+export const writeFile = async (
+  path: string,
+  content: string,
+): Promise<void> => {
+  return await new Promise((resolve, reject) => {
     fs.writeFile(path, content, (err) => {
       if (err) reject(err)
       resolve()
@@ -79,15 +82,15 @@ export const requireDistant = (name: string): any => {
       process.cwd() + '/node_modules/',
       process.cwd(),
       ...(require.main?.paths || []),
-      __dirname + '/../../../',
+      join(__dirname, '/../../../'),
     ],
   }))
   process.env = previousEnv
   return required
 }
 
-export const useYarn = (): Promise<boolean> => {
-  return pathExists(process.cwd() + '/yarn.lock')
+export const useYarn = async (): Promise<boolean> => {
+  return await pathExists(process.cwd() + '/yarn.lock')
 }
 
 export const runPrisma = async (cmd: string, options?: SpawnOptions) => {

@@ -1,7 +1,7 @@
 import cluster from 'cluster'
 
 // TODO
-export default () => {
+export default (): void => {
   try {
     if (cluster.isMaster) {
       console.log('cluster.isMaster')
@@ -20,7 +20,6 @@ export default () => {
             worker.kill()
             process.exit(1)
           default:
-            return
         }
       })
 

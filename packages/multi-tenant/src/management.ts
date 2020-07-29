@@ -3,7 +3,7 @@ import { setManagementEnv } from './utils'
 import { clientManagementPath } from './constants'
 
 export default class Management {
-  private options?: any
+  private readonly options?: any
   private client?: any
 
   constructor(options?: any) {
@@ -31,7 +31,7 @@ export default class Management {
     }
 
     this.client = new PrismaClient({
-      debug: process.env.verbose == 'true',
+      debug: process.env.verbose === 'true',
       ...this.options,
     })
 
@@ -42,12 +42,13 @@ export default class Management {
     const client = await this.getClient()
 
     try {
-      return await client.tenant.create({
+      return client.tenant.create({
         data: tenant,
       })
     } catch (err) {
-      if (err.code == 'P2002')
+      if (err.code === 'P2002') {
         throw new MrapiError('tenant-already-exists', tenant.name)
+      }
       throw err
     }
   }
@@ -84,13 +85,14 @@ export default class Management {
     const client = await this.getClient()
 
     try {
-      return await client.tenant.update({
+      return client.tenant.update({
         where: { name },
         data: update,
       })
     } catch (err) {
-      if (err.message.includes('RecordNotFound'))
+      if (err.message.includes('RecordNotFound')) {
         throw new MrapiError('tenant-does-not-exist', name)
+      }
       throw err
     }
   }
@@ -99,16 +101,17 @@ export default class Management {
     const client = await this.getClient()
 
     try {
-      return await client.tenant.delete({ where: { name } })
+      return client.tenant.delete({ where: { name } })
     } catch (err) {
-      if (err.message.includes('RecordNotFound'))
+      if (err.message.includes('RecordNotFound')) {
         throw new MrapiError('tenant-does-not-exist', name)
+      }
       throw err
     }
   }
 
-  disconnect(): Promise<void> {
-    if (!this.client) return Promise.resolve()
+  async disconnect(): Promise<void> {
+    if (!this.client) return await Promise.resolve()
 
     return this.client.disconnect()
   }

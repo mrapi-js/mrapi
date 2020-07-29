@@ -13,6 +13,7 @@ importers:
       eslint-plugin-standard: registry.npmjs.org/eslint-plugin-standard/4.0.1_eslint@7.5.0
       execa: 4.0.3
       jest: 26.1.0
+      pre-commit: registry.npmjs.org/pre-commit/1.2.2
       prettier: registry.npmjs.org/prettier/2.0.5
       semver: 7.3.2
       ts-node: 8.10.2_typescript@3.9.6
@@ -30,6 +31,7 @@ importers:
       eslint-plugin-standard: 4.0.1
       execa: ^4.0.3
       jest: ^26.1.0
+      pre-commit: ^1.2.2
       prettier: 2.0.5
       semver: ^7.3.2
       ts-node: ^8.10.2
@@ -8732,6 +8734,14 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.11.tgz'
     version: 1.1.11
+  registry.npmjs.org/buffer-from/1.1.1:
+    dev: true
+    name: buffer-from
+    resolution:
+      integrity: sha512-MQcXEUbCKtEo7bhqEs6560Hyd4XaovZlO/k9V3hjVUF/zwW7KBVdSK4gIt/bzwS9MbR5qob+F5jusZsb0YQK2A==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/buffer-from/-/buffer-from-1.1.1.tgz'
+    version: 1.1.1
   registry.npmjs.org/callsites/3.1.0:
     dev: true
     engines:
@@ -8815,6 +8825,21 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz'
     version: 0.0.1
+  registry.npmjs.org/concat-stream/1.6.2:
+    dependencies:
+      buffer-from: registry.npmjs.org/buffer-from/1.1.1
+      inherits: registry.npmjs.org/inherits/2.0.4
+      readable-stream: registry.npmjs.org/readable-stream/2.3.7
+      typedarray: registry.npmjs.org/typedarray/0.0.6
+    dev: true
+    engines:
+      '0': node >= 0.8
+    name: concat-stream
+    resolution:
+      integrity: sha512-27HBghJxjiZtIk3Ycvn/4kbJk/1uZuJFfuPEns6LaEvpvG1f0hTea8lilrouyo9mVc2GWdcEZ8OLoGmSADlrCw==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/concat-stream/-/concat-stream-1.6.2.tgz'
+    version: 1.6.2
   registry.npmjs.org/contains-path/0.1.0:
     dev: true
     engines:
@@ -8825,6 +8850,26 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/contains-path/-/contains-path-0.1.0.tgz'
     version: 0.1.0
+  registry.npmjs.org/core-util-is/1.0.2:
+    dev: true
+    name: core-util-is
+    resolution:
+      integrity: sha1-tf1UIgqivFq1eqtxQMlAdUUDwac=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/core-util-is/-/core-util-is-1.0.2.tgz'
+    version: 1.0.2
+  registry.npmjs.org/cross-spawn/5.1.0:
+    dependencies:
+      lru-cache: registry.npmjs.org/lru-cache/4.1.5
+      shebang-command: registry.npmjs.org/shebang-command/1.2.0
+      which: registry.npmjs.org/which/1.3.1
+    dev: true
+    name: cross-spawn
+    resolution:
+      integrity: sha1-6L0O/uWPz/b4+UUQoKVUu/ojVEk=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/cross-spawn/-/cross-spawn-5.1.0.tgz'
+    version: 5.1.0
   registry.npmjs.org/cross-spawn/7.0.3:
     dependencies:
       path-key: registry.npmjs.org/path-key/3.1.1
@@ -9804,6 +9849,17 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/lodash/-/lodash-4.17.19.tgz'
     version: 4.17.19
+  registry.npmjs.org/lru-cache/4.1.5:
+    dependencies:
+      pseudomap: registry.npmjs.org/pseudomap/1.0.2
+      yallist: registry.npmjs.org/yallist/2.1.2
+    dev: true
+    name: lru-cache
+    resolution:
+      integrity: sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/lru-cache/-/lru-cache-4.1.5.tgz'
+    version: 4.1.5
   registry.npmjs.org/minimatch/3.0.4:
     dependencies:
       brace-expansion: registry.npmjs.org/brace-expansion/1.1.11
@@ -9945,6 +10001,16 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/optionator/-/optionator-0.9.1.tgz'
     version: 0.9.1
+  registry.npmjs.org/os-shim/0.1.3:
+    dev: true
+    engines:
+      node: '>= 0.4.0'
+    name: os-shim
+    resolution:
+      integrity: sha1-a2LDeRz3kJ6jXtRuF2WLtBfLORc=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/os-shim/-/os-shim-0.1.3.tgz'
+    version: 0.1.3
   registry.npmjs.org/p-limit/1.3.0:
     dependencies:
       p-try: registry.npmjs.org/p-try/1.0.0
@@ -10075,6 +10141,19 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/pkg-dir/-/pkg-dir-2.0.0.tgz'
     version: 2.0.0
+  registry.npmjs.org/pre-commit/1.2.2:
+    dependencies:
+      cross-spawn: registry.npmjs.org/cross-spawn/5.1.0
+      spawn-sync: registry.npmjs.org/spawn-sync/1.0.15
+      which: registry.npmjs.org/which/1.2.14
+    dev: true
+    name: pre-commit
+    requiresBuild: true
+    resolution:
+      integrity: sha1-287g7p3nI15X95xW186UZBpp7sY=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/pre-commit/-/pre-commit-1.2.2.tgz'
+    version: 1.2.2
   registry.npmjs.org/prelude-ls/1.2.1:
     dev: true
     engines:
@@ -10096,6 +10175,14 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/prettier/-/prettier-2.0.5.tgz'
     version: 2.0.5
+  registry.npmjs.org/process-nextick-args/2.0.1:
+    dev: true
+    name: process-nextick-args
+    resolution:
+      integrity: sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-2.0.1.tgz'
+    version: 2.0.1
   registry.npmjs.org/progress/2.0.3:
     dev: true
     engines:
@@ -10106,6 +10193,14 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/progress/-/progress-2.0.3.tgz'
     version: 2.0.3
+  registry.npmjs.org/pseudomap/1.0.2:
+    dev: true
+    name: pseudomap
+    resolution:
+      integrity: sha1-8FKijacOYYkX7wqKw0wa5aaChrM=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/pseudomap/-/pseudomap-1.0.2.tgz'
+    version: 1.0.2
   registry.npmjs.org/punycode/2.1.1:
     dev: true
     engines:
@@ -10143,6 +10238,22 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/read-pkg/-/read-pkg-2.0.0.tgz'
     version: 2.0.0
+  registry.npmjs.org/readable-stream/2.3.7:
+    dependencies:
+      core-util-is: registry.npmjs.org/core-util-is/1.0.2
+      inherits: registry.npmjs.org/inherits/2.0.4
+      isarray: registry.npmjs.org/isarray/1.0.0
+      process-nextick-args: registry.npmjs.org/process-nextick-args/2.0.1
+      safe-buffer: registry.npmjs.org/safe-buffer/5.1.2
+      string_decoder: registry.npmjs.org/string_decoder/1.1.1
+      util-deprecate: registry.npmjs.org/util-deprecate/1.0.2
+    dev: true
+    name: readable-stream
+    resolution:
+      integrity: sha512-Ebho8K4jIbHAxnuxi7o42OrZgF/ZTNcsZj6nRKyUmkhLFq8CHItp/fy6hQZuZmP/n3yZ9VBUbp4zz/mX8hmYPw==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/readable-stream/-/readable-stream-2.3.7.tgz'
+    version: 2.3.7
   registry.npmjs.org/regexpp/3.1.0:
     dev: true
     engines:
@@ -10184,6 +10295,14 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/rimraf/-/rimraf-2.6.3.tgz'
     version: 2.6.3
+  registry.npmjs.org/safe-buffer/5.1.2:
+    dev: true
+    name: safe-buffer
+    resolution:
+      integrity: sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz'
+    version: 5.1.2
   registry.npmjs.org/semver/5.7.1:
     dev: true
     hasBin: true
@@ -10213,6 +10332,18 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/semver/-/semver-7.3.2.tgz'
     version: 7.3.2
+  registry.npmjs.org/shebang-command/1.2.0:
+    dependencies:
+      shebang-regex: registry.npmjs.org/shebang-regex/1.0.0
+    dev: true
+    engines:
+      node: '>=0.10.0'
+    name: shebang-command
+    resolution:
+      integrity: sha1-RKrGW2lbAzmJaMOfNj/uXer98eo=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/shebang-command/-/shebang-command-1.2.0.tgz'
+    version: 1.2.0
   registry.npmjs.org/shebang-command/2.0.0:
     dependencies:
       shebang-regex: registry.npmjs.org/shebang-regex/3.0.0
@@ -10225,6 +10356,16 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/shebang-command/-/shebang-command-2.0.0.tgz'
     version: 2.0.0
+  registry.npmjs.org/shebang-regex/1.0.0:
+    dev: true
+    engines:
+      node: '>=0.10.0'
+    name: shebang-regex
+    resolution:
+      integrity: sha1-2kL0l0DAtC2yypcoVxyxkMmO/qM=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/shebang-regex/-/shebang-regex-1.0.0.tgz'
+    version: 1.0.0
   registry.npmjs.org/shebang-regex/3.0.0:
     dev: true
     engines:
@@ -10249,6 +10390,18 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/slice-ansi/-/slice-ansi-2.1.0.tgz'
     version: 2.1.0
+  registry.npmjs.org/spawn-sync/1.0.15:
+    dependencies:
+      concat-stream: registry.npmjs.org/concat-stream/1.6.2
+      os-shim: registry.npmjs.org/os-shim/0.1.3
+    dev: true
+    name: spawn-sync
+    requiresBuild: true
+    resolution:
+      integrity: sha1-sAeZVX63+wyDdsKdROih6mfldHY=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/spawn-sync/-/spawn-sync-1.0.15.tgz'
+    version: 1.0.15
   registry.npmjs.org/spdx-correct/3.1.1:
     dependencies:
       spdx-expression-parse: registry.npmjs.org/spdx-expression-parse/3.0.1
@@ -10331,6 +10484,16 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/string.prototype.trimstart/-/string.prototype.trimstart-1.0.1.tgz'
     version: 1.0.1
+  registry.npmjs.org/string_decoder/1.1.1:
+    dependencies:
+      safe-buffer: registry.npmjs.org/safe-buffer/5.1.2
+    dev: true
+    name: string_decoder
+    resolution:
+      integrity: sha512-n/ShnvDi6FHbbVfviro+WojiFzv+s8MPMHBczVePfUpDJLwoLT0ht1l4YwBCbi8pJAveEEdnkHyPyTP/mzRfwg==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/string_decoder/-/string_decoder-1.1.1.tgz'
+    version: 1.1.1
   registry.npmjs.org/strip-ansi/5.2.0:
     dependencies:
       ansi-regex: registry.npmjs.org/ansi-regex/4.1.0
@@ -10481,6 +10644,14 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/type-fest/-/type-fest-0.8.1.tgz'
     version: 0.8.1
+  registry.npmjs.org/typedarray/0.0.6:
+    dev: true
+    name: typedarray
+    resolution:
+      integrity: sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz'
+    version: 0.0.6
   registry.npmjs.org/uri-js/4.2.2:
     dependencies:
       punycode: registry.npmjs.org/punycode/2.1.1
@@ -10491,6 +10662,14 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/uri-js/-/uri-js-4.2.2.tgz'
     version: 4.2.2
+  registry.npmjs.org/util-deprecate/1.0.2:
+    dev: true
+    name: util-deprecate
+    resolution:
+      integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/util-deprecate/-/util-deprecate-1.0.2.tgz'
+    version: 1.0.2
   registry.npmjs.org/v8-compile-cache/2.1.1:
     dev: true
     name: v8-compile-cache
@@ -10510,6 +10689,28 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/validate-npm-package-license/-/validate-npm-package-license-3.0.4.tgz'
     version: 3.0.4
+  registry.npmjs.org/which/1.2.14:
+    dependencies:
+      isexe: registry.npmjs.org/isexe/2.0.0
+    dev: true
+    hasBin: true
+    name: which
+    resolution:
+      integrity: sha1-mofEN48D6CfOyvGs31bHNsAcFOU=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/which/-/which-1.2.14.tgz'
+    version: 1.2.14
+  registry.npmjs.org/which/1.3.1:
+    dependencies:
+      isexe: registry.npmjs.org/isexe/2.0.0
+    dev: true
+    hasBin: true
+    name: which
+    resolution:
+      integrity: sha512-HxJdYWq1MTIQbJ3nw0cqssHoTNU267KlrDuGZ1WYlxDStUtKUhOaJmh112/TZmHxxUfuJqPXSOm7tDyas0OSIQ==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/which/-/which-1.3.1.tgz'
+    version: 1.3.1
   registry.npmjs.org/which/2.0.2:
     dependencies:
       isexe: registry.npmjs.org/isexe/2.0.0
@@ -10553,3 +10754,11 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/write/-/write-1.0.3.tgz'
     version: 1.0.3
+  registry.npmjs.org/yallist/2.1.2:
+    dev: true
+    name: yallist
+    resolution:
+      integrity: sha1-HBH5IY8HYImkfdUS+TxmmaaoHVI=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/yallist/-/yallist-2.1.2.tgz'
+    version: 2.1.2

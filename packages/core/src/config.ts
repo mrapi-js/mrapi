@@ -1,5 +1,5 @@
 import { join } from 'path'
-import { MrapiOptions, DBConfig, ServerConfig } from './types'
+import { MrapiOptions } from './types'
 
 export const defaults = {
   server: {
@@ -156,8 +156,8 @@ export const loadConfig = (
   }
 
   return {
-    server: serverConfig as ServerConfig,
-    database: databaseConfig as DBConfig,
+    server: serverConfig,
+    database: databaseConfig,
     plugins: pluginsConfig,
     hooks: hooksConfig,
   }

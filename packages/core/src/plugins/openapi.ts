@@ -29,7 +29,7 @@ import {
   PrismaClient,
 } from '../types'
 
-type OpenapiOptions = {
+interface OpenapiOptions {
   prefix?: string
   custom?: {
     path: string
@@ -53,7 +53,7 @@ export default async (
 ) => {
   // documentation
   if (config.documentation?.enable) {
-    app.register(require('fastify-oas'), config.documentation.options)
+    await app.register(require('fastify-oas'), config.documentation.options)
   }
   const models = await getModels(config.schema)
   let prefix = config.prefix || '/'
@@ -67,7 +67,7 @@ export default async (
     options,
   })
   if (coreRoutes && coreRoutes.length > 0) {
-    app.register(coreAPIs(coreRoutes), {
+    await app.register(coreAPIs(coreRoutes), {
       prefix,
     })
   }
@@ -75,7 +75,7 @@ export default async (
   // custom APIs
   const customRoutes = await getCustomRoutes(config, cwd)
   if (customRoutes && customRoutes.length > 0) {
-    app.register(
+    await app.register(
       customAPIs({ routes: customRoutes, prismaClient, multiTenant, options }),
       {
         prefix,
@@ -94,7 +94,7 @@ export default async (
 
 function coreAPIs(routes: any[]) {
   return (app: App, opts: any, done: () => void) => {
-    for (let route of routes) {
+    for (const route of routes) {
       app.route(route)
     }
     done()
@@ -113,7 +113,7 @@ function customAPIs({
   options: any
 }) {
   return (app: App, opts: any, done: () => void) => {
-    for (let route of routes) {
+    for (const route of routes) {
       app.route({
         ...route,
         handler: async (request: HttpRequest, reply: HttpReply) => {
@@ -139,10 +139,10 @@ function generateCoreRoutes({
   multiTenant,
   options,
 }: any) {
-  let routes = []
+  const routes = []
 
-  for (let { name, api, methods, fields, documentation } of models) {
-    const modelName = name.charAt(0).toLowerCase() + name.slice(1)
+  for (const { name, api, methods, fields, documentation } of models) {
+    const modelName = `${name.charAt(0).toLowerCase()}${name.slice(1)}`
     const scalarFields = fields
       .filter((f: any) => f.kind === 'scalar')
       .map((f: any) => f.name)
@@ -170,7 +170,7 @@ function generateCoreRoutes({
       description: id.documentation,
     }
 
-    for (let method of methods) {
+    for (const method of methods) {
       switch (method) {
         case 'findMany': {
           routes.push({

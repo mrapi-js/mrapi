@@ -32,7 +32,7 @@ export const parseFilter = (
 } => {
   const result = {}
 
-  for (let [key, val] of Object.entries(params)) {
+  for (const [key, val] of Object.entries(params)) {
     // sort: =name:asc  =name:desc
     if (sorting && key === SORTING) {
       const arr = val.split(':')
@@ -48,7 +48,7 @@ export const parseFilter = (
     if (selecting && SELECTING.includes(key)) {
       const tmp = {}
       const arr = [...new Set(val.split(','))]
-      for (let a of arr) {
+      for (const a of arr) {
         tmp[a] = true
       }
       result[key] = tmp
@@ -87,8 +87,8 @@ export const parseFilter = (
         ? [...new Set(val.split(','))]
         : val
 
-      result['where'] = result['where'] || {}
-      result['where'][arr[0]] = {
+      result.where = result.where || {}
+      result.where[arr[0]] = {
         [filter]: vals,
       }
     }

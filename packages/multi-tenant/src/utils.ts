@@ -6,11 +6,11 @@ import {
 } from '@mrapi/common'
 
 // Run from the place where the CLI was called
-export const runDistant = (
+export const runDistant = async (
   cmd: string,
   tenant?: Datasource,
 ): Promise<string | Buffer> => {
-  return runShell(cmd, {
+  return await runShell(cmd, {
     cwd: process.cwd(),
     env: {
       ...process.env,
@@ -39,7 +39,7 @@ export const getManagementEnv = async (): Promise<{
   }
 }
 
-export const setManagementEnv = async (): Promise<void> => {
+export const setManagementEnv = async () => {
   const managementEnv = await getManagementEnv()
 
   Object.entries(managementEnv).forEach(
@@ -55,10 +55,10 @@ export const runDistantPrisma = async (
   const promise = runDistant(`"${getPrismaCliPath()}" ${cmd}`, tenant)
 
   if (!withTimeout) {
-    return promise
+    return await promise
   }
 
-  return new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
       const altCmd =
         (tenant?.name ? `prisma-multi-tenant env ${tenant.name} -- ` : '') +

@@ -1,7 +1,7 @@
 import fs from 'fs'
 import { DBProvider } from './types'
 
-export const pathExists = (
+export const pathExists = async (
   path: string,
   options: { [name: string]: boolean } = {},
 ): Promise<boolean> => {
@@ -12,7 +12,7 @@ export const pathExists = (
     : options.exec
     ? fs.constants.X_OK
     : fs.constants.F_OK
-  return new Promise((resolve) => {
+  return await new Promise((resolve) => {
     fs.access(path, mode, (err) => {
       resolve(!err)
     })

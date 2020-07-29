@@ -1,6 +1,6 @@
 import { requireFromProject } from './utils/tools'
-import { checkPrismaClient } from './utils/prisma'
-import { generate, getUrlAndProvider } from './utils/prisma'
+import { checkPrismaClient, generate, getUrlAndProvider } from './utils/prisma'
+
 import { log } from './utils/logger'
 import { MrapiOptions, HttpRequest, HttpReply } from './types'
 
@@ -41,7 +41,7 @@ export const getDBClients = async ({
     })
 
     if (Array.isArray(database.multiTenant.tenants)) {
-      for (let tenant of database.multiTenant.tenants) {
+      for (const tenant of database.multiTenant.tenants) {
         const name = tenant.name.trim()
         if (!(await multiTenant.existsTenant(name))) {
           const tenantInfo = getUrlAndProvider(tenant.url)
@@ -85,9 +85,9 @@ export const getDBClients = async ({
           }
           // fix prisma query bug: skip: -1,  PANIC: called `Result::unwrap() TryFromIntError`
           const children = opts.document.children
-          for (let child of children) {
+          for (const child of children) {
             const args = child.args.args
-            for (let arg of args) {
+            for (const arg of args) {
               if (['skip', 'first', 'last'].includes(arg.key)) {
                 if (arg.value < 0) {
                   throw new Error(
@@ -135,7 +135,7 @@ export const getDBClient = async ({
     throw new Error(`'multiTenant.identifier' should be a function`)
   }
 
-  let tenantId = await identifier(request, reply)
+  const tenantId = await identifier(request, reply)
   if (tenantId) {
     try {
       client = await multiTenant.get(tenantId)

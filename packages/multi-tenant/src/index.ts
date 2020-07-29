@@ -75,7 +75,7 @@ class MultiTenant<PrismaClient extends { disconnect: () => Promise<void> }> {
       throw new Error(`The tenant with the name "${name}" does not exist`)
     }
 
-    return this.directGet(tenant, options)
+    return await this.directGet(tenant, options)
   }
 
   async directGet(
@@ -107,7 +107,7 @@ class MultiTenant<PrismaClient extends { disconnect: () => Promise<void> }> {
       )
     }
 
-    if (tenant.name == 'management') {
+    if (tenant.name === 'management') {
       throw new Error(
         'The name "management" is reserved. You cannot use it for a tenant.',
       )
@@ -129,7 +129,7 @@ class MultiTenant<PrismaClient extends { disconnect: () => Promise<void> }> {
       false,
     )
 
-    return this.directGet(tenant, options)
+    return await this.directGet(tenant, options)
   }
 
   async deleteTenant(name: string): Promise<Tenant> {
@@ -140,6 +140,7 @@ class MultiTenant<PrismaClient extends { disconnect: () => Promise<void> }> {
     }
 
     if (this.tenants[name]) {
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete this.tenants[name]
     }
 
@@ -159,19 +160,20 @@ class MultiTenant<PrismaClient extends { disconnect: () => Promise<void> }> {
 
     if (this.tenants[name]) return true
 
-    return this.management.exists(name)
+    return await this.management.exists(name)
   }
 
-  disconnect(): Promise<void[]> {
-    return Promise.all([
+  async disconnect(): Promise<any[]> {
+    return await Promise.all([
       ...(this.management ? [this.management.disconnect()] : []),
+      // eslint-disable-next-line @typescript-eslint/promise-function-async
       ...Object.values(this.tenants).map((t) => t.disconnect()),
     ])
   }
 }
 
 // Fix for Vercel + Next issue
-//@ts-ignore
+// @ts-expect-error
 const requirePrismaManagement = () =>
   require('.prisma-multi-tenant/management').PrismaClient
 

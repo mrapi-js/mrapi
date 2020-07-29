@@ -17,7 +17,7 @@ export const run = async () => {
   program
     .command('generate')
     .description('Generate prisma schema and resolvers')
-    .action((options) => generate(loadConfig(cwd), cwd, options))
+    .action(async (options) => await generate(loadConfig(cwd), cwd, options))
 
   program
     .command('migrate')
@@ -50,16 +50,16 @@ export const run = async () => {
   program
     .command('dev')
     .description('dev')
-    .action((cmdObj) => require('./commands/dev').default())
+    .action((_cmdObj) => require('./commands/dev').default())
 
   program.on('command:*', function (operands) {
     console.error(`error: unknown command '${operands[0]}'`)
     const availableCommands = program.commands.map((cmd) => cmd.name())
-    console.log(`Available Commands: ${availableCommands}`)
+    console.log(`Available Commands: ${availableCommands.join(' ')}`)
     process.exitCode = 1
   })
 
-  program.parseAsync(process.argv)
+  await program.parseAsync(process.argv)
 }
 
 run().catch(async (err) => {

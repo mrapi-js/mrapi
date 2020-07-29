@@ -2,7 +2,7 @@ import { join } from 'path'
 import { buildSchema } from 'type-graphql'
 import { getSrcDirFromTSConfig, getDistDirFromTSConfig } from './tools'
 
-export const createSchema = (
+export const createSchema = async (
   option: any,
   cwd: string,
   modelNames: string[] = [],
@@ -23,7 +23,7 @@ export const createSchema = (
     option.schema &&
     Object.prototype.toString.call(option.schema) === '[object Object]'
   ) {
-    for (let [key, val] of Object.entries(option.schema)) {
+    for (const [key, val] of Object.entries(option.schema)) {
       if (modelNames.includes(key)) {
         const name = key.charAt(0).toUpperCase() + key.slice(1)
         const methods = (val as string[]).map(
@@ -61,7 +61,7 @@ export const createSchema = (
   delete config.resolvers
   delete option.schema
 
-  return buildSchema({
+  return await buildSchema({
     ...config,
     resolvers: [...crudFilePath, relationFilePath, customResolvers],
   })

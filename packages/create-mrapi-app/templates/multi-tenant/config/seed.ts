@@ -11,10 +11,13 @@ async function main() {
 
   mrapi
     .start()
-    .then(async ({ app, address }) => {
-      const client = await mrapi.multiTenant.get('client-dev')
-      await action(client)
-    })
+    .then(async () =>
+      // { app, address }
+      {
+        const client = await mrapi.multiTenant.get('client-dev')
+        await action(client)
+      },
+    )
     .finally(async () => {
       await mrapi.multiTenant.disconnect()
       process.exit(0)

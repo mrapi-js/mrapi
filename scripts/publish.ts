@@ -12,11 +12,7 @@ async function getLatestVersion(): Promise<string> {
   return version.startsWith('v') ? version.slice(1) : version
 }
 
-async function writeVersion(
-  pkgDir: string,
-  version: string,
-  dryRun?: boolean,
-): Promise<void> {
+async function writeVersion(pkgDir: string, version: string, dryRun?: boolean) {
   const pkgJsonPath = join(pkgDir, 'package.json')
   const file = await fs.readFile(pkgJsonPath, 'utf-8')
   const packageJson: {
@@ -54,10 +50,7 @@ async function getPackagesInfo(
   return info
 }
 
-async function updateTemplatesDeps(
-  newVersion: string,
-  dryRun: boolean,
-): Promise<void> {
+async function updateTemplatesDeps(newVersion: string, dryRun: boolean) {
   if (dryRun) {
     return
   }
@@ -98,7 +91,7 @@ async function run(
   cmd: string,
   dry: boolean = false,
   hidden: boolean = false,
-): Promise<void> {
+) {
   const args = [chalk.underline('./' + cwd).padEnd(20), chalk.bold(cmd)]
   if (dry) {
     args.push(chalk.dim('(dry)'))
@@ -129,7 +122,7 @@ async function run(
   }
 }
 
-async function publish(dryRun: boolean): Promise<void> {
+async function publish(dryRun: boolean) {
   if (dryRun) {
     console.log(
       chalk.blue.bold(`\nThe DRY_RUN env var is set, so we'll do a dry run!\n`),

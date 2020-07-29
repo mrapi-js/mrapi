@@ -30,7 +30,7 @@ export const resolveFromProject = (name: string, cwd = process.cwd()) => {
       cwd + '/node_modules/',
       cwd,
       ...(require.main?.paths || []),
-      __dirname + '/../../../',
+      join(__dirname, '/../../../'),
     ],
   })
 }
@@ -38,7 +38,7 @@ export const resolveFromProject = (name: string, cwd = process.cwd()) => {
 const strip = (str: string) =>
   str
     .split('/')
-    .filter((x) => !!x && x != '.')
+    .filter((x) => !!x && x !== '.')
     .join('/')
 
 export const getTSConfig = (cwd = process.cwd()) => {
@@ -70,19 +70,19 @@ export const getPrismaCliPath = (): string => {
   return resolveFromProject('@prisma/cli')
 }
 
-export const getPMTCliPath = (): Promise<string> => {
-  return getBinPath('prisma-multi-tenant')
+export const getPMTCliPath = async (): Promise<string> => {
+  return await getBinPath('prisma-multi-tenant')
 }
 
-export const runShell = (
+export const runShell = async (
   cmd: string,
   options?: { cwd: string; env?: { [name: string]: string | undefined } },
 ): Promise<string | Buffer> => {
-  if (process.env.verbose == 'true') {
+  if (process.env.verbose === 'true') {
     console.log('  $> ' + cmd)
   }
 
-  return new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     exec(
       cmd,
       options,
@@ -91,7 +91,7 @@ export const runShell = (
         stdout: string | Buffer,
         stderr: string | Buffer,
       ) => {
-        if (process.env.verbose == 'true') {
+        if (process.env.verbose === 'true') {
           console.log(stderr || stdout)
         }
         if (error) reject(error)
@@ -101,9 +101,9 @@ export const runShell = (
   })
 }
 
-export const spawnShell = (cmd: string): Promise<number> => {
+export const spawnShell = async (cmd: string): Promise<number> => {
   const [command, ...commandArguments] = cmd.split(' ')
-  return new Promise((resolve) =>
+  return await new Promise((resolve) =>
     spawn(command, commandArguments, {
       stdio: 'inherit',
       env: process.env,

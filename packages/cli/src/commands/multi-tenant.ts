@@ -18,7 +18,7 @@ import {
 
 const migrateActions = ['up', 'down', 'save']
 
-const setManagementProviderInSchema = async (): Promise<void> => {
+const setManagementProviderInSchema = async () => {
   if (!process.env.MANAGEMENT_PROVIDER) {
     throw new MrapiError('missing-env', { name: 'MANAGEMENT_PROVIDER' })
   }
@@ -50,7 +50,7 @@ const setManagementProviderInSchema = async (): Promise<void> => {
   return fs.writeFile(schemaPath, content)
 }
 
-const setManagementProviderInMigration = async (): Promise<void> => {
+const setManagementProviderInMigration = async () => {
   if (!process.env.MANAGEMENT_PROVIDER) {
     throw new MrapiError('missing-env', { name: 'MANAGEMENT_PROVIDER' })
   }
@@ -72,8 +72,8 @@ const setManagementProviderInMigration = async (): Promise<void> => {
 
   // 3. Change provider of datasource
   content.steps.find(
-    (step: any) => step.argument == 'provider',
-  ).value = `\"${process.env.MANAGEMENT_PROVIDER}\"`
+    (step: any) => step.argument === 'provider',
+  ).value = `"${process.env.MANAGEMENT_PROVIDER}"`
 
   // 4. Write content to file
   return fs.writeFile(stepsPath, JSON.stringify(content, null, 2))
@@ -107,7 +107,7 @@ const runLocalPrisma = async (cmd: string): Promise<string | Buffer> => {
   // Fixes a weird bug that would not use the provided PMT_OUTPUT env
   delete process.env.INIT_CWD
 
-  return runShell(cmdStr, {
+  return await runShell(cmdStr, {
     cwd: join(nodeModules, 'prisma-multi-tenant/build/cli'),
     env: {
       ...process.env,
@@ -159,7 +159,7 @@ class Generate {
   }
 
   async watchGenerateTenants(prismaArgs: string = '') {
-    spawnShell(
+    await spawnShell(
       `npx @prisma/cli generate --watch ${prismaArgs}`,
     ).then((exitCode) => process.exit(exitCode))
   }
@@ -169,7 +169,7 @@ class Migrate {
   async run(args: any, management: Management) {
     const { name, action, migrateArgs, prismaArgs } = this.parseArgs(args)
 
-    if (action == 'save') {
+    if (action === 'save') {
       // A. Save on default tenant
       if (!name) {
         console.log(`\n  Saving migration with default tenant...\n`)
@@ -181,7 +181,7 @@ class Migrate {
       }
 
       // B. Save on management
-      if (name == 'management') {
+      if (name === 'management') {
         throw new MrapiError('cannot-migrate-save-management')
       }
 
@@ -191,7 +191,6 @@ class Migrate {
       await this.migrateSave(management, name, migrateArgs, prismaArgs)
 
       console.log(`\n✅  {green Successfuly saved the migration}\n`)
-      return
     } else {
       // D. Migrate up or down on all tenants
       if (!name) {
@@ -211,7 +210,7 @@ class Migrate {
       }
 
       // E. Migrate up or down management
-      if (name == 'management') {
+      if (name === 'management') {
         console.log(`\n  Migrating management ${action}...`)
 
         await this.migrateManagement(action, migrateArgs, prismaArgs)
@@ -265,7 +264,7 @@ class Migrate {
   ) {
     const tenant = await management.read(name)
 
-    return this.migrateTenant(action, tenant, migrateArgs, prismaArgs)
+    return await this.migrateTenant(action, tenant, migrateArgs, prismaArgs)
   }
 
   async migrateAllTenants(
@@ -276,30 +275,30 @@ class Migrate {
   ) {
     const tenants = await management.list()
 
-    for (let tenant of tenants) {
+    for (const tenant of tenants) {
       console.log(`    > Migrating "${tenant.name}" ${action}`)
       await this.migrateTenant(action, tenant, migrateArgs, prismaArgs)
     }
   }
 
-  migrateTenant(
+  async migrateTenant(
     action: string,
     tenant?: Datasource,
     migrateArgs: string = '',
     prismaArgs: string = '',
   ) {
-    return runDistantPrisma(
+    return await runDistantPrisma(
       `migrate ${action} ${migrateArgs} ${prismaArgs} --experimental`,
       tenant,
     )
   }
 
-  migrateManagement(
+  async migrateManagement(
     action: string,
     migrateArgs: string = '',
     prismaArgs: string = '',
   ) {
-    return runLocalPrisma(
+    return await runLocalPrisma(
       `migrate ${action} ${migrateArgs} ${prismaArgs} --experimental`,
     )
   }
@@ -315,7 +314,7 @@ class Migrate {
       process.env.DATABASE_URL = tenant.url
     }
 
-    return spawnShell(
+    return await spawnShell(
       `npx @prisma/cli migrate save ${migrateArgs} ${prismaArgs} --experimental`,
     )
   }
