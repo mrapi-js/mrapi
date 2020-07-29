@@ -22,9 +22,11 @@
     "prettier:scripts": "prettier --write scripts/**/*.ts",
     "prettier:docs": "prettier --write docs/* README.md README.zh-CN.md"
   },
-  "pre-commit": [
-    "eslint"
-  ],
+  "husky": {
+    "hooks": {
+      "pre-commit": "pnpm run eslint"
+    }
+  },
   "devDependencies": {
     "chalk": "^4.1.0",
     "execa": "^4.0.3",
@@ -42,7 +44,7 @@
     "eslint-plugin-jest": "23.19.0",
     "eslint": "7.5.0",
     "prettier": "2.0.5",
-    "pre-commit": "^1.2.2"
+    "husky": "^4.2.5"
   },
   "resolutions": {
     "graphql": "15.3.0"
