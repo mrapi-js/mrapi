@@ -16,10 +16,10 @@
     "db:ui": "mrapi db:ui"
   },
   "dependencies": {
-    "@mrapi/core": "0.8.2"
+    "@mrapi/core": "0.8.3"
   },
   "devDependencies": {
-    "@mrapi/cli": "0.8.2",
+    "@mrapi/cli": "0.8.3",
     "typescript": "^3.8.3",
     "ts-node-dev": "^1.0.0-pre.44"
   },

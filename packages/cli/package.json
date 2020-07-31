@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/cli",
-  "version": "0.8.2",
+  "version": "0.8.3",
   "main": "lib/index.js",
   "bin": {
     "mrapi": "./bin/run"
