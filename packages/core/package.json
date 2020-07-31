@@ -43,7 +43,9 @@
     "pino": "^6.4.1",
     "pino-pretty": "^4.1.0",
     "reflect-metadata": "^0.1.13",
-    "type-graphql": "1.0.0-rc.3"
+    "type-graphql": "1.0.0-rc.3",
+    "@nexus/schema": "^0.14.0",
+    "nexus-plugin-prisma": "^0.16.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.1",
