@@ -1,6 +1,10 @@
 module.exports = {
   root: true,
   plugins: ['jest'],
+  env: {
+    node: true,
+    es6: true,
+  },
   extends: [
     'standard-with-typescript',
     'prettier/@typescript-eslint',
