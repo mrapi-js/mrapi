@@ -6,7 +6,7 @@ import { MrapiOptions, Request, Reply } from './types'
 
 import { MultiTenant } from 'prisma-multi-tenant'
 import { PrismaClient as PrismaClientType } from '@prisma/client'
-import migrate from 'prisma-multi-tenant/build/cli/commands/migrate'
+// import migrate from 'prisma-multi-tenant/build/cli/commands/migrate'
 
 export const getDBClients = async ({
   database,
@@ -31,7 +31,8 @@ export const getDBClients = async ({
     )
     process.env.MANAGEMENT_URL = managementInfo.url
     process.env.MANAGEMENT_PROVIDER = managementInfo.provider
-    await migrate.migrateManagement('up', '--create-db')
+    // 注释多租户的migrate up操作，防止服务启动时表结构不一致导致up进程被挂起
+    // await migrate.migrateManagement('up', '--create-db')
 
     process.env.verbose = 'false'
     const multiTenant = new MultiTenant<PrismaClientType>({
