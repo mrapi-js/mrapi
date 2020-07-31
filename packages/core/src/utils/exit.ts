@@ -1,5 +1,5 @@
-function exitHandler(options: any, exitCode: any) {
-  if (options.dbClient && options.dbClient.disconnect) {
+function exitHandler(options: any, _exitCode: any) {
+  if (options?.dbClient?.disconnect) {
     options.dbClient.disconnect()
   }
   process.disconnect()

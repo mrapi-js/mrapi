@@ -4,7 +4,13 @@ import { MultiTenant } from '@mrapi/multi-tenant'
 import { getDBClient } from '../db'
 import { getModels } from '../utils/prisma'
 import { createSchema } from '../utils/schema'
-import { App, MrapiOptions, PrismaClient } from '../types'
+import {
+  App,
+  MrapiOptions,
+  PrismaClient,
+  HttpRequest as Request,
+  HttpReply as Reply,
+} from '../types'
 
 export default async (
   app: App,
@@ -27,13 +33,10 @@ export default async (
       'preValidation',
       (request: Request, reply: Reply, done: (err?: Error) => void) => {
         const queryString =
-          // POST
-          request.body && request.body.query
-            ? request.body.query
-            : // GET
-            request.query && request.query.query
-            ? request.query.query
-            : null
+          request?.body?.query || // POST
+          request?.query?.query || // GET
+          null
+
         if (queryString) {
           const message = checkIntrospectionQuery(queryString)
           if (message) {
@@ -46,7 +49,7 @@ export default async (
   }
 
   // https://github.com/mcollina/fastify-gql#plugin-options
-  app.register(require('fastify-gql'), {
+  await app.register(require('fastify-gql'), {
     errorHandler(err: any, request: Request, reply: Reply) {
       let returns
       if (err.errors) {

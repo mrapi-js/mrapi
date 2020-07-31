@@ -19,12 +19,12 @@ export const checkPrismaClient = () => {
   }
 }
 
-export const checkPrismaSchema = (database: any, cwd = process.cwd()) => {
+export const checkPrismaSchema = async (database: any, cwd = process.cwd()) => {
   const schemaFilePath = join(
     cwd,
     database?.schemaOutput || 'prisma/schema.prisma',
   )
-  return fs.pathExists(schemaFilePath)
+  return await fs.pathExists(schemaFilePath)
 }
 
 export const initPrisma = async (
@@ -70,17 +70,17 @@ export const getModels = async (userConfig?: Record<string, string[]>) => {
     return models
   }
 
-  let modelsCopy = []
-  for (let name of Object.keys(userConfig)) {
+  const modelsCopy = []
+  for (const name of Object.keys(userConfig)) {
     const model = models.find((m: any) => m.name === name)
     if (!model) {
       log.warn(`model '${name}' not found`)
       continue
     }
 
-    let methods = userConfig[name]
+    const methods = userConfig[name]
     if (!Array.isArray(methods)) {
-      log.warn(`methods should be array, get '${methods}'`)
+      log.warn(`methods should be array, get ${String(methods)}`)
       continue
     }
 
@@ -218,7 +218,7 @@ export const migrate = {
     options: MrapiOptions,
     cwd = process.cwd(),
     name = '',
-    config = {},
+    _config = {},
   ) => {
     if (!(await checkPrismaSchema(options, cwd))) {
       await create(options, cwd)
@@ -235,7 +235,7 @@ export const migrate = {
     options: MrapiOptions,
     cwd = process.cwd(),
     name = '',
-    config = {},
+    _config = {},
   ) => {
     if (!(await checkPrismaSchema(options.database, cwd))) {
       await create(options, cwd)
@@ -243,7 +243,7 @@ export const migrate = {
 
     const isMultiTenant = !!options.database.multiTenant
     if (isMultiTenant) {
-      await runPMT(`migrate management up`)
+      await runPMT('migrate management up')
       await runPMT(name ? `migrate ${name} up` : 'migrate up')
     } else {
       await runPrisma('migrate up')
@@ -253,7 +253,7 @@ export const migrate = {
     options: MrapiOptions,
     cwd = process.cwd(),
     name = '',
-    config = {},
+    _config = {},
   ) => {
     if (!(await checkPrismaSchema(options.database, cwd))) {
       await create(options, cwd)
@@ -270,9 +270,9 @@ export const migrate = {
 
 export const studio = async (
   options: MrapiOptions,
-  cwd = process.cwd(),
+  _cwd = process.cwd(),
   name = '',
-  config = {},
+  _config = {},
 ) => {
   const isMultiTenant = !!options.database.multiTenant
   if (isMultiTenant) {
@@ -285,8 +285,8 @@ export const studio = async (
 export const introspect = async (
   options: MrapiOptions,
   cwd = process.cwd(),
-  name = '',
-  config = {},
+  _name = '',
+  _config = {},
 ) => {
   if (!(await checkPrismaSchema(options.database, cwd))) {
     await create(options, cwd)
@@ -297,7 +297,7 @@ export const introspect = async (
 export const getUrlAndProvider = (url: string) => {
   const _url = url.trim()
   if (!_url) {
-    throw new Error(`database url can not be empty`)
+    throw new Error('database url can not be empty')
   }
   const str = _url.split(':')[0]
   if (!str) {

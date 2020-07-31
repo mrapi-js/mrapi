@@ -133,7 +133,7 @@ module.exports = {
         url: 'file:test.db',
       },
     ],
-    identifier (request) {
+    identifier(request) {
       return request.headers['tenant-id']
     },
   },

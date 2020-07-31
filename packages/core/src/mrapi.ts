@@ -51,7 +51,7 @@ export class Mrapi {
   async registerPlugins() {
     const plugins = Object.entries(this.options.plugins)
 
-    for (let [key, val] of plugins) {
+    for (const [key, val] of plugins) {
       if (val && !val.enable) {
         continue
       }
@@ -70,15 +70,14 @@ export class Mrapi {
           )
           this.app.log.debug(`register plugin: ${key}`)
           if (
-            ret &&
-            ret.callbackAfterReady &&
+            ret?.callbackAfterReady &&
             typeof ret.callbackAfterReady === 'function'
           ) {
             this.callbacksAfterReady.push(ret.callbackAfterReady)
           }
         } else {
           const pluginPath = require.resolve(key)
-          this.app.register(require(pluginPath), val.options)
+          await this.app.register(require(pluginPath), val.options)
           this.app.log.debug(`register plugin: ${key}`)
         }
       } catch (err) {
@@ -88,28 +87,24 @@ export class Mrapi {
   }
 
   registerHooks() {
-    for (let [key, cb] of Object.entries(this.options.hooks)) {
+    for (const [key, cb] of Object.entries(this.options.hooks)) {
       this.app.addHook(key as any, cb)
     }
   }
 
   async start() {
-    try {
-      await this.init()
-      await this.app.ready().then(async () => {
-        console.log(this.app.printRoutes())
+    await this.init()
+    await this.app.ready().then(async () => {
+      console.log(this.app.printRoutes())
 
-        for (let fn of this.callbacksAfterReady) {
-          await fn()
-        }
-      })
-      const address = await this.app.listen(this.options.server.listen)
-      return {
-        app: this.app,
-        address,
+      for (const fn of this.callbacksAfterReady) {
+        await fn()
       }
-    } catch (err) {
-      throw err
+    })
+    const address = await this.app.listen(this.options.server.listen)
+    return {
+      app: this.app,
+      address,
     }
   }
 
@@ -119,17 +114,13 @@ export class Mrapi {
   }
 
   async close() {
-    try {
-      return this.app.close().then(
-        () => {
-          this.app.log.info('successfully closed!')
-        },
-        (err: any) => {
-          this.app.log.error('an error happened', err)
-        },
-      )
-    } catch (err) {
-      throw err
-    }
+    return await this.app.close().then(
+      () => {
+        this.app.log.info('successfully closed!')
+      },
+      (err: any) => {
+        this.app.log.error('an error happened', err)
+      },
+    )
   }
 }

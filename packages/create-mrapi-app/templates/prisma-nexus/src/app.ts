@@ -3,6 +3,6 @@ import { Mrapi } from '@mrapi/core'
 
 async function main() {
   const mrapi = new Mrapi()
-  mrapi.start()
+  await mrapi.start()
 }
 main().catch(console.error)

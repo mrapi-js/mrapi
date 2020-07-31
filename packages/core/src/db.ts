@@ -1,6 +1,6 @@
 import { requireFromProject } from './utils/tools'
-import { checkPrismaClient } from './utils/prisma'
-import { generate, getUrlAndProvider } from './utils/prisma'
+import { checkPrismaClient, generate, getUrlAndProvider } from './utils/prisma'
+
 import { log } from './utils/logger'
 import { MrapiOptions, HttpRequest, HttpReply } from './types'
 
@@ -16,7 +16,7 @@ export const getDBClients = async ({
   // load '@prisma/client' from user's project folder
   const clientValid = checkPrismaClient()
   if (!clientValid) {
-    log.warn(`prisma client isn't ready. generate now...`)
+    log.warn('prisma client is not ready. generate now...')
     await generate({ database, server, plugins })
   }
   log.info({ prismaVersion: clientValid.prismaVersion })
@@ -41,7 +41,7 @@ export const getDBClients = async ({
     })
 
     if (Array.isArray(database.multiTenant.tenants)) {
-      for (let tenant of database.multiTenant.tenants) {
+      for (const tenant of database.multiTenant.tenants) {
         const name = tenant.name.trim()
         if (!(await multiTenant.existsTenant(name))) {
           const tenantInfo = getUrlAndProvider(tenant.url)
@@ -85,9 +85,9 @@ export const getDBClients = async ({
           }
           // fix prisma query bug: skip: -1,  PANIC: called `Result::unwrap() TryFromIntError`
           const children = opts.document.children
-          for (let child of children) {
+          for (const child of children) {
             const args = child.args.args
-            for (let arg of args) {
+            for (const arg of args) {
               if (['skip', 'first', 'last'].includes(arg.key)) {
                 if (arg.value < 0) {
                   throw new Error(
@@ -102,7 +102,7 @@ export const getDBClients = async ({
     },
   }
 
-  log.info(`using single prisma client`)
+  log.info('using single prisma client')
 
   return {
     prismaClient: new PrismaClient(clientOptions),
@@ -129,13 +129,13 @@ export const getDBClient = async ({
 
   const identifier = options.database.multiTenant.identifier
   if (!identifier) {
-    throw new Error(`'multiTenant.identifier' is required`)
+    throw new Error('"multiTenant.identifier" is required')
   }
   if (typeof identifier !== 'function') {
-    throw new Error(`'multiTenant.identifier' should be a function`)
+    throw new Error('"multiTenant.identifier" should be a function')
   }
 
-  let tenantId = await identifier(request, reply)
+  const tenantId = await identifier(request, reply)
   if (tenantId) {
     try {
       client = await multiTenant.get(tenantId)
@@ -143,11 +143,11 @@ export const getDBClient = async ({
       throw new Error(`get tenant client error. ${err}`)
     }
   } else {
-    throw new Error(`tenant id is required`)
+    throw new Error('tenant id is required')
   }
 
   if (!client) {
-    throw new Error(`cannot resolve multiple tenant client`)
+    throw new Error('cannot resolve multiple tenant client')
   }
 
   return client

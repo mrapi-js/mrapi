@@ -2,7 +2,10 @@ import { Query, Resolver } from 'type-graphql'
 
 @Resolver()
 export class SampleResolver {
-  @Query((returns) => Date, { nullable: true, description: 'Current DateTime' })
+  @Query((_returns) => Date, {
+    nullable: true,
+    description: 'Current DateTime',
+  })
   serverTime() {
     // console.log(ctx.request.cookies)
     // ctx.reply.setCookie('foo', 'foo')

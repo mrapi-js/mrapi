@@ -29,7 +29,7 @@ export function createLogger(
 ): HttpLogger {
   // const opts = options == null || options == undefined ?
   let opts = options
-  if (options == null || options == undefined) {
+  if (options == null || options === undefined) {
     const tmp = loadConfig(process.cwd())
     if (tmp) {
       opts = tmp.server?.options?.logger || {}

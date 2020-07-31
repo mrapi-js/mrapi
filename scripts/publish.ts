@@ -3,11 +3,10 @@ import execa from 'execa'
 import { join } from 'path'
 import { promises as fs } from 'fs'
 
-// const rootDir = process.cwd()
 const PACKAGES = ['core', 'cli', 'create-mrapi-app']
 const DEPS = ['@mrapi/core', '@mrapi/cli']
 
-async function getLatestVersion() {
+async function getLatestVersion(): Promise<string> {
   const childProcessResult = await execa.command('git describe --abbrev=0')
   const version = childProcessResult.stdout.toString()
   return version.startsWith('v') ? version.slice(1) : version
@@ -16,7 +15,10 @@ async function getLatestVersion() {
 async function writeVersion(pkgDir: string, version: string, dryRun?: boolean) {
   const pkgJsonPath = join(pkgDir, 'package.json')
   const file = await fs.readFile(pkgJsonPath, 'utf-8')
-  const packageJson = JSON.parse(file)
+  const packageJson: {
+    version: string
+    [key: string]: any
+  } = JSON.parse(file)
   if (dryRun) {
     console.log(
       `Would update ${pkgJsonPath} from ${
@@ -29,10 +31,13 @@ async function writeVersion(pkgDir: string, version: string, dryRun?: boolean) {
   }
 }
 
-async function getPackagesInfo(packages: string[], rootDir = 'packages') {
+async function getPackagesInfo(
+  packages: string[],
+  rootDir = 'packages',
+): Promise<Record<string, { name: string; path: string }>> {
   const info: Record<string, { name: string; path: string }> = {}
 
-  for (let name of packages) {
+  for (const name of packages) {
     const pkgDir = join(rootDir, name)
     const pkg: any = require(join('../', pkgDir, 'package.json'))
 
@@ -54,19 +59,20 @@ async function updateTemplatesDeps(newVersion: string, dryRun: boolean) {
     'packages/create-mrapi-app/templates',
   )
 
-  for (let [_name, obj] of Object.entries(info)) {
+  for (const [_name, obj] of Object.entries(info)) {
     const pkgJsonPath = join(obj.path, 'package.json')
     const file = await fs.readFile(pkgJsonPath, 'utf-8')
-    const pkg = JSON.parse(file)
-    const dependencies = pkg.dependencies || {}
-    const devDependencies = pkg.devDependencies || {}
+    const pkg: any = JSON.parse(file)
+    const dependencies = (typeof pkg === 'object' && pkg.dependencies) || {}
+    const devDependencies =
+      (typeof pkg === 'object' && pkg.devDependencies) || {}
 
-    for (let [key, _version] of Object.entries(dependencies)) {
+    for (const [key, _version] of Object.entries(dependencies)) {
       if (DEPS.includes(key)) {
         pkg.dependencies[key] = newVersion
       }
     }
-    for (let [key, _version] of Object.entries(devDependencies)) {
+    for (const [key, _version] of Object.entries(devDependencies)) {
       if (DEPS.includes(key)) {
         pkg.devDependencies[key] = newVersion
       }
@@ -85,7 +91,7 @@ async function run(
   cmd: string,
   dry: boolean = false,
   hidden: boolean = false,
-): Promise<void> {
+) {
   const args = [chalk.underline('./' + cwd).padEnd(20), chalk.bold(cmd)]
   if (dry) {
     args.push(chalk.dim('(dry)'))
@@ -111,7 +117,7 @@ async function run(
     throw new Error(
       chalk.red(
         `Error running ${chalk.bold(cmd)} in ${chalk.underline(cwd)}:`,
-      ) + (e.stderr || e.stack || e.message),
+      ) + `${e.stderr || e.stack || e.message}`,
     )
   }
 }
@@ -119,10 +125,12 @@ async function run(
 async function publish(dryRun: boolean) {
   if (dryRun) {
     console.log(
-      chalk.blue.bold(`\nThe DRY_RUN env var is set, so we'll do a dry run!\n`),
+      chalk.blue.bold(
+        '\nThe DRY_RUN env var is set, so we will do a dry run!\n',
+      ),
     )
   }
-  console.log(chalk.blueBright(`Publish order:`))
+  console.log(chalk.blueBright('Publish order:'))
   console.log(
     chalk.blueBright(PACKAGES.map((o, i) => `  ${i + 1}. ${o}`).join('\n')),
   )
@@ -130,14 +138,14 @@ async function publish(dryRun: boolean) {
   const newVersion = await getLatestVersion()
   const tag = 'latest'
 
-  for (let [name, obj] of Object.entries(info)) {
+  for (const [name, obj] of Object.entries(info)) {
     console.log(
       `\nPublishing ${chalk.magentaBright(`${name}@${newVersion}`)} ${chalk.dim(
         `on ${tag}`,
       )}`,
     )
     await writeVersion(obj.path, newVersion, dryRun)
-    await run(obj.path, `pnpm run build`, dryRun)
+    await run(obj.path, 'pnpm run build', dryRun)
     await run(obj.path, `pnpm publish --no-git-checks --tag ${tag}`, dryRun)
   }
 
@@ -145,18 +153,19 @@ async function publish(dryRun: boolean) {
 
   if (!dryRun) {
     // git push
-    await run(process.cwd(), `git add .`)
+    await run(process.cwd(), 'git add .')
     await run(
       process.cwd(),
       `git commit -am "chore(release): ${newVersion} update packages"`,
     )
-    await run(process.cwd(), `git push --quiet`)
+    await run(process.cwd(), 'git push --quiet')
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 if (!module.parent) {
   publish(!!process.env.DRY_RUN).catch((e) => {
-    console.error(chalk.red.bold('Error: ') + (e.stack || e.message))
+    console.error(chalk.red.bold('Error: ') + `${e.stack || e.message}`)
     process.exit(1)
   })
 }

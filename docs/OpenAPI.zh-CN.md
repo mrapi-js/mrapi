@@ -56,7 +56,7 @@ export default [
   {
     method: 'GET',
     url: `/test`,
-    async handler ({ app, request, reply, prisma }: Context) {
+    async handler({ app, request, reply, prisma }: Context) {
       reply.send({
         code: 0,
         data: await prisma.user.findMany(),

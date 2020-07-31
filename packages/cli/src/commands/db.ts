@@ -5,12 +5,15 @@ import { Management } from '@mrapi/multi-tenant'
 import create from './create'
 import { migrate as mtMigrate, studio } from './multi-tenant'
 
-const checkPrismaSchema = (database: any, cwd = process.cwd()) => {
+const checkPrismaSchema = async (
+  database: any,
+  cwd = process.cwd(),
+): Promise<boolean> => {
   const schemaFilePath = join(
     cwd,
     database?.schemaOutput || 'prisma/schema.prisma',
   )
-  return pathExists(schemaFilePath)
+  return await pathExists(schemaFilePath)
 }
 
 export default {

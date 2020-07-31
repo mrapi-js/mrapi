@@ -23,7 +23,7 @@ export class Tenant {
     // process.env.MANAGEMENT_PROVIDER = managementInfo.provider
     // await migrate.migrateManagement('up', '--create-db')
 
-    for (let tenant of this.config.multiTenant.tenants) {
+    for (const tenant of this.config.multiTenant.tenants) {
       const name = tenant.name.trim()
       if (!(await this.multiTenant.existsTenant(name))) {
         const { url, provider } = getUrlAndProvider(tenant.url)

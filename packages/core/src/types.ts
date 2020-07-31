@@ -2,7 +2,7 @@ import {
   FastifyRequest,
   FastifyReply,
   FastifyInstance,
-  RawRequestDefaultExpression,
+  // RawRequestDefaultExpression,
   RawReplyDefaultExpression,
   FastifyLoggerInstance,
   RawServerBase,
@@ -23,7 +23,7 @@ export type HttpLoggerOptions = LoggerOptions | FastifyLoggerOptions
 export type App = FastifyInstance<Server, IncomingMessage, ServerResponse>
 
 export type Hooks = Record<string, any>
-export type Context = {
+export interface Context {
   app: App
   request: FastifyRequest
   reply: FastifyReply
@@ -41,12 +41,12 @@ export enum DBProvider {
   sqlite = 'sqlite',
 }
 
-export type TenantOptions = {
+export interface TenantOptions {
   name: string
   provider: string
   url: string
 }
-export type DBConfig = {
+export interface DBConfig {
   client: string
   schema: string
   schemaOutput: string
@@ -57,17 +57,17 @@ export type DBConfig = {
       url: string
     }
     tenants: TenantOptions[]
-    identifier: (request: FastifyRequest, reply: FastifyReply) => string | void
+    identifier: (request: FastifyRequest, reply: FastifyReply) => string
   }
 }
 
-export type ServerConfig = {
+export interface ServerConfig {
   // options: FastifyServerOptions
   options: any
   listen: any
 }
 
-export type MrapiOptions = {
+export interface MrapiOptions {
   server: ServerConfig
   database: DBConfig
   plugins?: Record<string, any>
