@@ -12,7 +12,7 @@
     "deepmerge": "^4.2.2"
   },
   "devDependencies": {
-    "tslib": "^2.0.0",
+    "tslib": "^2.0.1",
     "typescript": "^3.9.7"
   },
   "author": "neikvon",

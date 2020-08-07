@@ -26,11 +26,10 @@
 
     "composite": true,
     "paths": {
-      "@mrapi/core": ["packages/core/src/index.ts"],
       "@mrapi/cli": ["packages/cli/src/index.ts"],
       "create-mrapi-app": ["packages/create-mrapi-app/src/index.ts"]
     }
   },
-  "include": ["packages", "scripts", "typings/**/*.ts"],
+  "include": ["packages", "scripts", "typings/**/*.ts", "tmp/multi-tenant"],
   "exclude": ["**/node_modules", "**/lib"]
 }
