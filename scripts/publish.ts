@@ -3,8 +3,8 @@ import execa from 'execa'
 import { join } from 'path'
 import { promises as fs } from 'fs'
 
-const PACKAGES = ['core', 'cli', 'create-mrapi-app']
-const DEPS = ['@mrapi/core', '@mrapi/cli']
+const PACKAGES = ['dal', 'api', 'create-mrapi-app']
+const DEPS = ['@mrapi/dal', '@mrapi/api']
 
 async function getLatestVersion(): Promise<string> {
   const childProcessResult = await execa.command('git describe --abbrev=0')
