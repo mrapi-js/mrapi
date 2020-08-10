@@ -2,14 +2,17 @@ export type TypeEnum = 'standalone' | 'combined'
 
 export default class API {
   prisma: unknown
-  dal: unknown
+  dal: {
+    getPrisma: any
+    start: any
+  }
 
   private combinedWithDAL() {
     let DAL
     try {
       DAL = require('@mrapi/dal')
     } catch (err) {
-      throw new Error(`please install '@mrapi/dal' manually`)
+      throw new Error('please install "@mrapi/dal" manually')
     }
 
     this.dal = new DAL()

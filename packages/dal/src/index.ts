@@ -3,17 +3,19 @@ import { makeSchema } from '@nexus/schema'
 import Server from './server'
 import { createPrismaClient } from './prisma'
 
-export type DALOptions = {
+export type DALOptions = Array<{
   name: string
   schema: any
-}[]
+}>
 
 export default class DAL {
   server: Server
   schemas: any[]
 
   constructor(options: DALOptions = []) {
-    this.prepare(options)
+    this.prepare(options).catch((e) => {
+      console.error(e)
+    })
   }
 
   getPrisma(options: any) {
