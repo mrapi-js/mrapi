@@ -12,4 +12,4 @@
 - [ ] [GraphQL API](./docs/GraphQL-API.zh-CN.md)
 - [x] [OpenAPI](./docs/OpenAPI.zh-CN.md)
 - [x] [CLI](./docs/CLI.zh-CN.md)
-- [ ] [部署方式](./docs/Deployment.zh-CN.md)
+- [x] [部署方式](./docs/Deployment.zh-CN.md)
