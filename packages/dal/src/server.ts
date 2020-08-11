@@ -1,7 +1,19 @@
 import express, { Express } from 'express'
-import { graphqlHTTP } from 'express-graphql'
+import { graphqlHTTP, OptionsData } from 'express-graphql'
 
 import { createContext } from './context'
+
+interface ServerOption {
+  host?: string
+  port?: number
+}
+
+const defaultConfig = {
+  host: '0.0.0.0',
+  port: 1358,
+}
+
+export type RouteOptions = OptionsData
 
 export default class Server {
   app: Express
@@ -10,15 +22,15 @@ export default class Server {
     this.app = express()
   }
 
-  start({ host = '0.0.0.0', port = 1358 } = {}) {
-    const PORT = port || 1358
-    const HOST = host || '0.0.0.0'
+  start({ host, port }: ServerOption) {
+    const PORT = port || defaultConfig.port
+    const HOST = host || defaultConfig.host
     this.app.listen(PORT, HOST)
     console.log(`Running a GraphQL API server at http://${HOST}:${PORT}`)
     return this.app
   }
 
-  addRoute(name: string, options: { schema: any }) {
+  addRoute(name: string, options: RouteOptions) {
     this.app.use(
       `/${name}`,
       graphqlHTTP({
@@ -34,7 +46,7 @@ export default class Server {
     if (idx !== -1) {
       this.app._router.stack.splice(idx, 1)
     } else {
-      console.error(`route '${name}' not found`)
+      console.error(`Route '${name}' not found`)
     }
   }
 }

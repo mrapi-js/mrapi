@@ -1,7 +1,5 @@
-import { PrismaClient, PrismaClientOptions } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
-export function createPrismaClient(
-  options?: PrismaClientOptions,
-): PrismaClient {
-  return new PrismaClient(options || {})
+export function createPrismaClient(options?: any): PrismaClient {
+  return new PrismaClient(options)
 }

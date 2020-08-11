@@ -1,10 +1,10 @@
-import { PrismaClient, PrismaClientOptions } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 export interface Context {
   prisma: PrismaClient
 }
 
-export function createContext(options?: PrismaClientOptions): Context {
+export function createContext(options?: any): Context {
   return {
     prisma: new PrismaClient(options || {}),
   }

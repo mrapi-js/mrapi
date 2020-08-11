@@ -1,6 +1,7 @@
 import { makeSchema } from '@nexus/schema'
+import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
 
-import Server from './server'
+import Server, { RouteOptions } from './server'
 import { createPrismaClient } from './prisma'
 
 export type DALOptions = Array<{
@@ -30,13 +31,13 @@ export default class DAL {
    * @memberof DAL
    */
   private async prepare(options: DALOptions) {
+    const allSchema: Array<Promise<NexusGraphQLSchema>> = []
     for (const option of options) {
-      const schema = await this.generateSchema(option.schema)
-      this.schemas.push({
-        ...option,
-        schema,
-      })
+      allSchema.push(this.generateSchema(option.schema))
+      // {...schema, ...}
     }
+
+    this.schemas = await Promise.all(allSchema)
   }
 
   /**
@@ -56,6 +57,8 @@ export default class DAL {
   ) {
     // TODO: generate types vis prisma schema
     const types = require('../')
+
+    console.log(types)
 
     // make schema
     return makeSchema({
@@ -85,12 +88,12 @@ export default class DAL {
    * add schema to existing server
    *
    * @param {string} name
-   * @param {(Record<'schema' | string, any>)} options
+   * @param {} options
    * @memberof DAL
    */
-  async addSchema(name: string, options: Record<'schema' | string, any>) {
+  async addSchema(name: string, options: RouteOptions) {
     if (!this.server) {
-      throw new Error('server not started')
+      throw new Error('Server not started')
     }
 
     const schema = await this.generateSchema(options.schema)
@@ -105,7 +108,7 @@ export default class DAL {
    */
   removeSchema(name: string) {
     if (!this.server) {
-      throw new Error('server not started')
+      throw new Error('Server not started')
     }
 
     this.server.removeRoute(name)
