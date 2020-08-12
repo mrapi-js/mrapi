@@ -2,8 +2,6 @@
   "compilerOptions": {
     "incremental": true,
 
-    "rootDir": ".",
-    "outDir": "./lib",
     "baseUrl": ".",
 
     "target": "es2018",

@@ -6,7 +6,7 @@ import type { SchemaConfig } from '@nexus/schema/dist/builder'
 
 import { merge } from '@mrapi/common'
 import Server, { RouteOptions, ServerOption } from './server'
-import { createPrismaClient } from './prisma'
+// import { createPrismaClient } from './prisma'
 
 export interface MakeSchemaOptions {
   schema: SchemaConfig
@@ -33,9 +33,9 @@ export default class DAL {
     })
   }
 
-  getPrisma(options: any) {
-    return createPrismaClient(options)
-  }
+  // getPrisma(options: any) {
+  //   return createPrismaClient(options)
+  // }
 
   /**
    * prepare for graphql server
