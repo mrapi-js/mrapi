@@ -10,7 +10,7 @@
     "clean": "rm -rf dist",
     "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
     "generate:prisma": "prisma generate",
-    "generate:nexus": "ts-node-dev --transpile-only src/schema"
+    "generate:nexus": "ts-node-dev --transpile-only src/nexus-schema"
   },
   "author": "",
   "license": "ISC",

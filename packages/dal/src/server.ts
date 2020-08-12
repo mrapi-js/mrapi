@@ -1,5 +1,8 @@
 import express, { Express } from 'express'
-import { graphqlHTTP, OptionsData } from 'express-graphql'
+import {
+  graphqlHTTP,
+  // OptionsData
+} from 'express-graphql'
 
 export interface ServerOption {
   host?: string
@@ -11,7 +14,7 @@ const defaultConfig = {
   port: 1358,
 }
 
-export type RouteOptions = OptionsData
+export type RouteOptions = any // OptionsData
 
 export default class Server {
   app: Express
@@ -24,7 +27,9 @@ export default class Server {
     const PORT = port || defaultConfig.port
     const HOST = host || defaultConfig.host
     this.app.listen(PORT, HOST)
-    console.log(`🚀 Running a GraphQL API server at http://${HOST}:${PORT}`)
+
+    console.log(`\n🚀 Server ready at: http://${HOST}:${PORT}\n`)
+
     return this.app
   }
 
@@ -36,6 +41,8 @@ export default class Server {
         ...options,
       }),
     )
+
+    console.log(`\n⭐️ [${name}] Running a GraphQL API server at: /${name}\n`)
   }
 
   removeRoute(name: string) {

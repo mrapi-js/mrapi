@@ -7,8 +7,9 @@ const options: DALOptions = [
   {
     name: 'dev',
     schema: {
-      outputsDir: path.join(__dirname, 'dev'),
-      schemaDir: path.join(__dirname, './schema.ts'),
+      outputsDir: path.join(__dirname),
+      schemaDir: require.resolve('./schema'),
+      contextSource: require.resolve('./context'),
     },
     graphqlHTTP: {
       context: new Context(),

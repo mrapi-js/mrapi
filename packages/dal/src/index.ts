@@ -1,6 +1,7 @@
 import path from 'path'
 import { makeSchema } from '@nexus/schema'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
+import isPlainObject from 'is-plain-object'
 
 import type { SchemaConfig } from '@nexus/schema/dist/builder'
 
@@ -9,9 +10,10 @@ import Server, { RouteOptions, ServerOption } from './server'
 // import { createPrismaClient } from './prisma'
 
 export interface MakeSchemaOptions {
-  schema: SchemaConfig
+  schema?: SchemaConfig | {}
   outputsDir: string
   schemaDir: string
+  contextSource: string
 }
 
 export type DALOptions = Array<{
@@ -28,9 +30,7 @@ export default class DAL {
   graphqlHTTPOptions = new Map()
 
   constructor(options: DALOptions = []) {
-    this.prepare(options).catch((e) => {
-      console.error(e)
-    })
+    this.prepare(options)
   }
 
   // getPrisma(options: any) {
@@ -44,9 +44,9 @@ export default class DAL {
    * @param {DALOptions} options
    * @memberof DAL
    */
-  private async prepare(options: DALOptions) {
+  private prepare(options: DALOptions) {
     for (const option of options) {
-      this.schemas.set(option.name, await this.generateSchema(option.schema))
+      this.schemas.set(option.name, this.generateSchema(option.schema))
       this.graphqlHTTPOptions.set(option.name, option.graphqlHTTP)
     }
   }
@@ -58,18 +58,23 @@ export default class DAL {
    * @returns
    * @memberof DAL
    */
-  private async generateSchema({
-    outputsDir = __dirname,
+  private generateSchema({
+    schema = {},
+    outputsDir,
     schemaDir,
-    schema,
+    contextSource,
   }: MakeSchemaOptions) {
     let types: any
     try {
       // TODO: generate types vis prisma schema
       types = require(schemaDir)
-      console.log(types)
+      // console.log(types)
     } catch (e) {
       console.log('Error: require schema-type \n', e)
+    }
+
+    const mergeOptions: merge.Options = {
+      isMergeableObject: isPlainObject,
     }
 
     // make schema
@@ -89,7 +94,7 @@ export default class DAL {
           typegenAutoConfig: {
             sources: [
               {
-                source: require.resolve('./context'),
+                source: contextSource, // 暂定这样写  // require.resolve('./context'),
                 alias: 'Context',
               },
             ],
@@ -100,6 +105,7 @@ export default class DAL {
           ),
         },
         schema,
+        mergeOptions,
       ),
     )
   }
@@ -121,7 +127,7 @@ export default class DAL {
     if (this.schemas.has(name)) {
       schema = this.schemas.get(name)
     } else {
-      schema = await this.generateSchema(options.schema)
+      schema = this.generateSchema(options.schema)
     }
 
     let graphqlHTTP

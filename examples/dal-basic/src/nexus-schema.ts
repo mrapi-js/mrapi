@@ -2,7 +2,7 @@ import { makeSchema } from '@nexus/schema'
 import path from 'path'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 
-import * as allTypes from './schema-type'
+import * as allTypes from './schema'
 
 export const schema = makeSchema({
   types: allTypes,
@@ -20,7 +20,7 @@ export const schema = makeSchema({
     sources: [
       {
         alias: 'ctx',
-        source: path.join(__dirname, './context.ts')
+        source: require.resolve('./context')
       }
     ]
   },

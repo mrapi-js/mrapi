@@ -64,34 +64,6 @@ importers:
       nexus-plugin-prisma: 0.17.0
       ts-node-dev: 1.0.0-pre.51
       typescript: ^3.9.6
-  examples/nexus-prisma-demo:
-    dependencies:
-      '@mrapi/dal': 'link:../../packages/dal'
-      '@nexus/schema': 0.15.0_graphql@15.3.0
-      '@prisma/cli': 2.4.1
-      '@prisma/client': 2.4.1_@prisma+cli@2.4.1
-      '@types/express': 4.17.7
-      cross-env: 7.0.2
-      express: 4.17.1
-      express-graphql: 0.11.0_graphql@15.3.0
-      graphql: 15.3.0
-      nexus-plugin-prisma: 0.17.0
-    devDependencies:
-      ts-node-dev: 1.0.0-pre.51_typescript@3.9.7
-      typescript: 3.9.7
-    specifiers:
-      '@mrapi/dal': 'workspace:*'
-      '@nexus/schema': 0.15.0
-      '@prisma/cli': 2.4.1
-      '@prisma/client': 2.4.1
-      '@types/express': ^4.17.7
-      cross-env: ^7.0.2
-      express: ^4.17.1
-      express-graphql: ^0.11.0
-      graphql: 15.3.0
-      nexus-plugin-prisma: 0.17.0
-      ts-node-dev: 1.0.0-pre.51
-      typescript: ^3.9.6
   packages/api:
     dependencies:
       '@mrapi/common': 'link:../common'
@@ -134,6 +106,7 @@ importers:
       express: 4.17.1
       express-graphql: 0.11.0_graphql@15.3.0
       graphql: 15.3.0
+      is-plain-object: 4.1.1
       nexus-plugin-prisma: 0.17.0
     devDependencies:
       '@types/node': 14.0.27
@@ -153,6 +126,7 @@ importers:
       express-graphql: ^0.11.0
       graphql: 15.3.0
       graphql-tools: ^6.0.16
+      is-plain-object: 4.1.1
       nexus-plugin-prisma: ^0.17.0
       nodemon: ^2.0.4
       pal: '^0.3.4 '
@@ -4649,6 +4623,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==
+  /is-plain-object/4.1.1:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-5Aw8LLVsDlZsETVMhoMXzqsXwQqr/0vlnBYzIXJbYo2F4yYlhLHs+Ez7Bod7IIQKWkJbJfxrWD7pA1Dw1TKrwA==
   /is-potential-custom-element-name/1.0.0:
     dev: true
     resolution:
