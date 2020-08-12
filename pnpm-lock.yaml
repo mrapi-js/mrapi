@@ -40,26 +40,28 @@ importers:
     dependencies:
       '@mrapi/dal': 'link:../../packages/dal'
       '@nexus/schema': 0.15.0_graphql@15.3.0
+      '@prisma/cli': 2.4.1
+      '@prisma/client': 2.4.1_@prisma+cli@2.4.1
       '@types/express': 4.17.7
       cross-env: 7.0.2
       express: 4.17.1
       express-graphql: 0.11.0_graphql@15.3.0
       graphql: 15.3.0
-      nexus-prisma: 0.13.0_083b8bc9afb60045b455a5f75e058c4b
+      nexus-plugin-prisma: 0.17.0
     devDependencies:
-      '@prisma/cli': 2.4.1
       ts-node-dev: 1.0.0-pre.51_typescript@3.9.7
       typescript: 3.9.7
     specifiers:
       '@mrapi/dal': 'workspace:*'
       '@nexus/schema': 0.15.0
-      '@prisma/cli': ^2.4.1
+      '@prisma/cli': 2.4.1
+      '@prisma/client': 2.4.1
       '@types/express': ^4.17.7
       cross-env: ^7.0.2
       express: ^4.17.1
       express-graphql: ^0.11.0
       graphql: 15.3.0
-      nexus-prisma: 0.13.0
+      nexus-plugin-prisma: 0.17.0
       ts-node-dev: 1.0.0-pre.51
       typescript: ^3.9.6
   packages/api:
@@ -1275,6 +1277,7 @@ packages:
     resolution:
       integrity: sha512-RhAHY+wp6Nqu89Tp3zfUVkpGfqk4TfngeOWaMGgmhP7mB2ASDtOl8dkwxHmI8eN4edo+luyjPmbJBC4kST321A==
   /@prisma/cli/2.4.1:
+    dev: false
     engines:
       node: '>=10'
     hasBin: true
@@ -5795,21 +5798,6 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-HsfYjYciW+ITqVOqWaFC6O0V6tNxv/Y5VqttJKmgR8zzm3vi3Bwnfye8nldscmkyro1wuSzABGf61/oxInxM8w==
-  /nexus-prisma/0.13.0_083b8bc9afb60045b455a5f75e058c4b:
-    dependencies:
-      '@nexus/schema': 0.15.0_graphql@15.3.0
-      camelcase: 6.0.0
-      fs-extra: 9.0.1
-      graphql: 15.3.0
-      pluralize: 8.0.0
-    deprecated: 'The nexus-prisma package has merged into nexus-plugin-prisma. Learn more here: https://nxs.li/nexus-prisma-to-nexus-plugin-prisma/about.'
-    dev: false
-    peerDependencies:
-      '@nexus/schema': ^0.13.1
-      '@prisma/client': 2.0.0-beta.4
-      graphql: ^14.5.0
-    resolution:
-      integrity: sha512-P4WCd2V0B+lcbV5svQYbBN+lLDozMbvXKda+Sb8PYUYRWXYL293rpHsF8/Rz/P3EN0mvqQTJMA8VBpyd6DChXQ==
   /nice-try/1.0.5:
     dev: true
     resolution:

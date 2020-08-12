@@ -1,5 +1,7 @@
 import { makeSchema } from '@nexus/schema'
 import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
+import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
+import path from 'path'
 
 import Server, { RouteOptions } from './server'
 import { createPrismaClient } from './prisma'
@@ -63,10 +65,14 @@ export default class DAL {
     // make schema
     return makeSchema({
       types,
-      plugins: [],
+      plugins: [
+        nexusSchemaPrisma({
+          experimentalCRUD: true,
+        }),
+      ],
       outputs: {
-        schema: outputsDir + '/generated/schema.graphql',
-        typegen: outputsDir + '/generated/nexus.ts',
+        schema: path.join(outputsDir, '/generated/schema.graphql'),
+        typegen: path.join(outputsDir, '/generated/nexus.ts'),
       },
       typegenAutoConfig: {
         sources: [
