@@ -1,19 +1,31 @@
-import { makeSchema } from '@nexus/schema'
-import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
-import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 import path from 'path'
+import { makeSchema } from '@nexus/schema'
+import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 
-import Server, { RouteOptions } from './server'
+import type { SchemaConfig } from '@nexus/schema/dist/builder'
+
+import { merge } from '@mrapi/common'
+import Server, { RouteOptions, ServerOption } from './server'
 import { createPrismaClient } from './prisma'
 
+export interface MakeSchemaOptions {
+  schema: SchemaConfig
+  outputsDir: string
+  schemaDir: string
+}
+
 export type DALOptions = Array<{
-  name: string
-  schema: any
+  name?: string
+  schema?: MakeSchemaOptions
+  graphqlHTTP?: RouteOptions
 }>
 
 export default class DAL {
   server: Server
-  schemas: any[]
+
+  schemas = new Map()
+
+  graphqlHTTPOptions = new Map()
 
   constructor(options: DALOptions = []) {
     this.prepare(options).catch((e) => {
@@ -33,83 +45,98 @@ export default class DAL {
    * @memberof DAL
    */
   private async prepare(options: DALOptions) {
-    const allSchema: Array<Promise<NexusGraphQLSchema>> = []
     for (const option of options) {
-      allSchema.push(this.generateSchema(option.schema))
-      // {...schema, ...}
+      this.schemas.set(option.name, await this.generateSchema(option.schema))
+      this.graphqlHTTPOptions.set(option.name, option.graphqlHTTP)
     }
-
-    this.schemas = await Promise.all(allSchema)
   }
 
   /**
    * generate graphql schema
    *
    * @private
-   * @param {*} schema prisma schema
-   * @param {string} [typegenDest='@prisma/client']
-   * @param {*} [outputsDir=__dirname]
    * @returns
    * @memberof DAL
    */
-  private async generateSchema(
-    schema: any,
-    typegenDest = '@prisma/client',
+  private async generateSchema({
     outputsDir = __dirname,
-  ) {
-    // TODO: generate types vis prisma schema
-    const types = require('../')
-
-    console.log(types)
+    schemaDir,
+    schema,
+  }: MakeSchemaOptions) {
+    let types: any
+    try {
+      // TODO: generate types vis prisma schema
+      types = require(schemaDir)
+      console.log(types)
+    } catch (e) {
+      console.log('Error: require schema-type \n', e)
+    }
 
     // make schema
-    return makeSchema({
-      types,
-      plugins: [
-        nexusSchemaPrisma({
-          experimentalCRUD: true,
-        }),
-      ],
-      outputs: {
-        schema: path.join(outputsDir, '/generated/schema.graphql'),
-        typegen: path.join(outputsDir, '/generated/nexus.ts'),
-      },
-      typegenAutoConfig: {
-        sources: [
-          {
-            source: typegenDest,
-            alias: 'prisma',
+    return makeSchema(
+      merge(
+        {
+          types,
+          plugins: [
+            nexusSchemaPrisma({
+              experimentalCRUD: true,
+            }),
+          ],
+          outputs: {
+            schema: path.join(outputsDir, '/generated/schema.graphql'),
+            typegen: path.join(outputsDir, '/generated/nexus.ts'),
           },
-          {
-            source: require.resolve('./context'),
-            alias: 'Context',
+          typegenAutoConfig: {
+            sources: [
+              {
+                source: require.resolve('./context'),
+                alias: 'Context',
+              },
+            ],
+            contextType: 'Context.Context',
           },
-        ],
-        contextType: 'Context.Context',
-      },
-    })
+          prettierConfig: require.resolve(
+            path.join(__dirname, '../package.json'),
+          ),
+        },
+        schema,
+      ),
+    )
   }
 
   /**
    * add schema to existing server
    *
-   * @param {string} name
-   * @param {} options
    * @memberof DAL
    */
-  async addSchema(name: string, options: RouteOptions) {
+  async addSchema(
+    name: string,
+    options: { schema?: MakeSchemaOptions; graphqlHTTP?: RouteOptions },
+  ) {
     if (!this.server) {
       throw new Error('Server not started')
     }
 
-    const schema = await this.generateSchema(options.schema)
-    this.server.addRoute(name, { ...options, schema })
+    let schema
+    if (this.schemas.has(name)) {
+      schema = this.schemas.get(name)
+    } else {
+      schema = await this.generateSchema(options.schema)
+    }
+
+    let graphqlHTTP
+    if (this.schemas.has(name)) {
+      graphqlHTTP = this.graphqlHTTPOptions.get(name)
+    } else {
+      graphqlHTTP = options.graphqlHTTP
+    }
+
+    this.server.addRoute(name, { ...graphqlHTTP, schema })
   }
 
   /**
    * remove schema from server
    *
-   * @param {string} name
    * @memberof DAL
    */
   removeSchema(name: string) {
@@ -117,23 +144,24 @@ export default class DAL {
       throw new Error('Server not started')
     }
 
+    this.schemas.delete(name)
+
+    this.graphqlHTTPOptions.delete(name)
+
     this.server.removeRoute(name)
   }
 
   /**
    * start server
    *
-   * @param {*} [options={}]
    * @memberof DAL
    */
-  async start(options = {}) {
+  async start(options: ServerOption = {}) {
     this.server = new Server()
     this.server.start(options)
 
-    for (const [name, schema] of this.schemas) {
-      this.server.addRoute(name, {
-        schema,
-      })
+    for (const [name, _schema] of this.schemas) {
+      await this.addSchema(name, {})
     }
   }
 }

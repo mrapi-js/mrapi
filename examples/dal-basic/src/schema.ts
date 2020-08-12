@@ -1,31 +1,39 @@
-import { makeSchema } from '@nexus/schema'
-import path from 'path'
-import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
+import { objectType, queryType } from '@nexus/schema'
 
-import * as allTypes from './schema-type'
-
-export const schema = makeSchema({
-  types: allTypes,
-  outputs: {
-    schema: path.join(__dirname, '/generated/schema.graphql'),
-    typegen: path.join(__dirname, '/generated/nexus.ts')
-  },
-  plugins: [
-    nexusSchemaPrisma({
-      experimentalCRUD: true
+export const User = objectType({
+  name: 'User',
+  definition (t) {
+    t.model.id()
+    t.model.name()
+    t.model.email()
+    t.model.posts({
+      pagination: false
     })
-  ],
-  typegenAutoConfig: {
-    contextType: 'ctx.Context',
-    sources: [
-      {
-        alias: 'ctx',
-        source: path.join(__dirname, './context.ts')
-      }
-    ],
-    backingTypeMap: {
-      Date: 'Date'
-    }
-  },
-  prettierConfig: require.resolve(path.join(__dirname, '../package.json'))
+  }
+})
+
+export const Post = objectType({
+  name: 'Post',
+  definition (t) {
+    t.model.id()
+    t.model.title()
+    t.model.content()
+    t.model.published()
+    t.model.authorId()
+  }
+})
+
+export const Query = queryType({
+  definition (t) {
+    t.crud.user()
+    t.crud.post()
+  }
+})
+
+export const Mutation = objectType({
+  name: 'Mutation',
+  definition (t) {
+    t.crud.createOneUser()
+    t.crud.deleteOnePost()
+  }
 })

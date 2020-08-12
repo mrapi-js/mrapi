@@ -1,9 +1,7 @@
 import express, { Express } from 'express'
 import { graphqlHTTP, OptionsData } from 'express-graphql'
 
-import { createContext } from './context'
-
-interface ServerOption {
+export interface ServerOption {
   host?: string
   port?: number
 }
@@ -26,7 +24,7 @@ export default class Server {
     const PORT = port || defaultConfig.port
     const HOST = host || defaultConfig.host
     this.app.listen(PORT, HOST)
-    console.log(`Running a GraphQL API server at http://${HOST}:${PORT}`)
+    console.log(`🚀 Running a GraphQL API server at http://${HOST}:${PORT}`)
     return this.app
   }
 
@@ -34,9 +32,8 @@ export default class Server {
     this.app.use(
       `/${name}`,
       graphqlHTTP({
-        ...options,
-        context: createContext(),
         graphiql: { headerEditorEnabled: true },
+        ...options,
       }),
     )
   }

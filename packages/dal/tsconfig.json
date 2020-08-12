@@ -4,6 +4,6 @@
     "rootDir": "./src",
     "outDir": "./lib",
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
-  },
-  "include": ["./src/**/*.ts", "./src/**/*.json"]
+  }
+  // "include": ["./src/**/*.ts", "./src/**/*.json"]
 }
