@@ -6,7 +6,7 @@ import isPlainObject from 'is-plain-object'
 import type { SchemaConfig } from '@nexus/schema/dist/builder'
 
 import { merge } from '@mrapi/common'
-import Server, { RouteOptions, ServerOption } from './server'
+import Server, { RouteOptions, ServerOptions } from './server'
 // import { createPrismaClient } from './prisma'
 
 export interface MakeSchemaOptions {
@@ -30,7 +30,10 @@ export default class DAL {
   graphqlHTTPOptions = new Map()
 
   constructor(options: DALOptions = []) {
-    this.prepare(options)
+    for (const option of options) {
+      this.schemas.set(option.name, this.generateSchema(option.schema))
+      this.graphqlHTTPOptions.set(option.name, option.graphqlHTTP)
+    }
   }
 
   // getPrisma(options: any) {
@@ -38,21 +41,7 @@ export default class DAL {
   // }
 
   /**
-   * prepare for graphql server
-   *
-   * @private
-   * @param {DALOptions} options
-   * @memberof DAL
-   */
-  private prepare(options: DALOptions) {
-    for (const option of options) {
-      this.schemas.set(option.name, this.generateSchema(option.schema))
-      this.graphqlHTTPOptions.set(option.name, option.graphqlHTTP)
-    }
-  }
-
-  /**
-   * generate graphql schema
+   * Generate graphql schema
    *
    * @private
    * @returns
@@ -111,23 +100,20 @@ export default class DAL {
   }
 
   /**
-   * add schema to existing server
+   * Add schema to existing server
    *
    * @memberof DAL
    */
-  async addSchema(
+  addSchema(
     name: string,
-    options: { schema?: MakeSchemaOptions; graphqlHTTP?: RouteOptions },
-  ) {
-    if (!this.server) {
-      throw new Error('Server not started')
-    }
-
+    options: { schema?: MakeSchemaOptions; graphqlHTTP?: RouteOptions } = {},
+  ): boolean {
     let schema
     if (this.schemas.has(name)) {
       schema = this.schemas.get(name)
     } else {
       schema = this.generateSchema(options.schema)
+      this.schemas.set(name, schema)
     }
 
     let graphqlHTTP
@@ -135,39 +121,60 @@ export default class DAL {
       graphqlHTTP = this.graphqlHTTPOptions.get(name)
     } else {
       graphqlHTTP = options.graphqlHTTP
+      this.graphqlHTTPOptions.set(name, graphqlHTTP)
     }
 
-    this.server.addRoute(name, { ...graphqlHTTP, schema })
+    let result = true
+    // 未启服务时，仅添加配置
+    if (this.server) {
+      result = this.server.addRoute(name, { ...graphqlHTTP, schema })
+    }
+    return result
   }
 
   /**
-   * remove schema from server
+   * Remove schema from server
    *
    * @memberof DAL
    */
-  removeSchema(name: string) {
+  removeSchema(name: string): boolean {
+    let result = true
+    if (this.server) {
+      result = this.server.removeRoute(name)
+    }
+
+    if (result) {
+      this.schemas.delete(name)
+      this.graphqlHTTPOptions.delete(name)
+    }
+    return result
+  }
+
+  /**
+   * Start server
+   *
+   * @memberof DAL
+   */
+  async start(serverOptions?: ServerOptions) {
+    if (!this.server) {
+      this.server = new Server(serverOptions)
+    }
+    this.server.start()
+
+    for (const [name, _schema] of this.schemas) {
+      this.addSchema(name)
+    }
+  }
+
+  /**
+   * Stop server
+   *
+   * @memberof DAL
+   */
+  async stop() {
     if (!this.server) {
       throw new Error('Server not started')
     }
-
-    this.schemas.delete(name)
-
-    this.graphqlHTTPOptions.delete(name)
-
-    this.server.removeRoute(name)
-  }
-
-  /**
-   * start server
-   *
-   * @memberof DAL
-   */
-  async start(options: ServerOption = {}) {
-    this.server = new Server()
-    this.server.start(options)
-
-    for (const [name, _schema] of this.schemas) {
-      await this.addSchema(name, {})
-    }
+    this.server.stop()
   }
 }

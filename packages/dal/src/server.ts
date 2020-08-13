@@ -3,37 +3,56 @@ import {
   graphqlHTTP,
   // OptionsData
 } from 'express-graphql'
+import chalk from 'chalk'
 
-export interface ServerOption {
+import { merge } from '@mrapi/common'
+
+import type http from 'http'
+
+export interface ServerOptions {
   host?: string
   port?: number
 }
 
-const defaultConfig = {
+export type RouteOptions = any // OptionsData
+
+const defaultOptions: ServerOptions = {
   host: '0.0.0.0',
   port: 1358,
 }
 
-export type RouteOptions = any // OptionsData
-
 export default class Server {
   app: Express
 
-  constructor() {
+  options: ServerOptions
+
+  server: http.Server
+
+  constructor(options: ServerOptions = {}) {
+    this.options = merge(defaultOptions, options)
+
     this.app = express()
   }
 
-  start({ host, port }: ServerOption) {
-    const PORT = port || defaultConfig.port
-    const HOST = host || defaultConfig.host
-    this.app.listen(PORT, HOST)
+  start() {
+    const { port, host } = this.options
+    this.server = this.app.listen(port, host)
 
-    console.log(`\n🚀 Server ready at: http://${HOST}:${PORT}\n`)
+    console.log(
+      `\n🚀 Server ready at: ${chalk.blue(`http://${host}:${port}`)}\n`,
+    )
 
     return this.app
   }
 
-  addRoute(name: string, options: RouteOptions) {
+  stop() {
+    this.server.close()
+
+    const { port, host } = this.options
+    console.log(`\n🚫 Server closed. ${chalk.gray(`http://${host}:${port}`)}\n`)
+  }
+
+  addRoute(name: string, options: RouteOptions): boolean {
     this.app.use(
       `/${name}`,
       graphqlHTTP({
@@ -42,15 +61,35 @@ export default class Server {
       }),
     )
 
-    console.log(`\n⭐️ [${name}] Running a GraphQL API server at: /${name}\n`)
+    console.log(
+      `\n⭐️ [${name}] Running a GraphQL API route at: ${chalk.blue(
+        `/${name}`,
+      )}\n`,
+    )
+    return true
   }
 
-  removeRoute(name: string) {
-    const idx = this.app._router.stack.findIndex((r: any) => r.name === name)
+  removeRoute(name: string): boolean {
+    const routes = this.app._router.stack
+
+    const idx = routes.findIndex((route: any) => {
+      if (route.name === 'graphqlMiddleware') {
+        return route.regexp.test(`/${name}`)
+      }
+      return false
+    })
     if (idx !== -1) {
-      this.app._router.stack.splice(idx, 1)
-    } else {
-      console.error(`Route '${name}' not found`)
+      routes.splice(idx, 1)
+
+      console.log(
+        `🚫 [${name}] Termination a GraphQL API of route at: ${chalk.gray(
+          `/${name}`,
+        )}`,
+      )
+      return true
     }
+
+    console.error(`Route '/${name}' not found`)
+    return false
   }
 }
