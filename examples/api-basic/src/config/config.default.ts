@@ -8,7 +8,7 @@ export default {
   sources: [
     {
       name: 'auth',
-      endpoint: 'http://42.194.188.88:1358/graphql', // should be replaced
+      endpoint: 'http://localhost:1358/graphql', // should be replaced
       prefix: 'auth_',
       snapshot: false,
     },
