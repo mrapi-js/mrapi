@@ -20,6 +20,7 @@
     "@nexus/schema": "^0.15.0"
   },
   "devDependencies": {
+    "tslib": "^2.0.1",
     "typescript": "^3.9.6",
     "cross-env": "^7.0.2",
     "ts-node-dev": "1.0.0-pre.51"

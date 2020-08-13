@@ -11,7 +11,7 @@ export async function meshSchema(
   meshContext: Function
   execute: ExecuteMeshFn
 }> {
-  const customSchemas = require(path.join(baseDir, options.graphqlDir))
+  const customSchemas = require(path.join(baseDir, options.graphql.dir))
   // load dal graphql schema
   const meshConfig = await findAndParseConfig({ configName: 'mesh' })
   const { schema: dalSchema, contextBuilder, execute } = await getMesh(

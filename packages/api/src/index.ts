@@ -1,7 +1,9 @@
-import { DefaultConfig } from './types'
 import genConfig from './utils/gen-config'
 import Server from './utils/server'
 import { meshSchema } from './utils/graphql'
+import { DefaultConfig } from './types'
+export * from './types'
+// export const Types = AllTypes
 
 export default class API {
   prisma: unknown
@@ -34,6 +36,7 @@ export default class API {
   async startStandalone() {
     const { schema, execute } = await meshSchema(this.baseDir, this.options)
     await this.server.loadGraphql(schema, execute)
+    await this.server.loadOpenapi()
   }
 
   async startCombined() {

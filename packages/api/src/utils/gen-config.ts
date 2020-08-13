@@ -3,6 +3,13 @@ import path from 'path'
 import defaultConfig from '../config/config.default'
 import { GraphqlConfig, Obj, DefaultConfig } from '../types'
 
+/**
+ * decription: generate graphql-mesh config file by template
+ *
+ * @param {Object} gConfig custom graphql config
+ *
+ * @returns {Object} valid graphql-mesh config
+ */
 function getGraphqlConfig(gConfig: GraphqlConfig): Obj {
   const ret = {
     name: gConfig.name,
@@ -32,6 +39,12 @@ function getGraphqlConfig(gConfig: GraphqlConfig): Obj {
   return ret
 }
 
+/**
+ * decription: generate graphql-mesh config and return API config
+ *
+ *
+ * @returns {Object} API options
+ */
 export default function genConfig(): DefaultConfig {
   const baseDir: string = process.cwd()
   const inputConfigName = 'config.default'
