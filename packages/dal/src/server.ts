@@ -5,9 +5,9 @@ import {
 } from 'express-graphql'
 import chalk from 'chalk'
 
-import { merge } from '@mrapi/common'
-
 import type http from 'http'
+
+import { merge } from '@mrapi/common'
 
 export interface ServerOptions {
   host?: string
@@ -46,6 +46,10 @@ export default class Server {
   }
 
   stop() {
+    if (!this.server) {
+      throw new Error('Server not started')
+    }
+
     this.server.close()
 
     const { port, host } = this.options
@@ -73,6 +77,7 @@ export default class Server {
     const routes = this.app._router.stack
 
     const idx = routes.findIndex((route: any) => {
+      // graphqlHTTP name
       if (route.name === 'graphqlMiddleware') {
         return route.regexp.test(`/${name}`)
       }
