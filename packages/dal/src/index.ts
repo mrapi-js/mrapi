@@ -89,9 +89,7 @@ export default class DAL {
             ],
             contextType: 'Context.Context',
           },
-          prettierConfig: require.resolve(
-            path.join(__dirname, '../package.json'),
-          ),
+          prettierConfig: require.resolve('../package.json'),
         },
         schema,
         mergeOptions,
