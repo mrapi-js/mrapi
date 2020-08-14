@@ -21,7 +21,7 @@ export type RouteOptions = any // OptionsData
 const defaultOptions: ServerOptions = {
   host: '0.0.0.0',
   port: 1358,
-  tenantName: 'mrapi-mtn',
+  tenantName: 'mrapi-pmt',
 }
 
 export default class Server {
@@ -67,7 +67,20 @@ export default class Server {
       graphqlHTTP(async (req, res, params) => {
         return {
           graphiql: { headerEditorEnabled: true },
-          context: await createContext(req, res, params, { tenantName }),
+          context: await createContext(req, res, params, { tenantName }).catch(
+            (e) => {
+              // TODO: 多租户异常时，保证 DEV 可以正常访问连接。
+              if (process.env.NODE_ENV === 'production') {
+                throw e
+              }
+              console.error(e)
+              console.log(
+                chalk.red(
+                  `Error: Check to see if a multi-tenant identity "${tenantName}" has been added to the "Request Headers".`,
+                ),
+              )
+            },
+          ),
           ...options,
         }
       }),

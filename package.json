@@ -8,7 +8,7 @@
   ],
   "scripts": {
     "clean": "pnpm recursive run clean && rm -rf node_modules",
-    "build": "pnpm run build --filter @mrapi/dal && pnpm run build --filter @mrapi/api && pnpm run build --filter create-mrapi-app",
+    "build": "pnpm run build --filter @mrapi/common && pnpm run build --filter @mrapi/dal && pnpm run build --filter @mrapi/api",
     "watch": "pnpm run --parallel watch",
     "publish": "ts-node scripts/publish.ts",
     "publish:dry": "DRY_RUN=true ts-node scripts/publish.ts",
