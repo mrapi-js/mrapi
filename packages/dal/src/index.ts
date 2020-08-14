@@ -50,8 +50,7 @@ export default class DAL {
   private generateSchema({
     schema = {},
     outputsDir,
-    schemaDir,
-    contextSource,
+    schemaDir, // contextSource,
   }: MakeSchemaOptions) {
     let types: any
     try {
@@ -80,15 +79,15 @@ export default class DAL {
             schema: path.join(outputsDir, '/generated/schema.graphql'),
             typegen: path.join(outputsDir, '/generated/nexus.ts'),
           },
-          typegenAutoConfig: {
-            sources: [
-              {
-                source: contextSource, // 暂定这样写  // require.resolve('./context'),
-                alias: 'Context',
-              },
-            ],
-            contextType: 'Context.Context',
-          },
+          // typegenAutoConfig: {
+          //   sources: [
+          //     {
+          //       source: require.resolve('./createContext'), // contextSource, // 暂定这样写  // require.resolve('./context'),
+          //       alias: 'Context',
+          //     },
+          //   ],
+          //   contextType: 'Context.Context',
+          // },
           prettierConfig: require.resolve('../package.json'),
         },
         schema,

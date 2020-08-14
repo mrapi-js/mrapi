@@ -15,14 +15,5 @@ export const schema = makeSchema({
       experimentalCRUD: true
     })
   ],
-  typegenAutoConfig: {
-    contextType: 'ctx.Context',
-    sources: [
-      {
-        alias: 'ctx',
-        source: require.resolve('./context')
-      }
-    ]
-  },
   prettierConfig: require.resolve('../package.json')
 })

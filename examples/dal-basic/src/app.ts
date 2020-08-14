@@ -1,7 +1,7 @@
 import DAL, { DALOptions } from '@mrapi/dal'
 import path from 'path'
 
-import Context from './context'
+// import Context from './context'
 
 const TEST_NAME = 'dev'
 
@@ -11,22 +11,11 @@ const options: DALOptions = [
     schema: {
       outputsDir: path.join(__dirname),
       schemaDir: require.resolve('./schema'),
-      contextSource: require.resolve('./context'),
+      // contextSource: require.resolve('./context'),
     },
-    graphqlHTTP: {
-      context: new Context(),
-    },
-  },
-  {
-    name: 'devTwo',
-    schema: {
-      outputsDir: path.join(__dirname),
-      schemaDir: require.resolve('./schema'),
-      contextSource: require.resolve('./context'),
-    },
-    graphqlHTTP: {
-      context: new Context(),
-    },
+    // graphqlHTTP: {
+    //   context: Context(),
+    // },
   },
 ]
 

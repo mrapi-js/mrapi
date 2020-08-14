@@ -8,10 +8,12 @@ import chalk from 'chalk'
 import type http from 'http'
 
 import { merge } from '@mrapi/common'
+import createContext from './createContext'
 
 export interface ServerOptions {
   host?: string
   port?: number
+  tenantName?: string
 }
 
 export type RouteOptions = any // OptionsData
@@ -19,6 +21,7 @@ export type RouteOptions = any // OptionsData
 const defaultOptions: ServerOptions = {
   host: '0.0.0.0',
   port: 1358,
+  tenantName: 'mrapi-mtn',
 }
 
 export default class Server {
@@ -57,11 +60,16 @@ export default class Server {
   }
 
   addRoute(name: string, options: RouteOptions): boolean {
+    const { tenantName } = this.options
+
     this.app.use(
       `/${name}`,
-      graphqlHTTP({
-        graphiql: { headerEditorEnabled: true },
-        ...options,
+      graphqlHTTP(async (req, res, params) => {
+        return {
+          graphiql: { headerEditorEnabled: true },
+          context: await createContext(req, res, params, { tenantName }),
+          ...options,
+        }
       }),
     )
 

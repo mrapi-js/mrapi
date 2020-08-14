@@ -27,6 +27,18 @@ export const Query = queryType({
   definition (t) {
     t.crud.user()
     t.crud.post()
+
+    t.field('publish', {
+      type: 'Post',
+      resolve (_root, args, ctx) {
+        console.log(ctx)
+        return ctx.db.post.update({
+          data: {
+            published: true
+          }
+        })
+      }
+    })
   }
 })
 

@@ -9,8 +9,9 @@
     "build": "tsc",
     "clean": "rm -rf dist",
     "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
-    "generate:prisma": "prisma generate",
-    "generate:nexus": "ts-node-dev --transpile-only src/nexus-schema"
+    "generate:prisma": "npx prisma-multi-tenant generate",
+    "generate:nexus": "ts-node-dev --transpile-only src/nexus-schema",
+    "list": "prisma-multi-tenant list"
   },
   "author": "",
   "license": "ISC",
@@ -24,7 +25,10 @@
     "@nexus/schema": "0.15.0",
     "nexus-plugin-prisma": "0.17.0",
     "@prisma/client": "2.4.1",
-    "@prisma/cli": "2.4.1"
+    "@prisma/cli": "2.4.1",
+    "prisma-multi-tenant": "2.2.0",
+    "@prisma-multi-tenant/client": "2.2.0",
+    "@prisma-multi-tenant/shared": "2.2.0"
   },
   "devDependencies": {
     "typescript": "^3.9.6",
