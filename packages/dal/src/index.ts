@@ -13,7 +13,6 @@ export interface MakeSchemaOptions {
   schema?: SchemaConfig | {}
   outputsDir: string
   schemaDir: string
-  contextSource: string
 }
 
 export type DALOptions = Array<{
@@ -50,7 +49,7 @@ export default class DAL {
   private generateSchema({
     schema = {},
     outputsDir,
-    schemaDir, // contextSource,
+    schemaDir,
   }: MakeSchemaOptions) {
     let types: any
     try {
@@ -58,7 +57,7 @@ export default class DAL {
       types = require(schemaDir)
       // console.log(types)
     } catch (e) {
-      console.log('Error: require schema-type \n', e)
+      console.log(`Error: require ${schemaDir}... \n`, e)
     }
 
     const mergeOptions: merge.Options = {
