@@ -20,13 +20,16 @@ export default class PMTManage {
   }
 
   setPMT(name: string, options?: { PrismaClient: any }) {
+    // delete
     if (!options?.PrismaClient) {
       if (this.multiTenants.has(name)) {
+        this.multiTenants.get(name)?.disconnect()
         this.multiTenants.delete(name)
       }
       return
     }
 
+    // add
     const { PrismaClient } = options
     const multiTenant = new MultiTenant({
       PrismaClient,
@@ -36,10 +39,10 @@ export default class PMTManage {
   }
 
   getPMT(name: string) {
-    if (this.multiTenants.has(name)) {
-      return this.multiTenants.get(name)
+    if (!this.multiTenants.has(name)) {
+      throw new Error(`No instance named "${name}" was found`)
     }
-    throw new Error(`No instance named "${name}" was found`)
+    return this.multiTenants.get(name)
   }
 
   async getPrisma(pmtName: string, dbName: string) {

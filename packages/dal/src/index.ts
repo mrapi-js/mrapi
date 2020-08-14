@@ -37,10 +37,6 @@ export default class DAL {
     }
   }
 
-  // getPrisma(options: any) {
-  //   return createPrismaClient(options)
-  // }
-
   /**
    * Generate graphql schema
    *

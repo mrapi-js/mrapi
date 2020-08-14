@@ -67,11 +67,15 @@ export default class Server {
   addRoute(name: string, options: RouteOptions): boolean {
     const { tenantIdentity } = this.options
 
+    // TODO: 还有问题
+    // set PrismaClient
     const PrismaClient = requireDistant('@prisma/client').PrismaClient
+    // const PrismaClient = requireDistant('.prisma-tqt/one').PrismaClient
     this.pmtManage.setPMT(name, {
       PrismaClient,
     })
 
+    // add graphqlAPI
     this.app.use(
       `/${name}`,
       graphqlHTTP(async (req, _res, _params) => {

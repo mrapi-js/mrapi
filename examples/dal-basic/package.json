@@ -7,9 +7,11 @@
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
     "prod": "cross-env NODE_ENV=production node dist/app",
     "build": "tsc",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist && rm -rf node_modules",
     "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
-    "generate:prisma": "npx prisma-multi-tenant generate",
+    "generate:prisma": "npm run generate:prisma1 && npm run generate:prisma2",
+    "generate:prisma1": "npx prisma-multi-tenant generate -- --schema=\"./prisma/one.prisma\"",
+    "generate:prisma2": "npx prisma-multi-tenant generate -- --schema=\"./prisma/two.prisma\"",
     "generate:nexus": "ts-node-dev --transpile-only src/nexus-schema",
     "list": "prisma-multi-tenant list"
   },
