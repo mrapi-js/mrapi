@@ -10,6 +10,8 @@ import { Server, IncomingMessage, ServerResponse } from 'http'
 
 export { ExecuteMeshFn } from '@graphql-mesh/runtime'
 export { GraphQLSchema } from 'graphql'
+export { Logger } from 'pino'
+export { Level } from 'pino-multi-stream'
 
 export type HttpServer = RawServerBase
 export type HttpRequest = FastifyRequest // RawRequestDefaultExpression<HttpServer>

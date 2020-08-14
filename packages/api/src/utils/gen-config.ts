@@ -2,6 +2,8 @@ import * as fs from 'fs'
 import path from 'path'
 import defaultConfig from '../config/config.default'
 import { GraphqlConfig, Obj, DefaultConfig } from '../types'
+import logger from './logger'
+import _ from 'lodash'
 
 /**
  * decription: generate graphql-mesh config file by template
@@ -54,7 +56,7 @@ export default function genConfig(): DefaultConfig {
     'src/config',
     inputConfigName,
   )).default
-  Object.assign(defaultConfig, customConfig)
+  _.merge(defaultConfig, customConfig)
   const graphqlConfigs: Obj[] = []
   defaultConfig.sources.forEach((s) => {
     graphqlConfigs.push(getGraphqlConfig(s))
@@ -68,7 +70,12 @@ export default function genConfig(): DefaultConfig {
   `,
   )
 
-  console.log(`gen config file ${outputConfigName} done`)
+  logger.info(`
+~~~~~~~~~~Config Start~~~~~~~~~~~~~~~
+  ${JSON.stringify(defaultConfig).replace(/},/g, '},\n')}
+~~~~~~~~~~~~~~~~~~~~~~~~~
+`)
+  logger.info(`[Start] gen config file ${outputConfigName} done`)
 
   return defaultConfig as DefaultConfig
 }
