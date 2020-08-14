@@ -122,6 +122,8 @@ export default class Server {
     if (idx !== -1) {
       routes.splice(idx, 1)
 
+      this.pmtManage.setPMT(name)
+
       console.log(
         `🚫 [${name}] Termination a GraphQL API of route at: ${chalk.gray(
           `/${name}`,

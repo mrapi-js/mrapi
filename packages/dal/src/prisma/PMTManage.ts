@@ -19,7 +19,7 @@ export default class PMTManage {
     this.options = { ...defaultOptions, ...options }
   }
 
-  setPMT(name: string, options: { PrismaClient: any }) {
+  setPMT(name: string, options?: { PrismaClient: any }) {
     if (!options?.PrismaClient) {
       if (this.multiTenants.has(name)) {
         this.multiTenants.delete(name)

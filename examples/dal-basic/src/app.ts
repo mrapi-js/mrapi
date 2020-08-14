@@ -10,18 +10,16 @@ const options: DALOptions = [
       outputsDir: path.join(__dirname),
       schemaDir: require.resolve('./schema'),
     },
-    // graphqlHTTP: {
-    //   context: Context(),
-    // },
   },
 ]
 
 const app = new DAL(options)
 
+let timer: any
 app
   .start()
   .then(() => {
-    setTimeout(() => {
+    timer = setTimeout(() => {
       // // stop test
       // app.stop().then(() => console.log('stop'))
       // // removeSchema test
@@ -32,15 +30,14 @@ app
       //   schema: {
       //     outputsDir: path.join(__dirname),
       //     schemaDir: require.resolve('./schema'),
-      //     contextSource: require.resolve('./context'),
-      //   },
-      //   graphqlHTTP: {
-      //     context: new Context(),
       //   },
       // })
       // ok2 && console.log('addSchema ok')
     }, 1000 * 3)
   })
   .catch((e) => {
+    clearTimeout(timer)
+    timer = null
+
     console.error(e)
   })
