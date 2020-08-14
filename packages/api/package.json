@@ -27,11 +27,20 @@
     "@prisma/client": "^2.4.1",
     "@types/node": "^14.0.27",
     "fastify": "^3.2.0",
+    "lodash": "^4.17.20",
     "fastify-gql": "^5.3.2",
+    "fastify-reply-from": "^2.1.0",
+    "pino": "^6.5.1",
+    "pino-multi-stream": "^5.1.1",
     "graphql": "^15.3.0",
-    "nexus": "^0.26.1"
+    "nexus": "^0.26.1",
+    "pino-pretty": "^4.1.0",
+    "logrotator": "^1.1.0"
   },
   "devDependencies": {
+    "@types/pino": "^6.3.0",
+    "@types/lodash": "^4.14.159",
+    "@types/pino-multi-stream": "^5.0.0",
     "tslib": "^2.0.1",
     "cross-env": "^7.0.2",
     "ts-node-dev": "^1.0.0-pre.49",

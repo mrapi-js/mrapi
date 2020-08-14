@@ -1,5 +1,6 @@
 import fastify from 'fastify'
 import path from 'path'
+import logger from './logger'
 import {
   App,
   GraphQLSchema,
@@ -15,7 +16,7 @@ export default class Server {
   baseDir: string
   constructor(options: DefaultConfig) {
     this.baseDir = process.cwd()
-    this.app = fastify()
+    this.app = fastify({ logger: logger })
     this.options = options
   }
 
@@ -56,12 +57,14 @@ export default class Server {
 
     // type equal standalone, forward request to dalServer
     if (this.options.server.type === 'standalone') {
+      await this.app.register(require('fastify-reply-from'), {
+        base: this.options.openapi.dalBaseUrl,
+      })
       this.app.route({
         method: ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'OPTIONS'],
         url: '/*',
-        handler: function () {
-          // TODO proxy to dalServer
-          console.log('1111')
+        handler: function (request, reply: any) {
+          reply.from(request.raw.url)
         },
       })
     }
@@ -98,7 +101,6 @@ export default class Server {
    */
   async start(): Promise<string> {
     const addr = await this.app.listen(this.options.server.port)
-    console.log(`Server listen: ${addr}`)
     return addr
   }
 }

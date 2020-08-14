@@ -3,6 +3,9 @@ export default {
     port: 1358,
     type: 'standalone',
   },
+  openapi: {
+    dalBaseUrl: 'http://localhost',
+  },
   sources: [
     {
       name: 'auth',
