@@ -7,13 +7,14 @@ import chalk from 'chalk'
 
 import type http from 'http'
 
-import { merge } from '@mrapi/common'
-import createContext from './createContext'
+import { merge, requireDistant } from '@mrapi/common'
+
+import type PMTManage from './prisma/PMTManage'
 
 export interface ServerOptions {
   host?: string
   port?: number
-  tenantName?: string
+  tenantIdentity?: string
 }
 
 export type RouteOptions = any // OptionsData
@@ -21,18 +22,22 @@ export type RouteOptions = any // OptionsData
 const defaultOptions: ServerOptions = {
   host: '0.0.0.0',
   port: 1358,
-  tenantName: 'mrapi-pmt',
+  tenantIdentity: 'mrapi-pmt',
 }
 
 export default class Server {
   app: Express
 
-  options: ServerOptions
+  private readonly options: ServerOptions
 
   server: http.Server
 
-  constructor(options: ServerOptions = {}) {
+  private readonly pmtManage: PMTManage
+
+  constructor(options: ServerOptions = {}, pmtManage: PMTManage) {
     this.options = merge(defaultOptions, options)
+
+    this.pmtManage = pmtManage
 
     this.app = express()
   }
@@ -60,15 +65,21 @@ export default class Server {
   }
 
   addRoute(name: string, options: RouteOptions): boolean {
-    const { tenantName } = this.options
+    const { tenantIdentity } = this.options
+
+    const PrismaClient = requireDistant('@prisma/client').PrismaClient
+    this.pmtManage.setPMT(name, {
+      PrismaClient,
+    })
 
     this.app.use(
       `/${name}`,
-      graphqlHTTP(async (req, res, params) => {
-        return {
-          graphiql: { headerEditorEnabled: true },
-          context: await createContext(req, res, params, { tenantName }).catch(
-            (e) => {
+      graphqlHTTP(async (req, _res, _params) => {
+        const createContext = async () => {
+          const dbName: any = req.headers[tenantIdentity]
+          const prisma = await this.pmtManage
+            .getPrisma(name, dbName)
+            .catch((e: any) => {
               // TODO: 多租户异常时，保证 DEV 可以正常访问连接。
               if (process.env.NODE_ENV === 'production') {
                 throw e
@@ -76,11 +87,15 @@ export default class Server {
               console.error(e)
               console.log(
                 chalk.red(
-                  `Error: Check to see if a multi-tenant identity "${tenantName}" has been added to the "Request Headers".`,
+                  `Error: Check to see if a multi-tenant identity "${tenantIdentity}" has been added to the "Request Headers".`,
                 ),
               )
-            },
-          ),
+            })
+          return { prisma }
+        }
+        return {
+          graphiql: { headerEditorEnabled: true },
+          context: await createContext(),
           ...options,
         }
       }),

@@ -7,7 +7,7 @@ import type { SchemaConfig } from '@nexus/schema/dist/builder'
 
 import { merge } from '@mrapi/common'
 import Server, { RouteOptions, ServerOptions } from './server'
-// import { createPrismaClient } from './prisma'
+import PMTManage from './prisma/PMTManage'
 
 export interface MakeSchemaOptions {
   schema?: SchemaConfig | {}
@@ -25,6 +25,8 @@ export default class DAL {
   server: Server
 
   schemas = new Map()
+
+  pmtManage = new PMTManage()
 
   graphqlHTTPOptions = new Map()
 
@@ -144,7 +146,7 @@ export default class DAL {
    */
   async start(serverOptions?: ServerOptions) {
     if (!this.server) {
-      this.server = new Server(serverOptions)
+      this.server = new Server({ ...serverOptions }, this.pmtManage)
     }
     this.server.start()
 
