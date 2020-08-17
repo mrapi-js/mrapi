@@ -2,14 +2,14 @@ import path from 'path'
 import isPlainObject from 'is-plain-object'
 import { makeSchema } from '@nexus/schema'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
-import type { SchemaConfig } from '@nexus/schema/dist/builder'
+import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
 
 import { merge } from '@mrapi/common'
 import Server, { RouteOptions, ServerOptions } from './server'
 import PMTManage from './prisma/PMTManage'
 
 export interface MakeSchemaOptions {
-  schema?: SchemaConfig | {}
+  schema?: NexusGraphQLSchema | {}
   schemaDir: string
   prismaClientDir: string
 }
@@ -25,11 +25,11 @@ export default class DAL {
 
   public pmtManage = new PMTManage()
 
-  private readonly schemas = new Map()
+  private readonly schemas: Map<string, NexusGraphQLSchema> = new Map()
 
-  private readonly graphqlHTTPOptions = new Map()
+  private readonly graphqlHTTPOptions: Map<string, RouteOptions> = new Map()
 
-  private readonly prismaClients = new Map()
+  private readonly prismaClients: Map<string, string> = new Map()
 
   constructor(options: DALOptions = []) {
     for (const option of options) {
@@ -40,11 +40,38 @@ export default class DAL {
   }
 
   /**
+   * Get PrismaClient
+   *
+   * @returns
+   */
+  getPrisma(name: string) {
+    let schema
+    if (this.schemas.has(name)) {
+      schema = this.schemas.get(name)
+    }
+
+    let prismaClient
+    if (this.prismaClients.has(name)) {
+      prismaClient = this.prismaClients.get(name)
+    }
+
+    if (schema && prismaClient) {
+      return {
+        schema,
+        prismaClient,
+      }
+    }
+
+    throw new Error(
+      `"${name}" was not found. Please call "dal.addSchema" first.`,
+    )
+  }
+
+  /**
    * Generate graphql schema
    *
    * @private
-   * @returns
-   * @memberof DAL
+   * @returns NexusGraphQLSchema
    */
   private generateSchema({
     schema = {},
@@ -93,7 +120,6 @@ export default class DAL {
   /**
    * Add schema to existing server
    *
-   * @memberof DAL
    */
   addSchema(
     name: string,
@@ -142,7 +168,6 @@ export default class DAL {
   /**
    * Remove schema from server
    *
-   * @memberof DAL
    */
   removeSchema(name: string): boolean {
     let result = true
@@ -177,7 +202,6 @@ export default class DAL {
   /**
    * Stop server
    *
-   * @memberof DAL
    */
   async stop() {
     if (!this.server) {
