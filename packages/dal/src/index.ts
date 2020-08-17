@@ -11,9 +11,8 @@ import PMTManage from './prisma/PMTManage'
 
 export interface MakeSchemaOptions {
   schema?: SchemaConfig | {}
-  outputsDir: string
   schemaDir: string
-  prismaClient: string
+  prismaClientDir: string
 }
 
 export type DALOptions = Array<{
@@ -37,7 +36,7 @@ export default class DAL {
     for (const option of options) {
       this.schemas.set(option.name, this.generateSchema(option.schema))
       this.graphqlHTTPOptions.set(option.name, option.graphqlHTTP)
-      this.prismaClients.set(option.name, option.schema.prismaClient)
+      this.prismaClients.set(option.name, option.schema.prismaClientDir)
     }
   }
 
@@ -50,9 +49,8 @@ export default class DAL {
    */
   private generateSchema({
     schema = {},
-    outputsDir,
     schemaDir,
-    prismaClient,
+    prismaClientDir,
   }: MakeSchemaOptions) {
     let types: any
     try {
@@ -77,13 +75,13 @@ export default class DAL {
             nexusSchemaPrisma({
               experimentalCRUD: true,
               inputs: {
-                prismaClient,
+                prismaClient: prismaClientDir,
               },
             }),
           ],
           outputs: {
-            schema: path.join(outputsDir, '/generated/schema.graphql'),
-            typegen: path.join(outputsDir, '/generated/nexus.ts'),
+            schema: path.join(prismaClientDir, '/generated/schema.graphql'),
+            typegen: path.join(prismaClientDir, '/generated/nexus.ts'), // ts 文件在生成环境会不会有问题？
           },
           prettierConfig: require.resolve('../package.json'),
         },
