@@ -5,6 +5,7 @@ import type http from 'http'
 
 import { merge } from '@mrapi/common'
 import type PMTManage from './prisma/PMTManage'
+import { graphqlAPIPrefix } from './constants'
 
 export interface ServerOptions {
   host?: string
@@ -23,11 +24,11 @@ const defaultOptions: ServerOptions = {
 }
 
 export default class Server {
-  app: Express
+  public app: Express
+
+  public server: http.Server
 
   private readonly options: ServerOptions
-
-  server: http.Server
 
   private readonly pmtManage: PMTManage
 
@@ -62,13 +63,11 @@ export default class Server {
   }
 
   addRoute(name: string, options: RouteOptions): boolean {
-    const routeKey = `/${name}`
-
     const { tenantIdentity } = this.options
 
     // set PrismaClient
     if (!options.prismaClient) {
-      throw new Error(`[${routeKey}] - PrismaClient was not found.`)
+      throw new Error(`[/${name}] - PrismaClient was not found.`)
     }
     const PrismaClient =
       typeof options.prismaClient === 'string'
@@ -81,7 +80,7 @@ export default class Server {
 
     // add graphqlAPI
     this.app.use(
-      routeKey,
+      `/${graphqlAPIPrefix}/${name}`,
       graphqlHTTP(async (req, _res, _params) => {
         const createContext = async () => {
           const dbName: any = req.headers[tenantIdentity]
@@ -111,9 +110,13 @@ export default class Server {
 
     console.log(
       `\n⭐️ [${name}] Running a GraphQL API route at: ${chalk.blue(
-        `${routeKey}`,
+        `/${graphqlAPIPrefix}/${name}`,
       )}\n`,
     )
+
+    // TODO: ADD openAPI
+    // ...
+
     return true
   }
 
@@ -123,7 +126,7 @@ export default class Server {
     const idx = routes.findIndex((route: any) => {
       // graphqlHTTP name
       if (route.name === 'graphqlMiddleware') {
-        return route.regexp.test(`/${name}`)
+        return route.regexp.test(`/${graphqlAPIPrefix}/${name}`)
       }
       return false
     })
@@ -134,7 +137,7 @@ export default class Server {
 
       console.log(
         `🚫 [${name}] Termination a GraphQL API of route at: ${chalk.gray(
-          `/${name}`,
+          `/${graphqlAPIPrefix}/${name}`,
         )}`,
       )
       return true

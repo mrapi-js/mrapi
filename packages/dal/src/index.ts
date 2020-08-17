@@ -22,15 +22,15 @@ export type DALOptions = Array<{
 }>
 
 export default class DAL {
-  server: Server
+  public server: Server
 
-  pmtManage = new PMTManage()
+  public pmtManage = new PMTManage()
 
-  schemas = new Map()
+  private readonly schemas = new Map()
 
-  graphqlHTTPOptions = new Map()
+  private readonly graphqlHTTPOptions = new Map()
 
-  prismaClients = new Map()
+  private readonly prismaClients = new Map()
 
   constructor(options: DALOptions = []) {
     for (const option of options) {
