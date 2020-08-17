@@ -55,7 +55,6 @@ importers:
   examples/dal-basic:
     dependencies:
       '@mrapi/dal': 'link:../../packages/dal'
-      '@prisma-multi-tenant/client': 2.3.1_@prisma+cli@2.4.1
       '@prisma-multi-tenant/shared': 2.3.1_@prisma+cli@2.4.1
       '@prisma/cli': 2.4.1
       cross-env: 7.0.2
@@ -65,7 +64,6 @@ importers:
       typescript: 3.9.7
     specifiers:
       '@mrapi/dal': 'workspace:*'
-      '@prisma-multi-tenant/client': 2.3.1
       '@prisma-multi-tenant/shared': 2.3.1
       '@prisma/cli': ^2.4.1
       cross-env: ^7.0.2

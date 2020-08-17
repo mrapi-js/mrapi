@@ -18,7 +18,6 @@
     "@mrapi/dal": "workspace:*",
     "cross-env": "^7.0.2",
     "prisma-multi-tenant": "2.3.1",
-    "@prisma-multi-tenant/client": "2.3.1",
     "@prisma-multi-tenant/shared": "2.3.1",
     "@prisma/cli": "^2.4.1"
   },
