@@ -31,9 +31,6 @@
   },
   "devDependencies": {
     "@types/node": "*",
-    "graphql-tools": "^6.0.16",
-    "nodemon": "^2.0.4",
-    "pal": "^0.3.4 ",
     "tslib": "^2.0.1",
     "typescript": "^3.9.7"
   },

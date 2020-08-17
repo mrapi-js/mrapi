@@ -5,8 +5,8 @@ import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
 
 import { merge } from '@mrapi/common'
-import Server, { RouteOptions, ServerOptions } from './server'
 import PMTManage from './prisma/PMTManage'
+import Server, { RouteOptions, ServerOptions } from './server'
 
 export interface MakeSchemaOptions {
   schema?: NexusGraphQLSchema | {}
@@ -186,7 +186,6 @@ export default class DAL {
   /**
    * Start server
    *
-   * @memberof DAL
    */
   async start(serverOptions?: ServerOptions) {
     if (!this.server) {

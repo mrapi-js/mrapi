@@ -4,8 +4,8 @@ import { graphqlHTTP, OptionsData } from 'express-graphql'
 import type http from 'http'
 
 import { merge } from '@mrapi/common'
-import type PMTManage from './prisma/PMTManage'
 import { graphqlAPIPrefix } from './constants'
+import type PMTManage from './prisma/PMTManage'
 
 export interface ServerOptions {
   host?: string
