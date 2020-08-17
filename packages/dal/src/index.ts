@@ -1,8 +1,7 @@
 import path from 'path'
+import isPlainObject from 'is-plain-object'
 import { makeSchema } from '@nexus/schema'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
-import isPlainObject from 'is-plain-object'
-
 import type { SchemaConfig } from '@nexus/schema/dist/builder'
 
 import { merge } from '@mrapi/common'

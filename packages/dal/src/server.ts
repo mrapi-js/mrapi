@@ -1,6 +1,6 @@
+import chalk from 'chalk'
 import express, { Express } from 'express'
 import { graphqlHTTP, OptionsData } from 'express-graphql'
-import chalk from 'chalk'
 import type http from 'http'
 
 import { merge } from '@mrapi/common'
