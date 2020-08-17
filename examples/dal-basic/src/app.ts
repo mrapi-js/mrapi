@@ -9,6 +9,7 @@ const options: DALOptions = [
     schema: {
       outputsDir: path.join(__dirname),
       schemaDir: require.resolve('./schema'),
+      prismaClient: path.join(process.cwd(), 'node_modules', '.prisma-tqt/one'),
     },
   },
 ]
@@ -30,6 +31,7 @@ app
       //   schema: {
       //     outputsDir: path.join(__dirname),
       //     schemaDir: require.resolve('./schema'),
+      //     prismaClient: path.join(process.cwd(), 'node_modules', '.prisma-tqt/two'),
       //   },
       // })
       // ok2 && console.log('addSchema ok')

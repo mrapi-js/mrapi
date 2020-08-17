@@ -27,8 +27,8 @@
     "graphql": "15.3.0",
     "is-plain-object": "4.1.1",
     "chalk": "^4.1.0",
-    "prisma-multi-tenant": "2.2.0",
-    "@prisma-multi-tenant/client": "2.2.0"
+    "prisma-multi-tenant": "2.3.1",
+    "@prisma-multi-tenant/client": "2.3.1"
   },
   "devDependencies": {
     "@types/node": "*",

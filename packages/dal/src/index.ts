@@ -13,6 +13,7 @@ export interface MakeSchemaOptions {
   schema?: SchemaConfig | {}
   outputsDir: string
   schemaDir: string
+  prismaClient: string
 }
 
 export type DALOptions = Array<{
@@ -24,16 +25,19 @@ export type DALOptions = Array<{
 export default class DAL {
   server: Server
 
-  schemas = new Map()
-
   pmtManage = new PMTManage()
 
+  schemas = new Map()
+
   graphqlHTTPOptions = new Map()
+
+  prismaClients = new Map()
 
   constructor(options: DALOptions = []) {
     for (const option of options) {
       this.schemas.set(option.name, this.generateSchema(option.schema))
       this.graphqlHTTPOptions.set(option.name, option.graphqlHTTP)
+      this.prismaClients.set(option.name, option.schema.prismaClient)
     }
   }
 
@@ -48,6 +52,7 @@ export default class DAL {
     schema = {},
     outputsDir,
     schemaDir,
+    prismaClient,
   }: MakeSchemaOptions) {
     let types: any
     try {
@@ -67,9 +72,13 @@ export default class DAL {
       merge(
         {
           types,
+          // shouldGenerateArtifacts: process.env.NODE_ENV === 'development',
           plugins: [
             nexusSchemaPrisma({
               experimentalCRUD: true,
+              inputs: {
+                prismaClient,
+              },
             }),
           ],
           outputs: {
@@ -91,7 +100,11 @@ export default class DAL {
    */
   addSchema(
     name: string,
-    options: { schema?: MakeSchemaOptions; graphqlHTTP?: RouteOptions } = {},
+    options: {
+      schema?: MakeSchemaOptions
+      graphqlHTTP?: RouteOptions
+      prismaClient: any
+    } = { prismaClient: null },
   ): boolean {
     let schema
     if (this.schemas.has(name)) {
@@ -109,10 +122,22 @@ export default class DAL {
       this.graphqlHTTPOptions.set(name, graphqlHTTP)
     }
 
+    let prismaClient
+    if (this.prismaClients.has(name)) {
+      prismaClient = this.prismaClients.get(name)
+    } else {
+      prismaClient = options.prismaClient
+      this.prismaClients.set(name, prismaClient)
+    }
+
     let result = true
     // 未启服务时，仅添加配置
     if (this.server) {
-      result = this.server.addRoute(name, { ...graphqlHTTP, schema })
+      result = this.server.addRoute(name, {
+        ...graphqlHTTP,
+        schema,
+        prismaClient,
+      })
     }
     return result
   }
@@ -131,6 +156,7 @@ export default class DAL {
     if (result) {
       this.schemas.delete(name)
       this.graphqlHTTPOptions.delete(name)
+      this.prismaClients.delete(name)
     }
     return result
   }

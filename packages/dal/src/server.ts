@@ -1,14 +1,9 @@
 import express, { Express } from 'express'
-import {
-  graphqlHTTP,
-  // OptionsData
-} from 'express-graphql'
+import { graphqlHTTP, OptionsData } from 'express-graphql'
 import chalk from 'chalk'
-
 import type http from 'http'
 
-import { merge, requireDistant } from '@mrapi/common'
-
+import { merge } from '@mrapi/common'
 import type PMTManage from './prisma/PMTManage'
 
 export interface ServerOptions {
@@ -17,7 +12,9 @@ export interface ServerOptions {
   tenantIdentity?: string
 }
 
-export type RouteOptions = any // OptionsData
+export type RouteOptions = OptionsData & {
+  prismaClient: any
+}
 
 const defaultOptions: ServerOptions = {
   host: '0.0.0.0',
@@ -65,19 +62,26 @@ export default class Server {
   }
 
   addRoute(name: string, options: RouteOptions): boolean {
+    const routeKey = `/${name}`
+
     const { tenantIdentity } = this.options
 
-    // TODO: 还有问题
     // set PrismaClient
-    const PrismaClient = requireDistant('@prisma/client').PrismaClient
-    // const PrismaClient = requireDistant('.prisma-tqt/one').PrismaClient
+    if (!options.prismaClient) {
+      throw new Error(`[${routeKey}] - PrismaClient was not found.`)
+    }
+    const PrismaClient =
+      typeof options.prismaClient === 'string'
+        ? require(options.prismaClient).PrismaClient
+        : options.prismaClient
     this.pmtManage.setPMT(name, {
       PrismaClient,
     })
+    delete options.prismaClient
 
     // add graphqlAPI
     this.app.use(
-      `/${name}`,
+      routeKey,
       graphqlHTTP(async (req, _res, _params) => {
         const createContext = async () => {
           const dbName: any = req.headers[tenantIdentity]
@@ -107,7 +111,7 @@ export default class Server {
 
     console.log(
       `\n⭐️ [${name}] Running a GraphQL API route at: ${chalk.blue(
-        `/${name}`,
+        `${routeKey}`,
       )}\n`,
     )
     return true
