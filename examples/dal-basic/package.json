@@ -5,12 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "prod": "cross-env NODE_ENV=production node dist/app",
-    "build": "tsc",
+    "prod": "cross-env NODE_ENV=production node dist/src/app",
+    "build": "rm -rf dist && npm run generate && tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "generate": "npm run generate:prisma1 && npm run generate:prisma2",
+    "generate": "npm run generate:prisma1 && npm run generate:prisma2 && npm run generate:cnt1 && npm run generate:cnt2",
     "generate:prisma1": "npx prisma-multi-tenant generate --schema=\"./prisma/one.prisma\"",
-    "generate:prisma2": "npx prisma-multi-tenant generate --schema=\"./prisma/two.prisma\""
+    "generate:prisma2": "npx prisma-multi-tenant generate --schema=\"./prisma/two.prisma\"",
+    "generate:cnt1": "npx cnt --schema=\"prisma/one.prisma\" --outDir=\"dist/types/one\" -s -mq -m -q -f -o --js",
+    "generate:cnt2": "npx cnt --schema=\"prisma/two.prisma\" --outDir=\"dist/types/two\" -s -mq -m -q -f -o --js"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +21,8 @@
     "cross-env": "^7.0.2",
     "prisma-multi-tenant": "2.3.1",
     "@prisma-multi-tenant/shared": "2.3.1",
-    "@prisma/cli": "^2.4.1"
+    "@prisma/cli": "^2.4.1",
+    "create-nexus-type": "1.2.5"
   },
   "devDependencies": {
     "typescript": "^3.9.6",

@@ -1,4 +1,5 @@
 import path from 'path'
+import chalk from 'chalk'
 import isPlainObject from 'is-plain-object'
 import { makeSchema } from '@nexus/schema'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
@@ -81,10 +82,10 @@ export default class DAL {
     let types: any
     try {
       // TODO: generate types vis prisma schema
-      types = require(schemaDir)
-      // console.log(types)
+      const requireDirTypes = require(schemaDir)
+      types = requireDirTypes.default || requireDirTypes
     } catch (e) {
-      console.log(`Error: require ${schemaDir}... \n`, e)
+      console.log(`${chalk.red(`Error: require "${schemaDir}"...`)}\n`, e)
     }
 
     const mergeOptions: merge.Options = {
@@ -96,7 +97,6 @@ export default class DAL {
       merge(
         {
           types,
-          // shouldGenerateArtifacts: process.env.NODE_ENV === 'development',
           plugins: [
             nexusSchemaPrisma({
               experimentalCRUD: true,
@@ -105,9 +105,10 @@ export default class DAL {
               },
             }),
           ],
+          shouldGenerateArtifacts: process.env.NODE_ENV === 'development', // 感觉生成的文件，只是方便编写 types
           outputs: {
             schema: path.join(prismaClientDir, '/generated/schema.graphql'),
-            typegen: path.join(prismaClientDir, '/generated/nexus.ts'), // ts 文件在生成环境会不会有问题？
+            typegen: path.join(prismaClientDir, '/generated/nexus.ts'),
           },
           prettierConfig: require.resolve('../package.json'),
         },
