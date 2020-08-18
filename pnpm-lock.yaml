@@ -54,6 +54,7 @@ importers:
       typescript: ^3.9.6
   examples/dal-basic:
     dependencies:
+      '@mrapi/cli': 'link:../../packages/cli'
       '@mrapi/dal': 'link:../../packages/dal'
       '@prisma-multi-tenant/shared': 2.3.1_@prisma+cli@2.4.1
       '@prisma/cli': 2.4.1
@@ -64,6 +65,7 @@ importers:
       ts-node-dev: 1.0.0-pre.51_typescript@3.9.7
       typescript: 3.9.7
     specifiers:
+      '@mrapi/cli': 'workspace:*'
       '@mrapi/dal': 'workspace:*'
       '@prisma-multi-tenant/shared': 2.3.1
       '@prisma/cli': ^2.4.1
@@ -129,6 +131,24 @@ importers:
       pino-pretty: ^4.1.0
       ts-node-dev: ^1.0.0-pre.49
       tslib: ^2.0.1
+      typescript: ^3.9.7
+  packages/cli:
+    dependencies:
+      '@mrapi/common': 'link:../common'
+      commander: 6.0.0
+      create-nexus-type: 1.2.5
+      is-plain-object: 4.1.1
+      prisma-multi-tenant: 2.3.1
+    devDependencies:
+      tslib: 2.0.1
+      typescript: 3.9.7
+    specifiers:
+      '@mrapi/common': 'workspace:*'
+      commander: ^6.0.0
+      create-nexus-type: 1.2.5
+      is-plain-object: 4.1.1
+      prisma-multi-tenant: 2.3.1
+      tslib: ^2.0.0
       typescript: ^3.9.7
   packages/common:
     dependencies:
@@ -3958,6 +3978,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
+  /commander/6.0.0:
+    dev: false
+    engines:
+      node: '>= 6'
+    resolution:
+      integrity: sha512-s7EA+hDtTYNhuXkTlhqew4txMZVdszBmKWSPEMxGr8ru8JXR7bLUFIAtPhcSuFdJQ0ILMxnJi8GkQL0yvDy/YA==
   /common-tags/1.8.0:
     dev: false
     engines:
