@@ -1,9 +1,9 @@
-import chalk from 'chalk'
+import path from 'path'
 import commander from 'commander'
 
 interface CommandOptions {
   key: string
-  required: true
+  required?: boolean
   flags: string[]
 }
 
@@ -22,33 +22,40 @@ export default class Command {
   constructor(program: commander.Command, params: CommandParams) {
     this.name = this.constructor.name.replace(/Command$/, '').toLowerCase()
 
-    // make command
+    // Make command
     let programCommand = program
       .command(this.name)
       .description(params.description)
+      .option('--env <path>', 'env filePath', 'prisma/.env')
     params.options.forEach((option) => {
       programCommand = programCommand[
         option.required ? 'requiredOption' : 'option'
-      ](...option.flags)
+      ](option.flags[0], option.flags[1], option.flags[2]) // ...option.flags
     })
     this.program = programCommand
 
-    // runner
+    // Runner
     const runner = new Promise((resolve, reject) => {
       let chain = Promise.resolve()
       chain = chain
-        .then(() => this.initialize())
+        .then(async () => {
+          const next = await this.initialize()
+          return next
+        })
         // If initialize return false, stop...
-        .then((proceed: any) => {
+        .then(async (proceed: any) => {
           if (proceed !== false) {
-            return this.execute()
+            const next = await this.execute()
+            return next
           }
         })
       chain.then(
         (result: any) => {
-          console.log(
-            chalk.green(`Generated "${this.argv.schema}" successful.`),
-          )
+          // console.log(
+          //   chalk.green(
+          //     `✅ Mrapi run ${this.name} successful.`,
+          //   ),
+          // )
           resolve(result)
         },
         (err) => {
@@ -73,6 +80,17 @@ export default class Command {
 
   initialize(): boolean {
     this.argv = this.program.opts()
+
+    // Loading env file
+    require('dotenv').config({
+      path: path.resolve(process.cwd(), this.argv.env || '.env'),
+    })
+
+    // debug
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`${this.name} argv =`, this.argv, '\n')
+      // console.log('\nprocess.env:', process.env, '\n')
+    }
     return true
   }
 

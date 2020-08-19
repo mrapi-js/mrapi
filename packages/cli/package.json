@@ -23,9 +23,11 @@
     "@mrapi/common": "workspace:*",
     "commander": "^6.0.0",
     "is-plain-object": "4.1.1",
+    "@prisma/cli": "2.4.1",
     "prisma-multi-tenant": "2.3.1",
     "create-nexus-type": "1.2.5",
-    "chalk": "^4.1.0"
+    "chalk": "^4.1.0",
+    "dotenv": "^8.2.0"
   },
   "devDependencies": {
     "tslib": "^2.0.0",

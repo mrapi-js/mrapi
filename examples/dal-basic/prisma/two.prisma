@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "/Users/kringtang/tencent/mrapi-js/mrapi/examples/dal-basic/node_modules/.prisma-tqt/two"
+  output   = env("PRISMA_CLIENT_OUTPUT")
 }
 
 datasource db {

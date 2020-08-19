@@ -8,10 +8,9 @@
     "prod": "cross-env NODE_ENV=production node dist/src/app",
     "build": "rm -rf dist && npm run generate && tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "generate": "npm run generate:prisma1 && npm npm run generate:cnt1",
-    "generate:prisma1": "npx prisma-multi-tenant generate --schema=\"prisma/one.prisma\"",
-    "generate:cnt1": "npx cnt --schema=\"prisma/one.prisma\" --outDir=\"dist/types/one\" -s -mq -m -q -f -o --js",
-    "gen": "npx mrapi generate --schema=\"prisma/two.prisma\" --outDir=\"dist/types/two\""
+    "generate": "npm run gen1 && npm run gen2",
+    "gen1": "npx mrapi generate --schema \"prisma/one.prisma\" --outDir \"node_modules/.prisma-mrapi/one\"",
+    "gen2": "npx mrapi generate --schema \"prisma/two.prisma\" --outDir \"node_modules/.prisma-mrapi/two\""
   },
   "author": "",
   "license": "ISC",
@@ -19,9 +18,8 @@
     "@mrapi/dal": "workspace:*",
     "@mrapi/cli": "workspace:*",
     "cross-env": "^7.0.2",
-    "prisma-multi-tenant": "2.3.1",
-    "@prisma-multi-tenant/shared": "2.3.1",
     "@prisma/cli": "^2.4.1",
+    "prisma-multi-tenant": "2.3.1",
     "create-nexus-type": "1.2.5"
   },
   "devDependencies": {

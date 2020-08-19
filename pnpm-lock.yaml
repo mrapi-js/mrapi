@@ -56,7 +56,6 @@ importers:
     dependencies:
       '@mrapi/cli': 'link:../../packages/cli'
       '@mrapi/dal': 'link:../../packages/dal'
-      '@prisma-multi-tenant/shared': 2.3.1_@prisma+cli@2.4.1
       '@prisma/cli': 2.4.1
       create-nexus-type: 1.2.5
       cross-env: 7.0.2
@@ -67,7 +66,6 @@ importers:
     specifiers:
       '@mrapi/cli': 'workspace:*'
       '@mrapi/dal': 'workspace:*'
-      '@prisma-multi-tenant/shared': 2.3.1
       '@prisma/cli': ^2.4.1
       create-nexus-type: 1.2.5
       cross-env: ^7.0.2
@@ -135,8 +133,11 @@ importers:
   packages/cli:
     dependencies:
       '@mrapi/common': 'link:../common'
+      '@prisma/cli': 2.4.1
+      chalk: 4.1.0
       commander: 6.0.0
       create-nexus-type: 1.2.5
+      dotenv: 8.2.0
       is-plain-object: 4.1.1
       prisma-multi-tenant: 2.3.1
     devDependencies:
@@ -144,8 +145,11 @@ importers:
       typescript: 3.9.7
     specifiers:
       '@mrapi/common': 'workspace:*'
+      '@prisma/cli': 2.4.1
+      chalk: ^4.1.0
       commander: ^6.0.0
       create-nexus-type: 1.2.5
+      dotenv: ^8.2.0
       is-plain-object: 4.1.1
       prisma-multi-tenant: 2.3.1
       tslib: ^2.0.0

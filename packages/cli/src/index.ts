@@ -11,7 +11,7 @@ export const run = async () => {
 
   program.version(pkg.version, '-v, --version')
 
-  await generate(program)
+  generate(program)
 
   program.parse(process.argv)
 }
