@@ -5,13 +5,14 @@ import { makeSchema } from '@nexus/schema'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
 
-import { merge } from '@mrapi/common'
+import { merge, getConfig } from '@mrapi/common'
 import PMTManage from './prisma/PMTManage'
 import Server, { RouteOptions, ServerOptions } from './server'
+import type { MrapiConfig } from '@mrapi/common'
 
 export interface MakeSchemaOptions {
   schema?: NexusGraphQLSchema | {}
-  schemaDir: string
+  nexusDir: string
   prismaClientDir: string
 }
 
@@ -26,6 +27,8 @@ export default class DAL {
 
   public pmtManage = new PMTManage()
 
+  private readonly mrapiConfig: MrapiConfig
+
   private readonly schemas: Map<string, NexusGraphQLSchema> = new Map()
 
   private readonly graphqlHTTPOptions: Map<string, RouteOptions> = new Map()
@@ -33,10 +36,21 @@ export default class DAL {
   private readonly prismaClients: Map<string, string> = new Map()
 
   constructor(options: DALOptions = []) {
+    this.mrapiConfig = getConfig()
+
     for (const option of options) {
-      this.schemas.set(option.name, this.generateSchema(option.schema))
+      const schema = option?.schema || this.getDefaultSchemaOptions(option.name)
+      this.schemas.set(option.name, this.generateSchema(schema))
       this.graphqlHTTPOptions.set(option.name, option.graphqlHTTP)
-      this.prismaClients.set(option.name, option.schema.prismaClientDir)
+      this.prismaClients.set(option.name, schema.prismaClientDir)
+    }
+  }
+
+  private getDefaultSchemaOptions(name: string) {
+    const outputDir = path.join(process.cwd(), this.mrapiConfig.outputDir, name)
+    return {
+      nexusDir: path.join(outputDir, 'nexus-types'),
+      prismaClientDir: outputDir,
     }
   }
 
@@ -76,16 +90,19 @@ export default class DAL {
    */
   private generateSchema({
     schema = {},
-    schemaDir,
+    nexusDir,
     prismaClientDir,
   }: MakeSchemaOptions) {
     let types: any
     try {
       // TODO: generate types vis prisma schema
-      const requireDirTypes = require(schemaDir)
+      const requireDirTypes = require(nexusDir)
       types = requireDirTypes.default || requireDirTypes
     } catch (e) {
-      console.log(`${chalk.red(`Error: require "${schemaDir}"...`)}\n`, e)
+      console.log(
+        `${chalk.red(`Error: require nexus types "${nexusDir}"...`)}\n`,
+        e,
+      )
     }
 
     const mergeOptions: merge.Options = {
@@ -127,14 +144,15 @@ export default class DAL {
     options: {
       schema?: MakeSchemaOptions
       graphqlHTTP?: RouteOptions
-      prismaClient: any
-    } = { prismaClient: null },
+    } = {},
   ): boolean {
     let schema
     if (this.schemas.has(name)) {
       schema = this.schemas.get(name)
     } else {
-      schema = this.generateSchema(options.schema)
+      schema = this.generateSchema(
+        options?.schema || this.getDefaultSchemaOptions(name),
+      )
       this.schemas.set(name, schema)
     }
 
@@ -150,7 +168,9 @@ export default class DAL {
     if (this.prismaClients.has(name)) {
       prismaClient = this.prismaClients.get(name)
     } else {
-      prismaClient = options.prismaClient
+      prismaClient =
+        options?.schema?.prismaClientDir ||
+        this.getDefaultSchemaOptions(name).prismaClientDir
       this.prismaClients.set(name, prismaClient)
     }
 

@@ -4,36 +4,30 @@ import commander from 'commander'
 
 import { spawnShell, runShell } from '@mrapi/common'
 import Command, { CommandParams } from './common'
+import type { MrapiConfig } from '@mrapi/common'
 
 class GenerateCommand extends Command {
   static params: CommandParams = {
     description: 'Generate prisma schema and nexus types',
     options: [
       {
-        key: 'schema',
-        required: true,
-        flags: ['--schema <path>', 'The schema path'],
-      },
-      {
-        key: 'outDir',
-        required: true,
-        flags: ['--outDir <path>', 'The output directory'],
-      },
-      {
         key: 'name',
         flags: ['--name <name>', 'schema client name'],
+        required: true,
       },
     ],
   }
 
   async execute() {
-    const { schema, outDir } = this.argv
+    const { name } = this.argv
+    const { schemaDir, outputDir } = this.mrapiConfig
     const cwd = process.cwd()
-    const schemaPath = path.join(cwd, schema)
-    const outputPath = path.join(cwd, outDir)
+    const schemaPath = path.join(cwd, schemaDir, `${name}.prisma`)
+    const outputPath = path.join(cwd, outputDir, name)
 
     // 1. Clean
     await runShell(`rm -rf ${outputPath}`)
+
     // 2. Generate PMT
     // TODO: spawnShell 存在 bug，在 pnpm 中使用时候，容易无法找到对应的依赖包
     const exitPMTCode = await spawnShell(
@@ -53,7 +47,7 @@ class GenerateCommand extends Command {
     const exitCNTCode = await spawnShell(
       `npx cnt --schema ${schemaPath} --outDir ${path.join(
         outputPath,
-        'types',
+        'nexus-types',
       )} -s -mq -m -q -f -o --js`,
     )
     if (exitCNTCode !== 0) {
@@ -62,12 +56,16 @@ class GenerateCommand extends Command {
   }
 }
 
-export default (program: commander.Command) => {
-  const command = new GenerateCommand(program, GenerateCommand.params)
+export default (program: commander.Command, mrapiConfig: MrapiConfig) => {
+  const command = new GenerateCommand(
+    program,
+    GenerateCommand.params,
+    mrapiConfig,
+  )
   command.then(() => {
     console.log(
       chalk.green(
-        `\n✅ Mrapi run ${command.name} "${command.argv.schema}" successful.\n`,
+        `\n✅  Mrapi run ${command.name} "${command.argv.name}.prisma" successful.\n`,
       ),
     )
   })

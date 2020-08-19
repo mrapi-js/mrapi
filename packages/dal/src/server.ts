@@ -3,7 +3,7 @@ import express, { Express } from 'express'
 import { graphqlHTTP, OptionsData } from 'express-graphql'
 import type http from 'http'
 
-import { merge } from '@mrapi/common'
+import { merge, getPrismaClient } from '@mrapi/common'
 import { graphqlAPIPrefix } from './constants'
 import type PMTManage from './prisma/PMTManage'
 
@@ -64,19 +64,14 @@ export default class Server {
 
   addRoute(name: string, options: RouteOptions): boolean {
     const { tenantIdentity } = this.options
+    const PRISMA_CLIENT_OUTPUT = options.prismaClient
 
     // set PrismaClient
-    if (!options.prismaClient) {
-      throw new Error(`[/${name}] - PrismaClient was not found.`)
-    }
-    const PrismaClient =
-      typeof options.prismaClient === 'string'
-        ? require(options.prismaClient).PrismaClient
-        : options.prismaClient
+    const PrismaClient = getPrismaClient(options.prismaClient)
+    delete options.prismaClient
     this.pmtManage.setPMT(name, {
       PrismaClient,
     })
-    delete options.prismaClient
 
     // add graphqlAPI
     this.app.use(
@@ -100,6 +95,10 @@ export default class Server {
             })
           return { prisma }
         }
+
+        // 感觉这样频繁变动会有问题，考虑后续此变量在 schema.prisma 中写死
+        process.env.PRISMA_CLIENT_OUTPUT = PRISMA_CLIENT_OUTPUT
+
         return {
           graphiql: { headerEditorEnabled: true },
           context: await createContext(),

@@ -1,6 +1,8 @@
 import path from 'path'
 import commander from 'commander'
 
+import type { MrapiConfig } from '@mrapi/common'
+
 interface CommandOptions {
   key: string
   required?: boolean
@@ -16,17 +18,24 @@ export default class Command {
   name: string
   runner: any
   argv: any
+  mrapiConfig: MrapiConfig
 
   private readonly program: commander.Command
 
-  constructor(program: commander.Command, params: CommandParams) {
+  constructor(
+    program: commander.Command,
+    params: CommandParams,
+    mrapiConfig: MrapiConfig,
+  ) {
+    this.mrapiConfig = mrapiConfig
+
     this.name = this.constructor.name.replace(/Command$/, '').toLowerCase()
 
     // Make command
     let programCommand = program
       .command(this.name)
       .description(params.description)
-      .option('--env <path>', 'env filePath', 'prisma/.env')
+      .option('--env <path>', 'env filePath', this.mrapiConfig.envPath)
     params.options.forEach((option) => {
       programCommand = programCommand[
         option.required ? 'requiredOption' : 'option'

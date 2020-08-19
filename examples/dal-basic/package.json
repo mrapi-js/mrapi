@@ -8,9 +8,10 @@
     "prod": "cross-env NODE_ENV=production node dist/src/app",
     "build": "rm -rf dist && npm run generate && tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "generate": "npm run gen1 && npm run gen2",
-    "gen1": "npx mrapi generate --schema \"prisma/one.prisma\" --outDir \"node_modules/.prisma-mrapi/one\"",
-    "gen2": "npx mrapi generate --schema \"prisma/two.prisma\" --outDir \"node_modules/.prisma-mrapi/two\""
+    "fixbug": "node scripts/fixbugs.js",
+    "generate": "npm run fixbug && npm run gen1 && npm run gen2",
+    "gen1": "npx mrapi generate --name one",
+    "gen2": "npx mrapi generate --name two"
   },
   "author": "",
   "license": "ISC",
