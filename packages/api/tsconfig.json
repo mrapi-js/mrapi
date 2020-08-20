@@ -3,7 +3,12 @@
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./lib",
+    "allowJs": true,
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
-  "include": ["./src/**/*.ts", "./src/**/*.json"]
+  "include": [
+    "./src/**/*.js",
+    "./src/**/*.ts",
+    "./src/**/*.json"
+  ]
 }

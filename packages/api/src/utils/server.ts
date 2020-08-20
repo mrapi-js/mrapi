@@ -6,17 +6,19 @@ import {
   GraphQLSchema,
   ExecuteMeshFn,
   HttpRequest,
-  DefaultConfig,
+  MrapiConfig,
   HttpReply,
 } from '../types'
 
 export default class Server {
   app: App
-  options: DefaultConfig
+  options: MrapiConfig
   baseDir: string
-  constructor(options: DefaultConfig) {
+  constructor(options: MrapiConfig) {
     this.baseDir = process.cwd()
-    this.app = fastify({ logger: logger })
+    this.app = fastify(
+      Object.assign({}, options.server.options, { logger: logger }),
+    )
     this.options = options
   }
 

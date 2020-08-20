@@ -1,9 +1,7 @@
 import * as fs from 'fs'
-import path from 'path'
-import defaultConfig from '../config/config.default'
-import { GraphqlConfig, Obj, DefaultConfig } from '../types'
+import { GraphqlConfig, Obj, MrapiConfig } from '../types'
 import logger from './logger'
-import _ from 'lodash'
+import { getConfig } from '@mrapi/common'
 
 /**
  * decription: generate graphql-mesh config file by template
@@ -47,18 +45,11 @@ function getGraphqlConfig(gConfig: GraphqlConfig): Obj {
  *
  * @returns {Object} API options
  */
-export default function genConfig(): DefaultConfig {
-  const baseDir: string = process.cwd()
-  const inputConfigName = 'config.default'
+export default function genConfig(): MrapiConfig {
   const outputConfigName = '.meshrc.js'
-  const customConfig: DefaultConfig = require(path.join(
-    baseDir,
-    'src/config',
-    inputConfigName,
-  )).default
-  _.merge(defaultConfig, customConfig)
+  const config: MrapiConfig = getConfig()
   const graphqlConfigs: Obj[] = []
-  defaultConfig.sources.forEach((s) => {
+  config.graphql.sources.forEach((s) => {
     graphqlConfigs.push(getGraphqlConfig(s))
   })
   fs.writeFileSync(
@@ -72,10 +63,10 @@ export default function genConfig(): DefaultConfig {
 
   logger.info(`
 ~~~~~~~~~~Config Start~~~~~~~~~~~~~~~
-  ${JSON.stringify(defaultConfig).replace(/},/g, '},\n')}
+  ${JSON.stringify(config).replace(/},/g, '},\n').replace(/],/g, '],\n')}
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 `)
   logger.info(`[Start] gen config file ${outputConfigName} done`)
 
-  return defaultConfig as DefaultConfig
+  return config
 }
