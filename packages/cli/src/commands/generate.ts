@@ -6,6 +6,9 @@ import { spawnShell, runShell } from '@mrapi/common'
 import Command, { CommandParams } from './common'
 import type { MrapiConfig } from '@mrapi/common'
 
+const cntWhiteList = ['s', 'mq', 'm', 'q', 'f', 'o']
+const cntWhiteListSet = new Set(cntWhiteList)
+
 class GenerateCommand extends Command {
   static params: CommandParams = {
     description: 'Generate prisma schema and nexus types',
@@ -15,11 +18,19 @@ class GenerateCommand extends Command {
         flags: ['--name <name>', 'schema client name'],
         required: true,
       },
+      {
+        key: 'cnt',
+        flags: [
+          '--cnt <options>',
+          'Generate CNT params',
+          cntWhiteList.join(','),
+        ],
+      },
     ],
   }
 
   async execute() {
-    const { name } = this.argv
+    const { name, cnt } = this.argv
     const { schemaDir, outputDir } = this.mrapiConfig
     const cwd = process.cwd()
     const schemaPath = path.join(cwd, schemaDir, `${name}.prisma`)
@@ -44,11 +55,18 @@ class GenerateCommand extends Command {
     }
 
     // 3. Generate CNT
+    let cntParams = ''
+    cnt.split(',').forEach((item: string) => {
+      if (cntWhiteListSet.has(item)) {
+        cntParams += ` -${item}`
+      }
+    })
+    console.log(cntParams)
     const exitCNTCode = await spawnShell(
       `npx cnt --schema ${schemaPath} --outDir ${path.join(
         outputPath,
         'nexus-types',
-      )} -s -mq -m -q -f -o --js`,
+      )}${cntParams} --js`,
     )
     if (exitCNTCode !== 0) {
       throw new Error('Generate nexus types exception.')
