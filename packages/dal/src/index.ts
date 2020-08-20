@@ -210,7 +210,10 @@ export default class DAL {
    */
   async start(serverOptions?: ServerOptions) {
     if (!this.server) {
-      this.server = new Server({ ...serverOptions }, this.pmtManage)
+      this.server = new Server(
+        { tenantIdentity: this.mrapiConfig.tenantIdentity, ...serverOptions },
+        this.pmtManage,
+      )
     }
     this.server.start()
 

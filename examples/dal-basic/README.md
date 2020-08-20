@@ -1,94 +1,40 @@
-mutation {
-  createOneUser(data: {email: "sadsad", name: "tqt"}) {
-    id
-  }
-}
+# 说明
 
+## TODO LIST
 
-query Post {
-  user(where: {id: 1}) {
+...
+
+## 验证方式
+
+### 运行
+
+```shell
+npm run generate
+
+npm run dev
+```
+
+### 下面以访问 `one.prisma` 为例：
+
+访问 http://0.0.0.0:1358/graphql/one
+
+设置租户标识请求头参数 `{[config.tenantIdentity]: "name"}` 例如：`{"mrapi-pmt": "dev"}`
+
+```graphql
+query {
+  users {
     id
     name
   }
 }
 
+mutation {
+  createOneUser(data: {email: "xxx", name: "xxx"}) {
+    id
+  }
+}
+```
 
+### 验证 stop / addSchema / removeSchema
 
-
-// export interface TypegenAutoConfigOptions {
-//   /**
-//    * Any headers to prefix on the generated type file
-//    */
-//   headers?: string[]
-//   /**
-//    * Array of files to match for a type
-//    *
-//    *   sources: [
-//    *     { source: 'typescript', alias: 'ts' },
-//    *     { source: path.join(__dirname, '../backingTypes'), alias: 'b' },
-//    *   ]
-//    */
-//   sources: TypegenConfigSourceModule[]
-//   /**
-//    * Typing for the context, referencing a type defined in the aliased module
-//    * provided in sources e.g. 'alias.Context'
-//    */
-//   contextType?: string
-//   /**
-//    * Types that should not be matched for a backing type,
-//    *
-//    * By default this is set to ['Query', 'Mutation', 'Subscription']
-//    *
-//    *   skipTypes: ['Query', 'Mutation', /(.*?)Edge/, /(.*?)Connection/]
-//    */
-//   skipTypes?: (string | RegExp)[]
-//   /**
-//    * If debug is set to true, this will log out info about all types
-//    * found, skipped, etc. for the type generation files.
-//    */
-//   debug?: boolean
-//   /**
-//    * If provided this will be used for the backing types rather than the auto-resolve
-//    * mechanism above. Useful as an override for one-off cases, or for scalar
-//    * backing types.
-//    */
-//   backingTypeMap?: Record<string, string>
-// }
-
-// export interface TypegenConfigSourceModule {
-//   /**
-//    * The module for where to look for the types.
-//    * This uses the node resolution algorithm via require.resolve,
-//    * so if this lives in node_modules, you can just provide the module name
-//    * otherwise you should provide the absolute path to the file.
-//    */
-//   source: string
-//   /**
-//    * When we import the module, we use 'import * as ____' to prevent
-//    * conflicts. This alias should be a name that doesn't conflict with any other
-//    * types, usually a short lowercase name.
-//    */
-//   alias: string
-//   /**
-//    * Provides a custom approach to matching for the type
-//    *
-//    * If not provided, the default implementation is:
-//    *
-//    *   (type) => [
-//    *      new RegExp(`(?:interface|type|class|enum)\\s+(${type.name})\\W`, "g")
-//    *   ]
-//    *
-//    */
-//   typeMatch?: (type: GraphQLNamedType, defaultRegex: RegExp) => RegExp | RegExp[]
-//   /**
-//    * A list of typesNames or regular expressions matching type names
-//    * that should be resolved by this import. Provide an empty array if you
-//    * wish to use the file for context and ensure no other types are matched.
-//    */
-//   onlyTypes?: (string | RegExp)[]
-//   /**
-//    * By default the import is configured 'import * as alias from', setting glob to false
-//    * will change this to 'import alias from'
-//    */
-//   glob?: false
-// }
+查看 app.js 代码...

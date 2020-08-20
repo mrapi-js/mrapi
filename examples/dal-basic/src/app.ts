@@ -4,9 +4,9 @@ const options: DALOptions = [
   {
     name: 'one',
   },
-  {
-    name: 'two',
-  },
+  // {
+  //   name: 'two',
+  // },
 ]
 
 const app = new DAL(options)
@@ -22,8 +22,8 @@ app
       // const ok = app.removeSchema('one')
       // ok && console.log('removeSchema one')
       // // addSchema test
-      // const ok2 = app.addSchema('three')
-      // ok2 && console.log('addSchema three ok')
+      const ok2 = app.addSchema('two')
+      ok2 && console.log('addSchema two ok')
     }, 1000 * 3)
   })
   .catch((e) => {

@@ -5,6 +5,7 @@ export interface MrapiConfig {
   envPath?: string
   schemaDir?: string
   outputDir?: string
+  tenantIdentity?: string
 }
 
 const defaultConfig: MrapiConfig = {
@@ -16,6 +17,9 @@ const defaultConfig: MrapiConfig = {
 
   // output directory （cnt and pmt）
   outputDir: 'node_modules/.prisma-mrapi',
+
+  // multi-tenant identification (use in HTTP Request Header)
+  tenantIdentity: 'mrapi-pmt',
 }
 
 export default function getConfig(str?: string): MrapiConfig {
