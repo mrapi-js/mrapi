@@ -20,18 +20,18 @@ export default class Command {
   argv: any
   mrapiConfig: MrapiConfig
 
+  static params: CommandParams
+
   private readonly program: commander.Command
 
-  constructor(
-    program: commander.Command,
-    params: CommandParams,
-    mrapiConfig: MrapiConfig,
-  ) {
+  constructor(program: commander.Command, mrapiConfig: MrapiConfig) {
     this.mrapiConfig = mrapiConfig
 
     this.name = this.constructor.name.replace(/Command$/, '').toLowerCase()
 
     // Make command
+    const thisConstructor: any = this.constructor // TODO: fix tslint
+    const params: CommandParams = thisConstructor.params
     let programCommand = program
       .command(this.name)
       .description(params.description)
