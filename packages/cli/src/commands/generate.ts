@@ -6,6 +6,16 @@ import { spawnShell, runShell } from '@mrapi/common'
 import Command, { CommandParams } from './common'
 import type { MrapiConfig } from '@mrapi/common'
 
+/**
+ * https://paljs.com/cli/cnt/#command-options-for-cnt
+ *
+ * -s       add this option to use @nexus/schema package
+ * -mq      add this option to create Queries and Mutations for models
+ * -m       add this option to create Mutations
+ * -q       add this option to create Queries
+ * -f       add this option to add {filtering: true} option to Queries
+ * -o       add this option to add {ordering: true} option to Queries
+ */
 const cntWhiteList = ['s', 'mq', 'm', 'q', 'f', 'o']
 const cntWhiteListSet = new Set(cntWhiteList)
 
@@ -61,7 +71,6 @@ class GenerateCommand extends Command {
         cntParams += ` -${item}`
       }
     })
-    console.log(cntParams)
     const exitCNTCode = await spawnShell(
       `npx cnt --schema ${schemaPath} --outDir ${path.join(
         outputPath,
