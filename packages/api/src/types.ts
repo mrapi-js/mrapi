@@ -6,12 +6,14 @@ import {
   RawServerBase,
 } from 'fastify'
 import { Server, IncomingMessage, ServerResponse } from 'http'
-// import { PrismaClient } from '@prisma/client'
+import { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
+// export { PrismaClient } from '@prisma/client'
 
 export { ExecuteMeshFn } from '@graphql-mesh/runtime'
 export { GraphQLSchema } from 'graphql'
 export { Logger } from 'pino'
 export { Level } from 'pino-multi-stream'
+export { MrapiConfig } from '@mrapi/common'
 
 export type HttpServer = RawServerBase
 export type HttpRequest = FastifyRequest // RawRequestDefaultExpression<HttpServer>
@@ -31,20 +33,33 @@ export interface Context {
   prisema: any
 }
 
+export interface MakeSchemaOptions {
+  schema?: NexusGraphQLSchema | {}
+  nexusDir: string
+  prismaClientDir: string
+}
+
+export type DALOptions = Array<{
+  name?: string
+  schema?: MakeSchemaOptions
+}>
+
 export interface DefaultConfig {
   server: {
     port: number
     type: TypeEnum
+    options?: Obj
   }
   openapi: {
     dir: string
-    dalBaseUrl: string
-    prefix: string
+    dalBaseUrl?: string
+    prefix?: string
   }
   graphql: {
     dir: string
   }
-  sources: [GraphqlConfig?]
+  dalOptions?: DALOptions
+  sources?: [GraphqlConfig]
 }
 
 export interface GraphqlConfig {
@@ -59,4 +74,4 @@ export interface Obj {
 }
 
 type ValueOrArray<T> = T | ArrayOfValueOrArray<T>
-interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}
+interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> { }

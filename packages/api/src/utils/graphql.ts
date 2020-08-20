@@ -1,23 +1,25 @@
-import { getMesh, findAndParseConfig } from '@graphql-mesh/runtime'
+import { getMesh } from '@graphql-mesh/runtime'
+import { findAndParseConfig } from '@graphql-mesh/config'
 import { stitchSchemas } from '@graphql-tools/stitch'
 import path from 'path'
-import { GraphQLSchema, ExecuteMeshFn, DefaultConfig } from '../types'
+import { GraphQLSchema, ExecuteMeshFn, MrapiConfig } from '../types'
 
 export async function meshSchema(
-  baseDir: string,
-  options: DefaultConfig,
+  options: MrapiConfig,
+  schemas: GraphQLSchema[] = [],
 ): Promise<{
   schema: GraphQLSchema
   meshContext: Function
   execute: ExecuteMeshFn
 }> {
-  const customSchemas = require(path.join(baseDir, options.graphql.dir))
+  const customSchemas = require(path.join(process.cwd(), options.graphql.dir))
   // load dal graphql schema
   const meshConfig = await findAndParseConfig({ configName: 'mesh' })
   const { schema: dalSchema, contextBuilder, execute } = await getMesh(
     meshConfig,
   )
-  const subschemas = [{ schema: dalSchema }]
+  const subschemas = schemas.map(schema => ({ schema }))
+  subschemas.push({ schema: dalSchema })
   Object.keys(customSchemas).forEach((key) => {
     subschemas.push({ schema: customSchemas[key] })
   })
