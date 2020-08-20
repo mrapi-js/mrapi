@@ -56,7 +56,7 @@ importers:
     dependencies:
       '@mrapi/cli': 'link:../../packages/cli'
       '@mrapi/dal': 'link:../../packages/dal'
-      '@prisma/cli': 2.5.0
+      '@prisma/cli': 2.4.1
       create-nexus-type: 1.2.5
       cross-env: 7.0.2
       prisma-multi-tenant: 2.3.1
@@ -66,7 +66,7 @@ importers:
     specifiers:
       '@mrapi/cli': 'workspace:*'
       '@mrapi/dal': 'workspace:*'
-      '@prisma/cli': ^2.5.0
+      '@prisma/cli': ^2.4.1
       create-nexus-type: 1.2.5
       cross-env: ^7.0.2
       prisma-multi-tenant: 2.3.1
@@ -1987,14 +1987,6 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-vAOBnouBgCYndXmTcGxanfmhVWUCpwr3akBXiQH+ZKzTYf/pwSsWYpeaXNQfVtUEJEQ0kumfLGdq6ZXnfX//aA==
-  /@prisma/cli/2.5.0:
-    dev: false
-    engines:
-      node: '>=10'
-    hasBin: true
-    requiresBuild: true
-    resolution:
-      integrity: sha512-yqGhDYH8lxIfT/1gjg6VVb2THS+k0cAbnoR8UENNrAAUWGzroZSvz+ECMsVinKshTUHJkD69yzi9i/nDqAODSw==
   /@prisma/client/2.4.1:
     dependencies:
       pkg-up: 3.1.0

@@ -84,11 +84,7 @@ class GenerateCommand extends Command {
 }
 
 export default (program: commander.Command, mrapiConfig: MrapiConfig) => {
-  const command = new GenerateCommand(
-    program,
-    GenerateCommand.params,
-    mrapiConfig,
-  )
+  const command = new GenerateCommand(program, mrapiConfig)
   command.then(() => {
     console.log(
       chalk.green(
