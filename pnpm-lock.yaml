@@ -56,7 +56,7 @@ importers:
     dependencies:
       '@mrapi/cli': 'link:../../packages/cli'
       '@mrapi/dal': 'link:../../packages/dal'
-      '@prisma/cli': 2.4.1
+      '@prisma/cli': 2.5.0
       create-nexus-type: 1.2.5
       cross-env: 7.0.2
       prisma-multi-tenant: 2.3.1
@@ -66,7 +66,7 @@ importers:
     specifiers:
       '@mrapi/cli': 'workspace:*'
       '@mrapi/dal': 'workspace:*'
-      '@prisma/cli': ^2.4.1
+      '@prisma/cli': ^2.5.0
       create-nexus-type: 1.2.5
       cross-env: ^7.0.2
       prisma-multi-tenant: 2.3.1
@@ -133,7 +133,6 @@ importers:
   packages/cli:
     dependencies:
       '@mrapi/common': 'link:../common'
-      '@prisma/cli': 2.4.1
       chalk: 4.1.0
       commander: 6.0.0
       create-nexus-type: 1.2.5
@@ -145,7 +144,6 @@ importers:
       typescript: 3.9.7
     specifiers:
       '@mrapi/common': 'workspace:*'
-      '@prisma/cli': 2.4.1
       chalk: ^4.1.0
       commander: ^6.0.0
       create-nexus-type: 1.2.5
@@ -180,9 +178,8 @@ importers:
     dependencies:
       '@mrapi/common': 'link:../common'
       '@nexus/schema': 0.15.0_graphql@15.3.0
-      '@prisma-multi-tenant/client': 2.3.1_@prisma+cli@2.4.1
-      '@prisma/cli': 2.4.1
-      '@prisma/client': 2.4.1_@prisma+cli@2.4.1
+      '@prisma-multi-tenant/client': 2.3.1
+      '@prisma/client': 2.5.0
       '@types/express': 4.17.7
       chalk: 4.1.0
       express: 4.17.1
@@ -198,8 +195,7 @@ importers:
       '@mrapi/common': 'workspace:*'
       '@nexus/schema': 0.15.0
       '@prisma-multi-tenant/client': 2.3.1
-      '@prisma/cli': 2.4.1
-      '@prisma/client': 2.4.1
+      '@prisma/client': 2.5.0
       '@types/express': ^4.17.7
       '@types/node': '*'
       chalk: ^4.1.0
@@ -1954,15 +1950,22 @@ packages:
     dev: false
     resolution:
       integrity: sha512-PROb3n3vFmyyYQvAyLb/JXDngoRlssql+Bhpf1gYYjAhwnjlGQOXlqGzXvq4r72fQDQPAmUs31pbG+XUk1wiTg==
-  /@prisma-multi-tenant/client/2.3.1_@prisma+cli@2.4.1:
+  /@prisma-multi-tenant/client/2.3.1:
     dependencies:
-      '@prisma-multi-tenant/shared': 2.3.1_@prisma+cli@2.4.1
-      '@prisma/cli': 2.4.1
+      '@prisma-multi-tenant/shared': 2.3.1
     dev: false
     peerDependencies:
       '@prisma/cli': ^2.4.1
     resolution:
       integrity: sha512-NYXz/dBlK1M9czIvGSGyhomoMOuzMJ5AApL+Hpg73h+vJmzbhNYJKXIYL4Ir3KEm5RJjAVhaLTTafISho6IFNQ==
+  /@prisma-multi-tenant/shared/2.3.1:
+    dependencies:
+      '@prisma/client': 2.4.1
+    dev: false
+    peerDependencies:
+      '@prisma/cli': ^2.4.1
+    resolution:
+      integrity: sha512-2zIwagTNuf0DJ5G7GiPapssW47r2RULGXAFRFlTJ+OPpTRksAYparVWqaUKFGOUjyEbs5u5fYMoF6rwZnSK5AQ==
   /@prisma-multi-tenant/shared/2.3.1_@prisma+cli@2.4.1:
     dependencies:
       '@prisma/cli': 2.4.1
@@ -1984,6 +1987,14 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-vAOBnouBgCYndXmTcGxanfmhVWUCpwr3akBXiQH+ZKzTYf/pwSsWYpeaXNQfVtUEJEQ0kumfLGdq6ZXnfX//aA==
+  /@prisma/cli/2.5.0:
+    dev: false
+    engines:
+      node: '>=10'
+    hasBin: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-yqGhDYH8lxIfT/1gjg6VVb2THS+k0cAbnoR8UENNrAAUWGzroZSvz+ECMsVinKshTUHJkD69yzi9i/nDqAODSw==
   /@prisma/client/2.4.1:
     dependencies:
       pkg-up: 3.1.0
@@ -2013,6 +2024,20 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-13aphZb34ws8GuRxVsmgiQmUJRfcnnb5/Jy78/ZkpLyCk5ZpchO/Rr1KNiF/cfLHprdKOjSvUzthcx+tubaA2A==
+  /@prisma/client/2.5.0:
+    dependencies:
+      pkg-up: 3.1.0
+    dev: false
+    engines:
+      node: '>=10'
+    peerDependencies:
+      '@prisma/cli': '*'
+    peerDependenciesMeta:
+      '@prisma/cli':
+        optional: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-rsgbImSVMBATLSSZEgP7pWpqV2iylDJWM2zjmL980IjTBgy63alDr0RyoOkdt8oVw4OyJW0uYpxAU2Z9bXZU9A==
   /@prisma/debug/2.4.1:
     dependencies:
       debug: 4.1.1
