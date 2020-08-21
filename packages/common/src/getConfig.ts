@@ -3,6 +3,7 @@ import merge from 'deepmerge'
 
 export interface MrapiConfig {
   envPath?: string
+  inputSchemaDir?: string
   schemaDir?: string
   outputDir?: string
   tenantIdentity?: string
@@ -12,22 +13,25 @@ export interface MrapiConfig {
     dalBaseUrl?: string
   }
   graphql: {
-    dir: string,
+    dir: string
     sources?: []
   }
   server: {
     type: 'standalone' | 'combined'
-    port: number,
+    port: number
     options?: {
       [key: string]: any
     }
-  },
-  schemaNames: string[],
+  }
+  schemaNames: string[]
 }
 
 const defaultConfig: MrapiConfig = {
   // .env filePath
   envPath: 'prisma/.env',
+
+  // input schema file to generate
+  inputSchemaDir: 'config/prisma',
 
   // schema directory
   schemaDir: 'prisma',
@@ -74,7 +78,7 @@ export default function getConfig(str?: string): MrapiConfig {
     if (config.defualt) {
       config = config.defualt
     }
-  } catch { }
+  } catch {}
 
   return config ? merge(defaultConfig, config) : config
 }

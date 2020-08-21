@@ -1,3 +1,5 @@
+// This file to fix pmt pnpm bug
+
 datasource management {
   provider = ["sqlite", "mysql", "postgresql"]
   url      = env("PMT_MANAGEMENT_URL")

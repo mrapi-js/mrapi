@@ -64,7 +64,6 @@ export default class Server {
 
   addRoute(name: string, options: RouteOptions): boolean {
     const { tenantIdentity } = this.options
-    const PRISMA_CLIENT_OUTPUT = options.prismaClient
 
     // set PrismaClient
     const PrismaClient = getPrismaClient(options.prismaClient)
@@ -95,9 +94,6 @@ export default class Server {
             })
           return { prisma }
         }
-
-        // 感觉这样频繁变动会有问题，考虑后续此变量在 schema.prisma 中写死
-        process.env.PRISMA_CLIENT_OUTPUT = PRISMA_CLIENT_OUTPUT
 
         return {
           graphiql: { headerEditorEnabled: true },

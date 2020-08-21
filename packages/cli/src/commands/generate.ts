@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import path from 'path'
 import commander from 'commander'
+import { readFileSync, outputFileSync } from 'fs-extra'
 
 import { spawnShell, runShell } from '@mrapi/common'
 import Command, { CommandParams } from './common'
@@ -41,30 +42,34 @@ class GenerateCommand extends Command {
 
   async execute() {
     const { name, cnt } = this.argv
-    const { schemaDir, outputDir } = this.mrapiConfig
+    const { inputSchemaDir, schemaDir, outputDir } = this.mrapiConfig
     const cwd = process.cwd()
+    const inputSchemaPath = path.join(cwd, inputSchemaDir, `${name}.prisma`)
     const schemaPath = path.join(cwd, schemaDir, `${name}.prisma`)
     const outputPath = path.join(cwd, outputDir, name)
 
     // 1. Clean
-    await runShell(`rm -rf ${outputPath}`)
+    await runShell(`rm -rf ${outputPath} ${schemaPath}`)
 
-    // 2. Generate PMT
+    // 2. Generate schema.prisma
+    outputFileSync(
+      schemaPath,
+      this.createSchemaPrisma(
+        outputPath,
+        readFileSync(inputSchemaPath, 'utf8'),
+      ),
+    )
+
+    // 3. Generate PMT
     // TODO: spawnShell 存在 bug，在 pnpm 中使用时候，容易无法找到对应的依赖包
     const exitPMTCode = await spawnShell(
       `npx prisma-multi-tenant generate --schema ${schemaPath}`,
-      {
-        env: {
-          ...process.env,
-          PRISMA_CLIENT_OUTPUT: outputPath,
-        },
-      },
     )
     if (exitPMTCode !== 0) {
       throw new Error('Generate a multi-tenant exception.')
     }
 
-    // 3. Generate CNT
+    // 4. Generate CNT
     let cntParams = ''
     cnt.split(',').forEach((item: string) => {
       if (cntWhiteListSet.has(item)) {
@@ -81,6 +86,20 @@ class GenerateCommand extends Command {
       throw new Error('Generate nexus types exception.')
     }
   }
+
+  createSchemaPrisma = (output: string, content: string) => `
+generator client {
+  provider = "prisma-client-js"
+  output   = "${output}"
+}
+
+datasource db {
+  provider = ["sqlite", "mysql", "postgresql"]
+  url      = env("DATABASE_URL")
+}
+
+${content}
+`
 }
 
 export default (program: commander.Command, mrapiConfig: MrapiConfig) => {
