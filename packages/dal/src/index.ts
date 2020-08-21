@@ -5,10 +5,11 @@ import { makeSchema } from '@nexus/schema'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
 
-import { merge, getConfig } from '@mrapi/common'
+import { merge, getConfig, getPrismaClient } from '@mrapi/common'
 import PMTManage from './prisma/PMTManage'
-import Server, { RouteOptions, ServerOptions } from './server'
+import Server from './server'
 import type { MrapiConfig } from '@mrapi/common'
+import type { RouteOptions, ServerOptions } from './types'
 
 export interface MakeSchemaOptions {
   schema?: NexusGraphQLSchema | {}
@@ -25,7 +26,7 @@ export type DALOptions = Array<{
 export default class DAL {
   public server: Server
 
-  public pmtManage: PMTManage
+  private readonly pmtManage: PMTManage
 
   private readonly mrapiConfig: MrapiConfig
 
@@ -56,34 +57,6 @@ export default class DAL {
       nexusDir: path.join(outputDir, 'nexus-types'),
       prismaClientDir: outputDir,
     }
-  }
-
-  /**
-   * Get PrismaClient
-   *
-   * @returns
-   */
-  getPrisma(name: string) {
-    let schema
-    if (this.schemas.has(name)) {
-      schema = this.schemas.get(name)
-    }
-
-    let prismaClient
-    if (this.prismaClients.has(name)) {
-      prismaClient = this.prismaClients.get(name)
-    }
-
-    if (schema && prismaClient) {
-      return {
-        schema,
-        prismaClient,
-      }
-    }
-
-    throw new Error(
-      `"${name}" was not found. Please call "dal.addSchema" first.`,
-    )
   }
 
   /**
@@ -140,6 +113,52 @@ export default class DAL {
   }
 
   /**
+   * Get PrismaClient path and @nexus/schema options
+   *
+   */
+  getPrisma(name: string) {
+    let schema
+    if (this.schemas.has(name)) {
+      schema = this.schemas.get(name)
+    }
+
+    let prismaClient
+    if (this.prismaClients.has(name)) {
+      prismaClient = this.prismaClients.get(name)
+    }
+
+    if (schema && prismaClient) {
+      return {
+        schema,
+        prismaClient,
+      }
+    }
+
+    throw new Error(
+      `"${name}" was not found. Please call "dal.addSchema" first.`,
+    )
+  }
+
+  /**
+   * Get prisma instance by PMT
+   *
+   */
+  getPMTPrisma = async (name: string, dbName: string) => {
+    return await this.pmtManage.getPrisma(name, dbName).catch((e: any) => {
+      // TODO: 多租户异常时，保证 DEV 可以正常访问连接。
+      if (process.env.NODE_ENV === 'production') {
+        throw e
+      }
+      console.error(e)
+      console.log(
+        chalk.red(
+          `Tips: Check to see if a multi-tenant identity "${this.mrapiConfig.tenantIdentity}" has been added to the "Request Headers".`,
+        ),
+      )
+    })
+  }
+
+  /**
    * Add schema to existing server
    *
    */
@@ -178,13 +197,17 @@ export default class DAL {
       this.prismaClients.set(name, prismaClient)
     }
 
+    // Set PMT PrismaClient
+    this.pmtManage.setPMT(name, {
+      PrismaClient: getPrismaClient(prismaClient),
+    })
+
     let result = true
-    // 未启服务时，仅添加配置
+    // If server not started, only the configuration is added
     if (this.server) {
       result = this.server.addRoute(name, {
         ...graphqlHTTP,
         schema,
-        prismaClient,
       })
     }
     return result
@@ -204,6 +227,9 @@ export default class DAL {
       this.schemas.delete(name)
       this.graphqlHTTPOptions.delete(name)
       this.prismaClients.delete(name)
+
+      // Delete pmt PrismaClient
+      this.pmtManage.setPMT(name)
     }
     return result
   }
@@ -216,7 +242,7 @@ export default class DAL {
     if (!this.server) {
       this.server = new Server(
         { tenantIdentity: this.mrapiConfig.tenantIdentity, ...serverOptions },
-        this.pmtManage,
+        this.getPMTPrisma,
       )
     }
     this.server.start()

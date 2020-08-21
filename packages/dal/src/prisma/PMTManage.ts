@@ -2,7 +2,7 @@ import { MultiTenant } from '@prisma-multi-tenant/client'
 
 import { getUrlAndProvider } from '@mrapi/common'
 
-export interface PMTManageOptions {
+interface PMTManageOptions {
   useManagement?: boolean
   PrismaClientManagement?: any
   tenantOptions?: any
@@ -11,6 +11,7 @@ export interface PMTManageOptions {
 
 const defaultOptions: PMTManageOptions = {
   useManagement: true,
+  managementUrl: '',
 }
 
 export default class PMTManage {
