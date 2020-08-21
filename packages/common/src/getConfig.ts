@@ -2,6 +2,7 @@ import path from 'path'
 import merge from 'deepmerge'
 
 export interface MrapiConfig {
+  managementUrl: string
   envPath?: string
   inputSchemaDir?: string
   schemaDir?: string
@@ -29,6 +30,9 @@ export interface MrapiConfig {
 const defaultConfig: MrapiConfig = {
   // .env filePath
   envPath: 'prisma/.env',
+
+  // management pmt db uri
+  managementUrl: '',
 
   // input schema file to generate
   inputSchemaDir: 'config/prisma',
@@ -73,12 +77,18 @@ const defaultConfig: MrapiConfig = {
 
 export default function getConfig(str?: string): MrapiConfig {
   let config
+  const configPath = path.join(process.cwd(), str || 'config/mrapi.config.js')
   try {
-    config = require(path.join(process.cwd(), str || 'config/mrapi.config.js'))
+    config = require(configPath)
     if (config.defualt) {
       config = config.defualt
     }
   } catch {}
 
-  return config ? merge(defaultConfig, config) : config
+  const result = config ? merge(defaultConfig, config) : config
+  if (!result.managementUrl) {
+    throw new Error(`Please configure the "managementUrl" in ${configPath}.`)
+  }
+
+  return result
 }

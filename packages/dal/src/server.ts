@@ -88,7 +88,7 @@ export default class Server {
               console.error(e)
               console.log(
                 chalk.red(
-                  `Error: Check to see if a multi-tenant identity "${tenantIdentity}" has been added to the "Request Headers".`,
+                  `Tips: Check to see if a multi-tenant identity "${tenantIdentity}" has been added to the "Request Headers".`,
                 ),
               )
             })

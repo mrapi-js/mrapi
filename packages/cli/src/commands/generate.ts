@@ -3,7 +3,7 @@ import path from 'path'
 import commander from 'commander'
 import { readFileSync, outputFileSync } from 'fs-extra'
 
-import { spawnShell, runShell } from '@mrapi/common'
+import { spawnShell, runShell, getUrlAndProvider } from '@mrapi/common'
 import Command, { CommandParams } from './common'
 import type { MrapiConfig } from '@mrapi/common'
 
@@ -42,18 +42,23 @@ class GenerateCommand extends Command {
 
   async execute() {
     const { name, cnt } = this.argv
-    const { inputSchemaDir, schemaDir, outputDir } = this.mrapiConfig
+    const {
+      inputSchemaDir,
+      schemaDir,
+      outputDir,
+      managementUrl,
+    } = this.mrapiConfig
     const cwd = process.cwd()
     const inputSchemaPath = path.join(cwd, inputSchemaDir, `${name}.prisma`)
-    const schemaPath = path.join(cwd, schemaDir, `${name}.prisma`)
+    const outputSchemaPath = path.join(cwd, schemaDir, `${name}.prisma`)
     const outputPath = path.join(cwd, outputDir, name)
 
     // 1. Clean
-    await runShell(`rm -rf ${outputPath} ${schemaPath}`)
+    await runShell(`rm -rf ${outputPath} ${outputSchemaPath}`)
 
     // 2. Generate schema.prisma
     outputFileSync(
-      schemaPath,
+      outputSchemaPath,
       this.createSchemaPrisma(
         outputPath,
         readFileSync(inputSchemaPath, 'utf8'),
@@ -61,9 +66,17 @@ class GenerateCommand extends Command {
     )
 
     // 3. Generate PMT
+    const managementObj = getUrlAndProvider(managementUrl)
     // TODO: spawnShell 存在 bug，在 pnpm 中使用时候，容易无法找到对应的依赖包
     const exitPMTCode = await spawnShell(
-      `npx prisma-multi-tenant generate --schema ${schemaPath}`,
+      `npx prisma-multi-tenant generate --schema ${outputSchemaPath}`,
+      {
+        env: {
+          ...process.env,
+          MANAGEMENT_PROVIDER: managementObj.provider,
+          MANAGEMENT_URL: managementObj.url,
+        },
+      },
     )
     if (exitPMTCode !== 0) {
       throw new Error('Generate a multi-tenant exception.')
@@ -77,7 +90,7 @@ class GenerateCommand extends Command {
       }
     })
     const exitCNTCode = await spawnShell(
-      `npx cnt --schema ${schemaPath} --outDir ${path.join(
+      `npx cnt --schema ${outputSchemaPath} --outDir ${path.join(
         outputPath,
         'nexus-types',
       )}${cntParams} --js`,

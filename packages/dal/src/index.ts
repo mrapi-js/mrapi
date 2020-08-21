@@ -25,7 +25,7 @@ export type DALOptions = Array<{
 export default class DAL {
   public server: Server
 
-  public pmtManage = new PMTManage()
+  public pmtManage: PMTManage
 
   private readonly mrapiConfig: MrapiConfig
 
@@ -37,6 +37,10 @@ export default class DAL {
 
   constructor(options: DALOptions = []) {
     this.mrapiConfig = getConfig()
+
+    this.pmtManage = new PMTManage({
+      managementUrl: this.mrapiConfig.managementUrl,
+    })
 
     for (const option of options) {
       const schema = option?.schema || this.getDefaultSchemaOptions(option.name)
