@@ -65,8 +65,8 @@ export default class Server {
       `/${graphqlAPIPrefix}/${name}`,
       graphqlHTTP(async (req, _res, _params) => {
         const createContext = async () => {
-          const dbName: any = req.headers[tenantIdentity]
-          return { prisma: await this.getPrisma(name, dbName) }
+          const tenantName: any = req.headers[tenantIdentity]
+          return { prisma: await this.getPrisma(name, tenantName) }
         }
 
         return {

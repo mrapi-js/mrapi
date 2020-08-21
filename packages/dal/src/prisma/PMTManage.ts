@@ -53,9 +53,9 @@ export default class PMTManage {
     return this.multiTenants.get(name)
   }
 
-  async getPrisma(pmtName: string, dbName: string) {
-    const multiTenant = this.getPMT(pmtName)
-    const prisma = await multiTenant.get(dbName)
+  async getPrisma(name: string, tenantName: string) {
+    const multiTenant = this.getPMT(name)
+    const prisma = await multiTenant.get(tenantName)
     return prisma
   }
 }

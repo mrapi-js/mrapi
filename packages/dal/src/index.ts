@@ -113,25 +113,12 @@ export default class DAL {
   }
 
   /**
-   * Get PrismaClient path and @nexus/schema options
+   * Get @nexus/schema options
    *
    */
-  getPrisma(name: string) {
-    let schema
+  getSchema(name: string) {
     if (this.schemas.has(name)) {
-      schema = this.schemas.get(name)
-    }
-
-    let prismaClient
-    if (this.prismaClients.has(name)) {
-      prismaClient = this.prismaClients.get(name)
-    }
-
-    if (schema && prismaClient) {
-      return {
-        schema,
-        prismaClient,
-      }
+      return this.schemas.get(name)
     }
 
     throw new Error(
@@ -143,8 +130,8 @@ export default class DAL {
    * Get prisma instance by PMT
    *
    */
-  getPMTPrisma = async (name: string, dbName: string) => {
-    return await this.pmtManage.getPrisma(name, dbName).catch((e: any) => {
+  getPrisma = async (name: string, tenantName: string) => {
+    return await this.pmtManage.getPrisma(name, tenantName).catch((e: any) => {
       // TODO: 多租户异常时，保证 DEV 可以正常访问连接。
       if (process.env.NODE_ENV === 'production') {
         throw e
@@ -242,7 +229,7 @@ export default class DAL {
     if (!this.server) {
       this.server = new Server(
         { tenantIdentity: this.mrapiConfig.tenantIdentity, ...serverOptions },
-        this.getPMTPrisma,
+        this.getPrisma,
       )
     }
     this.server.start()
