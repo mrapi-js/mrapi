@@ -1,14 +1,3 @@
-
-generator client {
-  provider = "prisma-client-js"
-  output   = "/Users/leo/Documents/projects/mrapi/examples/api-combine/node_modules/.prisma-mrapi/one"
-}
-
-datasource db {
-  provider = ["sqlite", "mysql", "postgresql"]
-  url      = env("DATABASE_URL")
-}
-
 model User {
   email String  @unique
   id    Int     @default(autoincrement()) @id
@@ -24,4 +13,3 @@ model Post {
   title     String
   User      User?   @relation(fields: [authorId], references: [id])
 }
-

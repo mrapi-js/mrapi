@@ -1,7 +1,12 @@
 import * as fs from 'fs'
-import { GraphqlConfig, Obj, MrapiConfig } from '../types'
+import { GraphqlConfig, Obj, ApiOptions } from '../types'
 import logger from './logger'
-import { getConfig } from '@mrapi/common'
+import { getConfig, merge } from '@mrapi/common'
+
+function optionsVerify(config: ApiOptions) {
+  // TODO
+  console.log(config)
+}
 
 /**
  * decription: generate graphql-mesh config file by template
@@ -45,11 +50,19 @@ function getGraphqlConfig(gConfig: GraphqlConfig): Obj {
  *
  * @returns {Object} API options
  */
-export default function genConfig(): MrapiConfig {
+export default function genConfig(options: ApiOptions): ApiOptions {
   const outputConfigName = '.meshrc.js'
-  const config: MrapiConfig = getConfig()
+  // get options
+  const { api, tenantIdentity } = getConfig()
+  api.tenantIdentity = tenantIdentity
+  const config = merge(api, options)
+
+  // verify options
+  optionsVerify(config)
+
+  // generage graphql-mesh config and write file
   const graphqlConfigs: Obj[] = []
-  config.graphql.sources.forEach((s) => {
+  config.graphql.sources.forEach((s: GraphqlConfig) => {
     graphqlConfigs.push(getGraphqlConfig(s))
   })
   fs.writeFileSync(

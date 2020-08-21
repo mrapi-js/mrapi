@@ -1,6 +1,6 @@
 import fs from 'fs'
 import logger from './logger'
-import { getConfig, MrapiConfig, runShell } from '@mrapi/common'
+import { runShell } from '@mrapi/common'
 
 function fixBugs() {
   const version = require('create-nexus-type/package.json').version
@@ -18,9 +18,8 @@ function fixBugs() {
   }
 }
 
-export default async function () {
-  const config: MrapiConfig = getConfig()
+export default async function (schemaNames: string[]) {
   fixBugs()
   /* eslint-disable */
-  await Promise.all(config.schemaNames.map(name => runShell(`npx mrapi generate --name ${name}`)))
+  await Promise.all(schemaNames.map(name => runShell(`npx mrapi generate --name ${name}`)))
 }

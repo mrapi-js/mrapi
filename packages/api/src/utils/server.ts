@@ -6,20 +6,23 @@ import {
   GraphQLSchema,
   ExecuteMeshFn,
   HttpRequest,
-  MrapiConfig,
   HttpReply,
+  ApiOptions,
 } from '../types'
 
 export default class Server {
   app: App
-  options: MrapiConfig
+  options: ApiOptions
   baseDir: string
-  constructor(options: MrapiConfig) {
-    this.baseDir = process.cwd()
-    this.app = fastify(
-      Object.assign({}, options.server.options, { logger: logger }),
-    )
+  prismaPaths: Map<string, string>
+
+  constructor(options: ApiOptions) {
     this.options = options
+    this.baseDir = process.cwd()
+    this.prismaPaths = new Map()
+    this.app = fastify(
+      Object.assign({}, this.options.server.options, { logger: logger }),
+    )
   }
 
   /**
@@ -46,10 +49,11 @@ export default class Server {
    * @returns {Void}
    */
   async loadOpenapi() {
+    const { options, app, baseDir } = this
     // load custom openapi
     const customRoutes = require(path.join(
-      this.baseDir,
-      this.options.openapi.dir,
+      baseDir,
+      options.openapi.dir,
     ))
     Object.keys(customRoutes).forEach((key) => {
       customRoutes[key].forEach((route: any) => {
@@ -58,11 +62,11 @@ export default class Server {
     })
 
     // type equal standalone, forward request to dalServer
-    if (this.options.server.type === 'standalone') {
-      await this.app.register(require('fastify-reply-from'), {
-        base: this.options.openapi.dalBaseUrl,
+    if (options.server.type === 'standalone') {
+      await app.register(require('fastify-reply-from'), {
+        base: options.openapi.dalBaseUrl,
       })
-      this.app.route({
+      app.route({
         method: ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'OPTIONS'],
         url: '/*',
         handler: function (request, reply: any) {
@@ -77,20 +81,36 @@ export default class Server {
    *
    * @param {Object} schema GraphqlSchema
    * @param {Function} execute graphql-mesh exec function
+   * @param {Object} dal dal instance
    *
    * @returns {Void}
    */
-  async loadGraphql(schema: GraphQLSchema, execute: ExecuteMeshFn) {
+  async loadGraphql(schema: GraphQLSchema, execute: ExecuteMeshFn | undefined, dal?: any) {
     await this.app.register(require('fastify-gql'), {
       schema,
-      path: '/graphql',
+      path: '/graphql/:name',
       ide: 'playground',
       context: async (request: HttpRequest, reply: HttpReply) => {
-        return {
+        let prisma: any
+        const ret = {
           request,
           reply,
           execute,
+          prisma,
         }
+        const dbName = request.headers[this.options.tenantIdentity]
+        const name: any = (request.params as object & { name: () => any }).name
+        logger.info(`[Route] name: ${name}, dbName: ${JSON.stringify(dbName)}`)
+        if (!name || !dal) return ret
+        return dal.getPrisma(name, dbName)
+          .then((prisma: any) => {
+            ret.prisma = prisma
+            return ret
+          })
+      },
+      errorHandler(err: Error) {
+        // TODO
+        logger.error(err)
       },
     })
   }
