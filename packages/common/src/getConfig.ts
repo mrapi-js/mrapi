@@ -29,7 +29,7 @@ export interface MrapiConfig {
 
 const defaultConfig: MrapiConfig = {
   // .env filePath
-  envPath: 'prisma/.env',
+  envPath: 'config/.env',
 
   // management pmt db uri
   managementUrl: '',

@@ -29,7 +29,7 @@ export default class Command {
 
     this.name = this.constructor.name.replace(/Command$/, '').toLowerCase()
 
-    // Make command
+    // Create command
     const thisConstructor: any = this.constructor // TODO: fix tslint
     const params: CommandParams = thisConstructor.params
     let programCommand = program
