@@ -1,13 +1,13 @@
-mutation {
-  createOneUser(data: {email: "sadsad", name: "tqt"}) {
-    id
-  }
-}
+# 说明
 
+## TODO LIST
 
-query Post {
-  user(where: {id: 1}) {
-    id
-    name
-  }
-}
+...
+
+## 验证方式
+
+### 运行
+
+- prepare database
+- npm run dev
+- visite [playground](http://localhost:1358/playground)

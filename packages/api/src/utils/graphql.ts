@@ -2,10 +2,10 @@ import { getMesh } from '@graphql-mesh/runtime'
 import { findAndParseConfig } from '@graphql-mesh/config'
 import { stitchSchemas } from '@graphql-tools/stitch'
 import path from 'path'
-import { GraphQLSchema, ExecuteMeshFn, MrapiConfig } from '../types'
+import { GraphQLSchema, ExecuteMeshFn, ApiOptions } from '../types'
 
 export async function meshSchema(
-  options: MrapiConfig,
+  options: ApiOptions,
   schemas: GraphQLSchema[] = [],
 ): Promise<{
   schema: GraphQLSchema

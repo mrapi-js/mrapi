@@ -1,7 +1,7 @@
 import genConfig from './utils/gen-config'
 import Server from './utils/server'
 import { meshSchema } from './utils/graphql'
-import { MrapiConfig, GraphQLSchema } from './types'
+import { GraphQLSchema, ApiOptions } from './types'
 import logger from './utils/logger'
 import genPrisma from './utils/gen-prisma'
 export * from './types'
@@ -9,23 +9,14 @@ export * from './types'
 export const log = logger
 export default class API {
   baseDir: string
-  options: MrapiConfig
+  options: ApiOptions
   server: Server
-  dal: Array<{
-    name: string
-    prisemaClient: unknown
-  }>
+  dal: any
 
-  constructor() {
+  constructor(options: ApiOptions = {}) {
     this.baseDir = process.cwd()
-    this.options = genConfig()
-    this.optionsVerify()
+    this.options = genConfig(options)
     this.server = new Server(this.options)
-    this.dal = []
-  }
-
-  private optionsVerify() {
-    // TODO
   }
 
   private combinedWithDAL(): GraphQLSchema[] {
@@ -37,19 +28,13 @@ export default class API {
     } catch (err) {
       throw new Error('please install "@mrapi/dal" manually')
     }
-    const dal = new DAL(this.options.schemaNames.map(s => ({ name: s })))
+    const dal = new DAL(options.schemaNames.map(s => ({ name: s })))
+    this.dal = dal
     // add all schemas
     options.schemaNames.forEach(name => dal.addSchema(name))
-    // get all schemas and prismaClient address
-    const schema: GraphQLSchema[] = []
-    options.schemaNames.forEach(name => {
-      const prisma = dal.getPrisma(name)
-      schema.push(prisma.schema)
-      delete prisma.schema
-      this.dal.push(Object.assign({ name }, prisma))
-    })
+    const schemas = options.schemaNames.map(name => dal.getSchema(name))
     logger.info('[Start] get dal prisma/schema done')
-    return schema
+    return schemas
   }
 
   private async startStandalone() {
@@ -61,12 +46,13 @@ export default class API {
   }
 
   private async startCombined() {
-    await genPrisma()
+    const { options, server } = this
+    await genPrisma(options.schemaNames)
     const schemas = this.combinedWithDAL()
-    const { schema, execute } = await meshSchema(this.options, schemas)
-    await this.server.loadGraphql(schema, execute)
+    const { schema } = await meshSchema(options, schemas)
+    await this.server.loadGraphql(schema, undefined, this.dal)
     logger.info('[Start] load graphql done')
-    await this.server.loadOpenapi()
+    await server.loadOpenapi()
     logger.info('[Start] load openapi done')
   }
 

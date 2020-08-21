@@ -13,7 +13,6 @@ export { ExecuteMeshFn } from '@graphql-mesh/runtime'
 export { GraphQLSchema } from 'graphql'
 export { Logger } from 'pino'
 export { Level } from 'pino-multi-stream'
-export { MrapiConfig } from '@mrapi/common'
 
 export type HttpServer = RawServerBase
 export type HttpRequest = FastifyRequest // RawRequestDefaultExpression<HttpServer>
@@ -26,6 +25,10 @@ export type Hooks = Record<string, any>
 export type TypeEnum = 'standalone' | 'combined'
 
 export { FastifyReply, FastifyRequest } from 'fastify'
+export type PrismaPaths = Array<{
+  name: string,
+  prismaClient: string
+}>
 
 export interface Context {
   reply: FastifyReply
@@ -67,6 +70,28 @@ export interface GraphqlConfig {
   endpoint: string
   prefix: string
   snapshot?: boolean
+}
+
+export interface ApiOptions {
+  tenantIdentity?: string
+  autoGenerate?: boolean
+  openapi?: {
+    dir?: string
+    prefix?: string
+    dalBaseUrl?: string
+  }
+  graphql?: {
+    dir?: string,
+    sources?: []
+  }
+  server?: {
+    type?: 'standalone' | 'combined'
+    port?: number,
+    options?: {
+      [key: string]: any
+    }
+  },
+  schemaNames?: string[]
 }
 
 export interface Obj {
