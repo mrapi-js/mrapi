@@ -1,13 +1,17 @@
 import { MultiTenant } from '@prisma-multi-tenant/client'
 
-export interface PMTManageOptions {
+import { getUrlAndProvider } from '@mrapi/common'
+
+interface PMTManageOptions {
   useManagement?: boolean
   PrismaClientManagement?: any
   tenantOptions?: any
+  managementUrl: string
 }
 
 const defaultOptions: PMTManageOptions = {
   useManagement: true,
+  managementUrl: '',
 }
 
 export default class PMTManage {
@@ -15,8 +19,12 @@ export default class PMTManage {
 
   private readonly multiTenants = new Map()
 
-  constructor(options: PMTManageOptions = {}) {
+  constructor(options: PMTManageOptions) {
     this.options = { ...defaultOptions, ...options }
+
+    const { url, provider } = getUrlAndProvider(this.options.managementUrl)
+    process.env.MANAGEMENT_PROVIDER = provider
+    process.env.MANAGEMENT_URL = url
   }
 
   setPMT(name: string, options?: { PrismaClient: any }) {
@@ -45,9 +53,9 @@ export default class PMTManage {
     return this.multiTenants.get(name)
   }
 
-  async getPrisma(pmtName: string, dbName: string) {
-    const multiTenant = this.getPMT(pmtName)
-    const prisma = await multiTenant.get(dbName)
+  async getPrisma(name: string, tenantName: string) {
+    const multiTenant = this.getPMT(name)
+    const prisma = await multiTenant.get(tenantName)
     return prisma
   }
 }

@@ -38,3 +38,8 @@ mutation {
 ### 验证 stop / addSchema / removeSchema
 
 查看 app.js 代码...
+
+
+## 注意事项！
+
+如果数据库使用的是 `sqlite`，管理表中的路径为相对 /prisma 目录的相对路径

@@ -1,8 +1,9 @@
 import chalk from 'chalk'
 import path from 'path'
 import commander from 'commander'
+import { readFileSync, outputFileSync } from 'fs-extra'
 
-import { spawnShell, runShell } from '@mrapi/common'
+import { spawnShell, runShell, getUrlAndProvider } from '@mrapi/common'
 import Command, { CommandParams } from './common'
 import type { MrapiConfig } from '@mrapi/common'
 
@@ -41,22 +42,39 @@ class GenerateCommand extends Command {
 
   async execute() {
     const { name, cnt } = this.argv
-    const { schemaDir, outputDir } = this.mrapiConfig
+    const {
+      inputSchemaDir,
+      schemaDir,
+      outputDir,
+      managementUrl,
+    } = this.mrapiConfig
     const cwd = process.cwd()
-    const schemaPath = path.join(cwd, schemaDir, `${name}.prisma`)
+    const inputSchemaPath = path.join(cwd, inputSchemaDir, `${name}.prisma`)
+    const outputSchemaPath = path.join(cwd, schemaDir, `${name}.prisma`)
     const outputPath = path.join(cwd, outputDir, name)
 
     // 1. Clean
-    await runShell(`rm -rf ${outputPath}`)
+    await runShell(`rm -rf ${outputPath} ${outputSchemaPath}`)
 
-    // 2. Generate PMT
+    // 2. Generate schema.prisma
+    outputFileSync(
+      outputSchemaPath,
+      this.createSchemaPrisma(
+        outputPath,
+        readFileSync(inputSchemaPath, 'utf8'),
+      ),
+    )
+
+    // 3. Generate PMT
+    const managementObj = getUrlAndProvider(managementUrl)
     // TODO: spawnShell 存在 bug，在 pnpm 中使用时候，容易无法找到对应的依赖包
     const exitPMTCode = await spawnShell(
-      `npx prisma-multi-tenant generate --schema ${schemaPath}`,
+      `npx prisma-multi-tenant generate --schema ${outputSchemaPath}`,
       {
         env: {
           ...process.env,
-          PRISMA_CLIENT_OUTPUT: outputPath,
+          MANAGEMENT_PROVIDER: managementObj.provider,
+          MANAGEMENT_URL: managementObj.url,
         },
       },
     )
@@ -64,7 +82,7 @@ class GenerateCommand extends Command {
       throw new Error('Generate a multi-tenant exception.')
     }
 
-    // 3. Generate CNT
+    // 4. Generate CNT
     let cntParams = ''
     cnt.split(',').forEach((item: string) => {
       if (cntWhiteListSet.has(item)) {
@@ -72,7 +90,7 @@ class GenerateCommand extends Command {
       }
     })
     const exitCNTCode = await spawnShell(
-      `npx cnt --schema ${schemaPath} --outDir ${path.join(
+      `npx cnt --schema ${outputSchemaPath} --outDir ${path.join(
         outputPath,
         'nexus-types',
       )}${cntParams} --js`,
@@ -81,6 +99,20 @@ class GenerateCommand extends Command {
       throw new Error('Generate nexus types exception.')
     }
   }
+
+  createSchemaPrisma = (output: string, content: string) => `
+generator client {
+  provider = "prisma-client-js"
+  output   = "${output}"
+}
+
+datasource db {
+  provider = ["sqlite", "mysql", "postgresql"]
+  url      = env("DATABASE_URL")
+}
+
+${content}
+`
 }
 
 export default (program: commander.Command, mrapiConfig: MrapiConfig) => {

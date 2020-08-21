@@ -161,17 +161,21 @@ importers:
       commander: 6.0.0
       create-nexus-type: 1.2.5
       dotenv: 8.2.0
+      fs-extra: 9.0.1
       is-plain-object: 4.1.1
       prisma-multi-tenant: 2.3.1
     devDependencies:
+      '@types/fs-extra': 9.0.1
       tslib: 2.0.1
       typescript: 3.9.7
     specifiers:
       '@mrapi/common': 'workspace:*'
+      '@types/fs-extra': ^9.0.1
       chalk: ^4.1.0
       commander: ^6.0.0
       create-nexus-type: 1.2.5
       dotenv: ^8.2.0
+      fs-extra: ^9.0.1
       is-plain-object: 4.1.1
       prisma-multi-tenant: 2.3.1
       tslib: ^2.0.0
@@ -1250,10 +1254,10 @@ packages:
       '@prisma/cli': ^2.4.1
     resolution:
       integrity: sha512-2zIwagTNuf0DJ5G7GiPapssW47r2RULGXAFRFlTJ+OPpTRksAYparVWqaUKFGOUjyEbs5u5fYMoF6rwZnSK5AQ==
-  /@prisma-multi-tenant/shared/2.3.1_@prisma+cli@2.5.0:
+  /@prisma-multi-tenant/shared/2.3.1_@prisma+cli@2.4.1:
     dependencies:
-      '@prisma/cli': 2.5.0
-      '@prisma/client': 2.4.1_@prisma+cli@2.5.0
+      '@prisma/cli': 2.4.1
+      '@prisma/client': 2.4.1_@prisma+cli@2.4.1
     dev: false
     peerDependencies:
       '@prisma/cli': ^2.4.1
@@ -1287,21 +1291,6 @@ packages:
   /@prisma/client/2.4.1_@prisma+cli@2.4.1:
     dependencies:
       '@prisma/cli': 2.4.1
-      pkg-up: 3.1.0
-    dev: false
-    engines:
-      node: '>=10'
-    peerDependencies:
-      '@prisma/cli': '*'
-    peerDependenciesMeta:
-      '@prisma/cli':
-        optional: true
-    requiresBuild: true
-    resolution:
-      integrity: sha512-13aphZb34ws8GuRxVsmgiQmUJRfcnnb5/Jy78/ZkpLyCk5ZpchO/Rr1KNiF/cfLHprdKOjSvUzthcx+tubaA2A==
-  /@prisma/client/2.4.1_@prisma+cli@2.5.0:
-    dependencies:
-      '@prisma/cli': 2.5.0
       pkg-up: 3.1.0
     dev: false
     engines:
@@ -1602,6 +1591,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-FKVPOCFbhCvZxpVAMhdBdTfVfXUpsh15wFHgqOKxh9N9vzWZVuWCSijZ5T4U34XYNnuj2oduh6xcs1i+LPI+BQ==
+  /@types/fs-extra/9.0.1:
+    dependencies:
+      '@types/node': 14.6.0
+    dev: true
+    resolution:
+      integrity: sha512-B42Sxuaz09MhC3DDeW5kubRcQ5by4iuVQ0cRRWM2lggLzAa/KVom0Aft/208NgMvNQQZ86s5rVcqDdn/SH0/mg==
   /@types/graceful-fs/4.1.3:
     dependencies:
       '@types/node': 14.0.27
@@ -1706,7 +1701,6 @@ packages:
     resolution:
       integrity: sha512-kVrqXhbclHNHGu9ztnAwSncIgJv/FaxmzXJvGXNdcCpV1b8u1/Mi6z6m0vwy0LzKeXFTPLH0NzwmoJ3fNCIq0g==
   /@types/node/14.6.0:
-    dev: false
     resolution:
       integrity: sha512-mikldZQitV94akrc4sCcSjtJfsTKt4p+e/s0AGscVA6XArQ9kFclP+ZiYUMnq987rc6QlYxXv/EivqlfSLxpKA==
   /@types/normalize-package-data/2.4.0:
@@ -7558,8 +7552,8 @@ packages:
       integrity: sha512-VVtxR7sOh0VsG8o06Ttq5TrI1aiZKmC+ClSn4eBPaNf4SHr5lzbYW+kYGX3HocBL/MfpVrRfFZ9V3vCbLaiplg==
   /prisma-multi-tenant/2.3.1:
     dependencies:
-      '@prisma-multi-tenant/shared': 2.3.1_@prisma+cli@2.5.0
-      '@prisma/cli': 2.5.0
+      '@prisma-multi-tenant/shared': 2.3.1_@prisma+cli@2.4.1
+      '@prisma/cli': 2.4.1
       arg: 4.1.3
       chalk: 4.1.0
       cli-table3: 0.6.0
