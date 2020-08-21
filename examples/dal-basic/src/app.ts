@@ -3,10 +3,17 @@ import DAL, { DALOptions } from '@mrapi/dal'
 const options: DALOptions = [
   {
     name: 'one',
+    defaultTenant: {
+      name: 'prod', // 视乎可以不要 name
+      url: 'file:../config/db/prod.db',
+    },
   },
-  // {
-  //   name: 'two',
-  // },
+  {
+    name: 'two',
+    defaultTenant: {
+      name: 'dev',
+    },
+  },
 ]
 
 const app = new DAL(options)

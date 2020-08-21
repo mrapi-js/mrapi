@@ -9,7 +9,7 @@ import { merge, getConfig, getPrismaClient } from '@mrapi/common'
 import PMTManage from './prisma/PMTManage'
 import Server from './server'
 import type { MrapiConfig } from '@mrapi/common'
-import type { RouteOptions, ServerOptions } from './types'
+import type { RouteOptions, ServerOptions, DefaultTenant } from './types'
 
 export interface MakeSchemaOptions {
   schema?: NexusGraphQLSchema | {}
@@ -21,6 +21,7 @@ export type DALOptions = Array<{
   name?: string
   schema?: MakeSchemaOptions
   graphqlHTTP?: RouteOptions
+  defaultTenant?: DefaultTenant
 }>
 
 export default class DAL {
@@ -36,14 +37,21 @@ export default class DAL {
 
   private readonly prismaClients: Map<string, string> = new Map()
 
+  private readonly defaultTenants: Map<string, DefaultTenant> = new Map()
+
   constructor(options: DALOptions = []) {
     this.mrapiConfig = getConfig()
+
+    if (!this.mrapiConfig.managementUrl) {
+      throw new Error('Please configure the "managementUrl".')
+    }
 
     this.pmtManage = new PMTManage({
       managementUrl: this.mrapiConfig.managementUrl,
     })
 
     for (const option of options) {
+      this.defaultTenants.set(option.name, option.defaultTenant)
       const schema = option?.schema || this.getDefaultSchemaOptions(option.name)
       this.schemas.set(option.name, this.generateSchema(schema))
       this.graphqlHTTPOptions.set(option.name, option.graphqlHTTP)
@@ -131,18 +139,25 @@ export default class DAL {
    *
    */
   getPrisma = async (name: string, tenantName: string) => {
-    return await this.pmtManage.getPrisma(name, tenantName).catch((e: any) => {
-      // TODO: 多租户异常时，保证 DEV 可以正常访问连接。
-      if (process.env.NODE_ENV === 'production') {
-        throw e
-      }
-      console.error(e)
-      console.log(
-        chalk.red(
-          `Tips: Check to see if a multi-tenant identity "${this.mrapiConfig.tenantIdentity}" has been added to the "Request Headers".`,
-        ),
-      )
-    })
+    let defaultTenant: DefaultTenant = {}
+    if (!tenantName) {
+      defaultTenant = this.defaultTenants.get(name)
+    }
+
+    return await this.pmtManage
+      .getPrisma(name, defaultTenant.name || tenantName, defaultTenant.url)
+      .catch((e: any) => {
+        // TODO: 多租户异常时，保证 DEV 可以正常访问连接。
+        if (process.env.NODE_ENV === 'production') {
+          throw e
+        }
+        console.error(e)
+        console.log(
+          chalk.red(
+            `Tips: Check to see if a multi-tenant identity "${this.mrapiConfig.tenantIdentity}" has been added to the "Request Headers".`,
+          ),
+        )
+      })
   }
 
   /**
@@ -154,8 +169,13 @@ export default class DAL {
     options: {
       schema?: MakeSchemaOptions
       graphqlHTTP?: RouteOptions
+      defaultTenant?: DefaultTenant
     } = {},
   ): boolean {
+    if (!this.defaultTenants.has(name)) {
+      this.defaultTenants.set(name, options.defaultTenant)
+    }
+
     let schema
     if (this.schemas.has(name)) {
       schema = this.schemas.get(name)
@@ -211,6 +231,7 @@ export default class DAL {
     }
 
     if (result) {
+      this.defaultTenants.delete(name)
       this.schemas.delete(name)
       this.graphqlHTTPOptions.delete(name)
       this.prismaClients.delete(name)
