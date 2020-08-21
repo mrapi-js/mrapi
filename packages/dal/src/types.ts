@@ -7,3 +7,8 @@ export interface ServerOptions {
 }
 
 export type RouteOptions = OptionsData & {}
+
+export interface DefaultTenant {
+  name?: string
+  url?: string
+}

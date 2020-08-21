@@ -2,7 +2,7 @@ import path from 'path'
 import merge from 'deepmerge'
 
 export interface MrapiConfig {
-  managementUrl: string
+  managementUrl?: string
   envPath?: string
   inputSchemaDir?: string
   schemaDir?: string
@@ -85,10 +85,5 @@ export default function getConfig(str?: string): MrapiConfig {
     }
   } catch {}
 
-  const result = config ? merge(defaultConfig, config) : config
-  if (!result.managementUrl) {
-    throw new Error(`Please configure the "managementUrl" in ${configPath}.`)
-  }
-
-  return result
+  return config ? merge(defaultConfig, config) : config
 }

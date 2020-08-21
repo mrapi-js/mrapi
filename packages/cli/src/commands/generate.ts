@@ -48,6 +48,10 @@ class GenerateCommand extends Command {
       outputDir,
       managementUrl,
     } = this.mrapiConfig
+    if (!managementUrl) {
+      throw new Error('Please configure the "managementUrl".')
+    }
+
     const cwd = process.cwd()
     const inputSchemaPath = path.join(cwd, inputSchemaDir, `${name}.prisma`)
     const outputSchemaPath = path.join(cwd, schemaDir, `${name}.prisma`)
