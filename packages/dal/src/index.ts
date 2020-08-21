@@ -141,8 +141,9 @@ export default class DAL {
   getPrisma = async (name: string, tenantName: string) => {
     let defaultTenant: DefaultTenant = {}
     if (!tenantName) {
-      defaultTenant = this.defaultTenants.get(name)
+      defaultTenant = this.defaultTenants.get(name) || {}
     }
+    console.log(defaultTenant)
 
     return await this.pmtManage
       .getPrisma(name, defaultTenant.name || tenantName, defaultTenant.url)
