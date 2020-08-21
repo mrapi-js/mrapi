@@ -3,17 +3,17 @@ import DAL, { DALOptions } from '@mrapi/dal'
 const options: DALOptions = [
   {
     name: 'one',
-    defaultTenant: {
-      name: 'prod', // 视乎可以不要 name
-      url: 'file:../config/db/prod.db',
-    },
+    // defaultTenant: {
+    //   name: 'prod', // 视乎可以不要 name
+    //   url: 'file:../config/db/prod.db',
+    // },
   },
-  {
-    name: 'two',
-    defaultTenant: {
-      name: 'dev',
-    },
-  },
+  // {
+  //   name: 'two',
+  //   defaultTenant: {
+  //     name: 'dev',
+  //   },
+  // },
 ]
 
 const app = new DAL(options)
@@ -29,7 +29,11 @@ app
       // const ok = app.removeSchema('one')
       // ok && console.log('removeSchema one')
       // // addSchema test
-      const ok2 = app.addSchema('two')
+      const ok2 = app.addSchema('two', {
+        defaultTenant: {
+          name: 'dev',
+        },
+      })
       ok2 && console.log('addSchema two ok')
     }, 1000 * 3)
   })
