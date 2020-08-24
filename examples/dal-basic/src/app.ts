@@ -30,9 +30,9 @@ app
       // ok && console.log('removeSchema one')
       // // addSchema test
       const ok2 = app.addSchema('two', {
-        defaultTenant: {
-          name: 'dev',
-        },
+        // defaultTenant: {
+        //   name: 'dev',
+        // },
       })
       ok2 && console.log('addSchema two ok')
     }, 1000 * 3)

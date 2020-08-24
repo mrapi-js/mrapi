@@ -143,7 +143,6 @@ export default class DAL {
     if (!tenantName) {
       defaultTenant = this.defaultTenants.get(name) || {}
     }
-    console.log(defaultTenant)
 
     return await this.pmtManage
       .getPrisma(name, defaultTenant.name || tenantName, defaultTenant.url)
