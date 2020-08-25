@@ -4,7 +4,8 @@ import { graphqlHTTP } from 'express-graphql'
 import type http from 'http'
 
 import { merge } from '@mrapi/common'
-import { graphqlAPIPrefix } from './constants'
+import { graphqlAPIPrefix, openAPIPrefix } from './constants'
+import GraphQLToOpenAPIConverter from './utils/GraphQLToOpenAPIConverter'
 import type { ServerOptions, RouteOptions } from './types'
 
 type GetPrismaType = (
@@ -84,7 +85,25 @@ export default class Server {
     )
 
     // TODO: ADD openAPI
-    // ...
+    const routes = GraphQLToOpenAPIConverter(name, async (req) => {
+      const tenantName: any = req.headers[tenantIdentity]
+      const prisma = await this.getPrisma(name, tenantName)
+      return prisma
+    })
+
+    for (const route of routes) {
+      this.app.use(`/${openAPIPrefix}/${name}${route.url}`, async (req) => {
+        const data = await route.handler(req)
+        console.log(data)
+        return data
+      })
+    }
+
+    console.log(
+      `\n⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
+        `/${openAPIPrefix}/${name}`,
+      )}\n`,
+    )
 
     return true
   }
