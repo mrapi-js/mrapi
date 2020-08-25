@@ -107,7 +107,7 @@ export default class DAL {
               },
             }),
           ],
-          shouldGenerateArtifacts: process.env.NODE_ENV === 'development', // 感觉生成的文件，只是方便编写 types
+          shouldGenerateArtifacts: process.env.NODE_ENV !== 'production', // 感觉生成的文件，只是方便编写 types
           outputs: {
             schema: path.join(prismaClientDir, '/generated/schema.graphql'),
             typegen: path.join(prismaClientDir, '/generated/nexus.ts'),

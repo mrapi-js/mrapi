@@ -11,7 +11,8 @@
     "generate": "npm run gen1 && npm run gen2",
     "gen1": "npx mrapi generate --name one",
     "gen2": "npx mrapi generate --name two",
-    "gto": "npx graphql-to-openapi --schema ./node_modules/.prisma-mrapi/one/generated/schema.graphql --query ./node_modules/.prisma-mrapi/one/generated/test.graphql"
+    "gto": "node ./scripts/qto.js",
+    "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts"
   },
   "author": "",
   "license": "ISC",
@@ -22,9 +23,12 @@
     "@prisma/cli": "^2.4.1",
     "prisma-multi-tenant": "2.3.1",
     "create-nexus-type": "1.2.6",
-    "graphql-to-openapi": "1.5.0"
+    "graphql-to-openapi": "1.5.0",
+    "express-openapi": "7.0.1"
   },
   "devDependencies": {
+    "fs-extra": "9.0.1",
+    "prettier": "2.0.5",
     "typescript": "^4.0.2",
     "ts-node-dev": "1.0.0-pre.60"
   },
