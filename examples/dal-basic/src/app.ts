@@ -6,10 +6,10 @@ import DAL, { DALOptions } from '@mrapi/dal'
 const options: DALOptions = [
   {
     name: 'one',
-    // defaultTenant: {
-    //   name: 'prod', // 视乎可以不要 name
-    //   url: 'file:../config/db/prod.db',
-    // },
+    defaultTenant: {
+      name: 'dev', // 视乎可以不要 name
+      // url: 'file:../config/db/prod.db',
+    },
   },
   // {
   //   name: 'two',

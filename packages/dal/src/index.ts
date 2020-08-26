@@ -5,9 +5,10 @@ import { makeSchema } from '@nexus/schema'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
 
-import { merge, getConfig, getPrismaClient } from '@mrapi/common'
+import { merge, getConfig } from '@mrapi/common'
 import PMTManage from './prisma/PMTManage'
 import Server from './server'
+import { getPrismaClient } from './prisma/getPrisma'
 import type { MrapiConfig } from '@mrapi/common'
 import type { RouteOptions, ServerOptions, DefaultTenant } from './types'
 
@@ -80,7 +81,6 @@ export default class DAL {
   }: MakeSchemaOptions) {
     let types: any
     try {
-      // TODO: generate types vis prisma schema
       const requireDirTypes = require(nexusDir)
       types = requireDirTypes.default || requireDirTypes
     } catch (e) {
