@@ -1,6 +1,4 @@
-import path from 'path'
-
-import { parseFilter } from './filters'
+import { findManyFilter } from './filters'
 
 function getModels(dmmf: any) {
   let models = JSON.parse(JSON.stringify(dmmf.datamodel.models))
@@ -30,18 +28,12 @@ function findInArray(arr: any[], keyName: string, key: string) {
 
 export default function GraphQLToOpenAPIConverter(
   name: string,
+  dmmf: any,
   getPrisma: (req: any) => Promise<any>,
 ) {
-  const prismaClientPath = path.join(
-    process.cwd(),
-    'node_modules/.prisma-mrapi', // config.outputDir
-    name,
-  )
-  const dmmf = require(prismaClientPath).dmmf
-
   const models = getModels(dmmf)
 
-  console.log(models)
+  console.log('models:', models)
 
   const routes = []
 
@@ -76,6 +68,7 @@ export default function GraphQLToOpenAPIConverter(
 
     for (const method of methods) {
       switch (method) {
+        // http://0.0.0.0:1358/api/one/users?orderBy=name:asc&skip=0&take=2
         case 'findMany': {
           routes.push({
             method: 'GET',
@@ -102,28 +95,17 @@ export default function GraphQLToOpenAPIConverter(
               additionalProperties: true,
             },
             async handler(res: any) {
-              try {
-                const prisma = await getPrisma(res)
-                const params = parseFilter(res.query, {
-                  filtering: true,
-                  pagination: true,
-                  sorting: true,
-                  selecting: true,
-                })
-                return {
-                  code: 0,
-                  data: {
-                    list: await prisma[modelName].findMany(params),
-                    total: await prisma[modelName].count({
-                      where: params.where || {},
-                    }),
-                  },
-                }
-              } catch (err) {
-                return {
-                  code: -1,
-                  message: err.message,
-                }
+              const prisma = await getPrisma(res)
+              const listParams = findManyFilter(res.query)
+              const [list, total] = await Promise.all([
+                prisma[modelName].findMany(listParams),
+                prisma[modelName].count({
+                  where: listParams.where,
+                }),
+              ])
+              return {
+                list,
+                total,
               }
             },
           })

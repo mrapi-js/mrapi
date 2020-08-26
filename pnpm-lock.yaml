@@ -215,7 +215,7 @@ importers:
       '@mrapi/common': 'link:../common'
       '@nexus/schema': 0.15.0_graphql@15.3.0
       '@prisma-multi-tenant/client': 2.3.1
-      '@prisma/client': 2.5.0
+      '@prisma/client': 2.5.1
       '@types/express': 4.17.7
       chalk: 4.1.0
       express: 4.17.1
@@ -231,7 +231,7 @@ importers:
       '@mrapi/common': 'workspace:*'
       '@nexus/schema': 0.15.0
       '@prisma-multi-tenant/client': 2.3.1
-      '@prisma/client': 2.5.0
+      '@prisma/client': 2.5.1
       '@types/express': ^4.17.7
       '@types/node': '*'
       chalk: ^4.1.0
@@ -1311,7 +1311,7 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-13aphZb34ws8GuRxVsmgiQmUJRfcnnb5/Jy78/ZkpLyCk5ZpchO/Rr1KNiF/cfLHprdKOjSvUzthcx+tubaA2A==
-  /@prisma/client/2.5.0:
+  /@prisma/client/2.5.1:
     dependencies:
       pkg-up: 3.1.0
     dev: false
@@ -1324,7 +1324,7 @@ packages:
         optional: true
     requiresBuild: true
     resolution:
-      integrity: sha512-rsgbImSVMBATLSSZEgP7pWpqV2iylDJWM2zjmL980IjTBgy63alDr0RyoOkdt8oVw4OyJW0uYpxAU2Z9bXZU9A==
+      integrity: sha512-vIyh6kyNNC7daePZRkrsxTF/xa8uA0bFpR4E9agyknzylGYFJqnjZCMTwtkXz64Vnlc55dMTCONNe/AFJ0UusQ==
   /@prisma/debug/2.4.1:
     dependencies:
       debug: 4.1.1

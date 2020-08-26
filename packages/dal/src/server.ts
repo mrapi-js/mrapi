@@ -85,7 +85,8 @@ export default class Server {
     )
 
     // add openAPI
-    const routes = GraphQLToOpenAPIConverter(name, async (req) => {
+    const dmmf = require(options.prismaClient).dmmf
+    const routes = GraphQLToOpenAPIConverter(name, dmmf, async (req) => {
       const tenantName: any = req.headers[tenantIdentity]
       const prisma = await this.getPrisma(name, tenantName)
       return prisma
@@ -93,7 +94,16 @@ export default class Server {
 
     for (const route of routes) {
       const openAPIMiddleware = async (req: any, res: any, _next: any) => {
-        const data = await route.handler(req)
+        const data = await route
+          .handler(req)
+          .then((res: any) => ({
+            code: 0,
+            data: res,
+          }))
+          .catch((err: any) => ({
+            code: -1,
+            message: err.message,
+          }))
         res.send(data)
       }
 

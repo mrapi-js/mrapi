@@ -215,6 +215,7 @@ export default class DAL {
       result = this.server.addRoute(name, {
         ...graphqlHTTP,
         schema,
+        prismaClient,
       })
     }
     return result
