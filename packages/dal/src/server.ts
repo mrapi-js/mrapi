@@ -4,7 +4,9 @@ import { graphqlHTTP } from 'express-graphql'
 import type http from 'http'
 
 import { merge } from '@mrapi/common'
-import { graphqlAPIPrefix } from './constants'
+import { getPrismaDmmf } from './prisma/getPrisma'
+import { graphqlAPIPrefix, openAPIPrefix } from './constants'
+import GraphQLToOpenAPIConverter from './utils/GraphQLToOpenAPIConverter'
 import type { ServerOptions, RouteOptions } from './types'
 
 type GetPrismaType = (
@@ -83,30 +85,95 @@ export default class Server {
       )}\n`,
     )
 
-    // TODO: ADD openAPI
-    // ...
+    // add openAPI
+    const dmmf = getPrismaDmmf(options.prismaClient)
+    const routes = GraphQLToOpenAPIConverter(name, dmmf, async (req) => {
+      const tenantName: any = req.headers[tenantIdentity]
+      const prisma = await this.getPrisma(name, tenantName)
+      return prisma
+    })
+
+    for (const route of routes) {
+      const openAPIMiddleware = async (req: any, res: any, _next: any) => {
+        const data = await route
+          .handler(req)
+          .then((res: any) => ({
+            code: 0,
+            data: res,
+          }))
+          .catch((err: any) => ({
+            code: -1,
+            message: err.message,
+          }))
+        res.send(data)
+      }
+
+      this.app.use(`/${openAPIPrefix}/${name}${route.url}`, openAPIMiddleware)
+    }
+
+    console.log(
+      `\n⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
+        `/${openAPIPrefix}/${name}`,
+      )}\n`,
+    )
 
     return true
   }
 
   removeRoute(name: string): boolean {
     const routes = this.app._router.stack
+    const graphqlPath = `/${graphqlAPIPrefix}/${name}`
+    const openAPIPath = `/${openAPIPrefix}/${name}`
 
-    const idx = routes.findIndex((route: any) => {
+    const removeNum = {
+      [graphqlAPIPrefix]: 0,
+      [openAPIPrefix]: 0,
+    }
+    let index = 0
+    while (index < routes.length) {
+      const route = routes[index]
+
       // graphqlHTTP name
-      if (route.name === 'graphqlMiddleware') {
-        return route.regexp.test(`/${graphqlAPIPrefix}/${name}`)
-      }
-      return false
-    })
-    if (idx !== -1) {
-      routes.splice(idx, 1)
+      if (
+        route.name === 'graphqlMiddleware' &&
+        route.regexp.test(graphqlPath)
+      ) {
+        routes.splice(index, 1)
 
-      console.log(
-        `🚫 [${name}] Termination a GraphQL API of route at: ${chalk.gray(
-          `/${graphqlAPIPrefix}/${name}`,
-        )}`,
-      )
+        removeNum[graphqlAPIPrefix] === 0 &&
+          console.log(
+            `🚫 [${name}] Termination a GraphQL API of route at: ${chalk.gray(
+              graphqlPath,
+            )}`,
+          )
+        removeNum[graphqlAPIPrefix]++
+      }
+      // openAPI name
+      else if (route.name === 'openAPIMiddleware') {
+        const str = route.regexp.source.replace(
+          `^\\/${openAPIPrefix}\\/${name}\\/`,
+          '',
+        )
+        if (str.length === route.regexp.source.length) {
+          index++
+          continue
+        }
+
+        routes.splice(index, 1)
+
+        removeNum[openAPIPrefix] === 0 &&
+          console.log(
+            `🚫 [${name}] Termination a openAPI of route at: ${chalk.gray(
+              openAPIPath,
+            )}`,
+          )
+        removeNum[openAPIPrefix]++
+      } else {
+        index++
+      }
+    }
+
+    if (removeNum[graphqlAPIPrefix] > 0 || removeNum[openAPIPrefix] > 0) {
       return true
     }
 

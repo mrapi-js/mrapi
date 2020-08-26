@@ -6,7 +6,9 @@ export interface ServerOptions {
   tenantIdentity?: string
 }
 
-export type RouteOptions = OptionsData & {}
+export type RouteOptions = OptionsData & {
+  prismaClient?: string
+}
 
 export interface DefaultTenant {
   name?: string
