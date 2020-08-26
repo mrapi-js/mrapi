@@ -1,0 +1,5 @@
+model User {
+  email String  @unique
+  id    Int     @default(autoincrement()) @id
+  name  String?
+}

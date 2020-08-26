@@ -1,7 +1,9 @@
 import express from 'express'
 import handler from './Handler/index'
 const app = express();
+app.use(express.json()) 
 app.use(express.static('view/dist'))
+console.log(handler)
 for(let item of handler){
     
     if(item.method.toUpperCase()=="POST"){

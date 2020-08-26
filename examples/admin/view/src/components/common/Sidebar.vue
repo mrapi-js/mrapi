@@ -59,12 +59,12 @@ export default {
                 {
                     icon: 'el-icon-lx-home',
                     index: 'dashboard',
-                    title: 'home'
+                    title: 'server'
                 },
                 {
                     icon: 'el-icon-lx-cascades',
                     index: 'table',
-                    title: 'service & routers'
+                    title: 'routers'
                 },
                 {
                     icon: 'el-icon-lx-copy',

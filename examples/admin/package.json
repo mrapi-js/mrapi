@@ -6,14 +6,23 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "build": "rm -rf dist && tsc"
+    "build": "rm -rf dist && tsc",
+    "generate": "npm run fixbug && npm run gen1 && npm run gen2",
+    "fixbug": "node scripts/fixbugs.js",
+    "gen1": "npx mrapi generate --name one",
+    "gen2": "npx mrapi generate --name two"
+
   },
   "author": "MIT",
   "license": "ISC",
   "dependencies": {
     "@mrapi/cli": "workspace:*",
     "@mrapi/dal": "workspace:*",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "cross-env": "^7.0.2",
+    "@prisma/cli": "^2.4.1",
+    "prisma-multi-tenant": "2.3.1",
+    "create-nexus-type": "1.2.5"
   },
   "devDependencies": {
     "typescript": "^3.9.6",

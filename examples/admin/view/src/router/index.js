@@ -17,12 +17,12 @@ export default new Router({
                 {
                     path: '/dashboard',
                     component: () => import(/* webpackChunkName: "dashboard" */ '../components/page/Dashboard.vue'),
-                    meta: { title: 'home' }
+                    meta: { title: 'server' }
                 },
                 {
                     path: '/icon',
                     component: () => import(/* webpackChunkName: "icon" */ '../components/page/Icon.vue'),
-                    meta: { title: 'service & routers' }
+                    meta: { title: 'routers' }
                 },
                 {
                     path: '/table',
