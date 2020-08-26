@@ -48,8 +48,8 @@ app
       // // stop test
       // app.stop().then(() => console.log('stop'))
       // // removeSchema test
-      // const ok = app.removeSchema('one')
-      // ok && console.log('removeSchema one')
+      const ok = app.removeSchema('one')
+      ok && console.log('removeSchema one')
       // // addSchema test
       // const ok2 = app.addSchema('two', {
       // defaultTenant: {

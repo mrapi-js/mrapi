@@ -101,10 +101,10 @@ export default function GraphQLToOpenAPIConverter(
               type: 'object',
               additionalProperties: true,
             },
-            async handler(request: any, _reply: any) {
+            async handler(res: any) {
               try {
-                const prisma = await getPrisma(request)
-                const params = parseFilter(request.query, {
+                const prisma = await getPrisma(res)
+                const params = parseFilter(res.query, {
                   filtering: true,
                   pagination: true,
                   sorting: true,
@@ -113,8 +113,8 @@ export default function GraphQLToOpenAPIConverter(
                 return {
                   code: 0,
                   data: {
-                    list: await prisma.findMany(params),
-                    total: await prisma.count({
+                    list: await prisma[modelName].findMany(params),
+                    total: await prisma[modelName].count({
                       where: params.where || {},
                     }),
                   },
