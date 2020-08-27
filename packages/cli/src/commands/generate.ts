@@ -10,14 +10,20 @@ import type { MrapiConfig } from '@mrapi/common'
 /**
  * https://paljs.com/cli/cnt/#command-options-for-cnt
  *
- * -s       add this option to use @nexus/schema package
- * -mq      add this option to create Queries and Mutations for models
- * -m       add this option to create Mutations
- * -q       add this option to create Queries
- * -f       add this option to add {filtering: true} option to Queries
- * -o       add this option to add {ordering: true} option to Queries
+  -mq      add this option to create Queries and Mutations for models
+  -m       add this option to create Mutations
+  -q       add this option to create Queries
+  -c       add this option to create Queries Count
+  -f       add this option to add {filtering: true} option to Queries
+  -o       add this option to add {ordering: true} option to Queries
  */
-const cntWhiteList = ['s', 'mq', 'm', 'q', 'f', 'o']
+const cntWhiteList = [
+  'mq',
+  // 'm', 'q',
+  'c',
+  'f',
+  'o',
+]
 const cntWhiteListSet = new Set(cntWhiteList)
 
 class GenerateCommand extends Command {
@@ -97,7 +103,7 @@ class GenerateCommand extends Command {
       `npx cnt --schema ${outputSchemaPath} --outDir ${path.join(
         outputPath,
         'nexus-types',
-      )}${cntParams} --js`,
+      )}${cntParams} -s --js`,
     )
     if (exitCNTCode !== 0) {
       throw new Error('Generate nexus types exception.')
