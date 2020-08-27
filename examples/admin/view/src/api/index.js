@@ -1,9 +1,18 @@
 import request from '../utils/request';
 
-export const fetchData = query => {
+export const routerList = query => {
     return request({
-        url: './table.json',
+        url: '/router/list',
         method: 'get',
-        params: query
+       // params: query
     });
 };
+
+export const routerAdd = name => {
+    return request({
+        url: '/router/add/'+name,
+        method: 'get',
+     //   params: query
+    });
+};
+

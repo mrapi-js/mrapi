@@ -25,6 +25,7 @@ export default[
         handler:Recover(async (req:express.Request,res:express.Response)=>{
             console.log(dal.server)
             assert(dal.server,"server is not exist")
+            //@ts-ignore
             return dal.server.options
         })
     },

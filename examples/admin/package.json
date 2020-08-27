@@ -11,18 +11,17 @@
     "fixbug": "node scripts/fixbugs.js",
     "gen1": "npx mrapi generate --name one",
     "gen2": "npx mrapi generate --name two"
-
   },
   "author": "MIT",
   "license": "ISC",
   "dependencies": {
     "@mrapi/cli": "workspace:*",
     "@mrapi/dal": "workspace:*",
-    "express": "^4.17.1",
-    "cross-env": "^7.0.2",
     "@prisma/cli": "^2.4.1",
-    "prisma-multi-tenant": "2.3.1",
-    "create-nexus-type": "1.2.5"
+    "create-nexus-type": "1.2.5",
+    "cross-env": "^7.0.2",
+    "multer": "^1.4.2",
+    "prisma-multi-tenant": "2.3.1"
   },
   "devDependencies": {
     "typescript": "^3.9.6",

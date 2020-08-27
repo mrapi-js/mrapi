@@ -20,4 +20,20 @@ export default [
             return list
         })
     },
+    {
+        method: 'get',
+        url: `/router/add/:name`,
+        handler: Recover(async (req: express.Request, res: express.Response) => {
+            console.log(req.params.name)
+           return dal.addSchema(req.params.name)
+        })
+    },
+    {
+        method: 'delete',
+        url: `/router/remove/:name`,
+        handler: Recover(async (req: express.Request, res: express.Response) => {
+            console.log(req.params.name)
+           return dal.removeSchema(req.params.name)
+        })
+    },
 ]

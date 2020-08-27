@@ -25,14 +25,14 @@ export default new Router({
                     meta: { title: 'routers' }
                 },
                 {
-                    path: '/table',
-                    component: () => import(/* webpackChunkName: "table" */ '../components/page/BaseTable.vue'),
-                    meta: { title: 'schema' }
+                    path: '/routers',
+                    component: () => import(/* webpackChunkName: "table" */ '../components/page/Routers.vue'),
+                    meta: { title: 'routers' }
                 },
                 {
-                    path: '/tabs',
-                    component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Tabs.vue'),
-                    meta: { title: 'management db' }
+                    path: '/schema',
+                    component: () => import(/* webpackChunkName: "tabs" */ '../components/page/Schema.vue'),
+                    meta: { title: 'schema' }
                 },
                 {
                     path: '/404',

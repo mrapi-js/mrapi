@@ -63,12 +63,12 @@ export default {
                 },
                 {
                     icon: 'el-icon-lx-cascades',
-                    index: 'table',
+                    index: 'routers',
                     title: 'routers'
                 },
                 {
                     icon: 'el-icon-lx-copy',
-                    index: 'tabs',
+                    index: 'schema',
                     title: 'schema'
                 },
                 {
