@@ -5,6 +5,7 @@ import { readFileSync, outputFileSync } from 'fs-extra'
 
 import { spawnShell, runShell, getUrlAndProvider } from '@mrapi/common'
 import Command, { CommandParams } from './common'
+import { Generator } from '../nexus-generator'
 import type { MrapiConfig } from '@mrapi/common'
 
 /**
@@ -91,6 +92,14 @@ class GenerateCommand extends Command {
     if (exitPMTCode !== 0) {
       throw new Error('Generate a multi-tenant exception.')
     }
+
+    // 4. Generate CRUD
+    await new Generator({
+      schema: outputPath,
+      output: path.join(outputPath, 'pal-nexus-types'),
+    }).run()
+    // TODO: ts -> js
+    // ...
 
     // 4. Generate CNT
     let cntParams = ''

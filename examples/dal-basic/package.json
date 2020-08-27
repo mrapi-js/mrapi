@@ -12,8 +12,7 @@
     "gen1": "npx mrapi generate --name one",
     "gen2": "npx mrapi generate --name two",
     "gto": "node ./scripts/qto.js",
-    "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts",
-    "pal": "ts-node-dev --respawn --transpile-only ./scripts/pal.ts"
+    "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts"
   },
   "author": "",
   "license": "ISC",
@@ -25,8 +24,7 @@
     "prisma-multi-tenant": "2.3.1",
     "create-nexus-type": "1.2.6",
     "graphql-to-openapi": "1.5.0",
-    "express-openapi": "7.0.1",
-    "@paljs/generator": "1.2.2"
+    "express-openapi": "7.0.1"
   },
   "devDependencies": {
     "fs-extra": "9.0.1",
