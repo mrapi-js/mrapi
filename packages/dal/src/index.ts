@@ -8,7 +8,7 @@ import { merge, getConfig } from '@mrapi/common'
 import PMTManage from './prisma/PMTManage'
 import Server from './server'
 import { getPrismaClient } from './prisma/getPrisma'
-import { paljs } from './prisma/nexus-plugin-paljs'
+import { paljs } from './prisma/nexusPluginPaljs'
 import type { MrapiConfig } from '@mrapi/common'
 import type { RouteOptions, ServerOptions, DefaultTenant } from './types'
 
