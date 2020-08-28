@@ -133,7 +133,7 @@ class GenerateCommand extends Command {
     // const exitCNTCode = await spawnShell(
     //   `npx cnt --schema ${outputSchemaPath} --outDir ${path.join(
     //     outputPath,
-    //     'nexus-types',
+    //     'nexus-types-cnt',
     //   )}${cntParams} -s --js`,
     // )
     // if (exitCNTCode !== 0) {
