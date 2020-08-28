@@ -82,7 +82,7 @@ importers:
     dependencies:
       '@mrapi/cli': 'link:../../packages/cli'
       '@mrapi/dal': 'link:../../packages/dal'
-      '@paljs/generator': 1.2.2
+      '@nexus/schema': 0.15.0
       '@prisma/cli': 2.4.1
       create-nexus-type: 1.2.6
       cross-env: 7.0.2
@@ -93,11 +93,12 @@ importers:
       fs-extra: 9.0.1
       prettier: 2.0.5
       ts-node-dev: 1.0.0-pre.60_typescript@4.0.2
+      tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
       '@mrapi/cli': 'workspace:*'
       '@mrapi/dal': 'workspace:*'
-      '@paljs/generator': 1.2.2
+      '@nexus/schema': 0.15.0
       '@prisma/cli': ^2.4.1
       create-nexus-type: 1.2.6
       cross-env: ^7.0.2
@@ -107,6 +108,7 @@ importers:
       prettier: 2.0.5
       prisma-multi-tenant: 2.3.1
       ts-node-dev: 1.0.0-pre.60
+      tslib: ^2.0.1
       typescript: ^4.0.2
   packages/api:
     dependencies:
@@ -167,6 +169,7 @@ importers:
   packages/cli:
     dependencies:
       '@mrapi/common': 'link:../common'
+      '@nexus/schema': 0.15.0
       chalk: 4.1.0
       commander: 6.0.0
       create-nexus-type: 1.2.6
@@ -180,6 +183,7 @@ importers:
       typescript: 4.0.2
     specifiers:
       '@mrapi/common': 'workspace:*'
+      '@nexus/schema': 0.15.0
       '@types/fs-extra': ^9.0.1
       chalk: ^4.1.0
       commander: ^6.0.0
@@ -1237,14 +1241,6 @@ packages:
     dev: false
     resolution:
       integrity: sha512-plywLqbvj/uohPkg4EWHVuyHbesTHw17fuRb6LHQLI9drmAw6TyVziJU8IOwM8etBs7kHdZhYd2hrbDpiawMiQ==
-  /@paljs/generator/1.2.2:
-    dependencies:
-      '@paljs/types': 1.1.0
-      pkg-dir: 4.2.0
-      prettier: 2.0.5
-    dev: false
-    resolution:
-      integrity: sha512-NsfWqKw4+aHKyc99Jga+TG5j2Tt9YXV9q7+KT/mzuAVn0t96WEmPbT2xq+ZA1Z3CGb+hpSeyW8OPayIKdxqLog==
   /@paljs/schema/1.1.0:
     dependencies:
       '@paljs/display': 1.0.1

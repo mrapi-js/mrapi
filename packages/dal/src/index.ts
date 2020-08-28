@@ -4,7 +4,6 @@ import isPlainObject from 'is-plain-object'
 import { makeSchema } from '@nexus/schema'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
-// import { paljs } from '@paljs/nexus'
 
 import { merge, getConfig } from '@mrapi/common'
 import PMTManage from './prisma/PMTManage'
@@ -64,7 +63,7 @@ export default class DAL {
   private getDefaultSchemaOptions(name: string) {
     const outputDir = path.join(process.cwd(), this.mrapiConfig.outputDir, name)
     return {
-      nexusDir: path.join(outputDir, 'nexus-types'), // 'pal-nexus-types'
+      nexusDir: path.join(outputDir, 'nexus-types'),
       prismaClientDir: outputDir,
     }
   }
@@ -101,7 +100,6 @@ export default class DAL {
         {
           types,
           plugins: [
-            // paljs(),
             nexusSchemaPrisma({
               experimentalCRUD: true,
               inputs: {
