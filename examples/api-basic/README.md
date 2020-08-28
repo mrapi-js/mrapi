@@ -11,6 +11,14 @@
 - change the config file `config/mrapi.config.js` to the valid value
 - npm run dev
 - visite [playground](http://localhost:1358/playground)
+```graphql
+// http://localhost:1358/graphql/default
+query serv_time{
+  serv_time{
+    time
+  }
+}
+```
 
 ### config说明
 ```javascript

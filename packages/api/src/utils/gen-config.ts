@@ -1,11 +1,24 @@
 import * as fs from 'fs'
+import util from 'util'
+import assert from 'assert'
 import { GraphqlConfig, Obj, ApiOptions } from '../types'
 import logger from './logger'
 import { getConfig, merge } from '@mrapi/common'
 
 function optionsVerify(config: ApiOptions) {
-  // TODO
-  console.log(config)
+  const { openapi, graphql, server, schemaNames } = config
+  const errorStr = '[Config Error] @mrapi/api '
+  switch (server.type) {
+    case 'standalone':
+      assert(openapi.dalBaseUrl, `${errorStr}standlone type need openapi.dalBaseUrl`)
+      assert(graphql.sources.length > 0, `${errorStr}standlone type need graphql.sources.length > 0`)
+      break
+    case 'combined':
+      assert(schemaNames.length > 0, `${errorStr}combined type need schemaNames.length > 0`)
+      break
+    default:
+      throw Error(`${errorStr}illge server.type`)
+  }
 }
 
 /**
@@ -76,7 +89,7 @@ export default function genConfig(options: ApiOptions): ApiOptions {
 
   logger.info(`
 ~~~~~~~~~~Config Start~~~~~~~~~~~~~~~
-  ${JSON.stringify(config).replace(/},/g, '},\n').replace(/],/g, '],\n')}
+${util.inspect(config, { compact: true })}
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 `)
   logger.info(`[Start] gen config file ${outputConfigName} done`)

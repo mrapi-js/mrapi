@@ -57,6 +57,7 @@ export default class Server {
     ))
     Object.keys(customRoutes).forEach((key) => {
       customRoutes[key].forEach((route: any) => {
+        // TODO inject prisma
         this.addRoute(route)
       })
     })
@@ -86,10 +87,11 @@ export default class Server {
    * @returns {Void}
    */
   async loadGraphql(schema: GraphQLSchema, execute: ExecuteMeshFn | undefined, dal?: any) {
+    const { options } = this
     await this.app.register(require('fastify-gql'), {
       schema,
-      path: '/graphql/:name',
-      ide: 'playground',
+      path: `${options.graphql.path}/:name`,
+      ide: options.graphql.playground,
       context: async (request: HttpRequest, reply: HttpReply) => {
         let prisma: any
         const ret = {
@@ -98,11 +100,13 @@ export default class Server {
           execute,
           prisma,
         }
-        const dbName = request.headers[this.options.tenantIdentity]
+        // 访问的租户
+        const tenant = request.headers[this.options.tenantIdentity]
+        // 访问的DB
         const name: any = (request.params as object & { name: () => any }).name
-        logger.info(`[Route] name: ${name}, dbName: ${JSON.stringify(dbName)}`)
+        logger.info(`[Route] DB: ${name}, Tenant: ${JSON.stringify(tenant)}`)
         if (!name || !dal) return ret
-        return dal.getPrisma(name, dbName)
+        return dal.getPrisma(name, tenant)
           .then((prisma: any) => {
             ret.prisma = prisma
             return ret
