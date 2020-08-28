@@ -3,14 +3,14 @@
  *
  * https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/crud
 
-// findOne
+// findOne FindOneUserArgs
 {
   where: UserWhereUniqueInput
   select?: UserSelect | null
   include?: UserInclude | null
 }
 
-// findMany
+// findMany FindManyUserArgs
 {
   select?: UserSelect | null
   include?: UserInclude | null
@@ -21,21 +21,21 @@
   skip?: number | null
 }
 
-// create
+// create UserCreateArgs
 {
   select?: UserSelect | null
   include?: UserInclude | null
   data: UserCreateInput
 }
 
-// delete
+// delete FindOneUserArgs
 {
   where: UserWhereUniqueInput
   select?: UserSelect | null
   include?: UserInclude | null
 }
 
-// update
+// update UserUpdateArgs
 {
   select?: UserSelect | null
   include?: UserInclude | null
@@ -48,13 +48,13 @@
   where: UserWhereUniqueInput
 }
 
-// updateMany
+// updateMany UserUpdateManyArgs
 {
   data: UserUpdateManyMutationInput
   where?: UserWhereInput | null
 }
 
-// count
+// count FindManyUserArgs
 {
   where?: UserWhereInput | null
   orderBy?: Enumerable<UserOrderByInput> | null
@@ -63,6 +63,30 @@
   before?: UserWhereUniqueInput | null
   first?: number | null
   last?: number | null
+}
+
+// upsert UserUpsertArgs
+{
+  select?: UserSelect | null
+  include?: UserInclude | null
+  where: UserWhereUniqueInput
+  create: UserCreateInput
+  update: UserUpdateInput
+}
+
+// aggregate AggregateUserArgs
+{
+  where?: UserWhereInput
+  orderBy?: Enumerable<UserOrderByInput>
+  cursor?: UserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Enumerable<UserDistinctFieldEnum>
+  count?: true
+  avg?: UserAvgAggregateInputType
+  sum?: UserSumAggregateInputType
+  min?: UserMinAggregateInputType
+  max?: UserMaxAggregateInputType
 }
 
  *
@@ -159,14 +183,18 @@ class Fillter {
 
     let isContinue = false
 
-    // sort: =name:asc  =name:desc
+    // sort: =name:asc,id:desc
     if (key === SORTING) {
-      const arr = val.split(':')
-      if (arr.length === 2) {
-        this.result[key] = {
-          [arr[0]]: arr[1],
+      const arrs = val.split(',')
+      for (const item of arrs) {
+        const arr = item.split(':')
+        if (arr.length === 2) {
+          this.result[key] = {
+            [arr[0]]: arr[1],
+          }
         }
       }
+
       isContinue = true
     }
 
@@ -225,6 +253,7 @@ class Fillter {
     return isContinue
   }
 
+  // TODO: 此方法暂未验证，待开发...
   filterOther(key: string, val: string) {
     const { filtering } = this.options
     if (filtering) {
@@ -235,18 +264,18 @@ class Fillter {
 
     // where: _equals, _not, _in, _notIn, _lt, _lte, _gt, _gte, _contains, _startsWith, _endsWith
     const arr = key.split('_')
-    if (!arr[0]) {
+    if (arr[0]) {
+      const filter = arr[1] && FILTERING.includes(arr[1]) ? arr[1] : 'equals'
+      const vals = ['in', 'notIn'].includes(filter)
+        ? [...new Set(val.split(','))]
+        : val
+
+      this.result.where = this.result.where || {}
+      this.result.where[arr[0]] = {
+        [filter]: vals,
+      }
+    } else {
       isContinue = true
-    }
-
-    const filter = arr[1] && FILTERING.includes(arr[1]) ? arr[1] : 'equals'
-    const vals = ['in', 'notIn'].includes(filter)
-      ? [...new Set(val.split(','))]
-      : val
-
-    this.result.where = this.result.where || {}
-    this.result.where[arr[0]] = {
-      [filter]: vals,
     }
 
     return isContinue

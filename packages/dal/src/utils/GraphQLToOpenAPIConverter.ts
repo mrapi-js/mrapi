@@ -68,7 +68,7 @@ export default function GraphQLToOpenAPIConverter(
 
     for (const method of methods) {
       switch (method) {
-        // http://0.0.0.0:1358/api/one/users?orderBy=name:asc&skip=0&take=2
+        // http://0.0.0.0:1358/api/one/users?orderBy=name:asc,id:desc&skip=0&take=2
         case 'findMany': {
           routes.push({
             method: 'GET',

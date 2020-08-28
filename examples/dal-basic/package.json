@@ -22,11 +22,12 @@
     "cross-env": "^7.0.2",
     "@prisma/cli": "^2.4.1",
     "prisma-multi-tenant": "2.3.1",
-    "create-nexus-type": "1.2.6",
     "graphql-to-openapi": "1.5.0",
-    "express-openapi": "7.0.1"
+    "express-openapi": "7.0.1",
+    "@nexus/schema": "0.15.0"
   },
   "devDependencies": {
+    "tslib": "^2.0.1",
     "fs-extra": "9.0.1",
     "prettier": "2.0.5",
     "typescript": "^4.0.2",
