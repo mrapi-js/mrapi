@@ -1,6 +1,6 @@
-// import { PrismaSelect } from '@paljs/plugins'
 import { enumType, inputObjectType, objectType, plugin } from '@nexus/schema'
 import { NexusAcceptedTypeDef } from '@nexus/schema/dist/builder'
+
 import { getPrismaDmmf } from './getPrisma'
 
 export const paljs = ({ prismaClient }: { prismaClient: string }) =>
@@ -77,12 +77,5 @@ export const paljs = ({ prismaClient }: { prismaClient: string }) =>
         })
 
       return { types: nexusSchemaInputs }
-    },
-    onCreateFieldResolver() {
-      return async (root, args, ctx, info: any, next) => {
-        // ctx.select = new PrismaSelect(info).value
-        const r = await next(root, args, ctx, info)
-        return r
-      }
     },
   })
