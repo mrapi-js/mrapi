@@ -29,12 +29,13 @@ const staticData = `('updateOne#{Model}', {
       type: '#{Model}UpdateInput',
       nullable: false,
     }),
+    select: '#{Model}Select',
+    include: '#{Model}Include',
   },
-  resolve(_parent, { data, where }, { prisma, select }) {
+  resolve(_parent, { data, where }, { prisma }) {
     return prisma.#{model}.update({
       where,
       data,
-      ...select,
     }) as any
   },
 })`

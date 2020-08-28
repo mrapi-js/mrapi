@@ -33,11 +33,10 @@ const staticData = `('upsertOne#{Model}', {
       type: '#{Model}UpdateInput',
       nullable: false,
     }),
+    select: '#{Model}Select',
+    include: '#{Model}Include',
   },
-  resolve(_parent, args, { prisma, select }) {
-    return prisma.#{model}.upsert({
-      ...args,
-      ...select,
-    }) as any
+  resolve(_parent, args, { prisma }) {
+    return prisma.#{model}.upsert(args) as any
   },
 })`

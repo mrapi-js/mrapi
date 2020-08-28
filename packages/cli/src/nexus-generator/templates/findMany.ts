@@ -27,11 +27,10 @@ const staticData = `('findMany#{Model}', {
     cursor: '#{Model}WhereUniqueInput',
     skip: 'Int',
     take: 'Int',
+    select: '#{Model}Select',
+    include: '#{Model}Include',
   },
-  resolve(_parent, args, {prisma, select}) {
-    return prisma.#{model}.findMany({
-      ...args,
-      ...select,
-    }) as any
+  resolve(_parent, args, {prisma}) {
+    return prisma.#{model}.findMany(args) as any
   },
 })`

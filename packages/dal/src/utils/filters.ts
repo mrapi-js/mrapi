@@ -3,14 +3,14 @@
  *
  * https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/crud
 
-// findOne
+// findOne FindOneUserArgs
 {
   where: UserWhereUniqueInput
   select?: UserSelect | null
   include?: UserInclude | null
 }
 
-// findMany
+// findMany FindManyUserArgs
 {
   select?: UserSelect | null
   include?: UserInclude | null
@@ -21,21 +21,21 @@
   skip?: number | null
 }
 
-// create
+// create UserCreateArgs
 {
   select?: UserSelect | null
   include?: UserInclude | null
   data: UserCreateInput
 }
 
-// delete
+// delete FindOneUserArgs
 {
   where: UserWhereUniqueInput
   select?: UserSelect | null
   include?: UserInclude | null
 }
 
-// update
+// update UserUpdateArgs
 {
   select?: UserSelect | null
   include?: UserInclude | null
@@ -48,13 +48,13 @@
   where: UserWhereUniqueInput
 }
 
-// updateMany
+// updateMany UserUpdateManyArgs
 {
   data: UserUpdateManyMutationInput
   where?: UserWhereInput | null
 }
 
-// count
+// count FindManyUserArgs
 {
   where?: UserWhereInput | null
   orderBy?: Enumerable<UserOrderByInput> | null
@@ -63,6 +63,30 @@
   before?: UserWhereUniqueInput | null
   first?: number | null
   last?: number | null
+}
+
+// upsert UserUpsertArgs
+{
+  select?: UserSelect | null
+  include?: UserInclude | null
+  where: UserWhereUniqueInput
+  create: UserCreateInput
+  update: UserUpdateInput
+}
+
+// aggregate AggregateUserArgs
+{
+  where?: UserWhereInput
+  orderBy?: Enumerable<UserOrderByInput>
+  cursor?: UserWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Enumerable<UserDistinctFieldEnum>
+  count?: true
+  avg?: UserAvgAggregateInputType
+  sum?: UserSumAggregateInputType
+  min?: UserMinAggregateInputType
+  max?: UserMaxAggregateInputType
 }
 
  *

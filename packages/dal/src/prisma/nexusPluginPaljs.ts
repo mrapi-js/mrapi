@@ -9,7 +9,7 @@ export const paljs = ({ prismaClient }: { prismaClient: string }) =>
     description:
       'paljs plugin to add Prisma select to your resolver and prisma admin queries and mutations and all models input types',
     onInstall() {
-      const data = getPrismaDmmf(prismaClient).schema
+      const dmmf = getPrismaDmmf(prismaClient)
 
       const nexusSchemaInputs: NexusAcceptedTypeDef[] = [
         objectType({
@@ -20,7 +20,70 @@ export const paljs = ({ prismaClient }: { prismaClient: string }) =>
         }),
       ]
 
-      data.enums.forEach((item: any) => {
+      dmmf.datamodel.models.forEach((input: any) => {
+        nexusSchemaInputs.push(
+          inputObjectType({
+            name: `FindMany${input.name}Args`,
+            definition(t) {
+              t.int('skip', {
+                nullable: true,
+              })
+              t.int('take', {
+                nullable: true,
+              })
+              t.field('where', {
+                type: `${input.name}WhereInput`,
+                nullable: true,
+              })
+              t.field('orderBy', {
+                type: `${input.name}OrderByInput`,
+                nullable: true,
+                list: true,
+              })
+              t.field('cursor', {
+                type: `${input.name}WhereUniqueInput`,
+                nullable: true,
+              })
+            },
+          }),
+        )
+        nexusSchemaInputs.push(
+          inputObjectType({
+            name: `${input.name}Select`,
+            definition(t) {
+              input.fields.forEach((field: any) => {
+                console.log(field)
+
+                if (field.kind === 'scalar') {
+                  t.boolean(field.name, { nullable: true })
+                } else if (field.kind === 'object') {
+                  t.field(field.name, {
+                    type: `FindMany${input.name}Args`,
+                    nullable: true,
+                  })
+                }
+              })
+            },
+          }),
+        )
+        nexusSchemaInputs.push(
+          inputObjectType({
+            name: `${input.name}Include`,
+            definition(t) {
+              input.fields.forEach((field: any) => {
+                if (field.kind === 'object') {
+                  t.field(field.name, {
+                    type: `FindMany${input.name}Args`,
+                    nullable: true,
+                  })
+                }
+              })
+            },
+          }),
+        )
+      })
+
+      dmmf.schema.enums.forEach((item: any) => {
         nexusSchemaInputs.push(
           enumType({
             name: item.name,
@@ -28,7 +91,8 @@ export const paljs = ({ prismaClient }: { prismaClient: string }) =>
           }),
         )
       })
-      data.inputTypes.forEach((input: any) => {
+
+      dmmf.schema.inputTypes.forEach((input: any) => {
         nexusSchemaInputs.push(
           inputObjectType({
             name: input.name,
@@ -56,7 +120,7 @@ export const paljs = ({ prismaClient }: { prismaClient: string }) =>
         )
       })
 
-      data.outputTypes
+      dmmf.schema.outputTypes
         .filter((type: any) => type.name.includes('Aggregate'))
         .forEach((type: any) => {
           nexusSchemaInputs.push(

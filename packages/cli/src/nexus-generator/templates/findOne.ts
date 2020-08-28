@@ -25,11 +25,12 @@ const staticData = `('findOne#{Model}', {
       type: '#{Model}WhereUniqueInput',
       nullable: false,
     }),
+    select: '#{Model}Select',
+    include: '#{Model}Include',
   },
-  resolve(_parent, { where }, { prisma, select }) {
+  resolve(_parent, { where }, { prisma }) {
     return prisma.#{model}.findOne({
       where,
-      ...select,
     }) as any
   },
 })`

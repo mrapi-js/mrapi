@@ -27,7 +27,7 @@ const staticData = `('aggregate#{Model}', {
     skip: 'Int',
     take: 'Int',
   },
-  resolve(_parent, args, { prisma, select }) {
-    return prisma.#{model}.aggregate({...args, ...select}) as any
+  resolve(_parent, args, { prisma }) {
+    return prisma.#{model}.aggregate(args) as any
   },
 })`

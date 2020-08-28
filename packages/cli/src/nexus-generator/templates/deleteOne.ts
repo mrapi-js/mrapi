@@ -25,12 +25,13 @@ const staticData = `('deleteOne#{Model}', {
       type: '#{Model}WhereUniqueInput',
       nullable: false,
     }),
+    select: '#{Model}Select',
+    include: '#{Model}Include',
   },
-  resolve: async (_parent, { where }, { prisma, select }) => {
+  resolve: async (_parent, { where }, { prisma }) => {
     #{onDelete}
     return prisma.#{model}.delete({
       where,
-      ...select,
     }) as any
   },
 })`

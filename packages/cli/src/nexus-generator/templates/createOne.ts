@@ -25,11 +25,12 @@ const staticData = `('createOne#{Model}', {
       type: '#{Model}CreateInput',
       nullable: false,
     }),
+    select: '#{Model}Select',
+    include: '#{Model}Include',
   },
-  resolve(_parent, { data }, { prisma, select }) {
+  resolve(_parent, { data }, { prisma }) {
     return prisma.#{model}.create({
       data,
-      ...select,
     }) as any
   },
 })`
