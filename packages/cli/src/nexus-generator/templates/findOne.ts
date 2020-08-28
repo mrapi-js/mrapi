@@ -28,9 +28,7 @@ const staticData = `('findOne#{Model}', {
     select: '#{Model}Select',
     include: '#{Model}Include',
   },
-  resolve(_parent, { where }, { prisma }) {
-    return prisma.#{model}.findOne({
-      where,
-    }) as any
+  resolve(_parent, args, { prisma }) {
+    return prisma.#{model}.findOne(args) as any
   },
 })`

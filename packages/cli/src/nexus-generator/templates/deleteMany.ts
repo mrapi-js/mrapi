@@ -25,8 +25,8 @@ const staticData = `('deleteMany#{Model}', {
       nullable: true,
     }),
   },
-  resolve: async (_parent, { where }, { prisma }) => {
+  resolve: async (_parent, args, { prisma }) => {
     #{onDelete}
-    return prisma.#{model}.deleteMany({where})
+    return prisma.#{model}.deleteMany(args)
   },
 })`
