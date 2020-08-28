@@ -12,16 +12,9 @@ const Query = queryType({
     t.field("serv_time", {
       type: ServTimeOutputType,
       args: { type: stringArg() },
-      async resolve(_, args, { execute }) {
-        console.log(args, execute);
-        const { data } = await execute(`
-          query auth_users {
-            auth_users(where: { id: { equals: "ckd5d4qpi00111i17jinkjswa" } }) {
-              id: true,
-              username: true,
-            }
-          }
-        `);
+      async resolve(_, args, { prisma }) {
+        console.log(args);
+        const data = await prisma.user.findMany()
         console.log(data);
         return { time: String(Date.now()) };
       },
