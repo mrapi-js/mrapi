@@ -11,7 +11,7 @@ export default class API {
   baseDir: string
   options: ApiOptions
   server: Server
-  dal: any
+  private dal: any
 
   constructor(options: ApiOptions = {}) {
     this.baseDir = process.cwd()
@@ -47,7 +47,7 @@ export default class API {
 
   private async startCombined() {
     const { options, server } = this
-    await genPrisma(options.schemaNames)
+    if (options.autoGenerate) await genPrisma(options.schemaNames)
     const schemas = this.combinedWithDAL()
     const { schema } = await meshSchema(options, schemas)
     await this.server.loadGraphql(schema, undefined, this.dal)

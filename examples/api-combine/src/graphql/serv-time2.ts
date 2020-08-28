@@ -12,17 +12,8 @@ const Query = queryType({
     t.field("serv_time2", {
       type: ServTimeOutputType2,
       args: { type: stringArg() },
-      async resolve(_, args, { execute }) {
-        console.log(args, execute);
-        const { data } = await execute(`
-          query auth_users {
-            auth_users(where: { id: { equals: "ckd5d4qpi00111i17jinkjswa" } }) {
-              id: true,
-              username: true,
-            }
-          }
-        `);
-        console.log(data);
+      async resolve(_, args) {
+        console.log(args);
         return { time: String(Date.now()) };
       },
     });
