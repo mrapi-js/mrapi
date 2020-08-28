@@ -53,23 +53,14 @@
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="pagination">
-                <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    :total="pageTotal"
-                    @current-change="handlePageChange"
-                ></el-pagination>
-            </div>
+           
         </div>
 
         <!-- 编辑弹出框 -->
         <el-dialog :title="addFlag?'create new':'edit'" :visible.sync="editVisible" width="70%">
             <el-form ref="form" :model="form" label-width="120px">
                 <el-form-item label="schema name">
-                    <el-input v-model="form.name" :readOnly="!addFlag"></el-input>
+                    <el-input placeholder="end with .prisma" v-model="form.name" :readOnly="!addFlag"></el-input>
                 </el-form-item>
                 <el-form-item label="content">
                     <el-input type="textarea" :rows="20" v-model="form.content"></el-input>
@@ -176,6 +167,7 @@ export default {
                     schemaGenerate(row.name).then(res=>{
                         this.$message.success(`generate 执行成功`);
                          this.loading=false
+                         this.getData();
                     }).catch(err=>{
                         this.loading=false
                     })

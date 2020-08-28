@@ -21,7 +21,7 @@
             >
                 <el-table-column prop="name" label="router type"></el-table-column>
                 <el-table-column prop="regexp" label="regexp"></el-table-column>
-                <el-table-column label="操作" width="180" align="center">
+                <el-table-column label="操作" width="220" align="center">
                     <template slot-scope="scope">
                        
                         <el-button
@@ -29,20 +29,17 @@
                             icon="el-icon-delete"
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
-                        >删除</el-button>
+                        >remove</el-button>
+                        <el-button
+                            type="text"
+                            icon="el-icon-lx-attention"
+                            class="red"
+                            @click="handleGraphqlUi(scope.$index, scope.row)"
+                        >graphql-ui</el-button>
                     </template>
                 </el-table-column>
             </el-table>
-            <div class="pagination">
-                <el-pagination
-                    background
-                    layout="total, prev, pager, next"
-                    :current-page="query.pageIndex"
-                    :page-size="query.pageSize"
-                    :total="pageTotal"
-                    @current-change="handlePageChange"
-                ></el-pagination>
-            </div>
+           
         </div>
 
         <!-- 编辑弹出框 -->
@@ -117,8 +114,14 @@ export default {
         getData() {
             routerList(this.query).then(res => {
                 console.log(res);
-                this.tableData = res;
-                this.pageTotal = res.length;
+                let arr=[]
+                for(let item of res){
+                   if(item.name=="graphqlMiddleware"){
+                      arr.push(item) 
+                   }
+                }
+                this.tableData = arr;
+                this.pageTotal = arr.length;
             });
         },
         
@@ -168,10 +171,11 @@ export default {
                 this.getData();
              })
         },
-        // 分页导航
-        handlePageChange(val) {
-            this.$set(this.query, 'pageIndex', val);
-            this.getData();
+        handleGraphqlUi(index, row){
+            
+           let name=row.regexp.replace("/^\/",'')
+           
+           window.open(`http://localhost:1358/${name}`, "_blank"); 
         }
     }
 };

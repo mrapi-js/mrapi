@@ -6,7 +6,6 @@ import {GetPrismaClientName }from '../Service/CommonService'
 var net=require('net')
 const portIsOccupied=(port:number)=>{
     return new Promise((resolve, reject) => {
-        console.log(port)
         var server=net.createServer().listen(port)
         server.on('listening',function(){
             server.close()
@@ -34,8 +33,9 @@ export default[
            }else{
             const status=await portIsOccupied(dal.server.options.port)
             console.log("----",status,dal.server.options.port)
-             assert(status,"server is running")
-              //  dal.start()
+             assert(!status,"server is running")
+             //TODO
+              dal.start()
           }
             return "OK"
         })
@@ -44,6 +44,7 @@ export default[
         method: 'GET',
         url: `/server/stop`,
         handler:Recover(async (req:express.Request,res:express.Response)=>{
+            assert(dal.server,"server is not exist")
             dal.server.stop()
             return "OK"
         })
@@ -53,7 +54,7 @@ export default[
         url: `/server/info`,
         handler:Recover(async (req:express.Request,res:express.Response)=>{
            
-           // assert(dal.server,"server is not exist")
+             assert(dal.server,"server is not exist，please start server")
             const port=13588//dal.server.options.port
             const status=await portIsOccupied(port)
             console.log(`${port} 使用情况-->${status}`)

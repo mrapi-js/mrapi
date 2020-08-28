@@ -75,6 +75,8 @@ export default [
         method: 'GET',
         url: `/schema/delete/:name`,
         handler: Recover(async (req: express.Request, res: express.Response) => {
+           const clients=await GetPrismaClientName()
+            assert(!clients.includes(req.params.name.split('.')[0]),"remove client first")
             assert(fs.existsSync(`config/prisma/${req.params.name}`), "file is not exist")
             fs.unlinkSync(`config/prisma/${req.params.name}`);
             return "ok"
@@ -121,22 +123,25 @@ export default [
         handler: Recover(async (req: express.Request, res: express.Response) => {
             assert(req.params.name,"params error")
             const name= req.params.name.split(".")[0]
-            //先卸载路由
-            const routes = dal.server.app._router.stack
-             let isOk=false
-            for (let item of routes) {
-                console.log(item)
-                if(item.regexp.test(`/graphql/${name}`)){
-                    isOk=true
-                    break
+            if(dal.server){
+                //先卸载路由
+                const routes = dal.server.app._router.stack
+                let isOk=false
+                for (let item of routes) {
+                    console.log(item)
+                    if(item.regexp.test(`/graphql/${name}`)){
+                        isOk=true
+                        break
+                    }
                 }
+                console.log(`remove router ${name}`)
+                dal.server.removeRoute(name)
+                dal.removeSchema(name)
             }
-            console.log(`remove router ${name}`)
-            dal.server.removeRoute(name)
-            dal.removeSchema(name)
             //再删除client
             await runShell(`rm -rf node_modules/.prisma-mrapi/${name}`)
-           
+            
+            await runShell(`rm -rf prisma/${name}.prisma`)
             return "ok"
         })
     }

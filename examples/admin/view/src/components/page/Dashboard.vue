@@ -6,9 +6,9 @@
           <div>server operations:</div>
           <div>port:1358</div>
           <div>...</div>
-           <el-button type="primary"  @click="serverStart">service start</el-button>
+           <el-button type="primary"  @click="serverStart">server start</el-button>
 
-           <el-button type="info"  @click="serverStop">service stop</el-button>
+           <el-button type="info"  @click="serverStop">server stop</el-button>
         </el-card>
        
     </div>

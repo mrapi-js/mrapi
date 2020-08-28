@@ -8,10 +8,11 @@ export default [
         method: 'GET',
         url: `/router/list`,
         handler: Recover(async (req: express.Request, res: express.Response) => {
+            assert(dal.server,"server is not running")
             const routes = dal.server.app._router.stack
             let list = []
             for (let item of routes) {
-                console.log(item.regexp.toString())
+               
                 list.push({
                     name: item.name,
                     path: item.path,
@@ -25,11 +26,22 @@ export default [
         method: 'get',
         url: `/router/add/:name`,
         handler: Recover(async (req: express.Request, res: express.Response) => {
-            console.log(req.params.name)
+            assert(dal.server,"start server first")
             assert(req.params.name,"params error")
             const name=req.params.name.split('.')[0]
+            const routes = dal.server.app._router.stack
+            let isOk=false
+            for (let item of routes) {
+                    console.log(item)
+                    if(item.regexp.test(`/graphql/${name}`)){
+                        isOk=true
+                        break
+                    }
+            }
+            if(isOk){//更新路由
+                dal.removeSchema(name)
+            }
             dal.addSchema(name)
-          //  dal.server.addRoute(name)
             return "ok"
         })
     },
