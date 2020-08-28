@@ -17,6 +17,7 @@
   "dependencies": {
     "@mrapi/cli": "workspace:*",
     "@mrapi/dal": "workspace:*",
+    "@mrapi/common": "workspace:*",
     "@prisma/cli": "^2.4.1",
     "create-nexus-type": "1.2.5",
     "cross-env": "^7.0.2",

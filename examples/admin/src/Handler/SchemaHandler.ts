@@ -3,6 +3,9 @@ import multer from 'multer'
 import Recover from './Recover'
 import * as fs from 'fs'
 import assert from 'assert'
+import {GetPrismaClientName }from '../Service/CommonService'
+import { spawnShell, runShell} from '@mrapi/common'
+import dal from '../dal'
 var upload = multer().single('file')
 const uploadPromise = (req: express.Request, res: express.Response) => {
     return new Promise((resolve, reject) => {
@@ -32,10 +35,13 @@ export default [
             const files = await fs.readdirSync('config/prisma')
             assert(files.length > 0, "do not exist .schema file")
             let arr = []
+            const allClient=await GetPrismaClientName()
             for (let item of files) {
                 let info = fs.statSync(`config/prisma/${item}`);
+                let prefix=item.split('.')[0]
                 arr.push({
                     name: item,
+                    client:allClient.includes(prefix),
                     ctime: info.ctime,
                     mtime: info.mtime,
                     birthtime: info.birthtime,
@@ -96,4 +102,42 @@ export default [
             return "ok"
         })
     },
+    //generate client 
+    {
+        method:'GET',
+        url:`/schema/generate/:name`,
+        handler: Recover(async (req: express.Request, res: express.Response) => {
+            assert(req.params.name,"params error")
+            const name= req.params.name.split(".")[0]
+            const ress = await spawnShell(`npx mrapi generate --name ${name}`)
+            assert(ress==0,"generate failed")
+            return "ok"
+        })
+    },
+     //delete client 
+     {
+        method:'GET',
+        url:`/schema/remove_client/:name`,
+        handler: Recover(async (req: express.Request, res: express.Response) => {
+            assert(req.params.name,"params error")
+            const name= req.params.name.split(".")[0]
+            //先卸载路由
+            const routes = dal.server.app._router.stack
+             let isOk=false
+            for (let item of routes) {
+                console.log(item)
+                if(item.regexp.test(`/graphql/${name}`)){
+                    isOk=true
+                    break
+                }
+            }
+            console.log(`remove router ${name}`)
+            dal.server.removeRoute(name)
+            dal.removeSchema(name)
+            //再删除client
+            await runShell(`rm -rf node_modules/.prisma-mrapi/${name}`)
+           
+            return "ok"
+        })
+    }
 ]

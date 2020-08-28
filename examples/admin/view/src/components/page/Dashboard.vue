@@ -6,9 +6,9 @@
           <div>server operations:</div>
           <div>port:1358</div>
           <div>...</div>
-           <el-button type="primary" @click="serverStart">service start</el-button>
+           <el-button type="primary"  @click="serverStart">service start</el-button>
 
-           <el-button type="info" @click="serverStop">service stop</el-button>
+           <el-button type="info"  @click="serverStop">service stop</el-button>
         </el-card>
        
     </div>
@@ -21,7 +21,8 @@ export default {
     name: 'dashboard',
     data() {
         return {
-            serverData:{}
+            serverData:{},
+            serverStatus:false,
         };
     },
     components: {
@@ -36,14 +37,18 @@ export default {
     methods: {
        async init(){
            this.serverData=await serverInfo()
+          // this.serverStatus=this.serverData.serverStatus
         },
      async serverStart(){
          if( await serverStart()=="OK"){
+             this.serverStatus=true
+             this.init()
              this.$message.success('启动成功');
          }
      },
      async serverStop(){
            if( await serverStop()=="OK"){
+               this.serverStatus=false
              this.$message.success('服务已停止');
          }
      }

@@ -8,10 +8,11 @@
     "prod": "cross-env NODE_ENV=production node dist/src/app",
     "build": "rm -rf dist && npm run generate && tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "fixbug": "node scripts/fixbugs.js",
-    "generate": "npm run fixbug && npm run gen1 && npm run gen2",
+    "generate": "npm run gen1 && npm run gen2",
     "gen1": "npx mrapi generate --name one",
-    "gen2": "npx mrapi generate --name two"
+    "gen2": "npx mrapi generate --name two",
+    "gto": "node ./scripts/qto.js",
+    "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts"
   },
   "author": "",
   "license": "ISC",
@@ -21,11 +22,15 @@
     "cross-env": "^7.0.2",
     "@prisma/cli": "^2.4.1",
     "prisma-multi-tenant": "2.3.1",
-    "create-nexus-type": "1.2.5"
+    "create-nexus-type": "1.2.6",
+    "graphql-to-openapi": "1.5.0",
+    "express-openapi": "7.0.1"
   },
   "devDependencies": {
-    "typescript": "^3.9.6",
-    "ts-node-dev": "1.0.0-pre.51"
+    "fs-extra": "9.0.1",
+    "prettier": "2.0.5",
+    "typescript": "^4.0.2",
+    "ts-node-dev": "1.0.0-pre.60"
   },
   "prettier": {
     "semi": false,

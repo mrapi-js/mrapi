@@ -12,6 +12,7 @@
                 <el-button type="primary" icon="el-icon-plus" @click="handleAdd">create</el-button>
             </div>
             <el-table
+                v-loading="loading"
                 :data="tableData"
                 border
                 class="table"
@@ -23,8 +24,8 @@
                 <el-table-column prop="ctime" label="ctime"></el-table-column>
                 <el-table-column prop="mtime" label="mtime"></el-table-column>
                 <el-table-column prop="birthtime" label="birthtime"></el-table-column>
-                <el-table-column prop="size" label="size"></el-table-column>
-                <el-table-column label="operation" width="180" align="center">
+                <el-table-column prop="size" label="size" width="100"></el-table-column>
+                <el-table-column label="operation" width="360" align="center">
                     <template slot-scope="scope">
                         <el-button
                             type="text"
@@ -37,6 +38,18 @@
                             class="red"
                             @click="handleDelete(scope.$index, scope.row)"
                         >delete</el-button>
+                        <el-button 
+                            type="text"
+                            icon="el-icon-lx-edit"
+                            class="black"
+                            @click="handleGenerate(scope.$index, scope.row)"
+                        >{{scope.row.client?'re-generate':'generate'}}</el-button>
+                         <el-button v-if="scope.row.client"
+                            type="text"
+                            icon="el-icon-delete"
+                            class="red"
+                            @click="handleRemove(scope.$index, scope.row)"
+                        >remove-client</el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -72,7 +85,7 @@
 
 
 <script>
-import { schemaList,schemaGet,schemaDelete ,schemaUpdate,schemaCreate} from '../../api/schema';
+import { schemaList,schemaGet,schemaDelete ,schemaUpdate,schemaCreate,schemaGenerate,schemaGenerateRemove} from '../../api/schema';
 export default {
     name: 'basetable',
     data() {
@@ -91,7 +104,8 @@ export default {
             form: {},
             idx: -1,
             id: -1,
-            addFlag:false
+            addFlag:false,
+            loading:false
         };
     },
     created() {
@@ -137,21 +151,13 @@ export default {
         handleSelectionChange(val) {
             this.multipleSelection = val;
         },
-        delAllSelection() {
-            const length = this.multipleSelection.length;
-            let str = '';
-            this.delList = this.delList.concat(this.multipleSelection);
-            for (let i = 0; i < length; i++) {
-                str += this.multipleSelection[i].name + ' ';
-            }
-            this.$message.error(`删除了${str}`);
-            this.multipleSelection = [];
-        },
+       
         // 编辑操作
         handleEdit(index, row) {
             this.addFlag=false
             this.idx = index;
             //this.form = row;
+           
             schemaGet(row.name).then(res=>{
                 
                 this.form={
@@ -162,12 +168,39 @@ export default {
             this.editVisible = true;
 
         },
+        handleGenerate(index,row){
+             this.$confirm('执行generate前确保schema文件格式正确', '提示', {
+                type: 'warning'
+            }).then(() => {
+                  this.loading=true
+                    schemaGenerate(row.name).then(res=>{
+                        this.$message.success(`generate 执行成功`);
+                         this.loading=false
+                    }).catch(err=>{
+                        this.loading=false
+                    })
+                })
+        },
+        handleRemove(index,row){
+            this.$confirm('删除client将卸载路由', '提示', {
+                type: 'warning'
+            }).then(() => {
+                 this.loading=true
+                schemaGenerateRemove(row.name).then(res=>{
+                    this.$message.success(`remove client 执行成功`);
+                    this.loading=false
+                    this.getData();
+                 }).catch(err=>{
+                        this.loading=false
+                 })
+            })
+        },
         // 保存编辑
         saveEdit() {
             if(!this.addFlag){
                 schemaUpdate(this.form.name,this.form).then(res=>{
                     this.editVisible = false;
-                    this.$message.success(`修改第 ${this.idx + 1} 行成功`);
+                    this.$message.success(`修改${this.form.name} 行成功`);
                     this.getData();
                 })
             }else{
@@ -207,6 +240,10 @@ export default {
 }
 .red {
     color: #ff0000;
+}
+.black{
+    color: #000000;
+
 }
 .mr10 {
     margin-right: 10px;

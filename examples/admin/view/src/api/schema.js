@@ -37,3 +37,19 @@ export const schemaCreate= (name,data) => {
         data
     });
 };
+
+export const schemaGenerate= (name) => {
+    return request({
+        url: '/schema/generate/'+name,
+        method: 'get',
+       // data
+    });
+};
+
+export const schemaGenerateRemove= (name) => {
+    return request({
+        url: '/schema/remove_client/'+name,
+        method: 'get',
+       // data
+    });
+};

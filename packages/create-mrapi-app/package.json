@@ -24,7 +24,7 @@
     "trailingComma": "all"
   },
   "dependencies": {
-    "tslib": "^2.0.0",
+    "tslib": "^2.0.1",
     "fs-extra": "^9.0.1"
   },
   "repository": {

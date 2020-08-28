@@ -5,9 +5,10 @@ import { makeSchema } from '@nexus/schema'
 import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
 
-import { merge, getConfig, getPrismaClient } from '@mrapi/common'
+import { merge, getConfig } from '@mrapi/common'
 import PMTManage from './prisma/PMTManage'
 import Server from './server'
+import { getPrismaClient } from './prisma/getPrisma'
 import type { MrapiConfig } from '@mrapi/common'
 import type { RouteOptions, ServerOptions, DefaultTenant } from './types'
 
@@ -80,7 +81,6 @@ export default class DAL {
   }: MakeSchemaOptions) {
     let types: any
     try {
-      // TODO: generate types vis prisma schema
       const requireDirTypes = require(nexusDir)
       types = requireDirTypes.default || requireDirTypes
     } catch (e) {
@@ -107,7 +107,7 @@ export default class DAL {
               },
             }),
           ],
-          shouldGenerateArtifacts: process.env.NODE_ENV === 'development', // 感觉生成的文件，只是方便编写 types
+          shouldGenerateArtifacts: process.env.NODE_ENV !== 'production', // 感觉生成的文件，只是方便编写 types
           outputs: {
             schema: path.join(prismaClientDir, '/generated/schema.graphql'),
             typegen: path.join(prismaClientDir, '/generated/nexus.ts'),
@@ -143,7 +143,6 @@ export default class DAL {
     if (!tenantName) {
       defaultTenant = this.defaultTenants.get(name) || {}
     }
-    console.log(defaultTenant)
 
     return await this.pmtManage
       .getPrisma(name, defaultTenant.name || tenantName, defaultTenant.url)
@@ -216,6 +215,7 @@ export default class DAL {
       result = this.server.addRoute(name, {
         ...graphqlHTTP,
         schema,
+        prismaClient,
       })
     }
     return result

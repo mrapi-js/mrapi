@@ -1,5 +1,6 @@
 import express from 'express'
 import Recover from './Recover'
+import assert from 'assert'
 import dal from '../dal'
 export default [
     //获取路由列表
@@ -10,11 +11,11 @@ export default [
             const routes = dal.server.app._router.stack
             let list = []
             for (let item of routes) {
-                console.log(item)
+                console.log(item.regexp.toString())
                 list.push({
                     name: item.name,
                     path: item.path,
-                    regexp: item.regexp
+                    regexp: item.regexp.toString()
                 })
             }
             return list
@@ -25,15 +26,29 @@ export default [
         url: `/router/add/:name`,
         handler: Recover(async (req: express.Request, res: express.Response) => {
             console.log(req.params.name)
-           return dal.addSchema(req.params.name)
+            assert(req.params.name,"params error")
+            const name=req.params.name.split('.')[0]
+            dal.addSchema(name)
+          //  dal.server.addRoute(name)
+            return "ok"
         })
     },
     {
         method: 'delete',
-        url: `/router/remove/:name`,
+        url: `/router/remove/`,
         handler: Recover(async (req: express.Request, res: express.Response) => {
-            console.log(req.params.name)
-           return dal.removeSchema(req.params.name)
+            console.log("ss---",req.query.name)
+            const routes = dal.server.app._router.stack
+             let isOk=false
+            for (let item of routes) {
+                console.log(item)
+                if(item.regexp.toString()===req.query.name){
+                    isOk=true
+                    break
+                }
+            }
+
+           return "ok"//dal.removeSchema(req.params.name)
         })
     },
 ]

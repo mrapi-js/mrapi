@@ -19,14 +19,11 @@
                 header-cell-class-name="table-header"
                 @selection-change="handleSelectionChange"
             >
-                <el-table-column prop="name" label="router name"></el-table-column>
+                <el-table-column prop="name" label="router type"></el-table-column>
+                <el-table-column prop="regexp" label="regexp"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template slot-scope="scope">
-                        <el-button
-                            type="text"
-                            icon="el-icon-edit"
-                            @click="handleEdit(scope.$index, scope.row)"
-                        >编辑</el-button>
+                       
                         <el-button
                             type="text"
                             icon="el-icon-delete"
@@ -73,7 +70,7 @@
 </template>
 
 <script>
-import { routerList } from '../../api/index';
+import { routerList,routerRemove ,routerAdd} from '../../api/router';
 import { schemaList} from '../../api/schema';
 export default {
     name: 'basetable',
@@ -106,6 +103,9 @@ export default {
            const res=await schemaList()
            let arr=[]
                for(let item of res){
+                   if(!item.client){
+                       continue
+                   }
                    arr.push({
                        label:item.name,
                        value:item.name
@@ -122,7 +122,8 @@ export default {
             });
         },
         
-        handleAdd() {
+       async  handleAdd() {
+           await this.schemaSelect()
            this.editVisible=true
         },
         // 删除操作
@@ -130,12 +131,14 @@ export default {
             // 二次确认删除
             this.$confirm('确定要删除吗？', '提示', {
                 type: 'warning'
+            }).then(() => {
+                 routerRemove(row.regexp).then(res=>{
+                   this.$message.success('删除成功');
+                    this.getData();
+                 }).catch(err=>{
+                      this.$message.error(`删除失败`);
+                 })
             })
-                .then(() => {
-                    this.$message.success('删除成功');
-                    this.tableData.splice(index, 1);
-                })
-                .catch(() => {});
         },
         // 多选操作
         handleSelectionChange(val) {
@@ -160,8 +163,10 @@ export default {
         // 保存编辑
         saveEdit() {
             this.editVisible = false;
-            this.$message.success(`修改第 ${this.idx + 1} 行成功`);
-            this.$set(this.tableData, this.idx, this.form);
+             routerAdd(this.form.name).then(res=>{
+                this.$message.success(`add success`);
+                this.getData();
+             })
         },
         // 分页导航
         handlePageChange(val) {

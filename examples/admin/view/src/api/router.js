@@ -16,3 +16,11 @@ export const routerAdd = name => {
     });
 };
 
+export const routerRemove = name => {
+    return request({
+        url: '/router/remove',
+        method: 'delete',
+        params:{name:name}
+    });
+};
+
