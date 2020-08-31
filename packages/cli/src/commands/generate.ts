@@ -4,8 +4,8 @@ import commander from 'commander'
 import { readFileSync, outputFileSync } from 'fs-extra'
 
 import { spawnShell, runShell, getUrlAndProvider } from '@mrapi/common'
+import { Generator } from '@mrapi/nexus'
 import Command, { CommandParams } from './common'
-import { Generator } from '../nexus-generator'
 import type { MrapiConfig } from '@mrapi/common'
 
 /**
