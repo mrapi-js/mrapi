@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@mrapi/common": "workspace:*",
-    "@nexus/schema": "0.15.0"
+    "@nexus/schema": "0.15.0",
+    "chalk": "^4.1.0"
   },
   "devDependencies": {
     "tslib": "^2.0.1",

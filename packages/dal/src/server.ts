@@ -84,6 +84,7 @@ export default class Server {
       )}\n`,
     )
 
+    // TODO: 此处打算修改...1.先在 cli generate 中编译出 openAPI 代码；2.再在此处初始化 express-openapi
     // add openAPI
     const dmmf = getPrismaDmmf(options.prismaClient)
     const routes = graphQLToOpenAPIConverter(name, dmmf, async (req) => {

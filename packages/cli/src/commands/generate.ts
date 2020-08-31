@@ -7,39 +7,10 @@ import { spawnShell, runShell, getUrlAndProvider } from '@mrapi/common'
 import { Generator } from '@mrapi/nexus'
 import Command, { CommandParams } from './common'
 import type { MrapiConfig } from '@mrapi/common'
+import type { Options as NexusOptions } from '@mrapi/nexus/lib/generator/types'
 
-/**
- * https://paljs.com/cli/cnt/#command-options-for-cnt
- *
-  -mq      add this option to create Queries and Mutations for models
-  -m       add this option to create Mutations
-  -q       add this option to create Queries
-  -c       add this option to create Queries Count
-  -f       add this option to add {filtering: true} option to Queries
-  -o       add this option to add {ordering: true} option to Queries
- */
-// const cntWhiteList = [
-//   'mq',
-//   // 'm', 'q',
-//   'c',
-//   'f',
-//   'o',
-// ]
-// const cntWhiteListSet = new Set(cntWhiteList)
-
-const tscOptions = [
-  '-t es2018',
-  '--lib esnext',
-  '--module commonjs',
-  '--moduleResolution node',
-  '--allowSyntheticDefaultImports',
-  '--esModuleInterop',
-  '--importHelpers',
-  '--resolveJsonModule',
-  '--sourceMap false ',
-  '--declaration',
-  '--skipLibCheck',
-].join(' ')
+const cntWhiteList = ['disableQueries', 'disableMutations']
+const cntWhiteListSet = new Set(cntWhiteList)
 
 class GenerateCommand extends Command {
   static params: CommandParams = {
@@ -50,21 +21,35 @@ class GenerateCommand extends Command {
         flags: ['--name <name>', 'schema client name'],
         required: true,
       },
-      // {
-      //   key: 'cnt',
-      //   flags: [
-      //     '--cnt <options>',
-      //     'Generate CNT params',
-      //     cntWhiteList.join(','),
-      //   ],
-      // },
+      {
+        key: 'cnt',
+        flags: [
+          '--cnt <options>',
+          `Generate CNT params. whiteList: ${cntWhiteList.join(',')}`,
+        ],
+      },
+      {
+        key: 'models',
+        flags: ['--m <options>', 'Generate models'],
+      },
+      {
+        key: 'excludeModels',
+        flags: ['--em <options>', 'Exclude generate models'],
+      },
+      {
+        key: 'excludeQueriesAndMutations',
+        flags: ['--eqm <options>', 'Exclude Queries and Mutations'],
+      },
     ],
   }
 
   async execute() {
     const {
       name,
-      // cnt
+      cnt,
+      models,
+      excludeModels,
+      excludeQueriesAndMutations,
     } = this.argv
     const {
       inputSchemaDir,
@@ -110,35 +95,43 @@ class GenerateCommand extends Command {
       throw new Error('Generate a multi-tenant exception.')
     }
 
-    // 4. Generate CRUD
+    // 4. Generate CRUD with nexus
     const palOutput = path.join(outputPath, 'nexus-types')
-    await new Generator({
+    const nexusParams: NexusOptions = {
       schema: outputPath,
       output: palOutput,
-    }).run()
-    const exitPalCode = await spawnShell(
-      `npx tsc ${tscOptions} ${palOutput}/*.ts ${palOutput}/**/*.ts ${palOutput}/**/**/*.ts`,
-    )
-    if (exitPalCode !== 0) {
-      throw new Error('Generate nexus types exception.')
+      excludeFields: [],
+      excludeModels: [],
+      excludeFieldsByModel: {},
+      excludeQueriesAndMutationsByModel: {},
+      excludeQueriesAndMutations: [],
     }
+    if (cnt) {
+      cnt.split(',').forEach((item: string) => {
+        if (cntWhiteListSet.has(item)) {
+          nexusParams[item] = true
+        }
+      })
+    }
+    if (models) {
+      nexusParams.models = models.split(',')
+    }
+    if (excludeModels) {
+      excludeModels.split(',').forEach((item: string) => {
+        nexusParams.excludeModels[item] = { name: item }
+      })
+    }
+    if (excludeQueriesAndMutations) {
+      nexusParams.excludeQueriesAndMutations = excludeQueriesAndMutations.split(
+        ',',
+      )
+    }
+    const nexusGenerate = new Generator(nexusParams)
+    await nexusGenerate.run()
+    await nexusGenerate.toJS()
 
-    // // 4. Generate CNT
-    // let cntParams = ''
-    // cnt.split(',').forEach((item: string) => {
-    //   if (cntWhiteListSet.has(item)) {
-    //     cntParams += ` -${item}`
-    //   }
-    // })
-    // const exitCNTCode = await spawnShell(
-    //   `npx cnt --schema ${outputSchemaPath} --outDir ${path.join(
-    //     outputPath,
-    //     'nexus-types-cnt',
-    //   )}${cntParams} -s --js`,
-    // )
-    // if (exitCNTCode !== 0) {
-    //   throw new Error('Generate nexus types exception.')
-    // }
+    // TODO: 5. Generate CRUD with openAPI
+    // ...
   }
 
   createSchemaPrisma = (output: string, content: string) => `

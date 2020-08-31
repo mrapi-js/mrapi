@@ -30,7 +30,7 @@ const staticData = `('updateOne#{Model}', {
       nullable: false,
     }),
     select: '#{Model}Select',
-    include: '#{Model}Include',
+    #{includeModel}
   },
   resolve(_parent, args, { prisma }) {
     return prisma.#{model}.update(args) as any

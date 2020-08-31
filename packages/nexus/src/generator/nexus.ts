@@ -7,8 +7,19 @@ import { getCrud } from './templates'
 export class GenerateNexus extends Generators {
   private readonly indexPath = this.output('index.ts')
   private index = this.readIndex()
+  private readonly includeModel = {}
 
   async run() {
+    const datamodel = await this.datamodel()
+    for (const model of datamodel.models) {
+      for (const field of model.fields) {
+        if (field.kind === 'object') {
+          this.includeModel[model.name] = true
+          continue
+        }
+      }
+    }
+
     await this.createModels()
     this.createIndex()
   }
@@ -77,6 +88,7 @@ export class GenerateNexus extends Generators {
             item,
             this.options.onDelete,
             this.options.nexusSchema,
+            !!this.includeModel[name],
           )
           this.createFileIfNotfound(
             path,
@@ -108,6 +120,7 @@ export class GenerateNexus extends Generators {
             item,
             this.options.onDelete,
             this.options.nexusSchema,
+            !!this.includeModel[name],
           )
           this.createFileIfNotfound(
             path,
