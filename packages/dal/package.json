@@ -17,6 +17,7 @@
   },
   "dependencies": {
     "@mrapi/common": "workspace:*",
+    "@mrapi/nexus": "workspace:*",
     "@nexus/schema": "0.15.0",
     "@prisma/client": "2.5.1",
     "@prisma-multi-tenant/client": "2.3.1",

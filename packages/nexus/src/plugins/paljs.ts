@@ -1,13 +1,13 @@
 import { enumType, inputObjectType, objectType, plugin } from '@nexus/schema'
 import { NexusAcceptedTypeDef } from '@nexus/schema/dist/builder'
 
-import { getPrismaDmmf } from './getPrisma'
+import { getPrismaDmmf } from '@mrapi/common'
 
-export const paljs = ({ prismaClient }: { prismaClient: string }) =>
+export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
   plugin({
-    name: 'paljs',
+    name: 'mrapi-paljs',
     description:
-      'paljs plugin to add Prisma select to your resolver and prisma admin queries and mutations and all models input types',
+      'This plugin to add Prisma select to your resolver and prisma admin queries and mutations and all models input types',
     onInstall() {
       const dmmf = getPrismaDmmf(prismaClient)
 

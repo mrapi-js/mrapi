@@ -4,7 +4,7 @@ export default (schema?: boolean) => `
 ${
   schema
     ? `
-export const #{Model}CreateOneMutation = mutationField${staticData};
+export const #{Model}UpdateOneMutation = mutationField${staticData};
 `
     : `
 schema.extendType({
@@ -17,20 +17,22 @@ schema.extendType({
 }
 `
 
-const staticData = `('createOne#{Model}', {
+const staticData = `('updateOne#{Model}', {
   type: '#{Model}',
   nullable: false,
   args: {
+    where: #{schema}arg({
+      type: '#{Model}WhereUniqueInput',
+      nullable: false,
+    }),
     data: #{schema}arg({
-      type: '#{Model}CreateInput',
+      type: '#{Model}UpdateInput',
       nullable: false,
     }),
     select: '#{Model}Select',
     include: '#{Model}Include',
   },
-  resolve(_parent, { data }, { prisma }) {
-    return prisma.#{model}.create({
-      data,
-    }) as any
+  resolve(_parent, args, { prisma }) {
+    return prisma.#{model}.update(args) as any
   },
 })`

@@ -4,11 +4,10 @@ import isPlainObject from 'is-plain-object'
 import { makeSchema } from '@nexus/schema'
 import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
 
-import { merge, getConfig } from '@mrapi/common'
+import { merge, getConfig, getPrismaClient } from '@mrapi/common'
+import { paljsPlugin } from '@mrapi/nexus'
 import PMTManage from './prisma/PMTManage'
 import Server from './server'
-import { getPrismaClient } from './prisma/getPrisma'
-import { paljs } from './prisma/nexusPluginPaljs'
 import type { MrapiConfig } from '@mrapi/common'
 import type { RouteOptions, ServerOptions, DefaultTenant } from './types'
 
@@ -99,7 +98,7 @@ export default class DAL {
       merge(
         {
           types,
-          plugins: [paljs({ prismaClient: prismaClientDir })],
+          plugins: [paljsPlugin({ prismaClient: prismaClientDir })],
           shouldGenerateArtifacts: process.env.NODE_ENV !== 'production', // 感觉生成的文件，只是方便编写 types
           outputs: {
             schema: path.join(prismaClientDir, '/generated/schema.graphql'),

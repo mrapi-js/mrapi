@@ -4,11 +4,11 @@ export default (schema?: boolean) => `
 ${
   schema
     ? `
-export const #{Model}FindOneQuery = queryField${staticData};
+export const #{Model}DeleteOneMutation = mutationField${staticData};
 `
     : `
 schema.extendType({
-  type: 'Query',
+  type: 'Mutation',
   definition(t) {
     t.field${staticData};
   },
@@ -17,7 +17,7 @@ schema.extendType({
 }
 `
 
-const staticData = `('findOne#{Model}', {
+const staticData = `('deleteOne#{Model}', {
   type: '#{Model}',
   nullable: true,
   args: {
@@ -28,9 +28,8 @@ const staticData = `('findOne#{Model}', {
     select: '#{Model}Select',
     include: '#{Model}Include',
   },
-  resolve(_parent, { where }, { prisma }) {
-    return prisma.#{model}.findOne({
-      where,
-    }) as any
+  resolve: async (_parent, args, { prisma }) => {
+    #{onDelete}
+    return prisma.#{model}.delete(args) as any
   },
 })`
