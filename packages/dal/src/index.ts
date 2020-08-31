@@ -250,7 +250,8 @@ export default class DAL {
     this.server.start()
 
     for (const [name, _schema] of this.schemas) {
-      this.addSchema(name)
+      if(!this.schemas.has(name))
+        this.addSchema(name)
     }
   }
 
