@@ -95,7 +95,7 @@ class GenerateCommand extends Command {
       throw new Error('Generate a multi-tenant exception.')
     }
 
-    // 4. Generate CRUD
+    // 4. Generate CRUD with nexus
     const palOutput = path.join(outputPath, 'nexus-types')
     const nexusParams: NexusOptions = {
       schema: outputPath,
@@ -129,6 +129,9 @@ class GenerateCommand extends Command {
     const nexusGenerate = new Generator(nexusParams)
     await nexusGenerate.run()
     await nexusGenerate.toJS()
+
+    // TODO: 5. Generate CRUD with openAPI
+    // ...
   }
 
   createSchemaPrisma = (output: string, content: string) => `

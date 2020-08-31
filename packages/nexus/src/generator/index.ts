@@ -1,3 +1,5 @@
+import chalk from 'chalk'
+
 import { spawnShell } from '@mrapi/common'
 import { GenerateNexus } from './nexus'
 
@@ -24,6 +26,8 @@ export class Generator {
 
   async run() {
     await this.generator.run()
+
+    console.log(chalk.green('\n✅  GenerateNexus run successful.\n'))
   }
 
   async toJS() {
@@ -34,5 +38,7 @@ export class Generator {
     if (exitPalCode !== 0) {
       throw new Error('Generate nexus types exception.')
     }
+
+    console.log(chalk.green('\n✅  GenerateNexus toJS successful.\n'))
   }
 }

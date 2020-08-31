@@ -52,8 +52,6 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
             name: `${input.name}Select`,
             definition(t) {
               input.fields.forEach((field: any) => {
-                console.log(field)
-
                 if (field.kind === 'scalar') {
                   t.boolean(field.name, { nullable: true })
                 } else if (field.kind === 'object') {
