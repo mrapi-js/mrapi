@@ -25,6 +25,8 @@ export default class Server {
 
   public server: http.Server
 
+  public serverRunningStatus:Boolean
+
   private readonly options: ServerOptions
 
   private readonly getPrisma: GetPrismaType
@@ -35,6 +37,8 @@ export default class Server {
     this.getPrisma = getPrisma
 
     this.app = express()
+
+    this.serverRunningStatus=false
   }
 
   start() {
@@ -44,7 +48,7 @@ export default class Server {
     console.log(
       `\n🚀 Server ready at: ${chalk.blue(`http://${host}:${port}`)}\n`,
     )
-
+    this.serverRunningStatus=true
     return this.app
   }
 
@@ -57,6 +61,7 @@ export default class Server {
 
     const { port, host } = this.options
     console.log(`\n🚫 Server closed. ${chalk.gray(`http://${host}:${port}`)}\n`)
+    this.serverRunningStatus=false
   }
 
   addRoute(name: string, options: RouteOptions): boolean {
