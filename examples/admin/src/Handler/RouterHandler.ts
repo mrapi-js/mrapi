@@ -9,6 +9,8 @@ export default [
         url: `/router/list`,
         handler: Recover(async (req: express.Request, res: express.Response) => {
             assert(dal.server,"server is not running")
+            assert(dal.server.app._router,"no routers")
+            console.log(dal.server.app)
             const routes = dal.server.app._router.stack
             let list = []
             for (let item of routes) {
@@ -32,7 +34,7 @@ export default [
             const routes = dal.server.app._router.stack
             let isOk=false
             for (let item of routes) {
-                    console.log(item)
+                  
                     if(item.regexp.test(`/graphql/${name}`)){
                         isOk=true
                         break
@@ -47,9 +49,8 @@ export default [
     },
     {
         method: 'delete',
-        url: `/router/remove/`,
+        url: `/router/remove`,
         handler: Recover(async (req: express.Request, res: express.Response) => {
-            console.log("ss---",req.query.name)
             const routes = dal.server.app._router.stack
              let isOk=false
             for (let item of routes) {

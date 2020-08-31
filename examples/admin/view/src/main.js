@@ -22,7 +22,7 @@ const i18n = new VueI18n({
 
 //使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
-    document.title = `${to.meta.title} | vue-manage-system`;
+    document.title = `${to.meta.title} | mrapi-dal-manage`;
     const role = localStorage.getItem('ms_username');
 
     // 简单的判断IE10及以下不进入富文本编辑器，该组件不兼容

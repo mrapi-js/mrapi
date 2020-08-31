@@ -27,6 +27,7 @@ export default[
            if(!dal.server){
              dal.start()
              const arr=await  GetPrismaClientName()
+             console.log(arr)
              for(let item of arr){
                  dal.addSchema(item)
              }
