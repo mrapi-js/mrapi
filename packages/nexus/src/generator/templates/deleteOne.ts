@@ -26,7 +26,7 @@ const staticData = `('deleteOne#{Model}', {
       nullable: false,
     }),
     select: '#{Model}Select',
-    include: '#{Model}Include',
+    #{includeModel}
   },
   resolve: async (_parent, args, { prisma }) => {
     #{onDelete}

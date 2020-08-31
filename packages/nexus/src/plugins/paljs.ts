@@ -47,6 +47,7 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
             },
           }),
         )
+
         nexusSchemaInputs.push(
           inputObjectType({
             name: `${input.name}Select`,
@@ -56,7 +57,7 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
                   t.boolean(field.name, { nullable: true })
                 } else if (field.kind === 'object') {
                   t.field(field.name, {
-                    type: `FindMany${input.name}Args`,
+                    type: `FindMany${field.name}Args`,
                     nullable: true,
                   })
                 }
@@ -64,21 +65,31 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
             },
           }),
         )
-        nexusSchemaInputs.push(
-          inputObjectType({
-            name: `${input.name}Include`,
-            definition(t) {
-              input.fields.forEach((field: any) => {
-                if (field.kind === 'object') {
-                  t.field(field.name, {
-                    type: `FindMany${input.name}Args`,
-                    nullable: true,
-                  })
-                }
-              })
-            },
-          }),
-        )
+
+        let hasObject = false
+        for (const field of input.fields) {
+          if (field.kind === 'object') {
+            hasObject = true
+            break
+          }
+        }
+        if (hasObject) {
+          nexusSchemaInputs.push(
+            inputObjectType({
+              name: `${input.name}Include`,
+              definition(t) {
+                input.fields.forEach((field: any) => {
+                  if (field.kind === 'object') {
+                    t.field(field.name, {
+                      type: `FindMany${field.name}Args`,
+                      nullable: true,
+                    })
+                  }
+                })
+              },
+            }),
+          )
+        }
       })
 
       dmmf.schema.enums.forEach((item: any) => {
