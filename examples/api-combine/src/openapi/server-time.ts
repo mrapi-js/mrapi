@@ -5,9 +5,9 @@ export const serverTimeRoutes = [
     method: 'GET',
     url: '/server-time',
     async handler(ctx: Context) {
-      const { reply, request } = ctx
-      request.log.error('123') // test custom logger
-      reply.send(Date.now())
+      const { reply, prisema } = ctx
+      const users = await prisema.user.findMany()
+      reply.send(users)
     },
   },
 ]

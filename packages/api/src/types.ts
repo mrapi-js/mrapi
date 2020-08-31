@@ -82,6 +82,8 @@ export interface ApiOptions {
   }
   graphql?: {
     dir?: string,
+    path?: string,
+    playground?: string | boolean,
     sources?: []
   }
   server?: {

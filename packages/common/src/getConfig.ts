@@ -46,6 +46,10 @@ const defaultConfig: MrapiConfig = {
     graphql: {
       // @mrapi/api graphql custom api dir
       dir: '/src/graphql',
+      // @mrapi/api graphql api prefix
+      path: '/graphql',
+      // @mrapi/api graphql playground
+      playground: 'playground',
       // @mrapi/api graphql sources
       sources: [],
     },
@@ -61,6 +65,8 @@ const defaultConfig: MrapiConfig = {
     },
     // @mrapi/api prisma schema names array
     schemaNames: [],
+    // auto run scripts mrapi generate
+    autoGenerate: true,
   },
 }
 

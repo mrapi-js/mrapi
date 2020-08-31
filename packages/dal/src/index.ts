@@ -2,13 +2,13 @@ import path from 'path'
 import chalk from 'chalk'
 import isPlainObject from 'is-plain-object'
 import { makeSchema } from '@nexus/schema'
-import { nexusSchemaPrisma } from 'nexus-plugin-prisma/schema'
 import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
 
 import { merge, getConfig } from '@mrapi/common'
 import PMTManage from './prisma/PMTManage'
 import Server from './server'
 import { getPrismaClient } from './prisma/getPrisma'
+import { paljs } from './prisma/nexusPluginPaljs'
 import type { MrapiConfig } from '@mrapi/common'
 import type { RouteOptions, ServerOptions, DefaultTenant } from './types'
 
@@ -99,14 +99,7 @@ export default class DAL {
       merge(
         {
           types,
-          plugins: [
-            nexusSchemaPrisma({
-              experimentalCRUD: true,
-              inputs: {
-                prismaClient: prismaClientDir,
-              },
-            }),
-          ],
+          plugins: [paljs({ prismaClient: prismaClientDir })],
           shouldGenerateArtifacts: process.env.NODE_ENV !== 'production', // 感觉生成的文件，只是方便编写 types
           outputs: {
             schema: path.join(prismaClientDir, '/generated/schema.graphql'),
