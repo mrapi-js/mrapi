@@ -25,7 +25,7 @@ class GenerateCommand extends Command {
         key: 'name',
         flags: [
           '--name <name>',
-          'schema client name. If the name is "management", Only generate management client',
+          'Schema client name. If the name is "management", Only generate management client.',
         ],
         required: true,
       },
@@ -72,10 +72,7 @@ class GenerateCommand extends Command {
 
     // Only generate management
     if (name === 'management') {
-      // process.env.MANAGEMENT_PROVIDER = managementObj.provider
-      // process.env.MANAGEMENT_URL = managementObj.url
       await this.generateManagement(managementObj)
-      console.log('???')
       return
     }
 

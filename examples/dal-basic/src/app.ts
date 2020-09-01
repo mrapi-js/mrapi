@@ -1,7 +1,6 @@
 import DAL, { DALOptions } from '@mrapi/dal'
 // import { initialize } from 'express-openapi'
-// import bodyParser from 'body-parser'
-// import cors from 'cors'
+// import path from 'path'
 
 const options: DALOptions = [
   {
@@ -11,12 +10,12 @@ const options: DALOptions = [
       // url: 'file:../config/db/prod.db',
     },
   },
-  {
-    name: 'two',
-    defaultTenant: {
-      name: 'dev',
-    },
-  },
+  // {
+  //   name: 'two',
+  //   defaultTenant: {
+  //     name: 'dev',
+  //   },
+  // },
 ]
 
 const app = new DAL(options)
@@ -26,21 +25,20 @@ app
   .start()
   .then(() => {
     // const thisApp = app.server.app
-    // thisApp.use(cors())
-    // thisApp.use(bodyParser.json())
 
+    // const openAPIPath = path.join(__dirname, '../', 'api')
+    // console.log(openAPIPath)
     // initialize({
     //   validateApiDoc: false,
     //   app: thisApp,
-    //   apiDoc: require('../api-v1/api-doc').default,
-    //   docsPath: '/api-docs',
-    //   operations: {
-    //     queryUsers: function (req, res) {
-    //       console.log('queryUsers')
-    //       res.send('queryUsers test')
-    //     },
+    //   apiDoc: require('../api/api-doc').default,
+    //   dependencies: {
+    //     worldsService: require('../api/services/worldsService').default,
+    //     // getPrisma: async (req: any) => {
+    //     //   return ''
+    //     // },
     //   },
-    //   // paths: path.resolve(__dirname, '../api-v1/api-routes'),
+    //   paths: path.join(openAPIPath, 'paths'),
     //   // pathsIgnore: new RegExp('.(spec|test)$'),
     // })
 

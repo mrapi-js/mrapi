@@ -1,14 +1,14 @@
 import chalk from 'chalk'
 import express, { Express } from 'express'
 import { graphqlHTTP } from 'express-graphql'
+import { initialize as initializeOpenAPI } from 'express-openapi'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import path from 'path'
 import type http from 'http'
 
-import {
-  merge,
-  // getPrismaDmmf
-} from '@mrapi/common'
+import { merge } from '@mrapi/common'
 import { graphqlAPIPrefix, openAPIPrefix } from './constants'
-// import graphQLToOpenAPIConverter from './utils/graphQLToOpenAPIConverter'
 import type { ServerOptions, RouteOptions } from './types'
 
 type GetPrismaType = (
@@ -37,6 +37,9 @@ export default class Server {
     this.getPrisma = getPrisma
 
     this.app = express()
+
+    this.app.use(cors())
+    this.app.use(bodyParser.json())
   }
 
   start() {
@@ -87,8 +90,35 @@ export default class Server {
       )}\n`,
     )
 
-    // TODO: 此处打算修改...1.先在 cli generate 中编译出 openAPI 代码；2.再在此处初始化 express-openapi
     // add openAPI
+    // TODO: 此处打算修改...1.先在 cli generate 中编译出 openAPI 代码；2.再在此处初始化 express-openapi
+    const openAPIPath = path.join(process.cwd(), 'api', name)
+    const definitions = require(path.join(openAPIPath, 'definitions')) || {}
+    const openAPIBasePath = `/${openAPIPrefix}/${name}`
+    initializeOpenAPI({
+      validateApiDoc: false,
+      app: this.app,
+      apiDoc: {
+        swagger: '2.0',
+        basePath: openAPIBasePath,
+        info: {
+          title: `[${name}] Started openAPI.`,
+          version: '1.0.0',
+        },
+        paths: {},
+        definitions: definitions.default || definitions,
+      },
+      dependencies: {
+        getPrisma: async (req: any) => {
+          const tenantName: string = req.headers[tenantIdentity]
+          const prisma = await this.getPrisma(name, tenantName)
+          return prisma
+        },
+      },
+      paths: path.join(openAPIPath, 'paths'),
+      pathsIgnore: new RegExp('.(spec|test)$'),
+    })
+
     // const dmmf = getPrismaDmmf(options.prismaClient)
     // const routes = graphQLToOpenAPIConverter(name, dmmf, async (req) => {
     //   const tenantName: any = req.headers[tenantIdentity]
@@ -114,11 +144,11 @@ export default class Server {
     //   this.app.use(`/${openAPIPrefix}/${name}${route.url}`, openAPIMiddleware)
     // }
 
-    // console.log(
-    //   `\n⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
-    //     `/${openAPIPrefix}/${name}`,
-    //   )}\n`,
-    // )
+    console.log(
+      `\n⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
+        openAPIBasePath,
+      )}\n`,
+    )
 
     return true
   }
