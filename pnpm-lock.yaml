@@ -167,7 +167,7 @@ importers:
   packages/cli:
     dependencies:
       '@mrapi/common': 'link:../common'
-      '@nexus/schema': 0.15.0
+      '@mrapi/nexus': 'link:../nexus'
       chalk: 4.1.0
       commander: 6.0.0
       dotenv: 8.2.0
@@ -180,7 +180,7 @@ importers:
       typescript: 4.0.2
     specifiers:
       '@mrapi/common': 'workspace:*'
-      '@nexus/schema': 0.15.0
+      '@mrapi/nexus': 'workspace:*'
       '@types/fs-extra': ^9.0.1
       chalk: ^4.1.0
       commander: ^6.0.0
@@ -215,6 +215,7 @@ importers:
   packages/dal:
     dependencies:
       '@mrapi/common': 'link:../common'
+      '@mrapi/nexus': 'link:../nexus'
       '@nexus/schema': 0.15.0_graphql@15.3.0
       '@prisma-multi-tenant/client': 2.3.1
       '@prisma/client': 2.5.1
@@ -230,6 +231,7 @@ importers:
       typescript: 4.0.2
     specifiers:
       '@mrapi/common': 'workspace:*'
+      '@mrapi/nexus': 'workspace:*'
       '@nexus/schema': 0.15.0
       '@prisma-multi-tenant/client': 2.3.1
       '@prisma/client': 2.5.1
@@ -240,6 +242,18 @@ importers:
       express-graphql: ^0.11.0
       graphql: 15.3.0
       is-plain-object: 4.1.1
+      tslib: ^2.0.1
+      typescript: ^4.0.2
+  packages/nexus:
+    dependencies:
+      '@mrapi/common': 'link:../common'
+      '@nexus/schema': 0.15.0
+    devDependencies:
+      tslib: 2.0.1
+      typescript: 4.0.2
+    specifiers:
+      '@mrapi/common': 'workspace:*'
+      '@nexus/schema': 0.15.0
       tslib: ^2.0.1
       typescript: ^4.0.2
 lockfileVersion: 5.1

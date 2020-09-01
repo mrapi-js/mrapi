@@ -1,13 +1,13 @@
 import { enumType, inputObjectType, objectType, plugin } from '@nexus/schema'
 import { NexusAcceptedTypeDef } from '@nexus/schema/dist/builder'
 
-import { getPrismaDmmf } from './getPrisma'
+import { getPrismaDmmf } from '@mrapi/common'
 
-export const paljs = ({ prismaClient }: { prismaClient: string }) =>
+export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
   plugin({
-    name: 'paljs',
+    name: 'mrapi-paljs',
     description:
-      'paljs plugin to add Prisma select to your resolver and prisma admin queries and mutations and all models input types',
+      'This plugin to add Prisma select to your resolver and prisma admin queries and mutations and all models input types',
     onInstall() {
       const dmmf = getPrismaDmmf(prismaClient)
 
@@ -47,18 +47,17 @@ export const paljs = ({ prismaClient }: { prismaClient: string }) =>
             },
           }),
         )
+
         nexusSchemaInputs.push(
           inputObjectType({
             name: `${input.name}Select`,
             definition(t) {
               input.fields.forEach((field: any) => {
-                console.log(field)
-
                 if (field.kind === 'scalar') {
                   t.boolean(field.name, { nullable: true })
                 } else if (field.kind === 'object') {
                   t.field(field.name, {
-                    type: `FindMany${input.name}Args`,
+                    type: `FindMany${field.name}Args`,
                     nullable: true,
                   })
                 }
@@ -66,21 +65,31 @@ export const paljs = ({ prismaClient }: { prismaClient: string }) =>
             },
           }),
         )
-        nexusSchemaInputs.push(
-          inputObjectType({
-            name: `${input.name}Include`,
-            definition(t) {
-              input.fields.forEach((field: any) => {
-                if (field.kind === 'object') {
-                  t.field(field.name, {
-                    type: `FindMany${input.name}Args`,
-                    nullable: true,
-                  })
-                }
-              })
-            },
-          }),
-        )
+
+        let hasObject = false
+        for (const field of input.fields) {
+          if (field.kind === 'object') {
+            hasObject = true
+            break
+          }
+        }
+        if (hasObject) {
+          nexusSchemaInputs.push(
+            inputObjectType({
+              name: `${input.name}Include`,
+              definition(t) {
+                input.fields.forEach((field: any) => {
+                  if (field.kind === 'object') {
+                    t.field(field.name, {
+                      type: `FindMany${field.name}Args`,
+                      nullable: true,
+                    })
+                  }
+                })
+              },
+            }),
+          )
+        }
       })
 
       dmmf.schema.enums.forEach((item: any) => {

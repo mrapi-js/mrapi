@@ -3,8 +3,7 @@ import express, { Express } from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import type http from 'http'
 
-import { merge } from '@mrapi/common'
-import { getPrismaDmmf } from './prisma/getPrisma'
+import { merge, getPrismaDmmf } from '@mrapi/common'
 import { graphqlAPIPrefix, openAPIPrefix } from './constants'
 import graphQLToOpenAPIConverter from './utils/graphQLToOpenAPIConverter'
 import type { ServerOptions, RouteOptions } from './types'
@@ -90,6 +89,7 @@ export default class Server {
       )}\n`,
     )
 
+    // TODO: 此处打算修改...1.先在 cli generate 中编译出 openAPI 代码；2.再在此处初始化 express-openapi
     // add openAPI
     const dmmf = getPrismaDmmf(options.prismaClient)
     const routes = graphQLToOpenAPIConverter(name, dmmf, async (req) => {

@@ -28,7 +28,7 @@ const staticData = `('findMany#{Model}', {
     skip: 'Int',
     take: 'Int',
     select: '#{Model}Select',
-    include: '#{Model}Include',
+    #{includeModel}
   },
   resolve(_parent, args, {prisma}) {
     return prisma.#{model}.findMany(args) as any

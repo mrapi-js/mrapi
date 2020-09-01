@@ -29,6 +29,7 @@ export function getCrud(
   key: QueriesAndMutations,
   onDelete?: boolean,
   schema?: boolean,
+  includeModel?: boolean,
 ) {
   const modelLower = model.charAt(0).toLowerCase() + model.slice(1)
   const importString = schema
@@ -41,6 +42,10 @@ export function getCrud(
     .replace(/#{model}/g, modelLower)
     .replace(/#{import}/g, importString)
     .replace(/#{schema}/g, schema ? '' : 'schema.')
+    .replace(
+      /#{includeModel}/g,
+      includeModel ? `include: '${model}Include'` : '',
+    )
     .replace(
       /#{onDelete}/g,
       onDelete ? `await prisma.onDelete({ model: '${model}', where })` : '',
