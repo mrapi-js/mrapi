@@ -168,6 +168,8 @@ importers:
     dependencies:
       '@mrapi/common': 'link:../common'
       '@mrapi/nexus': 'link:../nexus'
+      '@mrapi/oas': 'link:../oas'
+      '@prisma-multi-tenant/shared': 2.3.1
       chalk: 4.1.0
       commander: 6.0.0
       dotenv: 8.2.0
@@ -181,6 +183,8 @@ importers:
     specifiers:
       '@mrapi/common': 'workspace:*'
       '@mrapi/nexus': 'workspace:*'
+      '@mrapi/oas': 'workspace:*'
+      '@prisma-multi-tenant/shared': 2.3.1
       '@types/fs-extra': ^9.0.1
       chalk: ^4.1.0
       commander: ^6.0.0
@@ -248,12 +252,25 @@ importers:
     dependencies:
       '@mrapi/common': 'link:../common'
       '@nexus/schema': 0.15.0
-    devDependencies:
+      chalk: 4.1.0
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
       '@mrapi/common': 'workspace:*'
       '@nexus/schema': 0.15.0
+      chalk: ^4.1.0
+      tslib: ^2.0.1
+      typescript: ^4.0.2
+  packages/oas:
+    dependencies:
+      '@mrapi/common': 'link:../common'
+      chalk: 4.1.0
+    devDependencies:
+      tslib: 2.0.1
+      typescript: 4.0.2
+    specifiers:
+      '@mrapi/common': 'workspace:*'
+      chalk: ^4.1.0
       tslib: ^2.0.1
       typescript: ^4.0.2
 lockfileVersion: 5.1
@@ -1260,7 +1277,7 @@ packages:
       integrity: sha512-NYXz/dBlK1M9czIvGSGyhomoMOuzMJ5AApL+Hpg73h+vJmzbhNYJKXIYL4Ir3KEm5RJjAVhaLTTafISho6IFNQ==
   /@prisma-multi-tenant/shared/2.3.1:
     dependencies:
-      '@prisma/client': 2.4.1
+      '@prisma/client': 2.5.1
     dev: false
     peerDependencies:
       '@prisma/cli': ^2.4.1
@@ -1282,20 +1299,6 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-vAOBnouBgCYndXmTcGxanfmhVWUCpwr3akBXiQH+ZKzTYf/pwSsWYpeaXNQfVtUEJEQ0kumfLGdq6ZXnfX//aA==
-  /@prisma/client/2.4.1:
-    dependencies:
-      pkg-up: 3.1.0
-    dev: false
-    engines:
-      node: '>=10'
-    peerDependencies:
-      '@prisma/cli': '*'
-    peerDependenciesMeta:
-      '@prisma/cli':
-        optional: true
-    requiresBuild: true
-    resolution:
-      integrity: sha512-13aphZb34ws8GuRxVsmgiQmUJRfcnnb5/Jy78/ZkpLyCk5ZpchO/Rr1KNiF/cfLHprdKOjSvUzthcx+tubaA2A==
   /@prisma/client/2.4.1_@prisma+cli@2.4.1:
     dependencies:
       '@prisma/cli': 2.4.1
@@ -8707,7 +8710,6 @@ packages:
     resolution:
       integrity: sha512-BLbiRkiBzAwsjut4x/dsibSTB6yWpwT5qWmC2OfuCg3GgVQCSgMs4vEctYPhsaGtd0AeuuHMkjZ2h2WG8MSzRw==
   /typescript/4.0.2:
-    dev: true
     engines:
       node: '>=4.2.0'
     hasBin: true

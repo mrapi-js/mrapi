@@ -9,6 +9,7 @@
     "build": "rm -rf dist && npm run generate && tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
     "generate": "npm run gen1 && npm run gen2",
+    "gen-management": "npx mrapi generate --name management",
     "gen1": "npx mrapi generate --name one",
     "gen2": "npx mrapi generate --name two",
     "gto": "node ./scripts/qto.js",

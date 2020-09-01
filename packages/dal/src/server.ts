@@ -3,9 +3,12 @@ import express, { Express } from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import type http from 'http'
 
-import { merge, getPrismaDmmf } from '@mrapi/common'
+import {
+  merge,
+  // getPrismaDmmf
+} from '@mrapi/common'
 import { graphqlAPIPrefix, openAPIPrefix } from './constants'
-import graphQLToOpenAPIConverter from './utils/graphQLToOpenAPIConverter'
+// import graphQLToOpenAPIConverter from './utils/graphQLToOpenAPIConverter'
 import type { ServerOptions, RouteOptions } from './types'
 
 type GetPrismaType = (
@@ -91,36 +94,36 @@ export default class Server {
 
     // TODO: 此处打算修改...1.先在 cli generate 中编译出 openAPI 代码；2.再在此处初始化 express-openapi
     // add openAPI
-    const dmmf = getPrismaDmmf(options.prismaClient)
-    const routes = graphQLToOpenAPIConverter(name, dmmf, async (req) => {
-      const tenantName: any = req.headers[tenantIdentity]
-      const prisma = await this.getPrisma(name, tenantName)
-      return prisma
-    })
+    // const dmmf = getPrismaDmmf(options.prismaClient)
+    // const routes = graphQLToOpenAPIConverter(name, dmmf, async (req) => {
+    //   const tenantName: any = req.headers[tenantIdentity]
+    //   const prisma = await this.getPrisma(name, tenantName)
+    //   return prisma
+    // })
 
-    for (const route of routes) {
-      const openAPIMiddleware = async (req: any, res: any, _next: any) => {
-        const data = await route
-          .handler(req)
-          .then((res: any) => ({
-            code: 0,
-            data: res,
-          }))
-          .catch((err: any) => ({
-            code: -1,
-            message: err.message,
-          }))
-        res.send(data)
-      }
+    // for (const route of routes) {
+    //   const openAPIMiddleware = async (req: any, res: any, _next: any) => {
+    //     const data = await route
+    //       .handler(req)
+    //       .then((res: any) => ({
+    //         code: 0,
+    //         data: res,
+    //       }))
+    //       .catch((err: any) => ({
+    //         code: -1,
+    //         message: err.message,
+    //       }))
+    //     res.send(data)
+    //   }
 
-      this.app.use(`/${openAPIPrefix}/${name}${route.url}`, openAPIMiddleware)
-    }
+    //   this.app.use(`/${openAPIPrefix}/${name}${route.url}`, openAPIMiddleware)
+    // }
 
-    console.log(
-      `\n⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
-        `/${openAPIPrefix}/${name}`,
-      )}\n`,
-    )
+    // console.log(
+    //   `\n⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
+    //     `/${openAPIPrefix}/${name}`,
+    //   )}\n`,
+    // )
 
     return true
   }
