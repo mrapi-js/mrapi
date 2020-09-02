@@ -144,8 +144,18 @@ class GenerateCommand extends Command {
     await nexusGenerate.run()
     await nexusGenerate.toJS()
 
-    // TODO: 5. Generate CRUD with openAPI
-    const openAPIGenerate = new OASGenerate()
+    // 5. Generate CRUD with openAPI
+    const oasOutput = path.join(outputPath, 'api')
+    const oasParams: NexusOptions = {
+      schema: outputPath,
+      output: oasOutput,
+      excludeFields: [],
+      excludeModels: [],
+      excludeFieldsByModel: {},
+      excludeQueriesAndMutationsByModel: {},
+      excludeQueriesAndMutations: [],
+    }
+    const openAPIGenerate = new OASGenerate(oasParams)
     await openAPIGenerate.run()
   }
 
