@@ -1,7 +1,5 @@
-import DAL, { DALOptions } from '@mrapi/dal'
-// import { initialize } from 'express-openapi'
-// import bodyParser from 'body-parser'
-// import cors from 'cors'
+import DAL from '@mrapi/dal'
+import type { DALOptions } from '@mrapi/dal/lib/types'
 
 const options: DALOptions = [
   {
@@ -13,9 +11,17 @@ const options: DALOptions = [
   },
   {
     name: 'two',
-    defaultTenant: {
-      name: 'dev',
+    // defaultTenant: {
+    //   name: 'dev',
+    // },
+    openAPI: {
+      enable: false,
     },
+    // graphql: {
+    //   enable: false,
+    // },
+    // nexusDir?: string;
+    // prismaClientDir?: string;
   },
 ]
 
@@ -26,23 +32,6 @@ app
   .start()
   .then(() => {
     // const thisApp = app.server.app
-    // thisApp.use(cors())
-    // thisApp.use(bodyParser.json())
-
-    // initialize({
-    //   validateApiDoc: false,
-    //   app: thisApp,
-    //   apiDoc: require('../api-v1/api-doc').default,
-    //   docsPath: '/api-docs',
-    //   operations: {
-    //     queryUsers: function (req, res) {
-    //       console.log('queryUsers')
-    //       res.send('queryUsers test')
-    //     },
-    //   },
-    //   // paths: path.resolve(__dirname, '../api-v1/api-routes'),
-    //   // pathsIgnore: new RegExp('.(spec|test)$'),
-    // })
 
     timer = setTimeout(() => {
       // // stop test
@@ -54,6 +43,9 @@ app
       // const ok2 = app.addSchema('two', {
       //   defaultTenant: {
       //     name: 'dev',
+      //   },
+      //   openAPI: {
+      //     enable: false,
       //   },
       // })
       // ok2 && console.log('addSchema two ok')

@@ -1,11 +1,15 @@
 import chalk from 'chalk'
 import express, { Express } from 'express'
 import { graphqlHTTP } from 'express-graphql'
+import { initialize as initializeOpenAPI } from 'express-openapi'
+import swaggerUi from 'swagger-ui-express'
+import bodyParser from 'body-parser'
+import cors from 'cors'
+import path from 'path'
 import type http from 'http'
 
-import { merge, getPrismaDmmf } from '@mrapi/common'
+import { merge } from '@mrapi/common'
 import { graphqlAPIPrefix, openAPIPrefix } from './constants'
-import graphQLToOpenAPIConverter from './utils/graphQLToOpenAPIConverter'
 import type { ServerOptions, RouteOptions } from './types'
 
 type GetPrismaType = (
@@ -34,6 +38,9 @@ export default class Server {
     this.getPrisma = getPrisma
 
     this.app = express()
+
+    this.app.use(cors())
+    this.app.use(bodyParser.json())
   }
 
   start() {
@@ -58,64 +65,87 @@ export default class Server {
     console.log(`\n🚫 Server closed. ${chalk.gray(`http://${host}:${port}`)}\n`)
   }
 
-  addRoute(name: string, options: RouteOptions): boolean {
+  addRoute(name: string, { graphql, openAPI }: RouteOptions = {}): boolean {
     const { tenantIdentity } = this.options
 
+    console.log()
+
     // add graphqlAPI
-    this.app.use(
-      `/${graphqlAPIPrefix}/${name}`,
-      graphqlHTTP(async (req, _res, _params) => {
-        const createContext = async () => {
-          const tenantName: any = req.headers[tenantIdentity]
-          return { prisma: await this.getPrisma(name, tenantName) }
-        }
-
-        return {
-          graphiql: { headerEditorEnabled: true },
-          context: await createContext(),
-          ...options,
-        }
-      }),
-    )
-
-    console.log(
-      `\n⭐️ [${name}] Running a GraphQL API route at: ${chalk.blue(
+    if (typeof graphql === 'object') {
+      this.app.use(
         `/${graphqlAPIPrefix}/${name}`,
-      )}\n`,
-    )
+        graphqlHTTP(async (req, _res, _params) => {
+          const createContext = async () => {
+            const tenantName: any = req.headers[tenantIdentity]
+            return { prisma: await this.getPrisma(name, tenantName) }
+          }
 
-    // TODO: 此处打算修改...1.先在 cli generate 中编译出 openAPI 代码；2.再在此处初始化 express-openapi
-    // add openAPI
-    const dmmf = getPrismaDmmf(options.prismaClient)
-    const routes = graphQLToOpenAPIConverter(name, dmmf, async (req) => {
-      const tenantName: any = req.headers[tenantIdentity]
-      const prisma = await this.getPrisma(name, tenantName)
-      return prisma
-    })
+          return {
+            graphiql: { headerEditorEnabled: true },
+            context: await createContext(),
+            ...graphql,
+          }
+        }),
+      )
 
-    for (const route of routes) {
-      const openAPIMiddleware = async (req: any, res: any, _next: any) => {
-        const data = await route
-          .handler(req)
-          .then((res: any) => ({
-            code: 0,
-            data: res,
-          }))
-          .catch((err: any) => ({
-            code: -1,
-            message: err.message,
-          }))
-        res.send(data)
-      }
-
-      this.app.use(`/${openAPIPrefix}/${name}${route.url}`, openAPIMiddleware)
+      console.log(
+        `⭐️ [${name}] Running a GraphQL API route at: ${chalk.blue(
+          `/${graphqlAPIPrefix}/${name}`,
+        )}`,
+      )
     }
 
-    console.log(
-      `\n⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
-        `/${openAPIPrefix}/${name}`,
-      )}\n`,
-    )
+    // add openAPI
+    if (typeof openAPI === 'object') {
+      const definitions =
+        require(path.join(openAPI.oasDir, 'definitions')) || {}
+      const openAPIBasePath = `/${openAPIPrefix}/${name}`
+      const openAPIInstance = initializeOpenAPI({
+        validateApiDoc:
+          typeof openAPI.validateApiDoc === 'undefined'
+            ? true
+            : openAPI.validateApiDoc,
+        app: this.app,
+        apiDoc: {
+          swagger: '2.0',
+          basePath: openAPIBasePath,
+          info: {
+            title: `[${name}] Started openAPI.`,
+            version: '1.0.0',
+          },
+          paths: {},
+          definitions: definitions.default || definitions,
+        },
+        dependencies: {
+          getPrisma: async (req: any) => {
+            const tenantName: string = req.headers[tenantIdentity]
+            const prisma = await this.getPrisma(name, tenantName)
+            return prisma
+          },
+          ...(openAPI.dependencies || {}),
+        },
+        paths: path.join(openAPI.oasDir, 'paths'),
+        pathsIgnore: new RegExp('.(spec|test)$'),
+      })
+      this.app.use(
+        `${openAPIBasePath}/swagger`,
+        swaggerUi.serve,
+        function swaggerUiSetup(...params: [any, any, any]) {
+          swaggerUi.setup(openAPIInstance.apiDoc)(...params)
+        },
+      )
+
+      console.log(
+        `⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
+          openAPIBasePath,
+        )}
+⭐️ [${name}] Running a openAPI Swagger document at: ${chalk.blue(
+          `${openAPIBasePath}/swagger`,
+        )}`,
+      )
+    }
+
+    console.log()
 
     return true
   }
@@ -124,6 +154,8 @@ export default class Server {
     const routes = this.app._router.stack
     const graphqlPath = `/${graphqlAPIPrefix}/${name}`
     const openAPIPath = `/${openAPIPrefix}/${name}`
+
+    console.log()
 
     const removeNum = {
       [graphqlAPIPrefix]: 0,
@@ -149,7 +181,12 @@ export default class Server {
         removeNum[graphqlAPIPrefix]++
       }
       // openAPI name
-      else if (route.name === 'openAPIMiddleware') {
+      else if (
+        route.name === 'bound dispatch' ||
+        route.name === 'swaggerInitFn' ||
+        route.name === 'serveStatic' ||
+        route.name === 'swaggerUiSetup'
+      ) {
         const str = route.regexp.source.replace(
           `^\\/${openAPIPrefix}\\/${name}\\/`,
           '',
@@ -174,6 +211,7 @@ export default class Server {
     }
 
     if (removeNum[graphqlAPIPrefix] > 0 || removeNum[openAPIPrefix] > 0) {
+      console.log()
       return true
     }
 

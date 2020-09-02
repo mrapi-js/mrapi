@@ -6,11 +6,42 @@ export interface ServerOptions {
   tenantIdentity?: string
 }
 
-export type RouteOptions = OptionsData & {
-  prismaClient?: string
+export type graphqlOptions = OptionsData
+
+export interface openAPIOptions {
+  dependencies?: {
+    [name: string]: Function | Promise<Function>
+  }
+  oasDir: string
+  validateApiDoc?: boolean
+}
+
+export interface RouteOptions {
+  graphql?: graphqlOptions
+  openAPI?: openAPIOptions
 }
 
 export interface DefaultTenant {
   name?: string
   url?: string
 }
+
+export interface DALSchemaOptions {
+  nexusDir?: string
+  prismaClientDir?: string
+  defaultTenant?: DefaultTenant
+  graphql?: {
+    enable?: boolean
+    options?: graphqlOptions
+  }
+  openAPI?: {
+    enable?: boolean
+    options?: openAPIOptions
+  }
+}
+
+export interface DALOption extends DALSchemaOptions {
+  name: string
+}
+
+export type DALOptions = DALOption[]

@@ -9,20 +9,14 @@ import { paljsPlugin } from '@mrapi/nexus'
 import PMTManage from './prisma/PMTManage'
 import Server from './server'
 import type { MrapiConfig } from '@mrapi/common'
-import type { RouteOptions, ServerOptions, DefaultTenant } from './types'
-
-export interface MakeSchemaOptions {
-  schema?: NexusGraphQLSchema | {}
-  nexusDir: string
-  prismaClientDir: string
-}
-
-export type DALOptions = Array<{
-  name?: string
-  schema?: MakeSchemaOptions
-  graphqlHTTP?: RouteOptions
-  defaultTenant?: DefaultTenant
-}>
+import type {
+  graphqlOptions,
+  openAPIOptions,
+  ServerOptions,
+  DefaultTenant,
+  DALSchemaOptions,
+  DALOptions,
+} from './types'
 
 export default class DAL {
   public server: Server
@@ -33,11 +27,13 @@ export default class DAL {
 
   private readonly schemas: Map<string, NexusGraphQLSchema> = new Map()
 
-  private readonly graphqlHTTPOptions: Map<string, RouteOptions> = new Map()
-
   private readonly prismaClients: Map<string, string> = new Map()
 
   private readonly defaultTenants: Map<string, DefaultTenant> = new Map()
+
+  private readonly graphqlOptions: Map<string, graphqlOptions> = new Map()
+
+  private readonly openAPIOptions: Map<string, openAPIOptions> = new Map()
 
   constructor(options: DALOptions = []) {
     this.mrapiConfig = getConfig()
@@ -52,18 +48,60 @@ export default class DAL {
 
     for (const option of options) {
       this.defaultTenants.set(option.name, option.defaultTenant)
-      const schema = option?.schema || this.getDefaultSchemaOptions(option.name)
-      this.schemas.set(option.name, this.generateSchema(schema))
-      this.graphqlHTTPOptions.set(option.name, option.graphqlHTTP)
-      this.prismaClients.set(option.name, schema.prismaClientDir)
+
+      const { nexusDir, prismaClientDir } = this.getDefaultSchemaOptions(
+        option.name,
+        option,
+      )
+      this.prismaClients.set(option.name, prismaClientDir)
+
+      const graphqlOption: {
+        enable?: boolean
+        options?: graphqlOptions
+      } = option?.graphql || { enable: true }
+
+      const makeSchemaData = this.generateSchema({
+        schema: graphqlOption?.options?.schema,
+        nexusDir,
+        prismaClientDir,
+      })
+      this.schemas.set(option.name, makeSchemaData)
+
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
+      if (graphqlOption.enable !== false) {
+        this.graphqlOptions.set(option.name, {
+          ...(graphqlOption?.options || {}),
+          schema: makeSchemaData,
+        })
+      }
+
+      const openAPIOption: {
+        enable?: boolean
+        options?: openAPIOptions
+      } = option.openAPI || this.getDefaultOpenAPIOptions(option.name)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
+      if (openAPIOption.enable !== false) {
+        this.openAPIOptions.set(option.name, openAPIOption.options)
+      }
     }
   }
 
-  private getDefaultSchemaOptions(name: string) {
+  private getDefaultSchemaOptions(
+    name: string,
+    options: { [name: string]: any },
+  ) {
     const outputDir = path.join(process.cwd(), this.mrapiConfig.outputDir, name)
     return {
-      nexusDir: path.join(outputDir, 'nexus-types'),
-      prismaClientDir: outputDir,
+      nexusDir: options.nexusDir || path.join(outputDir, 'nexus-types'),
+      prismaClientDir: options.prismaClientDir || outputDir,
+    }
+  }
+
+  private getDefaultOpenAPIOptions(name: string) {
+    const outputDir = path.join(process.cwd(), this.mrapiConfig.outputDir, name)
+    return {
+      enable: true,
+      options: { oasDir: path.join(outputDir, 'api') },
     }
   }
 
@@ -74,10 +112,14 @@ export default class DAL {
    * @returns NexusGraphQLSchema
    */
   private generateSchema({
-    schema = {},
+    schema,
     nexusDir,
     prismaClientDir,
-  }: MakeSchemaOptions) {
+  }: {
+    schema?: NexusGraphQLSchema | {}
+    nexusDir: string
+    prismaClientDir: string
+  }) {
     let types: any
     try {
       const requireDirTypes = require(nexusDir)
@@ -106,7 +148,7 @@ export default class DAL {
           },
           prettierConfig: require.resolve('../package.json'),
         },
-        schema,
+        schema || {},
         mergeOptions,
       ),
     )
@@ -139,10 +181,10 @@ export default class DAL {
     return await this.pmtManage
       .getPrisma(name, defaultTenant.name || tenantName, defaultTenant.url)
       .catch((e: any) => {
-        // TODO: 多租户异常时，保证 DEV 可以正常访问连接。
-        if (process.env.NODE_ENV === 'production') {
-          throw e
-        }
+        // // TODO: 多租户异常时，保证 DEV 可以正常访问连接。
+        // if (process.env.NODE_ENV === 'production') {
+        //   throw e
+        // }
         console.error(e)
         console.log(
           chalk.red(
@@ -155,44 +197,24 @@ export default class DAL {
   /**
    * Add schema to existing server
    *
+   * Note: If "name" already exists, Please call "dal.removeSchema" first
+   *
    */
-  addSchema(
-    name: string,
-    options: {
-      schema?: MakeSchemaOptions
-      graphqlHTTP?: RouteOptions
-      defaultTenant?: DefaultTenant
-    } = {},
-  ): boolean {
+  addSchema(name: string, option: DALSchemaOptions = {}): boolean {
     if (!this.defaultTenants.has(name)) {
-      this.defaultTenants.set(name, options.defaultTenant)
+      this.defaultTenants.set(name, option.defaultTenant)
     }
 
-    let schema
-    if (this.schemas.has(name)) {
-      schema = this.schemas.get(name)
-    } else {
-      schema = this.generateSchema(
-        options?.schema || this.getDefaultSchemaOptions(name),
-      )
-      this.schemas.set(name, schema)
-    }
-
-    let graphqlHTTP
-    if (this.schemas.has(name)) {
-      graphqlHTTP = this.graphqlHTTPOptions.get(name)
-    } else {
-      graphqlHTTP = options.graphqlHTTP
-      this.graphqlHTTPOptions.set(name, graphqlHTTP)
-    }
+    const { nexusDir, prismaClientDir } = this.getDefaultSchemaOptions(
+      name,
+      option,
+    )
 
     let prismaClient
     if (this.prismaClients.has(name)) {
       prismaClient = this.prismaClients.get(name)
     } else {
-      prismaClient =
-        options?.schema?.prismaClientDir ||
-        this.getDefaultSchemaOptions(name).prismaClientDir
+      prismaClient = prismaClientDir
       this.prismaClients.set(name, prismaClient)
     }
 
@@ -201,13 +223,66 @@ export default class DAL {
       PrismaClient: getPrismaClient(prismaClient),
     })
 
+    // Fixbug: Initialization configuration conflict
+    let defaultGraphqlOption = { enable: true }
+    let defaultOpenAPIOption = { enable: true }
+    let schema
+    if (this.schemas.has(name)) {
+      defaultGraphqlOption = { enable: false }
+      defaultOpenAPIOption = { enable: false }
+      schema = this.schemas.get(name)
+    }
+
+    const graphqlOption: {
+      enable?: boolean
+      options?: graphqlOptions
+    } = option?.graphql || defaultGraphqlOption
+
+    let graphql
+    if (this.graphqlOptions.has(name)) {
+      graphql = this.graphqlOptions.get(name)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
+    else if (graphqlOption.enable !== false) {
+      if (!schema) {
+        schema = this.generateSchema({
+          schema: graphqlOption?.options?.schema,
+          nexusDir,
+          prismaClientDir,
+        })
+        this.schemas.set(name, schema)
+      }
+
+      graphql = {
+        ...graphqlOption.options,
+        schema,
+      }
+      this.graphqlOptions.set(name, graphql)
+    }
+
+    const openAPIOption: {
+      enable?: boolean
+      options?: openAPIOptions
+    } = option.openAPI || {
+      ...this.getDefaultOpenAPIOptions(name),
+      ...defaultOpenAPIOption,
+    }
+    let openAPI
+    if (this.openAPIOptions.has(name)) {
+      openAPI = this.openAPIOptions.get(name)
+    }
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
+    else if (openAPIOption.enable !== false) {
+      openAPI = openAPIOption.options
+      this.openAPIOptions.set(name, openAPI)
+    }
+
     let result = true
     // If server not started, only the configuration is added
     if (this.server) {
       result = this.server.addRoute(name, {
-        ...graphqlHTTP,
-        schema,
-        prismaClient,
+        graphql,
+        openAPI,
       })
     }
     return result
@@ -225,9 +300,10 @@ export default class DAL {
 
     if (result) {
       this.defaultTenants.delete(name)
-      this.schemas.delete(name)
-      this.graphqlHTTPOptions.delete(name)
       this.prismaClients.delete(name)
+      this.schemas.delete(name)
+      this.graphqlOptions.delete(name)
+      this.openAPIOptions.delete(name)
 
       // Delete pmt PrismaClient
       this.pmtManage.setPMT(name)

@@ -1,5 +1,5 @@
 {
-  "name": "@mrapi/nexus",
+  "name": "@mrapi/oas",
   "version": "0.8.1",
   "main": "lib/index.js",
   "scripts": {
@@ -9,16 +9,19 @@
   },
   "dependencies": {
     "@mrapi/common": "workspace:*",
-    "@nexus/schema": "0.15.0",
     "chalk": "^4.1.0",
-    "tslib": "^2.0.1",
-    "typescript": "^4.0.2",
+    "fs-extra": "^9.0.1",
     "prettier": "^2.1.1"
+  },
+  "devDependencies": {
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.2"
   },
   "author": "neikvon",
   "license": "MIT",
   "files": [
-    "lib"
+    "lib",
+    "templates"
   ],
   "repository": {
     "type": "git",

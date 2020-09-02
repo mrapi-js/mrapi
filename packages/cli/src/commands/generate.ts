@@ -2,9 +2,14 @@ import chalk from 'chalk'
 import path from 'path'
 import commander from 'commander'
 import { readFileSync, outputFileSync } from 'fs-extra'
+import {
+  clientManagementPath,
+  getNodeModules,
+} from '@prisma-multi-tenant/shared'
 
 import { spawnShell, runShell, getUrlAndProvider } from '@mrapi/common'
-import { Generator } from '@mrapi/nexus'
+import { Generator as NexusGenerate } from '@mrapi/nexus'
+import { Generator as OASGenerate } from '@mrapi/oas'
 import Command, { CommandParams } from './common'
 import type { MrapiConfig } from '@mrapi/common'
 import type { Options as NexusOptions } from '@mrapi/nexus/lib/generator/types'
@@ -18,7 +23,10 @@ class GenerateCommand extends Command {
     options: [
       {
         key: 'name',
-        flags: ['--name <name>', 'schema client name'],
+        flags: [
+          '--name <name>',
+          'Schema client name. If the name is "management", Only generate management client.',
+        ],
         required: true,
       },
       {
@@ -60,6 +68,13 @@ class GenerateCommand extends Command {
     if (!managementUrl) {
       throw new Error('Please configure the "managementUrl".')
     }
+    const managementObj = getUrlAndProvider(managementUrl)
+
+    // Only generate management
+    if (name === 'management') {
+      await this.generateManagement(managementObj)
+      return
+    }
 
     const cwd = process.cwd()
     const inputSchemaPath = path.join(cwd, inputSchemaDir, `${name}.prisma`)
@@ -79,7 +94,6 @@ class GenerateCommand extends Command {
     )
 
     // 3. Generate PMT
-    const managementObj = getUrlAndProvider(managementUrl)
     // TODO: spawnShell 存在 bug，在 pnpm 中使用时候，容易无法找到对应的依赖包
     const exitPMTCode = await spawnShell(
       `npx prisma-multi-tenant generate --schema ${outputSchemaPath}`,
@@ -126,12 +140,23 @@ class GenerateCommand extends Command {
         ',',
       )
     }
-    const nexusGenerate = new Generator(nexusParams)
+    const nexusGenerate = new NexusGenerate(nexusParams)
     await nexusGenerate.run()
     await nexusGenerate.toJS()
 
-    // TODO: 5. Generate CRUD with openAPI
-    // ...
+    // 5. Generate CRUD with openAPI
+    const oasOutput = path.join(outputPath, 'api')
+    const oasParams: NexusOptions = {
+      schema: outputPath,
+      output: oasOutput,
+      excludeFields: [],
+      excludeModels: [],
+      excludeFieldsByModel: {},
+      excludeQueriesAndMutationsByModel: {},
+      excludeQueriesAndMutations: [],
+    }
+    const openAPIGenerate = new OASGenerate(oasParams)
+    await openAPIGenerate.run()
   }
 
   createSchemaPrisma = (output: string, content: string) => `
@@ -147,6 +172,20 @@ datasource db {
 
 ${content}
 `
+
+  async generateManagement(managementObj: { url: string; provider: string }) {
+    const exitCode = await spawnShell('npx prisma generate', {
+      env: {
+        ...process.env,
+        MANAGEMENT_PROVIDER: managementObj.provider,
+        MANAGEMENT_URL: managementObj.url,
+        PMT_OUTPUT: path.join(await getNodeModules(), clientManagementPath),
+      },
+    })
+    if (exitCode !== 0) {
+      throw new Error('Generate a management exception.')
+    }
+  }
 }
 
 export default (program: commander.Command, mrapiConfig: MrapiConfig) => {
