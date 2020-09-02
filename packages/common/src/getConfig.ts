@@ -8,6 +8,9 @@ export interface MrapiConfig {
   schemaDir?: string
   outputDir?: string
   tenantIdentity?: string
+  dal: {
+    pmtErrorThrow?: boolean
+  }
   api: {
     [type: string]: any
   }
@@ -31,6 +34,12 @@ const defaultConfig: MrapiConfig = {
 
   // multi-tenant identification (use in HTTP Request Header)
   tenantIdentity: 'mrapi-pmt',
+
+  // @mrapi/dal config
+  dal: {
+    // In the event of a multi-tenant exception, whether or not an error is thrown.
+    pmtErrorThrow: false,
+  },
 
   // @mrapi/api config
   api: {
@@ -80,7 +89,7 @@ export default function getConfig(str?: string): MrapiConfig {
     if (config.defualt) {
       config = config.defualt
     }
-  } catch { }
+  } catch {}
 
   return config ? merge(defaultConfig, config) : config
 }

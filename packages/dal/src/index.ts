@@ -177,10 +177,10 @@ export default class DAL {
     return await this.pmtManage
       .getPrisma(name, defaultTenant.name || tenantName, defaultTenant.url)
       .catch((e: any) => {
-        // // TODO: 多租户异常时，保证 DEV 可以正常访问连接。
-        // if (process.env.NODE_ENV === 'production') {
-        //   throw e
-        // }
+        // In the event of a multi-tenant exception, the document connection is guaranteed to be properly accessed.
+        if (this.mrapiConfig?.dal?.pmtErrorThrow) {
+          throw e
+        }
         console.error(e)
         console.log(
           chalk.red(
@@ -196,7 +196,6 @@ export default class DAL {
    * Note: If "name" already exists, Please call "dal.removeSchema" first
    *
    */
-  // TODO: 逻辑细节有一点问题。- 待修复
   addSchema(name: string, option: DALSchemaOptions = {}): boolean {
     if (!this.defaultTenants.has(name)) {
       this.defaultTenants.set(name, option.defaultTenant)
