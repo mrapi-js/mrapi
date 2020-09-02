@@ -33,7 +33,7 @@ app
   .then(() => {
     // const thisApp = app.server.app
 
-    timer = setTimeout(() => {
+    timer = setTimeout(async () => {
       // // stop test
       // app.stop().then(() => console.log('stop'))
       // // removeSchema test
@@ -49,6 +49,11 @@ app
       //   },
       // })
       // ok2 && console.log('addSchema two ok')
+      // // getSchema
+      // console.log(app.getSchema('one'))
+      // // getPrisma
+      // const prisma = await app.getPrisma('one', 'dev')
+      // console.log(prisma)
     }, 1000 * 3)
   })
   .catch((e) => {
