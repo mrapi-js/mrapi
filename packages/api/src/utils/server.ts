@@ -29,15 +29,33 @@ export default class Server {
    * decription: add sign route to app
    *
    * @param {Object} route route option
+   * @param {Object} dal dal instance
    *
    * @returns {Void}
    */
-  addRoute(route: any) {
-    this.app.route({
+  addRoute(route: any, dal?: any) {
+    const { options, app } = this
+    app.route({
       ...route,
-      url: `${this.options.openapi.prefix}${route.url}`,
-      handler: async function (request, reply) {
-        return route.handler({ reply, request })
+      url: `${options.openapi.prefix}${route.url}`,
+      handler: async function (request: HttpRequest, reply: HttpReply) {
+        let prisma: any
+        const ret = {
+          request,
+          reply,
+          prisma,
+        }
+        // 访问的租户
+        const tenant = request.headers[options.tenantIdentity]
+        // 访问的DB
+        const name = request.headers[options.dbIdentity]
+        logger.debug(`[Route] DB: ${JSON.stringify(name)}, Tenant: ${JSON.stringify(tenant)}`)
+        if (!dal) return route.handler(ret)
+        return dal.getPrisma(name, tenant)
+          .then((prisma: any) => {
+            ret.prisma = prisma
+            return route.handler(ret)
+          })
       },
     })
   }
@@ -45,10 +63,11 @@ export default class Server {
   /**
    * decription: load custom openapi
    *
+   * @param {Object} dal dal instance
    *
    * @returns {Void}
    */
-  async loadOpenapi() {
+  async loadOpenapi(dal?: any) {
     const { options, app, baseDir } = this
     // load custom openapi
     const customRoutes = require(path.join(
@@ -57,8 +76,7 @@ export default class Server {
     ))
     Object.keys(customRoutes).forEach((key) => {
       customRoutes[key].forEach((route: any) => {
-        // TODO inject prisma
-        this.addRoute(route)
+        this.addRoute(route, dal)
       })
     })
 
@@ -104,7 +122,7 @@ export default class Server {
         const tenant = request.headers[this.options.tenantIdentity]
         // 访问的DB
         const name: any = (request.params as object & { name: () => any }).name
-        logger.info(`[Route] DB: ${name}, Tenant: ${JSON.stringify(tenant)}`)
+        logger.debug(`[Route] DB: ${name}, Tenant: ${JSON.stringify(tenant)}`)
         if (!name || !dal) return ret
         return dal.getPrisma(name, tenant)
           .then((prisma: any) => {

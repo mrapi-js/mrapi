@@ -52,7 +52,7 @@ export default class API {
     const { schema } = await meshSchema(options, schemas)
     await this.server.loadGraphql(schema, undefined, this.dal)
     logger.info('[Start] load graphql done')
-    await server.loadOpenapi()
+    await server.loadOpenapi(this.dal)
     logger.info('[Start] load openapi done')
   }
 
