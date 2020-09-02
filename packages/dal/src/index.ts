@@ -168,7 +168,7 @@ export default class DAL {
    * Get prisma instance by PMT
    *
    */
-  getPrisma = async (name: string, tenantName: string) => {
+  getPrisma = async (name: string, tenantName?: string) => {
     let defaultTenant: DefaultTenant = {}
     if (!tenantName) {
       defaultTenant = this.defaultTenants.get(name) || {}
