@@ -2,7 +2,7 @@ import path from 'path'
 import chalk from 'chalk'
 import isPlainObject from 'is-plain-object'
 import { makeSchema } from '@nexus/schema'
-import type { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
+import type { GraphQLSchema } from 'graphql'
 
 import { merge, getConfig, getPrismaClient } from '@mrapi/common'
 import { paljsPlugin } from '@mrapi/nexus'
@@ -24,8 +24,6 @@ export default class DAL {
   private readonly pmtManage: PMTManage
 
   private readonly mrapiConfig: MrapiConfig
-
-  private readonly schemas: Map<string, NexusGraphQLSchema> = new Map()
 
   private readonly prismaClients: Map<string, string> = new Map()
 
@@ -65,7 +63,6 @@ export default class DAL {
         nexusDir,
         prismaClientDir,
       })
-      this.schemas.set(option.name, makeSchemaData)
 
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
       if (graphqlOption.enable !== false) {
@@ -109,14 +106,13 @@ export default class DAL {
    * Generate graphql schema
    *
    * @private
-   * @returns NexusGraphQLSchema
    */
   private generateSchema({
     schema,
     nexusDir,
     prismaClientDir,
   }: {
-    schema?: NexusGraphQLSchema | {}
+    schema?: GraphQLSchema | {}
     nexusDir: string
     prismaClientDir: string
   }) {
@@ -158,9 +154,9 @@ export default class DAL {
    * Get @nexus/schema options
    *
    */
-  getSchema(name: string) {
-    if (this.schemas.has(name)) {
-      return this.schemas.get(name)
+  getSchema(name: string): GraphQLSchema {
+    if (this.graphqlOptions.has(name)) {
+      return this.graphqlOptions.get(name)?.schema
     }
 
     throw new Error(
@@ -200,6 +196,7 @@ export default class DAL {
    * Note: If "name" already exists, Please call "dal.removeSchema" first
    *
    */
+  // TODO: 逻辑细节有一点问题。- 待修复
   addSchema(name: string, option: DALSchemaOptions = {}): boolean {
     if (!this.defaultTenants.has(name)) {
       this.defaultTenants.set(name, option.defaultTenant)
@@ -211,27 +208,21 @@ export default class DAL {
     )
 
     let prismaClient
+    let defaultGraphqlOption = { enable: true }
+    let defaultOpenAPIOption = { enable: true }
     if (this.prismaClients.has(name)) {
       prismaClient = this.prismaClients.get(name)
+      // Fixbug: Initialization configuration conflict
+      defaultGraphqlOption = { enable: false }
+      defaultOpenAPIOption = { enable: false }
     } else {
       prismaClient = prismaClientDir
       this.prismaClients.set(name, prismaClient)
     }
-
     // Set PMT PrismaClient
     this.pmtManage.setPMT(name, {
       PrismaClient: getPrismaClient(prismaClient),
     })
-
-    // Fixbug: Initialization configuration conflict
-    let defaultGraphqlOption = { enable: true }
-    let defaultOpenAPIOption = { enable: true }
-    let schema
-    if (this.schemas.has(name)) {
-      defaultGraphqlOption = { enable: false }
-      defaultOpenAPIOption = { enable: false }
-      schema = this.schemas.get(name)
-    }
 
     const graphqlOption: {
       enable?: boolean
@@ -244,15 +235,11 @@ export default class DAL {
     }
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-boolean-literal-compare
     else if (graphqlOption.enable !== false) {
-      if (!schema) {
-        schema = this.generateSchema({
-          schema: graphqlOption?.options?.schema,
-          nexusDir,
-          prismaClientDir,
-        })
-        this.schemas.set(name, schema)
-      }
-
+      const schema = this.generateSchema({
+        schema: graphqlOption?.options?.schema,
+        nexusDir,
+        prismaClientDir,
+      })
       graphql = {
         ...graphqlOption.options,
         schema,
@@ -301,7 +288,6 @@ export default class DAL {
     if (result) {
       this.defaultTenants.delete(name)
       this.prismaClients.delete(name)
-      this.schemas.delete(name)
       this.graphqlOptions.delete(name)
       this.openAPIOptions.delete(name)
 
@@ -324,7 +310,7 @@ export default class DAL {
     }
     this.server.start()
 
-    for (const [name, _schema] of this.schemas) {
+    for (const [name] of this.prismaClients) {
       this.addSchema(name)
     }
   }
