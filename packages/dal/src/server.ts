@@ -2,6 +2,7 @@ import chalk from 'chalk'
 import express, { Express } from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import { initialize as initializeOpenAPI } from 'express-openapi'
+import swaggerUi from 'swagger-ui-express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import path from 'path'
@@ -87,15 +88,14 @@ export default class Server {
     console.log(
       `\n⭐️ [${name}] Running a GraphQL API route at: ${chalk.blue(
         `/${graphqlAPIPrefix}/${name}`,
-      )}\n`,
+      )}`,
     )
 
     // add openAPI
-    // TODO: 此处打算修改...1.先在 cli generate 中编译出 openAPI 代码；2.再在此处初始化 express-openapi
     const openAPIPath = path.join(process.cwd(), 'api', name)
     const definitions = require(path.join(openAPIPath, 'definitions')) || {}
     const openAPIBasePath = `/${openAPIPrefix}/${name}`
-    initializeOpenAPI({
+    const openAPI = initializeOpenAPI({
       validateApiDoc: false,
       app: this.app,
       apiDoc: {
@@ -118,35 +118,20 @@ export default class Server {
       paths: path.join(openAPIPath, 'paths'),
       pathsIgnore: new RegExp('.(spec|test)$'),
     })
-
-    // const dmmf = getPrismaDmmf(options.prismaClient)
-    // const routes = graphQLToOpenAPIConverter(name, dmmf, async (req) => {
-    //   const tenantName: any = req.headers[tenantIdentity]
-    //   const prisma = await this.getPrisma(name, tenantName)
-    //   return prisma
-    // })
-
-    // for (const route of routes) {
-    //   const openAPIMiddleware = async (req: any, res: any, _next: any) => {
-    //     const data = await route
-    //       .handler(req)
-    //       .then((res: any) => ({
-    //         code: 0,
-    //         data: res,
-    //       }))
-    //       .catch((err: any) => ({
-    //         code: -1,
-    //         message: err.message,
-    //       }))
-    //     res.send(data)
-    //   }
-
-    //   this.app.use(`/${openAPIPrefix}/${name}${route.url}`, openAPIMiddleware)
-    // }
+    this.app.use(
+      `${openAPIBasePath}/swagger`,
+      swaggerUi.serve,
+      function swaggerUiSetup(...params: [any, any, any]) {
+        swaggerUi.setup(openAPI.apiDoc)(...params)
+      },
+    )
 
     console.log(
-      `\n⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
+      `⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
         openAPIBasePath,
+      )}`,
+      `⭐️ [${name}] Running a openAPI Swagger document at: ${chalk.blue(
+        `${openAPIBasePath}/swagger`,
       )}\n`,
     )
 
@@ -175,14 +160,19 @@ export default class Server {
 
         removeNum[graphqlAPIPrefix] === 0 &&
           console.log(
-            `🚫 [${name}] Termination a GraphQL API of route at: ${chalk.gray(
+            `\n🚫 [${name}] Termination a GraphQL API of route at: ${chalk.gray(
               graphqlPath,
             )}`,
           )
         removeNum[graphqlAPIPrefix]++
       }
       // openAPI name
-      else if (route.name === 'openAPIMiddleware') {
+      else if (
+        route.name === 'bound dispatch' ||
+        route.name === 'swaggerInitFn' ||
+        route.name === 'serveStatic' ||
+        route.name === 'swaggerUiSetup'
+      ) {
         const str = route.regexp.source.replace(
           `^\\/${openAPIPrefix}\\/${name}\\/`,
           '',
@@ -198,7 +188,7 @@ export default class Server {
           console.log(
             `🚫 [${name}] Termination a openAPI of route at: ${chalk.gray(
               openAPIPath,
-            )}`,
+            )}\n`,
           )
         removeNum[openAPIPrefix]++
       } else {

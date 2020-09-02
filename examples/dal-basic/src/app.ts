@@ -1,6 +1,4 @@
 import DAL, { DALOptions } from '@mrapi/dal'
-// import { initialize } from 'express-openapi'
-// import path from 'path'
 
 const options: DALOptions = [
   {
@@ -25,22 +23,6 @@ app
   .start()
   .then(() => {
     // const thisApp = app.server.app
-
-    // const openAPIPath = path.join(__dirname, '../', 'api')
-    // console.log(openAPIPath)
-    // initialize({
-    //   validateApiDoc: false,
-    //   app: thisApp,
-    //   apiDoc: require('../api/api-doc').default,
-    //   dependencies: {
-    //     worldsService: require('../api/services/worldsService').default,
-    //     // getPrisma: async (req: any) => {
-    //     //   return ''
-    //     // },
-    //   },
-    //   paths: path.join(openAPIPath, 'paths'),
-    //   // pathsIgnore: new RegExp('.(spec|test)$'),
-    // })
 
     timer = setTimeout(() => {
       // // stop test

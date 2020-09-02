@@ -5,28 +5,26 @@ exports.default = function (getPrisma) {
     res.status(200).json(data)
   }
   GET.apiDoc = {
-    description: 'Query the users by parameter.',
-    operationId: 'getUsers',
+    description: 'Query the user by parameter.',
+    operationId: 'getUser',
     tags: ['users'],
     parameters: [
-      // {
-      //   name: 'user',
-      //   in: 'query',
-      //   schema: {
-      //     $ref: '#/definitions/User'
-      //   }
-      // }
+      {
+        name: 'id',
+        in: 'path',
+        type: 'string',
+        required: true,
+        description: 'id'
+      }
     ],
     responses: {
       200: {
-        description: 'The list of users that match the parameters.',
+        description: 'The user information',
         schema: {
-          type: 'array',
-          items: {
-            $ref: '#/definitions/User'
-          }
+          $ref: '#/definitions/User'
         }
       },
+
       default: {
         description: 'Unexpected error',
         schema: {
@@ -36,35 +34,36 @@ exports.default = function (getPrisma) {
     }
   }
 
-  async function POST (req, res, next) {
+  async function PUT (req, res, next) {
     const prisma = await getPrisma(req)
     const data = await prisma.user.findMany()
     res.status(500).json(data)
   }
-  POST.apiDoc = {
-    description: 'Create new users.',
-    operationId: 'createUsers',
+  PUT.apiDoc = {
+    description: 'Update a user.',
+    operationId: 'createUser',
     tags: ['users'],
     parameters: [
       {
-        name: 'data',
+        name: 'id',
+        in: 'path',
+        type: 'string',
+        required: true,
+        description: 'id'
+      },
+      {
+        name: 'user',
         in: 'body',
         schema: {
-          type: 'array',
-          items: {
-            $ref: '#/definitions/User'
-          }
+          $ref: '#/definitions/User'
         }
       }
     ],
     responses: {
       200: {
-        description: 'Users created successfully.',
+        description: 'User updated successfully.',
         schema: {
-          type: 'array',
-          items: {
-            $ref: '#/definitions/User'
-          }
+          $ref: '#/definitions/User'
         }
       },
       default: {
@@ -82,13 +81,21 @@ exports.default = function (getPrisma) {
     res.status(500).json(data)
   }
   DELETE.apiDoc = {
-    description: 'Delete users.',
-    operationId: 'deleteUsers',
+    description: 'Delete user.',
+    operationId: 'deleteUser',
     tags: ['users'],
-    parameters: [],
+    parameters: [
+      {
+        name: 'id',
+        in: 'path',
+        type: 'string',
+        required: true,
+        description: 'id'
+      }
+    ],
     responses: {
       204: {
-        description: 'Users deleted successfully.'
+        description: 'User deleted successfully.'
       },
       default: {
         description: 'Unexpected error',
@@ -101,7 +108,7 @@ exports.default = function (getPrisma) {
 
   return {
     GET,
-    POST,
+    PUT,
     DELETE
   }
 }

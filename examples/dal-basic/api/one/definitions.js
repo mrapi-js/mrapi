@@ -1,12 +1,53 @@
 exports.default = {
-  World: {
+  Error: {
+    additionalProperties: true
+  },
+  User: {
     type: 'object',
     properties: {
+      email: {
+        description: 'email',
+        type: 'string'
+      },
+      id: {
+        description: 'id',
+        type: 'integer'
+      },
       name: {
-        description: 'The name of this world.',
+        description: 'name',
         type: 'string'
       }
+      // Post: {
+      // }
     },
-    required: ['name']
+    required: ['email', 'id']
+  },
+  Post: {
+    type: 'object',
+    properties: {
+      content: {
+        description: 'content',
+        type: 'string'
+      },
+      authorId: {
+        description: 'authorId',
+        type: 'integer'
+      },
+      id: {
+        description: 'id',
+        type: 'integer'
+      },
+      title: {
+        description: 'title',
+        type: 'string'
+      },
+      published: {
+        description: 'published',
+        type: 'boolean'
+      }
+      // User: {
+      // }
+    },
+    required: ['id', 'published', 'title']
   }
 }
