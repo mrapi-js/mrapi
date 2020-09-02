@@ -33,7 +33,7 @@ export type PrismaPaths = Array<{
 export interface Context {
   reply: FastifyReply
   request: FastifyRequest
-  prisema: any
+  prisma: any
 }
 
 export interface MakeSchemaOptions {
@@ -75,6 +75,7 @@ export interface GraphqlConfig {
 export interface ApiOptions {
   tenantIdentity?: string
   autoGenerate?: boolean
+  dbIdentity?: string
   openapi?: {
     dir?: string
     prefix?: string
