@@ -5,8 +5,8 @@ export const serverTimeRoutes = [
     method: 'GET',
     url: '/server-time',
     async handler(ctx: Context) {
-      const { reply, prisema } = ctx
-      const users = await prisema.user.findMany()
+      const { reply, prisma } = ctx
+      const users = await prisma.user.findMany()
       reply.send(users)
     },
   },
