@@ -1,4 +1,5 @@
-import DAL, { DALOptions } from '@mrapi/dal'
+import DAL from '@mrapi/dal'
+import type { DALOptions } from '@mrapi/dal/lib/types'
 
 const options: DALOptions = [
   {
@@ -8,12 +9,20 @@ const options: DALOptions = [
       // url: 'file:../config/db/prod.db',
     },
   },
-  // {
-  //   name: 'two',
-  //   defaultTenant: {
-  //     name: 'dev',
-  //   },
-  // },
+  {
+    name: 'two',
+    // defaultTenant: {
+    //   name: 'dev',
+    // },
+    openAPI: {
+      enable: false,
+    },
+    // graphql: {
+    //   enable: false,
+    // },
+    // nexusDir?: string;
+    // prismaClientDir?: string;
+  },
 ]
 
 const app = new DAL(options)
@@ -34,6 +43,9 @@ app
       // const ok2 = app.addSchema('two', {
       //   defaultTenant: {
       //     name: 'dev',
+      //   },
+      //   openAPI: {
+      //     enable: false,
       //   },
       // })
       // ok2 && console.log('addSchema two ok')

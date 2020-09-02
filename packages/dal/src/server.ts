@@ -65,75 +65,87 @@ export default class Server {
     console.log(`\n🚫 Server closed. ${chalk.gray(`http://${host}:${port}`)}\n`)
   }
 
-  addRoute(name: string, options: RouteOptions): boolean {
+  addRoute(name: string, { graphql, openAPI }: RouteOptions = {}): boolean {
     const { tenantIdentity } = this.options
 
+    console.log()
+
     // add graphqlAPI
-    this.app.use(
-      `/${graphqlAPIPrefix}/${name}`,
-      graphqlHTTP(async (req, _res, _params) => {
-        const createContext = async () => {
-          const tenantName: any = req.headers[tenantIdentity]
-          return { prisma: await this.getPrisma(name, tenantName) }
-        }
-
-        return {
-          graphiql: { headerEditorEnabled: true },
-          context: await createContext(),
-          ...options,
-        }
-      }),
-    )
-
-    console.log(
-      `\n⭐️ [${name}] Running a GraphQL API route at: ${chalk.blue(
+    if (typeof graphql === 'object') {
+      this.app.use(
         `/${graphqlAPIPrefix}/${name}`,
-      )}`,
-    )
+        graphqlHTTP(async (req, _res, _params) => {
+          const createContext = async () => {
+            const tenantName: any = req.headers[tenantIdentity]
+            return { prisma: await this.getPrisma(name, tenantName) }
+          }
+
+          return {
+            graphiql: { headerEditorEnabled: true },
+            context: await createContext(),
+            ...graphql,
+          }
+        }),
+      )
+
+      console.log(
+        `⭐️ [${name}] Running a GraphQL API route at: ${chalk.blue(
+          `/${graphqlAPIPrefix}/${name}`,
+        )}`,
+      )
+    }
 
     // add openAPI
-    const openAPIPath = path.join(process.cwd(), 'api', name)
-    const definitions = require(path.join(openAPIPath, 'definitions')) || {}
-    const openAPIBasePath = `/${openAPIPrefix}/${name}`
-    const openAPI = initializeOpenAPI({
-      validateApiDoc: false,
-      app: this.app,
-      apiDoc: {
-        swagger: '2.0',
-        basePath: openAPIBasePath,
-        info: {
-          title: `[${name}] Started openAPI.`,
-          version: '1.0.0',
+    if (typeof openAPI === 'object') {
+      const definitions =
+        require(path.join(openAPI.oasDir, 'definitions')) || {}
+      const openAPIBasePath = `/${openAPIPrefix}/${name}`
+      const openAPIInstance = initializeOpenAPI({
+        validateApiDoc:
+          typeof openAPI.validateApiDoc === 'undefined'
+            ? true
+            : openAPI.validateApiDoc,
+        app: this.app,
+        apiDoc: {
+          swagger: '2.0',
+          basePath: openAPIBasePath,
+          info: {
+            title: `[${name}] Started openAPI.`,
+            version: '1.0.0',
+          },
+          paths: {},
+          definitions: definitions.default || definitions,
         },
-        paths: {},
-        definitions: definitions.default || definitions,
-      },
-      dependencies: {
-        getPrisma: async (req: any) => {
-          const tenantName: string = req.headers[tenantIdentity]
-          const prisma = await this.getPrisma(name, tenantName)
-          return prisma
+        dependencies: {
+          getPrisma: async (req: any) => {
+            const tenantName: string = req.headers[tenantIdentity]
+            const prisma = await this.getPrisma(name, tenantName)
+            return prisma
+          },
+          ...(openAPI.dependencies || {}),
         },
-      },
-      paths: path.join(openAPIPath, 'paths'),
-      pathsIgnore: new RegExp('.(spec|test)$'),
-    })
-    this.app.use(
-      `${openAPIBasePath}/swagger`,
-      swaggerUi.serve,
-      function swaggerUiSetup(...params: [any, any, any]) {
-        swaggerUi.setup(openAPI.apiDoc)(...params)
-      },
-    )
-
-    console.log(
-      `⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
-        openAPIBasePath,
-      )}`,
-      `⭐️ [${name}] Running a openAPI Swagger document at: ${chalk.blue(
+        paths: path.join(openAPI.oasDir, 'paths'),
+        pathsIgnore: new RegExp('.(spec|test)$'),
+      })
+      this.app.use(
         `${openAPIBasePath}/swagger`,
-      )}\n`,
-    )
+        swaggerUi.serve,
+        function swaggerUiSetup(...params: [any, any, any]) {
+          swaggerUi.setup(openAPIInstance.apiDoc)(...params)
+        },
+      )
+
+      console.log(
+        `⭐️ [${name}] Running a openAPI route at: ${chalk.blue(
+          openAPIBasePath,
+        )}
+⭐️ [${name}] Running a openAPI Swagger document at: ${chalk.blue(
+          `${openAPIBasePath}/swagger`,
+        )}`,
+      )
+    }
+
+    console.log()
 
     return true
   }
@@ -142,6 +154,8 @@ export default class Server {
     const routes = this.app._router.stack
     const graphqlPath = `/${graphqlAPIPrefix}/${name}`
     const openAPIPath = `/${openAPIPrefix}/${name}`
+
+    console.log()
 
     const removeNum = {
       [graphqlAPIPrefix]: 0,
@@ -160,7 +174,7 @@ export default class Server {
 
         removeNum[graphqlAPIPrefix] === 0 &&
           console.log(
-            `\n🚫 [${name}] Termination a GraphQL API of route at: ${chalk.gray(
+            `🚫 [${name}] Termination a GraphQL API of route at: ${chalk.gray(
               graphqlPath,
             )}`,
           )
@@ -188,7 +202,7 @@ export default class Server {
           console.log(
             `🚫 [${name}] Termination a openAPI of route at: ${chalk.gray(
               openAPIPath,
-            )}\n`,
+            )}`,
           )
         removeNum[openAPIPrefix]++
       } else {
@@ -197,6 +211,7 @@ export default class Server {
     }
 
     if (removeNum[graphqlAPIPrefix] > 0 || removeNum[openAPIPrefix] > 0) {
+      console.log()
       return true
     }
 
