@@ -83,13 +83,11 @@ importers:
       '@nexus/schema': 0.15.0
       '@prisma/cli': 2.4.1
       cross-env: 7.0.2
-      express-openapi: 7.0.1
-      graphql-to-openapi: 1.5.0
       prisma-multi-tenant: 2.3.1
     devDependencies:
       fs-extra: 9.0.1
       prettier: 2.0.5
-      ts-node-dev: 1.0.0-pre.60_typescript@4.0.2
+      ts-node-dev: 1.0.0-pre.62_typescript@4.0.2
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
@@ -98,12 +96,10 @@ importers:
       '@nexus/schema': 0.15.0
       '@prisma/cli': ^2.4.1
       cross-env: ^7.0.2
-      express-openapi: 7.0.1
       fs-extra: 9.0.1
-      graphql-to-openapi: 1.5.0
       prettier: 2.0.5
       prisma-multi-tenant: 2.3.1
-      ts-node-dev: 1.0.0-pre.60
+      ts-node-dev: 1.0.0-pre.62
       tslib: ^2.0.1
       typescript: ^4.0.2
   packages/api:
@@ -169,7 +165,7 @@ importers:
       '@mrapi/oas': 'link:../oas'
       '@prisma-multi-tenant/shared': 2.3.1
       chalk: 4.1.0
-      commander: 6.0.0
+      commander: 6.1.0
       dotenv: 8.2.0
       fs-extra: 9.0.1
       is-plain-object: 4.1.1
@@ -185,7 +181,7 @@ importers:
       '@prisma-multi-tenant/shared': 2.3.1
       '@types/fs-extra': ^9.0.1
       chalk: ^4.1.0
-      commander: ^6.0.0
+      commander: ^6.1.0
       dotenv: ^8.2.0
       fs-extra: ^9.0.1
       is-plain-object: 4.1.1
@@ -220,7 +216,7 @@ importers:
       '@mrapi/nexus': 'link:../nexus'
       '@nexus/schema': 0.15.0_graphql@15.3.0
       '@prisma-multi-tenant/client': 2.3.1
-      '@prisma/client': 2.5.1
+      '@prisma/client': 2.6.0
       '@types/express': 4.17.8
       body-parser: 1.19.0
       chalk: 4.1.0
@@ -241,7 +237,7 @@ importers:
       '@mrapi/nexus': 'workspace:*'
       '@nexus/schema': 0.15.0
       '@prisma-multi-tenant/client': 2.3.1
-      '@prisma/client': 2.5.1
+      '@prisma/client': 2.6.0
       '@types/express': ^4.17.8
       '@types/node': '*'
       '@types/swagger-ui-express': ^4.1.2
@@ -1282,7 +1278,7 @@ packages:
   /@prisma-multi-tenant/shared/2.3.1_@prisma+cli@2.4.1:
     dependencies:
       '@prisma/cli': 2.4.1
-      '@prisma/client': 2.4.1_@prisma+cli@2.4.1
+      '@prisma/client': 2.5.1_@prisma+cli@2.4.1
     dev: false
     peerDependencies:
       '@prisma/cli': ^2.4.1
@@ -1295,21 +1291,6 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-vAOBnouBgCYndXmTcGxanfmhVWUCpwr3akBXiQH+ZKzTYf/pwSsWYpeaXNQfVtUEJEQ0kumfLGdq6ZXnfX//aA==
-  /@prisma/client/2.4.1_@prisma+cli@2.4.1:
-    dependencies:
-      '@prisma/cli': 2.4.1
-      pkg-up: 3.1.0
-    dev: false
-    engines:
-      node: '>=10'
-    peerDependencies:
-      '@prisma/cli': '*'
-    peerDependenciesMeta:
-      '@prisma/cli':
-        optional: true
-    requiresBuild: true
-    resolution:
-      integrity: sha512-13aphZb34ws8GuRxVsmgiQmUJRfcnnb5/Jy78/ZkpLyCk5ZpchO/Rr1KNiF/cfLHprdKOjSvUzthcx+tubaA2A==
   /@prisma/client/2.5.1:
     dependencies:
       pkg-up: 3.1.0
@@ -1324,6 +1305,35 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-vIyh6kyNNC7daePZRkrsxTF/xa8uA0bFpR4E9agyknzylGYFJqnjZCMTwtkXz64Vnlc55dMTCONNe/AFJ0UusQ==
+  /@prisma/client/2.5.1_@prisma+cli@2.4.1:
+    dependencies:
+      '@prisma/cli': 2.4.1
+      pkg-up: 3.1.0
+    dev: false
+    engines:
+      node: '>=10'
+    peerDependencies:
+      '@prisma/cli': '*'
+    peerDependenciesMeta:
+      '@prisma/cli':
+        optional: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-vIyh6kyNNC7daePZRkrsxTF/xa8uA0bFpR4E9agyknzylGYFJqnjZCMTwtkXz64Vnlc55dMTCONNe/AFJ0UusQ==
+  /@prisma/client/2.6.0:
+    dependencies:
+      pkg-up: 3.1.0
+    dev: false
+    engines:
+      node: '>=10'
+    peerDependencies:
+      '@prisma/cli': '*'
+    peerDependenciesMeta:
+      '@prisma/cli':
+        optional: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-BxYBn8PQ7ACh6p6q9JJNlODV8i50aZA9f+HwPGtff9jhIuoyFdM0eh1Qldib1ngTzt1UnxvacqlpXDHlnL93Pg==
   /@protobufjs/aspromise/1.1.2:
     dev: false
     resolution:
@@ -2948,18 +2958,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
-  /commander/5.1.0:
+  /commander/6.1.0:
     dev: false
     engines:
       node: '>= 6'
     resolution:
-      integrity: sha512-P0CysNDQ7rtVw4QIQtm+MRxV66vKFSvlsQvGYXZWR3qFU0jlMKHZZZgw8e+8DSah4UDKMqnknRDQz+xuQXQ/Zg==
-  /commander/6.0.0:
-    dev: false
-    engines:
-      node: '>= 6'
-    resolution:
-      integrity: sha512-s7EA+hDtTYNhuXkTlhqew4txMZVdszBmKWSPEMxGr8ru8JXR7bLUFIAtPhcSuFdJQ0ILMxnJi8GkQL0yvDy/YA==
+      integrity: sha512-wl7PNrYWd2y5mp1OK/LhTlv8Ff4kQJQRXXAvF+uU/TPNiVJUxZLRYGj/B0y/lPGAVcSbJqH2Za/cvHmrPMC8mA==
   /common-tags/1.8.0:
     dev: false
     engines:
@@ -4653,14 +4657,6 @@ packages:
       graphql: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-VmsD5pJqWJnQZMUeRwrDhfgoyqcfwEkvtpANqcoUG8/tOLkwNgU9mzub/Mc78OJMhHjx7gfAMTxzdG43VGg3bA==
-  /graphql-to-openapi/1.5.0:
-    dependencies:
-      commander: 5.1.0
-      graphql: 15.3.0
-    dev: false
-    hasBin: true
-    resolution:
-      integrity: sha512-ks7t3iTdeBEtthoqhIqKyuTZWPKX0dsuBr1XSU8w9GzRMQUs5QxtD01mAwamK2nRMxaEf2UZ2/4oC40AnMHX3w==
   /graphql-tools/4.0.8_graphql@14.7.0:
     dependencies:
       apollo-link: 1.2.14_graphql@14.7.0
@@ -8466,6 +8462,32 @@ packages:
         optional: true
     resolution:
       integrity: sha512-S1X/2dMH2cxzFEiOWo5r/DTD0oElKbEpG8lnWoEA1LrwxXMFCJs71vIMaXPu6p8ud3MHMI2Ans3syDQ8mkjEUg==
+  /ts-node-dev/1.0.0-pre.62_typescript@4.0.2:
+    dependencies:
+      chokidar: 3.4.2
+      dateformat: 1.0.12
+      dynamic-dedupe: 0.3.0
+      minimist: 1.2.5
+      mkdirp: 1.0.4
+      resolve: 1.17.0
+      rimraf: 2.7.1
+      source-map-support: 0.5.19
+      tree-kill: 1.2.2
+      ts-node: 8.10.2_typescript@4.0.2
+      tsconfig: 7.0.0
+      typescript: 4.0.2
+    dev: true
+    engines:
+      node: '>=0.8.0'
+    hasBin: true
+    peerDependencies:
+      node-notifier: '*'
+      typescript: '*'
+    peerDependenciesMeta:
+      node-notifier:
+        optional: true
+    resolution:
+      integrity: sha512-hfsEuCqUZOVnZ86l7A3icxD1nFt1HEmLVbx4YOHCkrbSHPBNWcw+IczAPZo3zz7YiOm9vs0xG6OENNrkgm89tQ==
   /ts-node/8.10.2_typescript@3.9.7:
     dependencies:
       arg: 4.1.3
