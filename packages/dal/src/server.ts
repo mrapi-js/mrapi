@@ -29,7 +29,7 @@ export default class Server {
 
   public server: http.Server
 
-  private readonly options: ServerOptions
+  private options: ServerOptions
 
   private readonly getPrisma: GetPrismaType
 
@@ -46,14 +46,26 @@ export default class Server {
     this.app.use(bodyParser.json())
   }
 
-  start({ port, host } = this.options) {
+  start(options: ServerOptions = {}) {
+    if (options?.host) {
+      this.options.host = options.host
+    }
+    if (options?.port) {
+      this.options.port = options.port
+    }
+
+    const { port, host } = this.options
+
     this.server = this.app.listen(port, host)
 
-    console.log(
-      `\n🚀 Server ready at: ${chalk.blue(`http://${host}:${port}`)}\n`,
-    )
+    console.log(`\n🚀 Server ready at: ${chalk.blue(this.getUri())}\n`)
 
     return this.app
+  }
+
+  private readonly getUri = () => {
+    const { port, host } = this.options
+    return `http://${host}:${port}`
   }
 
   stop() {
@@ -63,8 +75,7 @@ export default class Server {
 
     this.server.close()
 
-    const { port, host } = this.options
-    console.log(`\n🚫 Server closed. ${chalk.gray(`http://${host}:${port}`)}\n`)
+    console.log(`\n🚫 Server closed. ${chalk.gray(this.getUri())}\n`)
   }
 
   addRoute(

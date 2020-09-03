@@ -35,7 +35,13 @@ app
 
     timer = setTimeout(async () => {
       // // stop test
-      // app.stop().then(() => console.log('stop'))
+      // app.stop().then(() => {
+      //   console.log('stop')
+      //   setTimeout(() => {
+      //     // restart
+      //     app.start({ port: 1360 })
+      //   }, 1000 * 3)
+      // })
       // // removeSchema test
       // const ok = app.removeSchema('one')
       // ok && console.log('removeSchema one')
