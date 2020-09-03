@@ -44,8 +44,7 @@ export default class Server {
     this.app.use(bodyParser.json())
   }
 
-  start() {
-    const { port, host } = this.options
+  start({ port, host } = this.options) {
     this.server = this.app.listen(port, host)
 
     console.log(

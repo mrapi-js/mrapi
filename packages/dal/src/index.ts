@@ -299,6 +299,8 @@ export default class DAL {
   /**
    * Start server
    *
+   * Note: When service is initialized, the default port configuration is logged.
+   *
    */
   async start(serverOptions?: ServerOptions) {
     if (!this.server) {
@@ -307,7 +309,7 @@ export default class DAL {
         this.getPrisma,
       )
     }
-    this.server.start()
+    this.server.start(serverOptions)
 
     for (const [name] of this.prismaClients) {
       this.addSchema(name)
