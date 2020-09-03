@@ -9,6 +9,7 @@ import path from 'path'
 import type http from 'http'
 
 import { merge } from '@mrapi/common'
+import { dependenciesPlugins } from '@mrapi/oas'
 import { graphqlAPIPrefix, openAPIPrefix } from './constants'
 import type { ServerOptions, RouteOptions } from './types'
 
@@ -97,6 +98,11 @@ export default class Server {
 
     // add openAPI
     if (typeof openAPI === 'object') {
+      const getPrisma = async (req: any) => {
+        const tenantName: string = req.headers[tenantIdentity]
+        const prisma = await this.getPrisma(name, tenantName)
+        return prisma
+      }
       const definitions =
         require(path.join(openAPI.oasDir, 'definitions')) || {}
       const openAPIBasePath = `/${openAPIPrefix}/${name}`
@@ -117,12 +123,11 @@ export default class Server {
           definitions: definitions.default || definitions,
         },
         dependencies: {
-          getPrisma: async (req: any) => {
-            const tenantName: string = req.headers[tenantIdentity]
-            const prisma = await this.getPrisma(name, tenantName)
-            return prisma
-          },
           ...(openAPI.dependencies || {}),
+          getPrisma,
+          mrapiFn: dependenciesPlugins({
+            getPrisma,
+          }),
         },
         paths: path.join(openAPI.oasDir, 'paths'),
         pathsIgnore: new RegExp('.(spec|test)$'),

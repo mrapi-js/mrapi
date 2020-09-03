@@ -1,139 +1,125 @@
 import chalk from 'chalk'
 import { join } from 'path'
-import prettier from 'prettier'
 import fs from 'fs-extra'
 
 import { Generators } from '@mrapi/common'
-import type { GeneratorOptions } from '@mrapi/common'
-
-const pkg = require('../../package.json')
-
-const intputBasePath = join(__dirname, '../../templates/api')
-
-const pathsDir = {
-  users: 'paths/users.js',
-  userId: 'paths/users/{id}.js',
-}
-
-const definitionsTypes = '#{models}'
-
-const test = `User: {
-  type: 'object',
-  properties: {
-    email: {
-      description: 'email',
-      type: 'string'
-    },
-    id: {
-      description: 'id',
-      type: 'integer'
-    },
-    name: {
-      description: 'name',
-      type: 'string'
-    }
-    // Post: {
-    // }
-  },
-  required: ['email', 'id']
-},
-Post: {
-  type: 'object',
-  properties: {
-    content: {
-      description: 'content',
-      type: 'string'
-    },
-    authorId: {
-      description: 'authorId',
-      type: 'integer'
-    },
-    id: {
-      description: 'id',
-      type: 'integer'
-    },
-    title: {
-      description: 'title',
-      type: 'string'
-    },
-    published: {
-      description: 'published',
-      type: 'boolean'
-    }
-    // User: {
-    // }
-  },
-  required: ['id', 'published', 'title']
-}
-`
+import { modelTmpFn, modelsTmpFn, getCrud } from './templates'
 
 export class OasGenerator extends Generators {
-  protected options: GeneratorOptions = {
-    schema: join(process.cwd(), 'node_modules', '@prisma/client'),
-    output: join(process.cwd(), '.mrapi'),
-    excludeFields: [],
-    excludeModels: [],
-    excludeFieldsByModel: {},
-    excludeQueriesAndMutations: [],
-    excludeQueriesAndMutationsByModel: {},
+  private outputFile(content: string, outputPath: string) {
+    fs.outputFileSync(outputPath, this.formation(content))
   }
 
-  protected pathsFiles = {
-    users: fs.readFileSync(join(intputBasePath, pathsDir.users), {
-      encoding: 'utf8',
-    }),
-    userId: fs.readFileSync(join(intputBasePath, pathsDir.userId), {
-      encoding: 'utf8',
-    }),
+  /**
+   * generate definitions.js
+   */
+  private async genDefinitions() {
+    const { mappings } = await this.dmmf()
+    const models = await this.models()
+
+    const modelDefinitions = {
+      Error: {
+        additionalProperties: true,
+      },
+    }
+
+    models.forEach((model: any) => {
+      const obj: {
+        type: string
+        properties: {
+          [name: string]: {
+            description: string
+            type?: string
+            schema?: any
+          }
+        }
+        required: string[]
+      } = {
+        type: 'object',
+        properties: {},
+        required: [],
+      }
+
+      model.fields.forEach((field: any) => {
+        if (!this.excludeFields(model.name).includes(field.name)) {
+          if (field.outputType.kind === 'scalar') {
+            let type: string
+            switch (field.outputType?.type) {
+              case 'Int':
+                type = 'integer'
+                break
+              case 'String':
+                type = 'string'
+                break
+              case 'Boolean':
+                type = 'boolean'
+                break
+            }
+
+            if (type) {
+              obj.properties[field.name] = {
+                description: field.name,
+                type,
+              }
+              field.outputType?.isRequired && obj.required.push(field.name)
+            }
+          }
+          // else if (field.outputType.kind === 'object') {
+          //   obj.properties[field.name] = {
+          //     description: field.name,
+          //     schema: {
+          //       $ref: `#/definitions/${field.name}`,
+          //     },
+          //   }
+          //   field.outputType?.isRequired && obj.required.push(field.name)
+          // }
+        }
+      })
+
+      modelDefinitions[model.name] = obj
+
+      const mapping = mappings.find((m: any) => m.model === model.name)
+      this.genPaths(model, mapping)
+    })
+
+    this.outputFile(
+      `exports.default = ${JSON.stringify(modelDefinitions)}`,
+      join(this.options.output, 'definitions.js'),
+    )
   }
 
-  constructor(customOptions?: GeneratorOptions) {
-    super(customOptions)
+  /**
+   * generate oas paths files
+   */
+  private genPaths(model: any, mapping: any) {
+    const modelName = `${model.name.charAt(0).toLowerCase()}${model.name.slice(
+      1,
+    )}`
 
-    this.options = { ...this.options, ...customOptions }
+    // paths -> users
+    this.outputFile(
+      getCrud(
+        modelsTmpFn,
+        { GET: true, POST: true, DELETE: true },
+        { modelName, plural: mapping.plural, name: model.name },
+      ),
+      join(this.options.output, `paths/${mapping.plural}.js`),
+    )
+
+    // paths -> users/{id}
+    this.outputFile(
+      getCrud(
+        modelTmpFn,
+        { GET: true, PUT: true, DELETE: true },
+        { modelName, plural: mapping.plural, name: model.name },
+      ),
+      join(this.options.output, `paths/${mapping.plural}/{id}.js`),
+    )
   }
 
   async run() {
-    const outputBasePath = this.options.output
-
-    // build paths files
-    for (const model in this.pathsFiles) {
-      let str = this.pathsFiles[model]
-      if (model === 'users') {
-        str = str.replace('', '')
-      } else if (model === 'userId') {
-        str = str.replace('', '')
-      }
-      this.outputFile(str, join(outputBasePath, pathsDir[model]))
-    }
-
-    // build definitions.js
-    this.outputFile(
-      `exports.default = {
-  Error: {
-    additionalProperties: true
-  },
-  ${definitionsTypes}
-}
-`.replace(definitionsTypes, test),
-      join(outputBasePath, 'definitions.js'),
-    )
+    await this.genDefinitions()
 
     console.log(chalk.green('\n✅  GenerateOAS run successful.\n'))
-  }
-
-  outputFile(content: string, outputPath: string) {
-    fs.outputFileSync(
-      outputPath,
-      prettier.format(
-        `
-/**
-* This file was generated by mrapi
-* Do not make changes to this file directly
-*/
-${content}`,
-        { ...pkg.prettier, parser: 'babel' },
-      ),
-    )
   }
 }

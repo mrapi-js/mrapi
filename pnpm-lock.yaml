@@ -216,6 +216,7 @@ importers:
     dependencies:
       '@mrapi/common': 'link:../common'
       '@mrapi/nexus': 'link:../nexus'
+      '@mrapi/oas': 'link:../oas'
       '@nexus/schema': 0.15.0_graphql@15.3.0
       '@prisma-multi-tenant/client': 2.3.1
       '@prisma/client': 2.6.0
@@ -237,6 +238,7 @@ importers:
     specifiers:
       '@mrapi/common': 'workspace:*'
       '@mrapi/nexus': 'workspace:*'
+      '@mrapi/oas': 'workspace:*'
       '@nexus/schema': 0.15.0
       '@prisma-multi-tenant/client': 2.3.1
       '@prisma/client': 2.6.0
