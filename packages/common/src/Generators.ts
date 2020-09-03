@@ -2,7 +2,22 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs'
 import { format, Options as PrettierOptions } from 'prettier'
 import { join } from 'path'
 
-import { Mutation, Options, Query } from './types'
+import { spawnShell } from './shell'
+import type { Mutation, GeneratorOptions as Options, Query } from './types'
+
+const tscOptions = [
+  '-t es2018',
+  '--lib esnext',
+  '--module commonjs',
+  '--moduleResolution node',
+  '--allowSyntheticDefaultImports',
+  '--esModuleInterop',
+  '--importHelpers',
+  '--resolveJsonModule',
+  '--sourceMap false ',
+  '--declaration',
+  '--skipLibCheck',
+].join(' ')
 
 export class Generators {
   protected options: Options = {
@@ -112,5 +127,15 @@ export class Generators {
       trailingComma: 'all',
       parser,
     })
+  }
+
+  protected async toJS() {
+    const { output } = this.options
+    const exitPalCode = await spawnShell(
+      `npx tsc ${tscOptions} ${output}/*.ts ${output}/**/*.ts ${output}/**/**/*.ts`,
+    )
+    if (exitPalCode !== 0) {
+      throw new Error('Generate nexus types exception.')
+    }
   }
 }

@@ -11,8 +11,7 @@ import { spawnShell, runShell, getUrlAndProvider } from '@mrapi/common'
 import { Generator as NexusGenerate } from '@mrapi/nexus'
 import { Generator as OASGenerate } from '@mrapi/oas'
 import Command, { CommandParams } from './common'
-import type { MrapiConfig } from '@mrapi/common'
-import type { Options as NexusOptions } from '@mrapi/nexus/lib/generator/types'
+import type { MrapiConfig, GeneratorOptions } from '@mrapi/common'
 
 const cntWhiteList = ['disableQueries', 'disableMutations']
 const cntWhiteListSet = new Set(cntWhiteList)
@@ -111,7 +110,7 @@ class GenerateCommand extends Command {
 
     // 4. Generate CRUD with nexus
     const palOutput = path.join(outputPath, 'nexus-types')
-    const nexusParams: NexusOptions = {
+    const nexusParams: GeneratorOptions = {
       schema: outputPath,
       output: palOutput,
       excludeFields: [],
@@ -146,14 +145,9 @@ class GenerateCommand extends Command {
 
     // 5. Generate CRUD with openAPI
     const oasOutput = path.join(outputPath, 'api')
-    const oasParams: NexusOptions = {
-      schema: outputPath,
+    const oasParams: GeneratorOptions = {
+      ...nexusParams,
       output: oasOutput,
-      excludeFields: [],
-      excludeModels: [],
-      excludeFieldsByModel: {},
-      excludeQueriesAndMutationsByModel: {},
-      excludeQueriesAndMutations: [],
     }
     const openAPIGenerate = new OASGenerate(oasParams)
     await openAPIGenerate.run()

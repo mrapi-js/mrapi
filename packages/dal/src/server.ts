@@ -182,10 +182,12 @@ export default class Server {
       }
       // openAPI name
       else if (
-        route.name === 'bound dispatch' ||
-        route.name === 'swaggerInitFn' ||
-        route.name === 'serveStatic' ||
-        route.name === 'swaggerUiSetup'
+        [
+          'bound dispatch',
+          'swaggerInitFn',
+          'serveStatic',
+          'swaggerUiSetup',
+        ].includes(route.name)
       ) {
         const str = route.regexp.source.replace(
           `^\\/${openAPIPrefix}\\/${name}\\/`,

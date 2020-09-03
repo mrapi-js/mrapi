@@ -1,2 +1,1 @@
-export { Generator } from './generator'
-// export { paljsPlugin } from './plugins/paljs'
+export { OasGenerator as Generator } from './generator'

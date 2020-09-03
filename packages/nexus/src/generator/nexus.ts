@@ -1,7 +1,7 @@
 import { writeFileSync, existsSync, readFileSync } from 'fs'
 import { join } from 'path'
 
-import { Generators } from './Generators'
+import { Generators } from '@mrapi/common'
 import { getCrud } from './templates'
 
 export class GenerateNexus extends Generators {

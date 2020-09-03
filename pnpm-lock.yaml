@@ -192,12 +192,14 @@ importers:
     dependencies:
       deepmerge: 4.2.2
       find-node-modules: 2.1.0
+      prettier: 2.1.1
     devDependencies:
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
       deepmerge: ^4.2.2
       find-node-modules: ^2.1.0
+      prettier: ^2.1.1
       tslib: ^2.0.1
       typescript: ^4.0.2
   packages/create-mrapi-app:
@@ -257,14 +259,12 @@ importers:
       '@mrapi/common': 'link:../common'
       '@nexus/schema': 0.15.0
       chalk: 4.1.0
-      prettier: 2.1.1
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
       '@mrapi/common': 'workspace:*'
       '@nexus/schema': 0.15.0
       chalk: ^4.1.0
-      prettier: ^2.1.1
       tslib: ^2.0.1
       typescript: ^4.0.2
   packages/oas:
@@ -272,7 +272,6 @@ importers:
       '@mrapi/common': 'link:../common'
       chalk: 4.1.0
       fs-extra: 9.0.1
-      prettier: 2.1.1
     devDependencies:
       tslib: 2.0.1
       typescript: 4.0.2
@@ -280,7 +279,6 @@ importers:
       '@mrapi/common': 'workspace:*'
       chalk: ^4.1.0
       fs-extra: ^9.0.1
-      prettier: ^2.1.1
       tslib: ^2.0.1
       typescript: ^4.0.2
 lockfileVersion: 5.1

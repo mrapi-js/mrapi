@@ -2,6 +2,7 @@ import merge from 'deepmerge'
 
 import getConfig, { MrapiConfig } from './getConfig'
 import getPrisma, { getPrismaClient, getPrismaDmmf } from './getPrisma'
+import { Generators } from './Generators'
 
 export * from './types'
 export * from './errors'
@@ -14,4 +15,5 @@ export {
   getPrisma,
   getPrismaClient,
   getPrismaDmmf,
+  Generators,
 }
