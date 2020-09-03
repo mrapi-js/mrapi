@@ -19,6 +19,7 @@ export interface openAPIOptions {
 export interface RouteOptions {
   graphql?: graphqlOptions
   openAPI?: openAPIOptions
+  enableRepeat?: boolean
 }
 
 export interface DefaultTenant {

@@ -191,6 +191,13 @@ export default class DAL {
   }
 
   /**
+   * Return server has schema
+   */
+  hasSchema(name: string) {
+    return this.defaultTenants.has(name)
+  }
+
+  /**
    * Add schema to existing server
    *
    * Note: If "name" already exists, Please call "dal.removeSchema" first
@@ -269,6 +276,7 @@ export default class DAL {
       result = this.server.addRoute(name, {
         graphql,
         openAPI,
+        enableRepeat: this.mrapiConfig.dal?.enableRepeatRoute,
       })
     }
     return result

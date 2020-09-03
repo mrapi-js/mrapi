@@ -54,6 +54,15 @@ app
       // // getPrisma
       // const prisma = await app.getPrisma('one', 'dev')
       // console.log(prisma)
+      // // hasSchema
+      // console.log("app.hasSchema('one') -> ", app.hasSchema('one'))
+      // // Repeat addRoute
+      // const ok3 = app.addSchema('one', {
+      //   defaultTenant: {
+      //     name: 'dev',
+      //   },
+      // })
+      // console.log('Repeat addSchema one ->', ok3)
     }, 1000 * 3)
   })
   .catch((e) => {

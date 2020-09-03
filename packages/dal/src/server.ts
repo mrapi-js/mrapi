@@ -33,6 +33,8 @@ export default class Server {
 
   private readonly getPrisma: GetPrismaType
 
+  private readonly routes: Set<string> = new Set()
+
   constructor(options: ServerOptions = {}, getPrisma: GetPrismaType) {
     this.options = merge(defaultOptions, options)
 
@@ -65,7 +67,20 @@ export default class Server {
     console.log(`\n🚫 Server closed. ${chalk.gray(`http://${host}:${port}`)}\n`)
   }
 
-  addRoute(name: string, { graphql, openAPI }: RouteOptions = {}): boolean {
+  addRoute(
+    name: string,
+    { graphql, openAPI, enableRepeat }: RouteOptions = {},
+  ): boolean {
+    // Fix: Repeat to add routes
+    if (this.routes.has(name)) {
+      if (enableRepeat) {
+        this.removeRoute(name)
+      } else {
+        return false
+      }
+    }
+    this.routes.add(name)
+
     const { tenantIdentity } = this.options
 
     console.log()
@@ -208,6 +223,9 @@ export default class Server {
           console.log(
             `🚫 [${name}] Termination a openAPI of route at: ${chalk.gray(
               openAPIPath,
+            )}
+🚫 [${name}] Termination a openAPI Swagger document at: ${chalk.gray(
+              `${openAPIPath}/swagger`,
             )}`,
           )
         removeNum[openAPIPrefix]++
@@ -218,6 +236,8 @@ export default class Server {
 
     if (removeNum[graphqlAPIPrefix] > 0 || removeNum[openAPIPrefix] > 0) {
       console.log()
+
+      this.routes.delete(name)
       return true
     }
 
