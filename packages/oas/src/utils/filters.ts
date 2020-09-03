@@ -1,111 +1,4 @@
-/**
- * Reference documentation
- *
- * https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/crud
-
-// findOne FindOneUserArgs
-{
-  where: UserWhereUniqueInput
-  select?: UserSelect | null
-  include?: UserInclude | null
-}
-
-// findMany FindManyUserArgs
-{
-  select?: UserSelect | null
-  include?: UserInclude | null
-  where?: UserWhereInput | null
-  orderBy?: Enumerable<UserOrderByInput> | null
-  cursor?: UserWhereUniqueInput | null
-  take?: number | null
-  skip?: number | null
-}
-
-// create UserCreateArgs
-{
-  select?: UserSelect | null
-  include?: UserInclude | null
-  data: UserCreateInput
-}
-
-// delete FindOneUserArgs
-{
-  where: UserWhereUniqueInput
-  select?: UserSelect | null
-  include?: UserInclude | null
-}
-
-// update UserUpdateArgs
-{
-  select?: UserSelect | null
-  include?: UserInclude | null
-  data: UserUpdateInput
-  where: UserWhereUniqueInput
-}
-
-// deleteMany
-{
-  where: UserWhereUniqueInput
-}
-
-// updateMany UserUpdateManyArgs
-{
-  data: UserUpdateManyMutationInput
-  where?: UserWhereInput | null
-}
-
-// count FindManyUserArgs
-{
-  where?: UserWhereInput | null
-  orderBy?: Enumerable<UserOrderByInput> | null
-  skip?: number | null
-  after?: UserWhereUniqueInput | null
-  before?: UserWhereUniqueInput | null
-  first?: number | null
-  last?: number | null
-}
-
-// upsert UserUpsertArgs
-{
-  select?: UserSelect | null
-  include?: UserInclude | null
-  where: UserWhereUniqueInput
-  create: UserCreateInput
-  update: UserUpdateInput
-}
-
-// aggregate AggregateUserArgs
-{
-  where?: UserWhereInput
-  orderBy?: Enumerable<UserOrderByInput>
-  cursor?: UserWhereUniqueInput
-  take?: number
-  skip?: number
-  distinct?: Enumerable<UserDistinctFieldEnum>
-  count?: true
-  avg?: UserAvgAggregateInputType
-  sum?: UserSumAggregateInputType
-  min?: UserMinAggregateInputType
-  max?: UserMaxAggregateInputType
-}
-
- *
- */
-const SELECTING = ['select', 'include']
-const SORTING = 'orderBy'
-const FILTERING = [
-  'equals',
-  'not',
-  'in',
-  'notIn',
-  'lt',
-  'lte',
-  'gt',
-  'gte',
-  'contains',
-  'startsWith',
-  'endsWith',
-]
+import { SELECTING, SORTING, FILTERING } from '../constants'
 
 export interface FindManyFilter {
   select?: {}
@@ -142,41 +35,49 @@ const defaultOptions: FillterOptions = {
 }
 
 class Fillter {
-  result: FindManyFilter = {}
   options: FillterOptions = {}
 
-  constructor(
-    params: {
-      [name: string]: string
-    },
-    options: FillterOptions,
-  ) {
+  constructor(options: FillterOptions) {
     this.options = { ...defaultOptions, ...options }
+  }
+
+  getParams(params: { [name: string]: string }) {
+    const { filtering, selecting, sorting, pagination } = this.options
+    const result: FindManyFilter = {}
 
     for (const [key, val] of Object.entries(params)) {
       // sorting
-      if (this.filterSorting(key, val)) {
+      if (this.filterSorting(result, key, val, sorting)) {
         continue
       }
 
       // selecting
-      if (this.filterSelecting(key, val)) {
+      if (this.filterSelecting(result, key, val, selecting)) {
         continue
       }
 
       // pagination
-      if (this.filterPagination(key, val)) {
+      if (this.filterPagination(result, key, val, pagination)) {
         continue
       }
 
-      if (this.filterOther(key, val)) {
+      // filtering
+      if (this.filterOther(result, key, val, filtering)) {
         continue
       }
     }
+
+    console.log('result -> \n', result)
+
+    return result
   }
 
-  filterSorting(key: string, val: string) {
-    const { sorting } = this.options
+  filterSorting(
+    result: FindManyFilter,
+    key: string,
+    val: string,
+    sorting: boolean,
+  ) {
     if (sorting) {
       return false
     }
@@ -189,7 +90,7 @@ class Fillter {
       for (const item of arrs) {
         const arr = item.split(':')
         if (arr.length === 2) {
-          this.result[key] = {
+          result[key] = {
             [arr[0]]: arr[1],
           }
         }
@@ -201,8 +102,12 @@ class Fillter {
     return isContinue
   }
 
-  filterSelecting(key: string, val: string) {
-    const { selecting } = this.options
+  filterSelecting(
+    result: FindManyFilter,
+    key: string,
+    val: string,
+    selecting: boolean,
+  ) {
     if (selecting) {
       return false
     }
@@ -216,7 +121,7 @@ class Fillter {
       for (const a of arr) {
         tmp[a] = true
       }
-      this.result[key] = tmp
+      result[key] = tmp
 
       isContinue = true
     }
@@ -224,8 +129,12 @@ class Fillter {
     return isContinue
   }
 
-  filterPagination(key: string, val: string) {
-    const { pagination } = this.options
+  filterPagination(
+    result: FindManyFilter,
+    key: string,
+    val: string,
+    pagination: string[][] | false,
+  ) {
     if (pagination === false) {
       return false
     }
@@ -236,7 +145,7 @@ class Fillter {
       // must >=0
       const num = parseInt(val)
       if (!isNaN(num) && num >= 0) {
-        this.result[key] = num
+        result[key] = num
       } else {
         throw new Error(`argument '${key}' must be a positive integer`)
       }
@@ -244,7 +153,7 @@ class Fillter {
     } else if (pagination[1].includes(key)) {
       // cursor=id:xxxx
       const arr = val.split(':')
-      this.result[key] = {
+      result[key] = {
         [arr[0]]: +arr[1],
       }
       isContinue = true
@@ -254,8 +163,12 @@ class Fillter {
   }
 
   // TODO: 此方法暂未验证，待开发...
-  filterOther(key: string, val: string) {
-    const { filtering } = this.options
+  filterOther(
+    result: FindManyFilter,
+    key: string,
+    val: string,
+    filtering: boolean,
+  ) {
     if (filtering) {
       return false
     }
@@ -270,8 +183,8 @@ class Fillter {
         ? [...new Set(val.split(','))]
         : val
 
-      this.result.where = this.result.where || {}
-      this.result.where[arr[0]] = {
+      result.where = result.where || {}
+      result.where[arr[0]] = {
         [filter]: vals,
       }
     } else {
@@ -282,27 +195,19 @@ class Fillter {
   }
 }
 
-export const findManyFilter = (params: Record<any, string>): FindManyFilter => {
-  const { result } = new Fillter(params, {
-    pagination: [['take', 'skip'], ['cursor']],
-    filtering: true,
-    selecting: true,
-    sorting: true,
-  })
-  console.log('findManyFilter:', result)
-  return result
-}
+export const findManyFilter = new Fillter({
+  pagination: [['take', 'skip'], ['cursor']],
+  filtering: true,
+  selecting: true,
+  sorting: true,
+})
 
-export const countFilter = (params: Record<any, string>): CountFilter => {
-  const { result } = new Fillter(params, {
-    pagination: [
-      ['first', 'last', 'skip'],
-      ['after', 'before'],
-    ],
-    filtering: true,
-    selecting: true,
-    sorting: true,
-  })
-  console.log('countFilter:', result)
-  return result
-}
+export const countFilter = new Fillter({
+  pagination: [
+    ['first', 'last', 'skip'],
+    ['after', 'before'],
+  ],
+  filtering: true,
+  selecting: true,
+  sorting: true,
+})
