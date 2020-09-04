@@ -1,4 +1,4 @@
-import { SELECTING, SORTING, FILTERING } from '../constants'
+import { SELECTING } from '../constants'
 
 export interface FindManyFilter {
   select?: {}
@@ -75,23 +75,24 @@ class Fillter {
   filterSorting(
     result: FindManyFilter,
     key: string,
-    val: string,
+    val: string[],
     sorting: boolean,
   ) {
-    if (sorting) {
+    if (!sorting) {
       return false
     }
 
     let isContinue = false
 
     // sort: =name:asc,id:desc
-    if (key === SORTING) {
-      const arrs = val.split(',')
-      for (const item of arrs) {
-        const arr = item.split(':')
-        if (arr.length === 2) {
-          result[key] = {
-            [arr[0]]: arr[1],
+    if (key === 'orderBy') {
+      if (Array.isArray(val)) {
+        for (const item of val) {
+          const arr = item.split(':')
+          if (arr.length === 2) {
+            result[key] = {
+              [arr[0]]: arr[1],
+            }
           }
         }
       }
@@ -108,7 +109,7 @@ class Fillter {
     val: string,
     selecting: boolean,
   ) {
-    if (selecting) {
+    if (!selecting) {
       return false
     }
 
@@ -153,41 +154,48 @@ class Fillter {
     } else if (pagination[1].includes(key)) {
       // cursor=id:xxxx
       const arr = val.split(':')
-      result[key] = {
-        [arr[0]]: +arr[1],
+      if (val.length === 2) {
+        result[key] = {
+          [arr[0]]: +arr[1],
+        }
       }
+
       isContinue = true
     }
 
     return isContinue
   }
 
-  // TODO: 此方法暂未验证，待开发...
   filterOther(
     result: FindManyFilter,
     key: string,
-    val: string,
+    val: string[],
     filtering: boolean,
   ) {
-    if (filtering) {
+    if (!filtering) {
       return false
     }
 
     let isContinue = false
 
-    // where: _equals, _not, _in, _notIn, _lt, _lte, _gt, _gte, _contains, _startsWith, _endsWith
-    const arr = key.split('_')
-    if (arr[0]) {
-      const filter = arr[1] && FILTERING.includes(arr[1]) ? arr[1] : 'equals'
-      const vals = ['in', 'notIn'].includes(filter)
-        ? [...new Set(val.split(','))]
-        : val
-
-      result.where = result.where || {}
-      result.where[arr[0]] = {
-        [filter]: vals,
+    if (key === 'where') {
+      if (Array.isArray(val)) {
+        // id_in:1,2,3
+        for (const item of val) {
+          const arr = item.split(':')
+          if (arr.length === 2) {
+            // TODO: 待添加白名单逻辑
+            const vals = ['in', 'not_in'].includes(arr[0])
+              ? [...new Set(arr[1].split(','))]
+              : arr[1]
+            if (!result.where) {
+              result.where = {}
+            }
+            result.where[arr[0]] = vals
+          }
+        }
       }
-    } else {
+
       isContinue = true
     }
 

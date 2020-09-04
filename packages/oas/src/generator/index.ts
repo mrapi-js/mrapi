@@ -41,20 +41,8 @@ export class OasGenerator extends Generators {
 
       model.fields.forEach((field: any) => {
         if (!this.excludeFields(model.name).includes(field.name)) {
-          /**
-           *
-integer integer int32 // signed 32 bits
-long integer int64 // signed 64 bits
-float number float
-double number double
-string string
-byte string byte // base64 encoded characters
-binary string binary // any sequence of octets
-boolean boolean
-date string date // As defined by full-date - RFC3339
-dateTime string date-time // As defined by date-time - RFC3339
-password string password // Used to hint UIs the input needs to be obscured.
-           */
+          // https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#dataTypeFormat
+          // TODO: 类型暂未补全
           if (field.outputType.kind === 'scalar') {
             let type: string
             switch (field.outputType?.type) {
