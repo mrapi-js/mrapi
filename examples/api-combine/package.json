@@ -20,15 +20,14 @@
     "@mrapi/api": "workspace:*",
     "@mrapi/dal": "workspace:*",
     "@mrapi/cli": "workspace:*",
-    "@nexus/schema": "^0.15.0",
-    "prisma-multi-tenant": "2.3.1"
+    "@nexus/schema": "^0.15.0"
   },
   "devDependencies": {
     "tslib": "^2.0.1",
     "typescript": "^4.0.2",
     "cross-env": "^7.0.2",
-    "ts-node-dev": "1.0.0-pre.58",
-    "@prisma/cli": "2.4.1"
+    "ts-node-dev": "1.0.0-pre.62",
+    "@prisma/cli": "2.6.1"
   },
   "prettier": {
     "semi": false,

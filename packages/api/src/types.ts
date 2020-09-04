@@ -75,7 +75,7 @@ export interface GraphqlConfig {
 export interface ApiOptions {
   tenantIdentity?: string
   autoGenerate?: boolean
-  dbIdentity?: string
+  schemaIdentity?: string
   openapi?: {
     dir?: string
     prefix?: string
