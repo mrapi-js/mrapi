@@ -8,7 +8,7 @@ import upsertOne from './upsertOne'
 import deleteMany from './deleteMany'
 import updateMany from './updateMany'
 import aggregate from './aggregate'
-import { QueriesAndMutations } from '../types'
+import type { QueriesAndMutations } from '@mrapi/common'
 
 const crud: { [key in QueriesAndMutations]: (schema?: boolean) => string } = {
   findOne,

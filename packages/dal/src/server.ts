@@ -9,6 +9,7 @@ import path from 'path'
 import type http from 'http'
 
 import { merge } from '@mrapi/common'
+import { dependenciesPlugins } from '@mrapi/oas'
 import { graphqlAPIPrefix, openAPIPrefix } from './constants'
 import type { ServerOptions, RouteOptions } from './types'
 
@@ -28,9 +29,11 @@ export default class Server {
 
   public server: http.Server
 
-  private readonly options: ServerOptions
+  private options: ServerOptions
 
   private readonly getPrisma: GetPrismaType
+
+  private readonly routes: Set<string> = new Set()
 
   constructor(options: ServerOptions = {}, getPrisma: GetPrismaType) {
     this.options = merge(defaultOptions, options)
@@ -43,15 +46,26 @@ export default class Server {
     this.app.use(bodyParser.json())
   }
 
-  start() {
+  start(options: ServerOptions = {}) {
+    if (options?.host) {
+      this.options.host = options.host
+    }
+    if (options?.port) {
+      this.options.port = options.port
+    }
+
     const { port, host } = this.options
+
     this.server = this.app.listen(port, host)
 
-    console.log(
-      `\n🚀 Server ready at: ${chalk.blue(`http://${host}:${port}`)}\n`,
-    )
+    console.log(`\n🚀 Server ready at: ${chalk.blue(this.getUri())}\n`)
 
     return this.app
+  }
+
+  private readonly getUri = () => {
+    const { port, host } = this.options
+    return `http://${host}:${port}`
   }
 
   stop() {
@@ -61,11 +75,23 @@ export default class Server {
 
     this.server.close()
 
-    const { port, host } = this.options
-    console.log(`\n🚫 Server closed. ${chalk.gray(`http://${host}:${port}`)}\n`)
+    console.log(`\n🚫 Server closed. ${chalk.gray(this.getUri())}\n`)
   }
 
-  addRoute(name: string, { graphql, openAPI }: RouteOptions = {}): boolean {
+  addRoute(
+    name: string,
+    { graphql, openAPI, enableRepeat }: RouteOptions = {},
+  ): boolean {
+    // Fix: Repeat to add routes
+    if (this.routes.has(name)) {
+      if (enableRepeat) {
+        this.removeRoute(name)
+      } else {
+        return false
+      }
+    }
+    this.routes.add(name)
+
     const { tenantIdentity } = this.options
 
     console.log()
@@ -97,6 +123,11 @@ export default class Server {
 
     // add openAPI
     if (typeof openAPI === 'object') {
+      const getPrisma = async (req: any) => {
+        const tenantName: string = req.headers[tenantIdentity]
+        const prisma = await this.getPrisma(name, tenantName)
+        return prisma
+      }
       const definitions =
         require(path.join(openAPI.oasDir, 'definitions')) || {}
       const openAPIBasePath = `/${openAPIPrefix}/${name}`
@@ -117,12 +148,11 @@ export default class Server {
           definitions: definitions.default || definitions,
         },
         dependencies: {
-          getPrisma: async (req: any) => {
-            const tenantName: string = req.headers[tenantIdentity]
-            const prisma = await this.getPrisma(name, tenantName)
-            return prisma
-          },
           ...(openAPI.dependencies || {}),
+          getPrisma,
+          mrapiFn: dependenciesPlugins({
+            getPrisma,
+          }),
         },
         paths: path.join(openAPI.oasDir, 'paths'),
         pathsIgnore: new RegExp('.(spec|test)$'),
@@ -182,10 +212,12 @@ export default class Server {
       }
       // openAPI name
       else if (
-        route.name === 'bound dispatch' ||
-        route.name === 'swaggerInitFn' ||
-        route.name === 'serveStatic' ||
-        route.name === 'swaggerUiSetup'
+        [
+          'bound dispatch',
+          'swaggerInitFn',
+          'serveStatic',
+          'swaggerUiSetup',
+        ].includes(route.name)
       ) {
         const str = route.regexp.source.replace(
           `^\\/${openAPIPrefix}\\/${name}\\/`,
@@ -202,6 +234,9 @@ export default class Server {
           console.log(
             `🚫 [${name}] Termination a openAPI of route at: ${chalk.gray(
               openAPIPath,
+            )}
+🚫 [${name}] Termination a openAPI Swagger document at: ${chalk.gray(
+              `${openAPIPath}/swagger`,
             )}`,
           )
         removeNum[openAPIPrefix]++
@@ -212,6 +247,8 @@ export default class Server {
 
     if (removeNum[graphqlAPIPrefix] > 0 || removeNum[openAPIPrefix] > 0) {
       console.log()
+
+      this.routes.delete(name)
       return true
     }
 

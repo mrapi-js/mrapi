@@ -191,6 +191,13 @@ export default class DAL {
   }
 
   /**
+   * Return server has schema
+   */
+  hasSchema(name: string) {
+    return this.prismaClients.has(name)
+  }
+
+  /**
    * Add schema to existing server
    *
    * Note: If "name" already exists, Please call "dal.removeSchema" first
@@ -269,6 +276,7 @@ export default class DAL {
       result = this.server.addRoute(name, {
         graphql,
         openAPI,
+        enableRepeat: this.mrapiConfig.dal?.enableRepeatRoute,
       })
     }
     return result
@@ -299,6 +307,8 @@ export default class DAL {
   /**
    * Start server
    *
+   * Note: When service is initialized, the default port configuration is logged.
+   *
    */
   async start(serverOptions?: ServerOptions) {
     if (!this.server) {
@@ -307,7 +317,7 @@ export default class DAL {
         this.getPrisma,
       )
     }
-    this.server.start()
+    this.server.start(serverOptions)
 
     for (const [name] of this.prismaClients) {
       this.addSchema(name)

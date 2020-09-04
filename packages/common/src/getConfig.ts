@@ -10,6 +10,7 @@ export interface MrapiConfig {
   tenantIdentity?: string
   dal: {
     pmtErrorThrow?: boolean
+    enableRepeatRoute?: boolean
   }
   api: {
     [type: string]: any
@@ -39,6 +40,9 @@ const defaultConfig: MrapiConfig = {
   dal: {
     // In the event of a multi-tenant exception, whether or not an error is thrown.
     pmtErrorThrow: false,
+
+    // Remove routes of the same name before adding them.
+    enableRepeatRoute: true,
   },
 
   // @mrapi/api config

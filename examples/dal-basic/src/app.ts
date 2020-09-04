@@ -35,7 +35,13 @@ app
 
     timer = setTimeout(async () => {
       // // stop test
-      // app.stop().then(() => console.log('stop'))
+      // app.stop().then(() => {
+      //   console.log('stop')
+      //   setTimeout(() => {
+      //     // restart
+      //     app.start({ port: 1360 })
+      //   }, 1000 * 3)
+      // })
       // // removeSchema test
       // const ok = app.removeSchema('one')
       // ok && console.log('removeSchema one')
@@ -54,6 +60,15 @@ app
       // // getPrisma
       // const prisma = await app.getPrisma('one', 'dev')
       // console.log(prisma)
+      // // hasSchema
+      // console.log("app.hasSchema('one') -> ", app.hasSchema('one'))
+      // // Repeat addRoute
+      // const ok3 = app.addSchema('one', {
+      //   defaultTenant: {
+      //     name: 'dev',
+      //   },
+      // })
+      // console.log('Repeat addSchema one ->', ok3)
     }, 1000 * 3)
   })
   .catch((e) => {

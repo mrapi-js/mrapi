@@ -2,7 +2,7 @@ import path from 'path'
 import prettier from 'prettier'
 import fs from 'fs-extra'
 
-const fileName = 'two'
+const fileName = 'one'
 
 // config.outputDir + fileName
 const prismaClientPath = path.join(
