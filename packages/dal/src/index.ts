@@ -194,7 +194,7 @@ export default class DAL {
    * Return server has schema
    */
   hasSchema(name: string) {
-    return this.defaultTenants.has(name)
+    return this.prismaClients.has(name)
   }
 
   /**
