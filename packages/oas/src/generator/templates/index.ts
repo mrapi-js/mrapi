@@ -18,7 +18,7 @@ export const getCrud = (
     PUT?: boolean
     DELETE?: boolean
   } = { GET: true, POST: true, PUT: true, DELETE: true },
-  ...params
+  ...params: any[]
 ) => {
   const returnArr: string[] = []
   let str: string = ''

@@ -1,13 +1,12 @@
 import chalk from 'chalk'
 import { join } from 'path'
-import fs from 'fs-extra'
 
-import { Generators } from '@mrapi/common'
+import { Generators, writeFileSync, formation } from '@mrapi/common'
 import { modelTmpFn, modelsTmpFn, getCrud } from './templates'
 
 export class OasGenerator extends Generators {
   private outputFile(content: string, outputPath: string) {
-    fs.outputFileSync(outputPath, this.formation(content))
+    writeFileSync(outputPath, formation(content))
   }
 
   /**

@@ -20,6 +20,7 @@ export interface RouteOptions {
   graphql?: graphqlOptions
   openAPI?: openAPIOptions
   enableRepeat?: boolean
+  prismaClientDir?: string
 }
 
 export interface DefaultTenant {

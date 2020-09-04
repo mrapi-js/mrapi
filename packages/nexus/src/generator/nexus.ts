@@ -1,7 +1,7 @@
-import { writeFileSync, existsSync, readFileSync } from 'fs'
+import { existsSync } from 'fs'
 import { join } from 'path'
 
-import { Generators } from '@mrapi/common'
+import { Generators, writeFileSync, readFileSync } from '@mrapi/common'
 import { getCrud } from './templates'
 
 export class GenerateNexus extends Generators {
@@ -158,9 +158,7 @@ export class GenerateNexus extends Generators {
   }
 
   private readIndex() {
-    return existsSync(this.indexPath)
-      ? readFileSync(this.indexPath, { encoding: 'utf-8' })
-      : ''
+    return existsSync(this.indexPath) ? readFileSync(this.indexPath) : ''
   }
 
   private getOptions(field: any) {

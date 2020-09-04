@@ -86,7 +86,7 @@ importers:
       prisma-multi-tenant: 2.3.1
     devDependencies:
       fs-extra: 9.0.1
-      prettier: 2.0.5
+      prettier: 2.1.1
       ts-node-dev: 1.0.0-pre.62_typescript@4.0.2
       tslib: 2.0.1
       typescript: 4.0.2
@@ -96,8 +96,8 @@ importers:
       '@nexus/schema': 0.15.0
       '@prisma/cli': ^2.4.1
       cross-env: ^7.0.2
-      fs-extra: 9.0.1
-      prettier: 2.0.5
+      fs-extra: ^9.0.1
+      prettier: ^2.1.1
       prisma-multi-tenant: 2.3.1
       ts-node-dev: 1.0.0-pre.62
       tslib: ^2.0.1
@@ -192,13 +192,14 @@ importers:
     dependencies:
       deepmerge: 4.2.2
       find-node-modules: 2.1.0
+      fs-extra: 9.0.1
       prettier: 2.1.1
-    devDependencies:
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
       deepmerge: ^4.2.2
       find-node-modules: ^2.1.0
+      fs-extra: ^9.0.1
       prettier: ^2.1.1
       tslib: ^2.0.1
       typescript: ^4.0.2
@@ -261,6 +262,7 @@ importers:
       '@mrapi/common': 'link:../common'
       '@nexus/schema': 0.15.0
       chalk: 4.1.0
+    devDependencies:
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
@@ -273,14 +275,12 @@ importers:
     dependencies:
       '@mrapi/common': 'link:../common'
       chalk: 4.1.0
-      fs-extra: 9.0.1
     devDependencies:
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
       '@mrapi/common': 'workspace:*'
       chalk: ^4.1.0
-      fs-extra: ^9.0.1
       tslib: ^2.0.1
       typescript: ^4.0.2
 lockfileVersion: 5.1
@@ -7129,7 +7129,6 @@ packages:
     resolution:
       integrity: sha512-7PtVymN48hGcO4fGjybyBSIWDsLU4H4XlvOHfq91pz9kkGlonzwTfYkaIEwiRg/dAJF9YlbsduBAgtYLi+8cFg==
   /prettier/2.1.1:
-    dev: false
     engines:
       node: '>=10.13.0'
     hasBin: true

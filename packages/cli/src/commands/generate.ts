@@ -1,13 +1,18 @@
 import chalk from 'chalk'
 import path from 'path'
 import commander from 'commander'
-import { readFileSync, outputFileSync } from 'fs-extra'
 import {
   clientManagementPath,
   getNodeModules,
 } from '@prisma-multi-tenant/shared'
 
-import { spawnShell, runShell, getUrlAndProvider } from '@mrapi/common'
+import {
+  spawnShell,
+  runShell,
+  getUrlAndProvider,
+  readFileSync,
+  writeFileSync,
+} from '@mrapi/common'
 import { Generator as NexusGenerate } from '@mrapi/nexus'
 import { Generator as OASGenerate } from '@mrapi/oas'
 import Command, { CommandParams } from './common'
@@ -84,12 +89,9 @@ class GenerateCommand extends Command {
     await runShell(`rm -rf ${outputPath} ${outputSchemaPath}`)
 
     // 2. Generate schema.prisma
-    outputFileSync(
+    writeFileSync(
       outputSchemaPath,
-      this.createSchemaPrisma(
-        outputPath,
-        readFileSync(inputSchemaPath, 'utf8'),
-      ),
+      this.createSchemaPrisma(outputPath, readFileSync(inputSchemaPath)),
     )
 
     // 3. Generate PMT
