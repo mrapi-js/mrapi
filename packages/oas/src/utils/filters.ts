@@ -1,5 +1,3 @@
-import { SELECTING } from '../constants'
-
 export interface FindManyFilter {
   select?: {}
   include?: {}
@@ -106,7 +104,7 @@ class Fillter {
   filterSelecting(
     result: FindManyFilter,
     key: string,
-    val: string,
+    val: string[],
     selecting: boolean,
   ) {
     if (!selecting) {
@@ -115,14 +113,16 @@ class Fillter {
 
     let isContinue = false
 
-    // selecting: use `include` or `select`, but not both at the same time
-    if (SELECTING.includes(key)) {
+    // TODO: 待开发中 -> Post: FindManyPostArgs ?
+    // selecting: use `include` or `select`, but not both at the same time.
+    if (['select', 'include'].includes(key)) {
       const tmp = {}
-      const arr: string[] = [...new Set(val.split(','))]
-      for (const a of arr) {
-        tmp[a] = true
+      if (Array.isArray(val)) {
+        for (const a of val) {
+          tmp[a] = true
+        }
+        result[key] = tmp
       }
-      result[key] = tmp
 
       isContinue = true
     }

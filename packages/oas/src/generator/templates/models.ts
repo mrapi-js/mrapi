@@ -15,6 +15,8 @@ export const modelsTmpFn = {
       ${parameters.skip}
       ${parameters.take}
       ${parameters.cursor}
+      ${parameters.select}
+      ${parameters.include}
     ],
     responses: {
       200: {

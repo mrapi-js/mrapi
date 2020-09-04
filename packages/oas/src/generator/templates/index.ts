@@ -60,6 +60,26 @@ const parameters = {
     required: false,
     description: 'Specifies the position for the list (the value typically specifies an id or another unique value). Example: id:xxxx',
   },`,
+  select: `{
+    name: 'select',
+    in: 'query',
+    type: 'array',
+    items: {
+      type: "string",
+    },
+    required: false,
+    description: 'Specifies which properties to include on the returned object, but not both at the same time. Example: id,name',
+  },`,
+  include: `{
+    name: 'include',
+    in: 'query',
+    type: 'array',
+    items: {
+      type: "string",
+    },
+    required: false,
+    description: 'Specifies which relations should be eagerly loaded on the returned object, but not both at the same time. Example: Post',
+  },`,
 }
 
 export const getCrud = (

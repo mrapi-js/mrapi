@@ -1,4 +1,3 @@
-export const SELECTING = ['select', 'include']
 export const FILTERING = [
   'equals',
   'not',
