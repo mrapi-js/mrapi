@@ -39,55 +39,64 @@ export const modelsTmpFn = {
     res.status(204).json(data);
   };
   POST.apiDoc = {
-    description: 'Create new ${data.plural}.',
-    operationId: 'create${data.name}s',
+    description: 'Create a new ${data.plural}.',
+    operationId: 'create${data.name}',
     tags: ['${data.plural}'],
     parameters: [
       {
         name: 'data',
         in: 'body',
         schema: {
-          type: 'array',
-          items: {
-            $ref: '#/definitions/${data.name}'
-          }
-        }
-      }
+          $ref: '#/definitions/${data.name}CreateInput'
+        },
+        required: true,
+      },
+      ${parameters.select}
+      ${parameters.include}
     ],
     responses: {
       204: {
-        description: '${data.modelName}s created successfully.',
+        description: '${data.modelName} created successfully.',
         schema: {
-          type: 'array',
-          items: {
-            $ref: '#/definitions/${data.name}'
-          }
+          $ref: '#/definitions/${data.name}'
         }
       },
       #{TMP_DEFAULT_RESPONSE}
     }
   };`,
 
-  DELETE: (
-    parameters: any,
-    data: any,
-  ) => `async function DELETE (req, res, next) {
-    const data = await mrapiFn.deleteMany(req, res, next, {
-      modelName: "${data.modelName}"
-    });
-    res.status(204).json(data);
-  };
-  DELETE.apiDoc = {
-    description: 'Delete ${data.plural}.',
-    operationId: 'delete${data.name}s',
-    tags: ['${data.plural}'],
-    parameters: [
-    ],
-    responses: {
-      204: {
-        description: '${data.name}s deleted successfully.'
-      },
-      #{TMP_DEFAULT_RESPONSE}
-    }
-  };`,
+  // DELETE: (
+  //   _parameters: any,
+  //   data: any,
+  // ) => `async function DELETE (req, res, next) {
+  //   const data = await mrapiFn.deleteMany(req, res, next, {
+  //     modelName: "${data.modelName}"
+  //   });
+  //   res.status(204).json(data);
+  // };
+  // DELETE.apiDoc = {
+  //   description: 'Delete ${data.plural}.',
+  //   operationId: 'delete${data.name}s',
+  //   tags: ['${data.plural}'],
+  //   parameters: [
+  //     {
+  //       name: 'data',
+  //       in: 'body',
+  //       schema: {
+  //         type: 'array',
+  //         items: {
+  //           type: "string",
+  //           default: "id"
+  //         },
+  //       },
+  //       required: true,
+  //     },
+  //   ],
+  //   responses: {
+  //     204: {
+  //       description: '${data.name}s deleted successfully.'
+  //     },
+  //     #{TMP_DEFAULT_RESPONSE}
+  //   }
+  // };`,
 }

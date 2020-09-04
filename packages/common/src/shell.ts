@@ -77,7 +77,7 @@ export const formation = (
  * Do not make changes to this file directly
  */`,
 ) => {
-  return format(`${prefixStr}${text}`, {
+  return format(`${prefixStr}\n${text}`, {
     singleQuote: true,
     semi: false,
     trailingComma: 'all',

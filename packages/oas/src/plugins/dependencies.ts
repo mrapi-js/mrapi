@@ -1,4 +1,4 @@
-import { findManyFilter } from '../utils/filters'
+import { findManyFilter, createFilter, findOne } from '../utils/filters'
 
 export const dependenciesPlugins = ({ getPrisma }: any) => {
   if (!getPrisma) {
@@ -6,7 +6,7 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
   }
 
   return {
-    // TODO: get -> /api/users/{id}
+    // get -> /api/users/{id}
     findOne: async (
       req: any,
       _res: any,
@@ -15,12 +15,11 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
     ) => {
       try {
         const prisma = await getPrisma(req)
-        const data = await prisma[modelName].findOne({
-          where: req.params,
-          // ...parseFilter(req.query, {
-          //   selecting: true,
-          // }),
+        console.log(req.params.id)
+        const params = findOne.getParams({
+          ...req.query,
         })
+        const data = await prisma[modelName].findOne(params)
         return {
           code: 0,
           data,
@@ -64,7 +63,7 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       }
     },
 
-    // TODO: post -> /api/users
+    // post -> /api/users
     create: async (
       req: any,
       _res: any,
@@ -73,12 +72,11 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
     ) => {
       try {
         const prisma = await getPrisma(req)
-        const data = await prisma[modelName].create({
+        const params = {
           data: req.body,
-          // ...parseFilter(req.query, {
-          //   selecting: true,
-          // }),
-        })
+          ...createFilter.getParams(req.query),
+        }
+        const data = await prisma[modelName].create(params)
 
         return {
           code: 0,
@@ -92,7 +90,7 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       }
     },
 
-    // TODO: delete -> /api/users
+    // delete -> /api/users
     deleteMany: async (
       req: any,
       _res: any,
@@ -101,11 +99,10 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
     ) => {
       try {
         const prisma = await getPrisma(req)
+        const where = {}
+        // req.body.forEach((item) => {})
         const data = await prisma[modelName].deleteMany({
-          where: req.params,
-          // ...parseFilter(req.query, {
-          //   selecting: true,
-          // }),
+          where,
         })
         return {
           code: 0,

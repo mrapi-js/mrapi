@@ -1,5 +1,5 @@
 export const modelTmpFn = {
-  GET: (data: any) => `async function GET (req, res, next) {
+  GET: (parameters: any, data: any) => `async function GET (req, res, next) {
     const data = await mrapiFn.findOne(req, res, next, {
       modelName: '${data.modelName}'
     });
@@ -16,7 +16,10 @@ export const modelTmpFn = {
         type: 'string',
         required: true,
         description: 'id',
-      },
+      }, 
+      ${parameters.where} // WhereUniqueInput
+      ${parameters.select}
+      ${parameters.include}
     ],
     responses: {
       200: {
@@ -29,7 +32,7 @@ export const modelTmpFn = {
     },
   };`,
 
-  PUT: (data: any) => `async function PUT(req, res, next) {
+  PUT: (parameters: any, data: any) => `async function PUT(req, res, next) {
     const data = await mrapiFn.update(req, res, next, {
       modelName: '${data.modelName}'
     });
@@ -66,7 +69,10 @@ export const modelTmpFn = {
     },
   };`,
 
-  DELETE: (data: any) => `async function DELETE(req, res, next) {
+  DELETE: (
+    parameters: any,
+    data: any,
+  ) => `async function DELETE(req, res, next) {
     const data = await mrapiFn.delete(req, res, next, {
       modelName: '${data.modelName}'
     });

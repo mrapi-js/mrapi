@@ -4,6 +4,40 @@ import { join } from 'path'
 import { Generators, writeFileSync, formation } from '@mrapi/common'
 import { modelTmpFn, modelsTmpFn, getCrud } from './templates'
 
+interface IObjType {
+  type: string
+  properties: {
+    [name: string]: {
+      description: string
+      type?: string
+      schema?: any
+    }
+  }
+  required: string[]
+}
+
+// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#dataTypeFormat
+// TODO: 类型暂未补全
+function getFieldType(type: string) {
+  switch (type) {
+    case 'Int':
+      return 'integer'
+    case 'String':
+      return 'string'
+    case 'Boolean':
+      return 'boolean'
+  }
+  return ''
+}
+
+function findInputType(inputTypes: any[], modelName: string) {
+  for (const inputType of inputTypes) {
+    if (inputType.name === `${modelName}CreateInput`) {
+      return inputType
+    }
+  }
+}
+
 export class OasGenerator extends Generators {
   private outputFile(content: string, outputPath: string) {
     writeFileSync(outputPath, formation(content))
@@ -13,7 +47,11 @@ export class OasGenerator extends Generators {
    * generate definitions.js
    */
   private async genDefinitions() {
-    const { mappings } = await this.dmmf()
+    const {
+      mappings,
+      schema: { inputTypes },
+    } = await this.dmmf()
+    // Get the filtered models
     const models = await this.models()
 
     const modelDefinitions = {
@@ -23,40 +61,42 @@ export class OasGenerator extends Generators {
     }
 
     models.forEach((model: any) => {
-      const obj: {
-        type: string
-        properties: {
-          [name: string]: {
-            description: string
-            type?: string
-            schema?: any
-          }
-        }
-        required: string[]
-      } = {
+      const obj: IObjType = {
+        type: 'object',
+        properties: {},
+        required: [],
+      }
+      const inputObj: IObjType = {
         type: 'object',
         properties: {},
         required: [],
       }
 
+      // inputTypes
+      const inputType = findInputType(inputTypes, model.name) || {}
+      inputType?.fields.forEach((field: any) => {
+        const fieldInputType = Array.isArray(field.inputType)
+          ? field.inputType[0]
+          : field.inputType
+        if (fieldInputType.kind === 'scalar') {
+          const type = getFieldType(fieldInputType?.type)
+          if (type) {
+            inputObj.properties[field.name] = {
+              description: field.name,
+              type,
+            }
+            fieldInputType?.isRequired && inputObj.required.push(field.name)
+          }
+        }
+        // else if (fieldInputType.kind === 'object') {
+        // }
+      })
+
+      // outputTypes
       model.fields.forEach((field: any) => {
         if (!this.excludeFields(model.name).includes(field.name)) {
-          // https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#dataTypeFormat
-          // TODO: 类型暂未补全
           if (field.outputType.kind === 'scalar') {
-            let type: string
-            switch (field.outputType?.type) {
-              case 'Int':
-                type = 'integer'
-                break
-              case 'String':
-                type = 'string'
-                break
-              case 'Boolean':
-                type = 'boolean'
-                break
-            }
-
+            const type = getFieldType(field.outputType?.type)
             if (type) {
               obj.properties[field.name] = {
                 description: field.name,
@@ -78,6 +118,7 @@ export class OasGenerator extends Generators {
       })
 
       modelDefinitions[model.name] = obj
+      modelDefinitions[`${model.name}CreateInput`] = inputObj
 
       const mapping = mappings.find((m: any) => m.model === model.name)
       this.genPaths(model, mapping)

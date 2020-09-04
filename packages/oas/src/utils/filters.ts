@@ -39,7 +39,7 @@ class Fillter {
     this.options = { ...defaultOptions, ...options }
   }
 
-  getParams(params: { [name: string]: string }) {
+  getParams(params: { [name: string]: any } = {}) {
     const { filtering, selecting, sorting, pagination } = this.options
     const result: FindManyFilter = {}
 
@@ -65,7 +65,7 @@ class Fillter {
       }
     }
 
-    console.log('result -> \n', result)
+    console.log('result -> \n', `${JSON.stringify(result)}`)
 
     return result
   }
@@ -203,6 +203,11 @@ class Fillter {
   }
 }
 
+export const findOne = new Fillter({
+  filtering: true,
+  selecting: true,
+})
+
 export const findManyFilter = new Fillter({
   pagination: [['take', 'skip'], ['cursor']],
   filtering: true,
@@ -218,4 +223,8 @@ export const countFilter = new Fillter({
   filtering: true,
   selecting: true,
   sorting: true,
+})
+
+export const createFilter = new Fillter({
+  selecting: true,
 })
