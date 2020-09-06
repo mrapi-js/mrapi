@@ -16,8 +16,7 @@ interface IObjType {
   required: string[]
 }
 
-// https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#dataTypeFormat
-// TODO: 类型暂未补全
+// Reference URL: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#dataTypeFormat
 function getFieldType(type: string) {
   switch (type) {
     case 'Int':
@@ -26,8 +25,12 @@ function getFieldType(type: string) {
       return 'string'
     case 'Boolean':
       return 'boolean'
+    case 'DateTime':
+      return 'string'
+    case 'Float':
+      return 'number'
   }
-  return ''
+  throw new Error('Unknown field type.')
 }
 
 function findInputType(inputTypes: any[], modelName: string) {
@@ -109,13 +112,11 @@ export class OasGenerator extends Generators {
           : field.inputType
         if (fieldInputType.kind === 'scalar') {
           const type = getFieldType(fieldInputType?.type)
-          if (type) {
-            inputObj.properties[field.name] = {
-              description: field.name,
-              type,
-            }
-            fieldInputType?.isRequired && inputObj.required.push(field.name)
+          inputObj.properties[field.name] = {
+            description: field.name,
+            type,
           }
+          fieldInputType?.isRequired && inputObj.required.push(field.name)
         }
         // else if (fieldInputType.kind === 'object') {
         // }
@@ -126,13 +127,11 @@ export class OasGenerator extends Generators {
         if (!this.excludeFields(model.name).includes(field.name)) {
           if (field.outputType.kind === 'scalar') {
             const type = getFieldType(field.outputType?.type)
-            if (type) {
-              obj.properties[field.name] = {
-                description: field.name,
-                type,
-              }
-              field.outputType?.isRequired && obj.required.push(field.name)
+            obj.properties[field.name] = {
+              description: field.name,
+              type,
             }
+            field.outputType?.isRequired && obj.required.push(field.name)
           }
           // else if (field.outputType.kind === 'object') {
           //   obj.properties[field.name] = {
