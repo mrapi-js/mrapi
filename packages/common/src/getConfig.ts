@@ -81,7 +81,7 @@ const defaultConfig: MrapiConfig = {
     // auto run scripts mrapi generate
     autoGenerate: true,
     // mrapi db choose header key
-    dbIdentity: 'mrapi-db',
+    schemaIdentity: 'mrapi-schema',
   },
 }
 

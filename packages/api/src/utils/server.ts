@@ -48,7 +48,7 @@ export default class Server {
         // 访问的租户
         const tenant = request.headers[options.tenantIdentity]
         // 访问的DB
-        const name = request.headers[options.dbIdentity]
+        const name = request.headers[options.schemaIdentity]
         logger.debug(`[Route] DB: ${JSON.stringify(name)}, Tenant: ${JSON.stringify(tenant)}`)
         if (!dal) return route.handler(ret)
         return dal.getPrisma(name, tenant)
