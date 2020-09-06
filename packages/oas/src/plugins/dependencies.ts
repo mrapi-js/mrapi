@@ -1,4 +1,4 @@
-import { findManyFilter, createFilter, findOne } from '../utils/filters'
+import { findManyFilter } from '../utils/filters'
 
 export const dependenciesPlugins = ({ getPrisma }: any) => {
   if (!getPrisma) {
@@ -6,32 +6,6 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
   }
 
   return {
-    // get -> /api/users/{id}
-    findOne: async (
-      req: any,
-      _res: any,
-      _next: any,
-      { modelName }: { modelName: string },
-    ) => {
-      try {
-        const prisma = await getPrisma(req)
-        console.log(req.params.id)
-        const params = findOne.getParams({
-          ...req.query,
-        })
-        const data = await prisma[modelName].findOne(params)
-        return {
-          code: 0,
-          data,
-        }
-      } catch (err) {
-        return {
-          code: -1,
-          message: err.message,
-        }
-      }
-    },
-
     // get -> /api/users
     findMany: async (
       req: any,
@@ -74,7 +48,7 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
         const prisma = await getPrisma(req)
         const params = {
           data: req.body,
-          ...createFilter.getParams(req.query),
+          // ...createFilter.getParams(req.query),
         }
         const data = await prisma[modelName].create(params)
 
@@ -90,34 +64,34 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       }
     },
 
-    // delete -> /api/users
-    deleteMany: async (
-      req: any,
-      _res: any,
-      _next: any,
-      { modelName }: { modelName: string },
-    ) => {
-      try {
-        const prisma = await getPrisma(req)
-        const where = {}
-        // req.body.forEach((item) => {})
-        const data = await prisma[modelName].deleteMany({
-          where,
-        })
-        return {
-          code: 0,
-          data,
-        }
-      } catch (err) {
-        return {
-          code: -1,
-          message: err.message,
-        }
-      }
-    },
+    // // TODO: delete -> /api/users
+    // deleteMany: async (
+    //   req: any,
+    //   _res: any,
+    //   _next: any,
+    //   { modelName }: { modelName: string },
+    // ) => {
+    //   try {
+    //     const prisma = await getPrisma(req)
+    //     const where = {}
+    //     // req.body.forEach((item) => {})
+    //     const data = await prisma[modelName].deleteMany({
+    //       where,
+    //     })
+    //     return {
+    //       code: 0,
+    //       data,
+    //     }
+    //   } catch (err) {
+    //     return {
+    //       code: -1,
+    //       message: err.message,
+    //     }
+    //   }
+    // },
 
-    // TODO: delete -> /api/users/{id}
-    delete: async (
+    // get -> /api/users/{id}
+    findOne: async (
       req: any,
       _res: any,
       _next: any,
@@ -125,12 +99,10 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
     ) => {
       try {
         const prisma = await getPrisma(req)
-        const data = await prisma[modelName].delete({
+        const params = {
           where: req.params,
-          // ...parseFilter(req.query, {
-          //   selecting: true,
-          // }),
-        })
+        }
+        const data = await prisma[modelName].findOne(params)
         return {
           code: 0,
           data,
@@ -143,7 +115,7 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       }
     },
 
-    // TODO: put -> /api/users/{id}
+    // put -> /api/users/{id}
     update: async (
       req: any,
       _res: any,
@@ -152,13 +124,36 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
     ) => {
       try {
         const prisma = await getPrisma(req)
-        const data = await prisma[modelName].update({
+        const params = {
           where: req.params,
           data: req.body,
-          // ...parseFilter(req.query, {
-          //   selecting: true,
-          // }),
-        })
+        }
+        const data = await prisma[modelName].update(params)
+        return {
+          code: 0,
+          data,
+        }
+      } catch (err) {
+        return {
+          code: -1,
+          message: err.message,
+        }
+      }
+    },
+
+    // delete -> /api/users/{id}
+    delete: async (
+      req: any,
+      _res: any,
+      _next: any,
+      { modelName }: { modelName: string },
+    ) => {
+      try {
+        const prisma = await getPrisma(req)
+        const params = {
+          where: req.params,
+        }
+        const data = await prisma[modelName].delete(params)
         return {
           code: 0,
           data,

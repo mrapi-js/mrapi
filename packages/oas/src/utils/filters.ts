@@ -203,10 +203,10 @@ class Fillter {
   }
 }
 
-export const findOne = new Fillter({
-  filtering: true,
-  selecting: true,
-})
+// export const findOne = new Fillter({
+//   filtering: true,
+//   selecting: true,
+// })
 
 export const findManyFilter = new Fillter({
   pagination: [['take', 'skip'], ['cursor']],
@@ -215,16 +215,16 @@ export const findManyFilter = new Fillter({
   sorting: true,
 })
 
-export const countFilter = new Fillter({
-  pagination: [
-    ['first', 'last', 'skip'],
-    ['after', 'before'],
-  ],
-  filtering: true,
-  selecting: true,
-  sorting: true,
-})
+// export const countFilter = new Fillter({
+//   pagination: [
+//     ['first', 'last', 'skip'],
+//     ['after', 'before'],
+//   ],
+//   filtering: true,
+//   selecting: true,
+//   sorting: true,
+// })
 
-export const createFilter = new Fillter({
-  selecting: true,
-})
+// export const createFilter = new Fillter({
+//   selecting: true,
+// })

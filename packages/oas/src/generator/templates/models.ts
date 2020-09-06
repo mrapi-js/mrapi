@@ -3,7 +3,11 @@ export const modelsTmpFn = {
     const data = await mrapiFn.findMany(req, res, next, {
       modelName: '${data.modelName}'
     });
-    res.status(200).json(data);
+    if (data.code === 0) {
+      res.status(200).json(data);
+    } else {
+      res.status(500).json(data);
+    }
   };
   GET.apiDoc = {
     description: 'Query the ${data.plural} by parameter.',
@@ -36,7 +40,11 @@ export const modelsTmpFn = {
     const data = await mrapiFn.create(req, res, next, {
       modelName: '${data.modelName}'
     });
-    res.status(204).json(data);
+    if (data.code === 0) {
+      res.status(204).json(data);
+    } else {
+      res.status(500).json(data);
+    }
   };
   POST.apiDoc = {
     description: 'Create a new ${data.plural}.',
@@ -51,8 +59,6 @@ export const modelsTmpFn = {
         },
         required: true,
       },
-      ${parameters.select}
-      ${parameters.include}
     ],
     responses: {
       204: {
@@ -72,7 +78,11 @@ export const modelsTmpFn = {
   //   const data = await mrapiFn.deleteMany(req, res, next, {
   //     modelName: "${data.modelName}"
   //   });
-  //   res.status(204).json(data);
+  //   if (data.code === 0) {
+  //     res.status(200).json(data);
+  //   } else {
+  //     res.status(500).json(data);
+  //   }
   // };
   // DELETE.apiDoc = {
   //   description: 'Delete ${data.plural}.',
@@ -93,7 +103,7 @@ export const modelsTmpFn = {
   //     },
   //   ],
   //   responses: {
-  //     204: {
+  //     200: {
   //       description: '${data.name}s deleted successfully.'
   //     },
   //     #{TMP_DEFAULT_RESPONSE}

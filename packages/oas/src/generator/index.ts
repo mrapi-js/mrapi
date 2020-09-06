@@ -38,6 +38,22 @@ function findInputType(inputTypes: any[], modelName: string) {
   }
 }
 
+function dealModels(models: any[]) {
+  const obj = {}
+  Array.isArray(models) &&
+    models.forEach((model) => {
+      obj[model.name] = model
+
+      for (const field of model.fields) {
+        if (field.isId) {
+          obj[model.name].primaryField = field
+          break
+        }
+      }
+    })
+  return obj
+}
+
 export class OasGenerator extends Generators {
   private outputFile(content: string, outputPath: string) {
     writeFileSync(outputPath, formation(content))
@@ -48,15 +64,28 @@ export class OasGenerator extends Generators {
    */
   private async genDefinitions() {
     const {
+      datamodel,
       mappings,
       schema: { inputTypes },
     } = await this.dmmf()
     // Get the filtered models
     const models = await this.models()
 
+    const allModelsObj = dealModels(datamodel.models)
+
     const modelDefinitions = {
       Error: {
-        additionalProperties: true,
+        type: 'object',
+        properties: {
+          code: {
+            description: 'Error code.',
+            type: 'integer',
+          },
+          message: {
+            description: 'Error message.',
+            type: 'string',
+          },
+        },
       },
     }
 
@@ -121,7 +150,7 @@ export class OasGenerator extends Generators {
       modelDefinitions[`${model.name}CreateInput`] = inputObj
 
       const mapping = mappings.find((m: any) => m.model === model.name)
-      this.genPaths(model, mapping)
+      this.genPaths(model, mapping, allModelsObj[model.name])
     })
 
     this.outputFile(
@@ -133,7 +162,7 @@ export class OasGenerator extends Generators {
   /**
    * generate oas paths files
    */
-  private genPaths(model: any, mapping: any) {
+  private genPaths(model: any, mapping: any, modelObj: any) {
     const modelName = `${model.name.charAt(0).toLowerCase()}${model.name.slice(
       1,
     )}`
@@ -149,13 +178,24 @@ export class OasGenerator extends Generators {
     )
 
     // paths -> users/{id}
+    const pathId = {
+      name: modelObj.primaryField.name,
+      type: getFieldType(modelObj.primaryField.type),
+    }
     this.outputFile(
       getCrud(
         modelTmpFn,
         { GET: true, PUT: true, DELETE: true },
         { modelName, plural: mapping.plural, name: model.name },
+        `{
+  name: '${pathId.name}',
+  in: 'path',
+  type: '${pathId.type}',
+  required: true,
+  description: '${pathId.name}',
+},`,
       ),
-      join(this.options.output, `paths/${mapping.plural}/{id}.js`),
+      join(this.options.output, `paths/${mapping.plural}/{${pathId.name}}.js`),
     )
   }
 

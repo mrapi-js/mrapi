@@ -55,6 +55,7 @@ export class Generators {
 
   protected async models() {
     const { schema }: { schema: any } = await this.dmmf()
+    // Plan to replace "outputTypes" to "datamodel.models"
     return schema.outputTypes.filter(
       (model: any) =>
         !['Query', 'Mutation'].includes(model.name) &&
