@@ -65,8 +65,6 @@ class Fillter {
       }
     }
 
-    console.log('result -> \n', `${JSON.stringify(result)}`)
-
     return result
   }
 

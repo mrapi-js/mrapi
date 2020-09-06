@@ -11,6 +11,7 @@ interface IObjType {
       description: string
       type?: string
       schema?: any
+      $ref?: any
     }
   }
   required: string[]
@@ -119,6 +120,12 @@ export class OasGenerator extends Generators {
           fieldInputType?.isRequired && inputObj.required.push(field.name)
         }
         // else if (fieldInputType.kind === 'object') {
+        //   inputObj.properties[field.name] = {
+        //     type: 'object',
+        //     description: field.name,
+        //     $ref: `#/definitions/${field.name}`,
+        //   }
+        //   fieldInputType?.isRequired && inputObj.required.push(field.name)
         // }
       })
 
@@ -135,10 +142,9 @@ export class OasGenerator extends Generators {
           }
           // else if (field.outputType.kind === 'object') {
           //   obj.properties[field.name] = {
+          //     type: 'object',
           //     description: field.name,
-          //     schema: {
-          //       $ref: `#/definitions/${field.name}`,
-          //     },
+          //     $ref: `#/definitions/${field.name}`,
           //   }
           //   field.outputType?.isRequired && obj.required.push(field.name)
           // }
