@@ -26,4 +26,4 @@
 - `api.server.options`: Object.默认值`{}`透传给fastify的options
 - `api.schemaNames`: Array.默认值`[]`type为`combined`时需要加载的schema名称
 - `api.autoGenerate`: Boolean.默认值`true`,是否根据根据`api.schemaNames`自定执行`npx mrapi generate`脚本(生产环境建议开启，开发环境在db变更后开启)
-- `api.dbIdentity`: String.默认值`mrapi-db`,dal结合使用下，自定义openapi中db选择的header key
+- `api.schemaIdentity`: String.默认值`mrapi-db`,dal结合使用下，自定义openapi中db选择的header key
