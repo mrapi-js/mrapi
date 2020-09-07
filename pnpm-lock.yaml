@@ -42,7 +42,7 @@ importers:
       '@nexus/schema': 0.15.0
     devDependencies:
       cross-env: 7.0.2
-      ts-node-dev: 1.0.0-pre.62_typescript@4.0.2
+      ts-node-dev: 1.0.0-pre.62
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
@@ -58,11 +58,10 @@ importers:
       '@mrapi/cli': 'link:../../packages/cli'
       '@mrapi/dal': 'link:../../packages/dal'
       '@nexus/schema': 0.15.0
-      prisma-multi-tenant: 2.3.1
     devDependencies:
       '@prisma/cli': 2.6.1
       cross-env: 7.0.2
-      ts-node-dev: 1.0.0-pre.62_typescript@4.0.2
+      ts-node-dev: 1.0.0-pre.62
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
@@ -72,7 +71,6 @@ importers:
       '@nexus/schema': ^0.15.0
       '@prisma/cli': 2.6.1
       cross-env: ^7.0.2
-      prisma-multi-tenant: 2.3.1
       ts-node-dev: 1.0.0-pre.62
       tslib: ^2.0.1
       typescript: ^4.0.2
@@ -86,7 +84,7 @@ importers:
       prisma-multi-tenant: 2.3.1
     devDependencies:
       fs-extra: 9.0.1
-      prettier: 2.0.5
+      prettier: 2.1.1
       ts-node-dev: 1.0.0-pre.62_typescript@4.0.2
       tslib: 2.0.1
       typescript: 4.0.2
@@ -96,20 +94,20 @@ importers:
       '@nexus/schema': 0.15.0
       '@prisma/cli': ^2.4.1
       cross-env: ^7.0.2
-      fs-extra: 9.0.1
-      prettier: 2.0.5
+      fs-extra: ^9.0.1
+      prettier: ^2.1.1
       prisma-multi-tenant: 2.3.1
       ts-node-dev: 1.0.0-pre.62
       tslib: ^2.0.1
       typescript: ^4.0.2
   packages/api:
     dependencies:
-      '@graphql-mesh/config': 0.7.0_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/graphql': 0.5.0_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/runtime': 0.5.0_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/transform-prefix': 0.5.0_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/transform-snapshot': 0.5.0_graphql@15.3.0+typescript@4.0.2
-      '@graphql-tools/stitch': 6.2.0_graphql@15.3.0
+      '@graphql-mesh/config': 0.7.0_graphql@15.3.0
+      '@graphql-mesh/graphql': 0.5.0_graphql@15.3.0
+      '@graphql-mesh/runtime': 0.5.0_graphql@15.3.0
+      '@graphql-mesh/transform-prefix': 0.5.0_graphql@15.3.0
+      '@graphql-mesh/transform-snapshot': 0.5.0_graphql@15.3.0
+      '@graphql-tools/stitch': 6.2.1_graphql@15.3.0
       '@mrapi/common': 'link:../common'
       '@nexus/schema': 0.15.0_graphql@15.3.0
       fastify: 3.3.0
@@ -121,14 +119,14 @@ importers:
       nexus: 0.26.1
       pino: 6.5.1
       pino-multi-stream: 5.1.1
-      pino-pretty: 4.2.0
+      pino-pretty: 4.2.1
     devDependencies:
       '@types/lodash': 4.14.161
       '@types/node': 14.6.4
       '@types/pino': 6.3.0
       '@types/pino-multi-stream': 5.0.0
       cross-env: 7.0.2
-      ts-node-dev: 1.0.0-pre.62_typescript@4.0.2
+      ts-node-dev: 1.0.0-pre.62
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
@@ -192,13 +190,14 @@ importers:
     dependencies:
       deepmerge: 4.2.2
       find-node-modules: 2.1.0
+      fs-extra: 9.0.1
       prettier: 2.1.1
-    devDependencies:
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
       deepmerge: ^4.2.2
       find-node-modules: ^2.1.0
+      fs-extra: ^9.0.1
       prettier: ^2.1.1
       tslib: ^2.0.1
       typescript: ^4.0.2
@@ -270,6 +269,18 @@ importers:
       chalk: ^4.1.0
       tslib: ^2.0.1
       typescript: ^4.0.2
+  packages/oas:
+    dependencies:
+      '@mrapi/common': 'link:../common'
+      chalk: 4.1.0
+    devDependencies:
+      tslib: 2.0.1
+      typescript: 4.0.2
+    specifiers:
+      '@mrapi/common': 'workspace:*'
+      chalk: ^4.1.0
+      tslib: ^2.0.1
+      typescript: ^4.0.2
 lockfileVersion: 5.1
 packages:
   /@apollo/protobufjs/1.0.5:
@@ -313,6 +324,14 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-UQ9BequOTIavs0pTHLMwQwKQF8tTV1oezY/H2O9chA+JNPFZSua55xpU5dPSjAU9/jLJ1VwU+HJuTVN8u7S6Fg==
+  /@ardatan/aggregate-error/0.0.6:
+    dependencies:
+      tslib: 2.0.1
+    dev: false
+    engines:
+      node: '>=8'
+    resolution:
+      integrity: sha512-vyrkEHG1jrukmzTPtyWB4NLPauUw5bQeg4uhn8f+1SSynmrOcyvlb1GKQjjgoBzElLdfXCRYX8UnBlhklOHYRQ==
   /@ardatan/string-interpolation/1.2.8:
     dev: false
     resolution:
@@ -600,24 +619,23 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-H2R13IvZdM6gei2vOGSzF7HdMyw=
-  /@graphql-mesh/cache-inmemory-lru/0.4.1_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/cache-inmemory-lru/0.4.1_graphql@15.3.0:
     dependencies:
-      '@graphql-mesh/types': 0.8.0_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/types': 0.8.0_graphql@15.3.0
       '@types/lru-cache': 5.1.0
       graphql: 15.3.0
       lru-cache: 6.0.0
     dev: false
     peerDependencies:
       graphql: '*'
-      typescript: '*'
     resolution:
       integrity: sha512-v6WUCWOFanZtPSHaaZ4T+WMpIvThm4Hcw/irblO6iCHIaETOyVt8xbBDukY1/ZMhSq64eCUoZJPpALpdU0m7ew==
-  /@graphql-mesh/config/0.7.0_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/config/0.7.0_graphql@15.3.0:
     dependencies:
-      '@graphql-mesh/cache-inmemory-lru': 0.4.1_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/merger-stitching': 0.5.0_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/runtime': 0.5.0_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/types': 0.8.0_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/cache-inmemory-lru': 0.4.1_graphql@15.3.0
+      '@graphql-mesh/merger-stitching': 0.5.0_graphql@15.3.0
+      '@graphql-mesh/runtime': 0.5.0_graphql@15.3.0
+      '@graphql-mesh/types': 0.8.0_graphql@15.3.0
       '@graphql-mesh/utils': 0.5.0_graphql@15.3.0
       '@graphql-tools/graphql-file-loader': 6.2.0_graphql@15.3.0
       '@graphql-tools/load': 6.2.0_graphql@15.3.0
@@ -631,12 +649,11 @@ packages:
     dev: false
     peerDependencies:
       graphql: '*'
-      typescript: '*'
     resolution:
       integrity: sha512-P/0lnW/F1NECkTyYuaPDY3wsC2kwq3cdBh7MKhtweEoRNzjS/IIsE75SdZEmGZ9yTOy0bHN67kVj0Fv70FOUcw==
-  /@graphql-mesh/graphql/0.5.0_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/graphql/0.5.0_graphql@15.3.0:
     dependencies:
-      '@graphql-mesh/types': 0.8.0_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/types': 0.8.0_graphql@15.3.0
       '@graphql-mesh/utils': 0.5.0_graphql@15.3.0
       '@graphql-tools/url-loader': 6.2.0_graphql@15.3.0
       '@graphql-tools/wrap': 6.2.0_graphql@15.3.0
@@ -645,12 +662,11 @@ packages:
     dev: false
     peerDependencies:
       graphql: '*'
-      typescript: '*'
     resolution:
       integrity: sha512-cOOoK0FseLJRdikUV8mV167MGY4Rz0/10tJlJt/BnBT9zMW0U0rq8Q4lSjjcdq6kKytssJGcq9+agkh8MnahmQ==
-  /@graphql-mesh/merger-stitching/0.5.0_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/merger-stitching/0.5.0_graphql@15.3.0:
     dependencies:
-      '@graphql-mesh/types': 0.8.0_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/types': 0.8.0_graphql@15.3.0
       '@graphql-tools/stitch': 6.2.0_graphql@15.3.0
       '@graphql-tools/wrap': 6.2.0_graphql@15.3.0
       fetchache: 0.0.3
@@ -658,40 +674,36 @@ packages:
     dev: false
     peerDependencies:
       graphql: '*'
-      typescript: '*'
     resolution:
       integrity: sha512-AawTY4YM4mKvj7FFhebvu8i14K5kso3BIDxTpY4DQegoPrSLKffs24On9LHF+vgMdJxRBMiYXmF8JZgWRDnfVg==
-  /@graphql-mesh/runtime/0.5.0_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/runtime/0.5.0_graphql@15.3.0:
     dependencies:
-      '@graphql-mesh/types': 0.8.0_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/types': 0.8.0_graphql@15.3.0
       '@graphql-mesh/utils': 0.5.0_graphql@15.3.0
       '@graphql-tools/delegate': 6.2.0_graphql@15.3.0
       '@graphql-tools/resolvers-composition': 6.2.0_graphql@15.3.0
       '@graphql-tools/schema': 6.2.0_graphql@15.3.0
       '@graphql-tools/utils': 6.2.0_graphql@15.3.0
       graphql: 15.3.0
-      typescript: 4.0.2
     dev: false
     peerDependencies:
       graphql: '*'
-      typescript: '*'
     resolution:
       integrity: sha512-u2nwEXP1lfraSJ/6NjeIOgclapOyw3gSsFx64HRAfCYONDNyWMZw5sLtFVm1JkxbPqLNrJe9cy/xsc3okBF2kw==
-  /@graphql-mesh/transform-prefix/0.5.0_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/transform-prefix/0.5.0_graphql@15.3.0:
     dependencies:
-      '@graphql-mesh/types': 0.8.0_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/types': 0.8.0_graphql@15.3.0
       '@graphql-tools/utils': 6.2.0_graphql@15.3.0
       '@graphql-tools/wrap': 6.2.0_graphql@15.3.0
       graphql: 15.3.0
     dev: false
     peerDependencies:
       graphql: '*'
-      typescript: '*'
     resolution:
       integrity: sha512-K19FrU1Becty9OShRv0mPsR6rvMzEJNZcT9C6cQk13lEFUcSY7G/j+QZ0TyYi7MuECF8+I4a17GUpzLtRtYPSQ==
-  /@graphql-mesh/transform-snapshot/0.5.0_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/transform-snapshot/0.5.0_graphql@15.3.0:
     dependencies:
-      '@graphql-mesh/types': 0.8.0_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/types': 0.8.0_graphql@15.3.0
       '@graphql-mesh/utils': 0.5.0_graphql@15.3.0
       '@graphql-tools/resolvers-composition': 6.2.0_graphql@15.3.0
       '@graphql-tools/schema': 6.2.0_graphql@15.3.0
@@ -702,20 +714,18 @@ packages:
     dev: false
     peerDependencies:
       graphql: '*'
-      typescript: '*'
     resolution:
       integrity: sha512-1RMU4jmTctOtqu5DVb7pRvaerkuYMmrOssetTrpKxjl6F3skNwsK/qKvRatlbGyryDmzLRHr9h73dA2fr83xgg==
-  /@graphql-mesh/types/0.8.0_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/types/0.8.0_graphql@15.3.0:
     dependencies:
       '@graphql-tools/delegate': 6.2.0_graphql@15.3.0
       '@graphql-tools/utils': 6.2.0_graphql@15.3.0
       fetchache: 0.0.3
       graphql: 15.3.0
-      tsee: 1.3.0_typescript@4.0.2
+      tsee: 1.3.0
     dev: false
     peerDependencies:
       graphql: '*'
-      typescript: '*'
     resolution:
       integrity: sha512-jC5Aw+qcn4oA9mUVNqrO4wxnsc1m8oYhmMyy0eEuJsUOExk2kPyLuN5uyychDlON9MSwo4RPR8pESEe7FplhbQ==
   /@graphql-mesh/utils/0.5.0_graphql@15.3.0:
@@ -745,6 +755,17 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-mr+SKGct+vlZezlH5DXg4o7ef2AmjDTH1ZqhCoCmm8h5j8fLWz0/L2C6eh6bpeWt/OS0NQAXi8T0fMhwcZUDFQ==
+  /@graphql-tools/batch-delegate/6.2.1_graphql@15.3.0:
+    dependencies:
+      '@graphql-tools/delegate': 6.2.1_graphql@15.3.0
+      dataloader: 2.0.0
+      graphql: 15.3.0
+      tslib: 2.0.1
+    dev: false
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-3+gruxgPuUDosgoynSmjFFEWIFOJY7nKQ49jRJuCfvjy5sm62GlARtNLfIWRJWjbE40Fye9sHQQ6Dc8YJoZBuw==
   /@graphql-tools/delegate/6.2.0_graphql@15.3.0:
     dependencies:
       '@ardatan/aggregate-error': 0.0.1
@@ -759,6 +780,20 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-jYwg6MuErovAHXhyReTSgRTzdvPB60VEO02KGZskaD5WPqCQy6oqYBetXOp1yG6PBwJvxCTpMKuZvyPVLRM9ww==
+  /@graphql-tools/delegate/6.2.1_graphql@15.3.0:
+    dependencies:
+      '@ardatan/aggregate-error': 0.0.6
+      '@graphql-tools/schema': 6.2.1_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
+      dataloader: 2.0.0
+      graphql: 15.3.0
+      is-promise: 4.0.0
+      tslib: 2.0.1
+    dev: false
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-IsmrZ+aiT00V567PfawxvdjwMf8RrfjSuyOy7LvqJ6ABUlpcjZejYMFIl82ZjHf8m3OU1xF5Wier8G6XFYzPYw==
   /@graphql-tools/graphql-file-loader/6.2.0_graphql@15.3.0:
     dependencies:
       '@graphql-tools/import': 6.2.0_graphql@15.3.0
@@ -809,6 +844,17 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-q2bnFhdw6ssBzIlTkyUGPzBThLHgwuTVCRvjjCepegQCKGzwDypve0n+EMBUnoaOcJ3JRgQHR3eStP2x/S0AYw==
+  /@graphql-tools/merge/6.2.1_graphql@15.3.0:
+    dependencies:
+      '@graphql-tools/schema': 6.2.1_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
+      graphql: 15.3.0
+      tslib: 2.0.1
+    dev: false
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-GJyMOYM2JyZhvMlVwpUZUv5ocvWCh+/KdPCCzXqo3Va/kOO1ntm8lKGNf3JZpQDgpC5FvaQfsu/b5pE7TBFxyw==
   /@graphql-tools/resolvers-composition/6.2.0_graphql@15.3.0:
     dependencies:
       '@graphql-tools/utils': 6.2.0_graphql@15.3.0
@@ -829,6 +875,16 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-wlAIgN6pMgRaruiJqlZLIe+FM834ZYif/P7evCbG71sm7Ou8t0n+dkpf8+qZAa7D+PWO9G96BF1l2NPUlM+KvA==
+  /@graphql-tools/schema/6.2.1_graphql@15.3.0:
+    dependencies:
+      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
+      graphql: 15.3.0
+      tslib: 2.0.1
+    dev: false
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-SKoZmxlLwOq08/NZ8Y5aShgEHneTJ8Ksw4gU1WBSWVJGf64ROoxIxN4Uc47F0cZxwOBqVqUy/EdXWZ8Jt97uQQ==
   /@graphql-tools/stitch/6.2.0_graphql@15.3.0:
     dependencies:
       '@graphql-tools/batch-delegate': 6.2.0_graphql@15.3.0
@@ -845,6 +901,22 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-lZmqLFm8u8Fn7U5s8Dslj6L2F4QhNPGUV+K/5NojireCJfdqLyG9rlw0AXujFmOmcp1CfCuG7hOoREWRrIoCNA==
+  /@graphql-tools/stitch/6.2.1_graphql@15.3.0:
+    dependencies:
+      '@graphql-tools/batch-delegate': 6.2.1_graphql@15.3.0
+      '@graphql-tools/delegate': 6.2.1_graphql@15.3.0
+      '@graphql-tools/merge': 6.2.1_graphql@15.3.0
+      '@graphql-tools/schema': 6.2.1_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
+      '@graphql-tools/wrap': 6.2.1_graphql@15.3.0
+      graphql: 15.3.0
+      is-promise: 4.0.0
+      tslib: 2.0.1
+    dev: false
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-l1FOFEl/YJsry9B480TzZpKbckwP4n1fT7YE+ky28kQkooldOwxBnXMu5ae3r/KJdXCOyJDpmDhn9ZWc/fEVDw==
   /@graphql-tools/url-loader/6.2.0_graphql@15.3.0:
     dependencies:
       '@graphql-tools/delegate': 6.2.0_graphql@15.3.0
@@ -872,6 +944,17 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-Z5ONje6tGNvBzGwo/8eIafr98mwuvWpi3IwPp8CKHKjTBAKlUxY8hlwSn+bEMPyuA9uH/7nHWz4lamRQQEHAhg==
+  /@graphql-tools/utils/6.2.1_graphql@15.3.0:
+    dependencies:
+      '@ardatan/aggregate-error': 0.0.6
+      camel-case: 4.1.1
+      graphql: 15.3.0
+      tslib: 2.0.1
+    dev: false
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-DZ6a2bjOH4sWKhNUachvYy+3ocXDvDcTtComOD/z7ncszdlZPU6RXNOgBTxh/bMVHBPqlEh/VjCVMwBysZRbJw==
   /@graphql-tools/wrap/6.2.0_graphql@15.3.0:
     dependencies:
       '@graphql-tools/delegate': 6.2.0_graphql@15.3.0
@@ -886,6 +969,19 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-I7EAvY6x6cBB92j+IrZLE3meYUdmHNK8r/TvHXJ8SmgMJGlt4z8bjOr7WmYdMPufyVdHBSGwECqjWcxOhSxLsA==
+  /@graphql-tools/wrap/6.2.1_graphql@15.3.0:
+    dependencies:
+      '@graphql-tools/delegate': 6.2.1_graphql@15.3.0
+      '@graphql-tools/schema': 6.2.1_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
+      graphql: 15.3.0
+      is-promise: 4.0.0
+      tslib: 2.0.1
+    dev: false
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-bjmN2Xh3haRp5tMDNPpUDV/9IlvFfmG9umsAOb3WFRJBoVi/dX0YwWIyucM3WBVix4ory8Op5eT4KkoKeaFSMw==
   /@hapi/bourne/2.0.0:
     dev: false
     resolution:
@@ -1203,7 +1299,7 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-xRFSVPwyUIvKaiQs00vVnv4kB3Po4kCA1aNjLaDNgn+k99RRasULQsGvt1nPrilIeFedii7Fn9nDyHixzw6llg==
-  /@prisma/client/2.4.1:
+  /@prisma/client/2.5.1:
     dependencies:
       pkg-up: 3.1.0
     dev: false
@@ -1523,7 +1619,6 @@ packages:
     resolution:
       integrity: sha512-kVrqXhbclHNHGu9ztnAwSncIgJv/FaxmzXJvGXNdcCpV1b8u1/Mi6z6m0vwy0LzKeXFTPLH0NzwmoJ3fNCIq0g==
   /@types/node/14.6.0:
-    dev: true
     resolution:
       integrity: sha512-mikldZQitV94akrc4sCcSjtJfsTKt4p+e/s0AGscVA6XArQ9kFclP+ZiYUMnq987rc6QlYxXv/EivqlfSLxpKA==
   /@types/node/14.6.4:
@@ -6969,7 +7064,7 @@ packages:
     dev: false
     resolution:
       integrity: sha512-P9z/5OXRaaZJulNcxvvvV4p+m1tmiuKC4RT3I5NixOQwCWj9uHbDQaXP/NLtKgFqjrGHl5bkIb73nIvWe7KnbQ==
-  /pino-pretty/4.2.0:
+  /pino-pretty/4.2.1:
     dependencies:
       '@hapi/bourne': 2.0.0
       args: 5.0.1
@@ -6985,7 +7080,7 @@ packages:
     dev: false
     hasBin: true
     resolution:
-      integrity: sha512-CBFLgxMj/cJOANqZs+Xcjdgi1v40TJP3xMTkSN2xuOvX+03uAAHXf9SEU+1DHu/1kw44H2c31VYCImx0QewQ6w==
+      integrity: sha512-WyO/n6c6T2gj0ioYGFUFbrvyUoERK37Lu0liLxMIJnp1YaaG+XZBU2TAQB0yVJNb+7T+oDh9t8HGMzk00jy+tw==
   /pino-std-serializers/2.5.0:
     dev: false
     resolution:
@@ -7065,7 +7160,6 @@ packages:
     resolution:
       integrity: sha512-7PtVymN48hGcO4fGjybyBSIWDsLU4H4XlvOHfq91pz9kkGlonzwTfYkaIEwiRg/dAJF9YlbsduBAgtYLi+8cFg==
   /prettier/2.1.1:
-    dev: false
     engines:
       node: '>=10.13.0'
     hasBin: true
@@ -8346,7 +8440,7 @@ packages:
     dev: false
     resolution:
       integrity: sha512-BUKSoz7AFSKPcYTZODbICW2mOthAN4vc5juD6FL1lD/dLwZ0WvrC3zqBM3/X6f5gHxq3yaz+HmanHGaWm0ddbQ==
-  /ts-node-dev/1.0.0-pre.60_typescript@4.0.2:
+  /ts-node-dev/1.0.0-pre.62:
     dependencies:
       chokidar: 3.4.2
       dateformat: 1.0.12
@@ -8357,9 +8451,8 @@ packages:
       rimraf: 2.7.1
       source-map-support: 0.5.19
       tree-kill: 1.2.2
-      ts-node: 8.10.2_typescript@4.0.2
+      ts-node: 8.10.2
       tsconfig: 7.0.0
-      typescript: 4.0.2
     dev: true
     engines:
       node: '>=0.8.0'
@@ -8371,7 +8464,7 @@ packages:
       node-notifier:
         optional: true
     resolution:
-      integrity: sha512-S1X/2dMH2cxzFEiOWo5r/DTD0oElKbEpG8lnWoEA1LrwxXMFCJs71vIMaXPu6p8ud3MHMI2Ans3syDQ8mkjEUg==
+      integrity: sha512-hfsEuCqUZOVnZ86l7A3icxD1nFt1HEmLVbx4YOHCkrbSHPBNWcw+IczAPZo3zz7YiOm9vs0xG6OENNrkgm89tQ==
   /ts-node-dev/1.0.0-pre.62_typescript@4.0.2:
     dependencies:
       chokidar: 3.4.2
@@ -8398,6 +8491,21 @@ packages:
         optional: true
     resolution:
       integrity: sha512-hfsEuCqUZOVnZ86l7A3icxD1nFt1HEmLVbx4YOHCkrbSHPBNWcw+IczAPZo3zz7YiOm9vs0xG6OENNrkgm89tQ==
+  /ts-node/8.10.2:
+    dependencies:
+      arg: 4.1.3
+      diff: 4.0.2
+      make-error: 1.3.6
+      source-map-support: 0.5.19
+      yn: 3.1.1
+    dev: true
+    engines:
+      node: '>=6.0.0'
+    hasBin: true
+    peerDependencies:
+      typescript: '>=2.7'
+    resolution:
+      integrity: sha512-ISJJGgkIpDdBhWVu3jufsWpK3Rzo7bdiIXJjQc0ynKxVOVcg2oIrf2H2cejminGrptVc6q6/uynAHNCuWGbpVA==
   /ts-node/8.10.2_typescript@3.9.7:
     dependencies:
       arg: 4.1.3
@@ -8446,9 +8554,7 @@ packages:
       typescript: '>=2.7'
     resolution:
       integrity: sha512-/TqB4SnererCDR/vb4S/QvSZvzQMJN8daAslg7MeaiHvD8rDZsSfXmNeNumyZZzMned72Xoq/isQljYSt8Ynfg==
-  /tsargs/1.4.0_typescript@4.0.2:
-    dependencies:
-      typescript: 4.0.2
+  /tsargs/1.4.0:
     dev: false
     peerDependencies:
       typescript: ^3.1.6
@@ -8472,13 +8578,11 @@ packages:
     dev: true
     resolution:
       integrity: sha512-vZXmzPrL+EmC4T/4rVlT2jNVMWCi/O4DIiSj3UHg1OE5kCKbk4mfrXc6dZksLgRM/TZlKnousKH9bbTazUWRRw==
-  /tsee/1.3.0_typescript@4.0.2:
+  /tsee/1.3.0:
     dependencies:
       '@types/node': 12.12.54
-      tsargs: 1.4.0_typescript@4.0.2
+      tsargs: 1.4.0
     dev: false
-    peerDependencies:
-      typescript: '*'
     resolution:
       integrity: sha512-GgslWDOWe+6m2n2yV456NH2QVHHpnZOAjIZZ5/o5olvK3NkGjYX/59/7+Ool+nNKFIiWy3mTBL5pyKv3dy5bLQ==
   /tslib/1.13.0:

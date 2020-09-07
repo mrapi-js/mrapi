@@ -1,15 +1,16 @@
-export const SELECTING = ['select', 'include']
-export const SORTING = 'orderBy'
 export const FILTERING = [
   'equals',
   'not',
   'in',
-  'notIn',
+  'not_in',
   'lt',
   'lte',
   'gt',
   'gte',
   'contains',
-  'startsWith',
-  'endsWith',
+  'not_contains',
+  'starts_with',
+  'not_starts_with',
+  'ends_with',
+  'not_ends_with',
 ]

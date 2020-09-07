@@ -1,5 +1,3 @@
-import { SELECTING, SORTING, FILTERING } from '../constants'
-
 export interface FindManyFilter {
   select?: {}
   include?: {}
@@ -41,7 +39,7 @@ class Fillter {
     this.options = { ...defaultOptions, ...options }
   }
 
-  getParams(params: { [name: string]: string }) {
+  getParams(params: { [name: string]: any } = {}) {
     const { filtering, selecting, sorting, pagination } = this.options
     const result: FindManyFilter = {}
 
@@ -67,31 +65,30 @@ class Fillter {
       }
     }
 
-    console.log('result -> \n', result)
-
     return result
   }
 
   filterSorting(
     result: FindManyFilter,
     key: string,
-    val: string,
+    val: string[],
     sorting: boolean,
   ) {
-    if (sorting) {
+    if (!sorting) {
       return false
     }
 
     let isContinue = false
 
     // sort: =name:asc,id:desc
-    if (key === SORTING) {
-      const arrs = val.split(',')
-      for (const item of arrs) {
-        const arr = item.split(':')
-        if (arr.length === 2) {
-          result[key] = {
-            [arr[0]]: arr[1],
+    if (key === 'orderBy') {
+      if (Array.isArray(val)) {
+        for (const item of val) {
+          const arr = item.split(':')
+          if (arr.length === 2) {
+            result[key] = {
+              [arr[0]]: arr[1],
+            }
           }
         }
       }
@@ -105,23 +102,25 @@ class Fillter {
   filterSelecting(
     result: FindManyFilter,
     key: string,
-    val: string,
+    val: string[],
     selecting: boolean,
   ) {
-    if (selecting) {
+    if (!selecting) {
       return false
     }
 
     let isContinue = false
 
-    // selecting: use `include` or `select`, but not both at the same time
-    if (SELECTING.includes(key)) {
+    // TODO: 待开发中 -> Post: FindManyPostArgs ?
+    // selecting: use `include` or `select`, but not both at the same time.
+    if (['select', 'include'].includes(key)) {
       const tmp = {}
-      const arr: string[] = [...new Set(val.split(','))]
-      for (const a of arr) {
-        tmp[a] = true
+      if (Array.isArray(val)) {
+        for (const a of val) {
+          tmp[a] = true
+        }
+        result[key] = tmp
       }
-      result[key] = tmp
 
       isContinue = true
     }
@@ -153,47 +152,59 @@ class Fillter {
     } else if (pagination[1].includes(key)) {
       // cursor=id:xxxx
       const arr = val.split(':')
-      result[key] = {
-        [arr[0]]: +arr[1],
+      if (val.length === 2) {
+        result[key] = {
+          [arr[0]]: +arr[1],
+        }
       }
+
       isContinue = true
     }
 
     return isContinue
   }
 
-  // TODO: 此方法暂未验证，待开发...
   filterOther(
     result: FindManyFilter,
     key: string,
-    val: string,
+    val: string[],
     filtering: boolean,
   ) {
-    if (filtering) {
+    if (!filtering) {
       return false
     }
 
     let isContinue = false
 
-    // where: _equals, _not, _in, _notIn, _lt, _lte, _gt, _gte, _contains, _startsWith, _endsWith
-    const arr = key.split('_')
-    if (arr[0]) {
-      const filter = arr[1] && FILTERING.includes(arr[1]) ? arr[1] : 'equals'
-      const vals = ['in', 'notIn'].includes(filter)
-        ? [...new Set(val.split(','))]
-        : val
-
-      result.where = result.where || {}
-      result.where[arr[0]] = {
-        [filter]: vals,
+    if (key === 'where') {
+      if (Array.isArray(val)) {
+        // id_in:1,2,3
+        for (const item of val) {
+          const arr = item.split(':')
+          if (arr.length === 2) {
+            // TODO: 待添加白名单逻辑
+            const vals = ['in', 'not_in'].includes(arr[0])
+              ? [...new Set(arr[1].split(','))]
+              : arr[1]
+            if (!result.where) {
+              result.where = {}
+            }
+            result.where[arr[0]] = vals
+          }
+        }
       }
-    } else {
+
       isContinue = true
     }
 
     return isContinue
   }
 }
+
+// export const findOne = new Fillter({
+//   filtering: true,
+//   selecting: true,
+// })
 
 export const findManyFilter = new Fillter({
   pagination: [['take', 'skip'], ['cursor']],
@@ -202,12 +213,16 @@ export const findManyFilter = new Fillter({
   sorting: true,
 })
 
-export const countFilter = new Fillter({
-  pagination: [
-    ['first', 'last', 'skip'],
-    ['after', 'before'],
-  ],
-  filtering: true,
-  selecting: true,
-  sorting: true,
-})
+// export const countFilter = new Fillter({
+//   pagination: [
+//     ['first', 'last', 'skip'],
+//     ['after', 'before'],
+//   ],
+//   filtering: true,
+//   selecting: true,
+//   sorting: true,
+// })
+
+// export const createFilter = new Fillter({
+//   selecting: true,
+// })

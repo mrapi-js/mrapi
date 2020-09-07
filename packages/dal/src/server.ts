@@ -8,7 +8,7 @@ import cors from 'cors'
 import path from 'path'
 import type http from 'http'
 
-import { merge } from '@mrapi/common'
+import { merge, formation, writeFileSync } from '@mrapi/common'
 import { dependenciesPlugins } from '@mrapi/oas'
 import { graphqlAPIPrefix, openAPIPrefix } from './constants'
 import type { ServerOptions, RouteOptions } from './types'
@@ -80,7 +80,7 @@ export default class Server {
 
   addRoute(
     name: string,
-    { graphql, openAPI, enableRepeat }: RouteOptions = {},
+    { graphql, openAPI, enableRepeat, prismaClientDir }: RouteOptions = {},
   ): boolean {
     // Fix: Repeat to add routes
     if (this.routes.has(name)) {
@@ -173,6 +173,13 @@ export default class Server {
           `${openAPIBasePath}/swagger`,
         )}`,
       )
+
+      // generate apiDoc.json
+      prismaClientDir &&
+        writeFileSync(
+          path.join(prismaClientDir, 'apiDoc.json'),
+          formation(JSON.stringify(openAPIInstance.apiDoc), 'json', ''),
+        )
     }
 
     console.log()

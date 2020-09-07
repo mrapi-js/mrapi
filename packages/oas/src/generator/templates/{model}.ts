@@ -1,22 +1,24 @@
 export const modelTmpFn = {
-  GET: (data: any) => `async function GET (req, res, next) {
+  GET: (
+    _parameters: any,
+    data: any,
+    parameterId: string,
+  ) => `async function GET (req, res, next) {
     const data = await mrapiFn.findOne(req, res, next, {
       modelName: '${data.modelName}'
     });
-    res.status(200).json(data);
+    if (data.code === 0) {
+      res.status(200).json(data);
+    } else {
+      res.status(500).json(data);
+    }
   };
   GET.apiDoc = {
     description: 'Query the ${data.modelName} by parameter.',
-    operationId: 'get${data.name}',
+    operationId: 'getOne${data.name}',
     tags: ['${data.plural}'],
     parameters: [
-      {
-        name: 'id',
-        in: 'path',
-        type: 'string',
-        required: true,
-        description: 'id',
-      },
+      ${parameterId}
     ],
     responses: {
       200: {
@@ -29,31 +31,34 @@ export const modelTmpFn = {
     },
   };`,
 
-  PUT: (data: any) => `async function PUT(req, res, next) {
+  PUT: (
+    _parameters: any,
+    data: any,
+    parameterId: string,
+  ) => `async function PUT(req, res, next) {
     const data = await mrapiFn.update(req, res, next, {
       modelName: '${data.modelName}'
     });
-    res.status(204).json(data);
+    if (data.code === 0) {
+      res.status(204).json(data);
+    } else {
+      res.status(500).json(data);
+    }
   };
   PUT.apiDoc = {
     description: 'Update a ${data.modelName}.',
-    operationId: 'create${data.name}',
+    operationId: 'updateOne${data.name}',
     tags: ['${data.plural}'],
     parameters: [
+      ${parameterId}
       {
-        name: 'id',
-        in: 'path',
-        type: 'string',
+        name: 'data',
+        in: 'body',
+        schema: {
+          $ref: '#/definitions/${data.name}CreateInput'
+        },
         required: true,
-        description: 'id',
       },
-      // {
-      //   name: 'user',
-      //   in: 'body',
-      //   schema: {
-      //     $ref: '#/definitions/User',
-      //   },
-      // },
     ],
     responses: {
       204: {
@@ -66,27 +71,29 @@ export const modelTmpFn = {
     },
   };`,
 
-  DELETE: (data: any) => `async function DELETE(req, res, next) {
+  DELETE: (
+    _parameters: any,
+    data: any,
+    parameterId: string,
+  ) => `async function DELETE(req, res, next) {
     const data = await mrapiFn.delete(req, res, next, {
       modelName: '${data.modelName}'
     });
-    res.status(204).json(data);
+    if (data.code === 0) {
+      res.status(200).json(data);
+    } else {
+      res.status(500).json(data);
+    }
   };
   DELETE.apiDoc = {
     description: 'Delete ${data.modelName}.',
-    operationId: 'delete${data.name}',
+    operationId: 'deleteOne${data.name}',
     tags: ['${data.plural}'],
     parameters: [
-      {
-        name: 'id',
-        in: 'path',
-        type: 'string',
-        required: true,
-        description: 'id',
-      },
+      ${parameterId}
     ],
     responses: {
-      204: {
+      200: {
         description: '${data.name} deleted successfully.',
       },
       #{TMP_DEFAULT_RESPONSE}

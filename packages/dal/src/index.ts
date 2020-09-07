@@ -277,6 +277,7 @@ export default class DAL {
         graphql,
         openAPI,
         enableRepeat: this.mrapiConfig.dal?.enableRepeatRoute,
+        prismaClientDir,
       })
     }
     return result
