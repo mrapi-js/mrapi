@@ -28,11 +28,11 @@ export default class API {
     } catch (err) {
       throw new Error('please install "@mrapi/dal" manually')
     }
-    const dal = new DAL(options.schemaNames.map(s => ({ name: s })))
+    const dal = new DAL(options.schemaNames.map((s) => ({ name: s })))
     this.dal = dal
     // add all schemas
-    options.schemaNames.forEach(name => dal.addSchema(name))
-    const schemas = options.schemaNames.map(name => dal.getSchema(name))
+    options.schemaNames.forEach((name) => dal.addSchema(name))
+    const schemas = options.schemaNames.map((name) => dal.getSchema(name))
     logger.info('[Start] get dal prisma/schema done')
     return schemas
   }

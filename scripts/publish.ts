@@ -3,8 +3,8 @@ import execa from 'execa'
 import { join } from 'path'
 import { promises as fs } from 'fs'
 
-const PACKAGES = ['dal', 'api', 'create-mrapi-app']
-const DEPS = ['@mrapi/dal', '@mrapi/api']
+const PACKAGES = ['common', 'nexus', 'oas', 'dal', 'api']
+// const DEPS = ['@mrapi/common', '@mrapi/nexus', '@mrapi/oas', '@mrapi/dal', '@mrapi/api']
 
 async function getLatestVersion(): Promise<string> {
   const childProcessResult = await execa.command('git describe --abbrev=0')
@@ -50,36 +50,36 @@ async function getPackagesInfo(
   return info
 }
 
-async function updateTemplatesDeps(newVersion: string, dryRun: boolean) {
-  if (dryRun) {
-    return
-  }
-  const info = await getPackagesInfo(
-    ['prisma', 'multi-tenant', 'prisma-nexus', 'typeorm'],
-    'packages/create-mrapi-app/templates',
-  )
+// async function updateTemplatesDeps(newVersion: string, dryRun: boolean) {
+//   if (dryRun) {
+//     return
+//   }
+//   const info = await getPackagesInfo(
+//     ['prisma', 'multi-tenant', 'prisma-nexus', 'typeorm'],
+//     'packages/create-mrapi-app/templates',
+//   )
 
-  for (const [_name, obj] of Object.entries(info)) {
-    const pkgJsonPath = join(obj.path, 'package.json')
-    const file = await fs.readFile(pkgJsonPath, 'utf-8')
-    const pkg: any = JSON.parse(file)
-    const dependencies = (typeof pkg === 'object' && pkg.dependencies) || {}
-    const devDependencies =
-      (typeof pkg === 'object' && pkg.devDependencies) || {}
+//   for (const [_name, obj] of Object.entries(info)) {
+//     const pkgJsonPath = join(obj.path, 'package.json')
+//     const file = await fs.readFile(pkgJsonPath, 'utf-8')
+//     const pkg: any = JSON.parse(file)
+//     const dependencies = (typeof pkg === 'object' && pkg.dependencies) || {}
+//     const devDependencies =
+//       (typeof pkg === 'object' && pkg.devDependencies) || {}
 
-    for (const [key, _version] of Object.entries(dependencies)) {
-      if (DEPS.includes(key)) {
-        pkg.dependencies[key] = newVersion
-      }
-    }
-    for (const [key, _version] of Object.entries(devDependencies)) {
-      if (DEPS.includes(key)) {
-        pkg.devDependencies[key] = newVersion
-      }
-    }
-    await fs.writeFile(pkgJsonPath, JSON.stringify(pkg, null, 2))
-  }
-}
+//     for (const [key, _version] of Object.entries(dependencies)) {
+//       if (DEPS.includes(key)) {
+//         pkg.dependencies[key] = newVersion
+//       }
+//     }
+//     for (const [key, _version] of Object.entries(devDependencies)) {
+//       if (DEPS.includes(key)) {
+//         pkg.devDependencies[key] = newVersion
+//       }
+//     }
+//     await fs.writeFile(pkgJsonPath, JSON.stringify(pkg, null, 2))
+//   }
+// }
 
 /**
  * Runs a command and pipes the stdout & stderr to the current process.
@@ -149,7 +149,7 @@ async function publish(dryRun: boolean) {
     await run(obj.path, `pnpm publish --no-git-checks --tag ${tag}`, dryRun)
   }
 
-  await updateTemplatesDeps(newVersion, dryRun)
+  // await updateTemplatesDeps(newVersion, dryRun)
 
   if (!dryRun) {
     // git push
