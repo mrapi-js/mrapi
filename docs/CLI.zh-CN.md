@@ -32,7 +32,13 @@ Commands:
 
 ## 配置项
 
-参考 [mrapi 公共配置](./Configuration/Common.zh-CN.md)
+将使用到 `mrapiConfig` 中以下属性：
+
+```js
+const { inputSchemaDir, schemaDir, outputDir, managementUrl } = this.mrapiConfig
+```
+
+参考 [mrapiConfig](./Configuration/Common.zh-CN.md)
 
 ## generate
 
@@ -52,7 +58,6 @@ npx mrapi generate -h
 
 将打印帮助:
 
-
 ```
 Usage: run generate [options]
 
@@ -70,22 +75,74 @@ Options:
 
 #### name
 
-对应 `schema` 配置的文件名，`prisma client` 唯一标识
+对应 `schema` 配置的文件名，`prisma client` 唯一标识。
 
 - 必填
 
 - 参数类型：`string`
-  
-- 参考值：`management` 或者 `schema` 配置文件名称
 
-当值为
+- 参考值：`"management"` 或者 `schema` 配置文件名称
 
-**注意:** 名称是 `management`，只生成多租户管理的 `prisma client`
+结合 `mrapiConfig.inputSchemaDir` 找到 `prisma schema` 配置入口，与 `mrapiConfig.schemaDir` 生成 `schema.prisma` 出口路径，同时与 `mrapiConfig.outputDir` 生成 `prisma client` 地址
 
+```ts
+const inputSchemaPath = path.join(cwd, inputSchemaDir, `${name}.prisma`)
+const outputSchemaPath = path.join(cwd, schemaDir, `${name}.prisma`)
+const outputPath = path.join(cwd, outputDir, name)
+```
 
+**注意\:当值为 `"management"` 时，只生成多租户管理的 `prisma client`。避免值等于 `"schema"`，因为此值将预留给多租户管理表配置文件。**
+
+#### cnt
+
+生成 CURD 的参数
+
+- 非必填
+
+- 参数类型：`string`（逗号分隔）
+
+- 参考值：`"disableQueries"` 、`"disableMutations"`
+
+`"disableQueries"` 表示不生成 `queries`，`"disableMutations"` 表示不生成 `mutations`。
+
+#### m
+
+启用配置文件中的哪些 `model`
+
+- 非必填
+
+- 参数类型：`string`（逗号分隔）
+
+为空表示启用全部 `model`
+
+#### em
+
+与 `--m` 相反且互斥，表示忽略哪些 `model`
+
+- 非必填
+
+- 参数类型：`string`（逗号分隔）
+
+为空表示不忽略任何 `model`
+
+#### eqm
+
+哪些 `model` 同时忽略 `queries` 和 `mutations`
+
+- 非必填
+
+- 参数类型：`string`（逗号分隔）
+
+为空表示不忽略任何 `model`
 
 ### 示例
 
-```
-npx mrapi generate --name schema-name
+```shell
+# 一般用法，初始化 schema-xxx 配置文件
+npx mrapi generate --name schema-xxx
+
+# OR
+
+# 仅初始化多租户管理（需要 prisma/schema.prisma 文件）
+npx mrapi generate --name management
 ```
