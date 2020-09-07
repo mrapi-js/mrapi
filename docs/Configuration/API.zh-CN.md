@@ -1,6 +1,7 @@
-# mrapi.config.js
+# @mrapi/api 配置说明
 
-## @mrapi/api 配置
+## 配置参数
+
 - `tenantIdentity`: String.默认值`mrapi-pmt` 多租户在 header 中的 key 值
 - `api`: Object. api 包配置
 - `api.schemaNames`: Array.默认值`[]`type 为`combined`时需要加载的 schema 名称
