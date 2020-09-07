@@ -7,6 +7,10 @@
     "watch": "tsc --preserveWatchOutput --watch",
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
+  "publishConfig": {
+    "access": "public",
+    "directory": "lib"
+  },
   "dependencies": {
     "@mrapi/common": "workspace:*",
     "chalk": "^4.1.0"
