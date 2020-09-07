@@ -1,5 +1,6 @@
 {
   "name": "create-mrapi-app",
+  "private": true,
   "version": "0.8.1",
   "main": "index.js",
   "bin": {

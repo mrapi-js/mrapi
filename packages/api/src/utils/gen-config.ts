@@ -10,11 +10,20 @@ function optionsVerify(config: ApiOptions) {
   const errorStr = '[Config Error] @mrapi/api '
   switch (server.type) {
     case 'standalone':
-      assert(openapi.dalBaseUrl, `${errorStr}standlone type need openapi.dalBaseUrl`)
-      assert(graphql.sources.length > 0, `${errorStr}standlone type need graphql.sources.length > 0`)
+      assert(
+        openapi.dalBaseUrl,
+        `${errorStr}standlone type need openapi.dalBaseUrl`,
+      )
+      assert(
+        graphql.sources.length > 0,
+        `${errorStr}standlone type need graphql.sources.length > 0`,
+      )
       break
     case 'combined':
-      assert(schemaNames.length > 0, `${errorStr}combined type need schemaNames.length > 0`)
+      assert(
+        schemaNames.length > 0,
+        `${errorStr}combined type need schemaNames.length > 0`,
+      )
       break
     default:
       throw Error(`${errorStr}illge server.type`)

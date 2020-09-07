@@ -43,4 +43,39 @@ pnpx create-mrapi-app my-project
 
 ### 三、自定义 Mrapi Server
 
-...
+```js
+// 新建实例
+const mrapi = new Mrapi({...})
+
+// 启动服务
+mrapi
+  .start()
+  .then(({ app, address }) => {
+    app.log.info(`GraphQL Server:     ${address}/graphql`)
+    app.log.info(`GraphQL Playground: ${address}/playground`)
+  })
+```
+
+> ## Tips
+>
+> 本文档中的示例，默认情况下只监听本地 `127.0.0.1` 端口。要监听所有有效的 IPv4 端口，需要将代码修改为监听 `0.0.0.0`。
+>
+> 默认端口：`1358`
+
+更多详情 [Mrapi server](./Mrapi.zh-CN.md)
+
+### 四、验证服务
+
+1. 以 `DEV` 模式启动应用程序
+
+```bash
+npm run start:dev
+```
+
+2. 以 `PROD` 模式启动应用程序
+
+```bash
+npm run build && npm run start:prod
+```
+
+访问 `GraphQL Server` 和 `GraphQL Playground` 地址，验证 [OpenAPI](./OpenAPI.zh-CN.md) / [GraphQL](./GraphQL-API.zh-CN.md) 接口。

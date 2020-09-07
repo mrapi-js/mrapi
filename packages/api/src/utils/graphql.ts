@@ -18,7 +18,7 @@ export async function meshSchema(
   const { schema: dalSchema, contextBuilder, execute } = await getMesh(
     meshConfig,
   )
-  const subschemas = schemas.map(schema => ({ schema }))
+  const subschemas = schemas.map((schema) => ({ schema }))
   subschemas.push({ schema: dalSchema })
   Object.keys(customSchemas).forEach((key) => {
     subschemas.push({ schema: customSchemas[key] })

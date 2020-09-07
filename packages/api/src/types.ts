@@ -26,7 +26,7 @@ export type TypeEnum = 'standalone' | 'combined'
 
 export { FastifyReply, FastifyRequest } from 'fastify'
 export type PrismaPaths = Array<{
-  name: string,
+  name: string
   prismaClient: string
 }>
 
@@ -82,18 +82,18 @@ export interface ApiOptions {
     dalBaseUrl?: string
   }
   graphql?: {
-    dir?: string,
-    path?: string,
-    playground?: string | boolean,
+    dir?: string
+    path?: string
+    playground?: string | boolean
     sources?: []
   }
   server?: {
     type?: 'standalone' | 'combined'
-    port?: number,
+    port?: number
     options?: {
       [key: string]: any
     }
-  },
+  }
   schemaNames?: string[]
 }
 
@@ -102,4 +102,4 @@ export interface Obj {
 }
 
 type ValueOrArray<T> = T | ArrayOfValueOrArray<T>
-interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> { }
+interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}

@@ -49,13 +49,16 @@ export default class Server {
         const tenant = request.headers[options.tenantIdentity]
         // 访问的DB
         const name = request.headers[options.schemaIdentity]
-        logger.debug(`[Route] DB: ${JSON.stringify(name)}, Tenant: ${JSON.stringify(tenant)}`)
+        logger.debug(
+          `[Route] DB: ${JSON.stringify(name)}, Tenant: ${JSON.stringify(
+            tenant,
+          )}`,
+        )
         if (!dal) return route.handler(ret)
-        return dal.getPrisma(name, tenant)
-          .then((prisma: any) => {
-            ret.prisma = prisma
-            return route.handler(ret)
-          })
+        return dal.getPrisma(name, tenant).then((prisma: any) => {
+          ret.prisma = prisma
+          return route.handler(ret)
+        })
       },
     })
   }
@@ -70,10 +73,7 @@ export default class Server {
   async loadOpenapi(dal?: any) {
     const { options, app, baseDir } = this
     // load custom openapi
-    const customRoutes = require(path.join(
-      baseDir,
-      options.openapi.dir,
-    ))
+    const customRoutes = require(path.join(baseDir, options.openapi.dir))
     Object.keys(customRoutes).forEach((key) => {
       customRoutes[key].forEach((route: any) => {
         this.addRoute(route, dal)
@@ -104,7 +104,11 @@ export default class Server {
    *
    * @returns {Void}
    */
-  async loadGraphql(schema: GraphQLSchema, execute: ExecuteMeshFn | undefined, dal?: any) {
+  async loadGraphql(
+    schema: GraphQLSchema,
+    execute: ExecuteMeshFn | undefined,
+    dal?: any,
+  ) {
     const { options } = this
     await this.app.register(require('fastify-gql'), {
       schema,
@@ -124,11 +128,10 @@ export default class Server {
         const name: any = (request.params as object & { name: () => any }).name
         logger.debug(`[Route] DB: ${name}, Tenant: ${JSON.stringify(tenant)}`)
         if (!name || !dal) return ret
-        return dal.getPrisma(name, tenant)
-          .then((prisma: any) => {
-            ret.prisma = prisma
-            return ret
-          })
+        return dal.getPrisma(name, tenant).then((prisma: any) => {
+          ret.prisma = prisma
+          return ret
+        })
       },
       errorHandler(err: Error) {
         // TODO
