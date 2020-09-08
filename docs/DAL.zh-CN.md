@@ -52,7 +52,7 @@ const options: DALOptions = [
   {
     name: 'one',
     defaultTenant: {
-      name: 'dev', 
+      name: 'dev',
       url: 'file:../config/db/dev.db', // 默认租户为此 db
     },
   },
@@ -142,42 +142,139 @@ export type DALOptions = DALOption[]
 schema 唯一标识
 
 - 必填
-  
+
 - 参数类型：`string`
-  
+
 - 参考值：schema 文件名
 
 ### defaultTenant
 
 默认租户配置信息
-  
+
 - 参数类型：`object`
 
 ```ts
 {
-  name?: string
-  url?: string
+  name?: string // 默认租户标识，对应于 management 表中的 db
+  url?: string // 默认租户的 db 连接地址
 }
 ```
-  
-#### name
-
-默认租户标识，对应于 management 表中的 db
 
 **注意:\ 当 url 存在时，name 不再对应 management 表中的 db**
 
-#### url
-
-默认租户的 db 连接地址
-
 ### prismaClientDir
+
+`prisma client` 的目录
+
+- 参数类型：`string`
+
+- 默认值：`mrapiConfig.outputDir`
+
+**注意:\ 通过 mrapi/cli 生成的 prisma client 可以直接使用默认值**
 
 ### nexusDir
 
+`nexus type` 的目录
+
+- 参数类型：`string`
+
+- 默认值：`path.join(mrapiConfig.outputDir, 'nexus-types')`
+
+**注意:\ 通过 mrapi/cli 生成的 nexus type 可以直接使用默认值**
+
 ### graphql
+
+graphql 服务配置信息
+
+- 参数类型：`object`
+
+```ts
+{
+  enable?: boolean // 是否启用 graphql, 默认启用
+  options?: OptionsData // 参考 import { OptionsData } from 'express-graphql'
+}
+```
 
 ### openAPI
 
+openAPI 服务配置信息
+
+- 参数类型：`object`
+
+```ts
+{
+  enable?: boolean // 是否启用 openAPI, 默认启用
+  options?: {
+    dependencies?: { // oas dependencies 方法扩展
+      [name: string]: Function | Promise<Function>
+    }
+    oasDir: string // oas 目录
+    validateApiDoc?: boolean // 是否校验 oas 文档
+  }
+}
+```
+
 ## API
 
-###
+实例化后对外提供的 API 方法
+
+### getPrisma = async (name: string, tenantName?: string) => prismaClient
+
+- 异步方法
+
+通过 schema 标识 和 tenant 标识，返回对应的 `prisma client`。当 tenantName 为空的时候，将尝试在配置中找出默认值进行填充。
+
+### hasSchema(name: string): boolean
+
+schema 标识是否存在
+
+### getSchema(name: string): GraphQLSchema
+
+获取 @nexus/schema
+
+### addSchema(name: string, option: DALSchemaOptions = {}): boolean
+
+添加 schema 标识为 name 的 `DALSchemaOptions` 配置，返回值可用于判断添加是否成功。
+
+### removeSchema(name: string): boolean
+
+移除 schema 标识为 name 的相关配置，返回值可用于判断移除是否成功。
+
+### async start(serverOptions?: ServerOption)
+
+- 异步方法
+
+启动服务
+
+```ts
+export interface ServerOptions {
+  host?: string
+  port?: number
+  tenantIdentity?: string // 默认取用 mrapi.config.js 中的 tenantIdentity
+}
+```
+
+### async stop()
+
+- 异步方法
+
+停止服务
+
+## 实例对象
+
+实例化对象的属性
+
+### server
+
+DAL 的 server 实例对象
+
+```ts
+app.start().then(() => {
+  const thisApp = app.server.app // 实际为 Express 实例
+
+  // 可以通过 thisApp 调用 Express 的能力
+  thisApp.use(cors()) // 注意：DAL 中已内置 cors 和 body-parser 插件，这里只是示例
+})
+```
+
+**注意\： 仅在 `app.start()` 后实例化才存在。**
