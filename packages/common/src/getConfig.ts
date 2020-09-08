@@ -93,8 +93,8 @@ export default function getConfig(str?: string): MrapiConfig {
   )
   try {
     config = require(configPath)
-    if (config.defualt) {
-      config = config.defualt
+    if (config.default) {
+      config = config.default
     }
   } catch {}
 

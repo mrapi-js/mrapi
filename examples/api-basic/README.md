@@ -22,7 +22,7 @@ query serv_time{
 
 ### config说明
 ```javascript
-exports.defualt = {
+exports.default = {
   // @mrapi/api config
   api: {
     // serverconfig
