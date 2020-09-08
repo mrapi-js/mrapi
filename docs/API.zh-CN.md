@@ -20,14 +20,14 @@
 
 它有两种使用模式 `standlone` 或 `combined`，两种模式下它都能加载自定义的 openAPI 和 graphql 接口，并通过 Fastify 启动 Server 供客户端使用。其中 `standlone` 模式下它能通过 `graphql-mesh` 聚合多个 `graphql` 接口，而 `combined` 模式下它能加载 [@mrapi/dal](./DAL.zh-CN.md) 生成的 `graphql schema` 和 `prisma client`.
 
-## `standlone` 模式
+### `standlone` 模式
 
 - 参考 [api-basic](../examples/api-basic) 项目
 - 独立使用模式下，`@mrapi/api` 不提供数据库操作能力
 - 提供 **_graphql-mesh_** 能力，在 `config/mrapi.config.js` 文件的 `api.graphql.sources` 中配置源 graphql 服务
 - 提供 **_openapi proxy_** 能力，在 `config/mrapi.config.js` 文件的 `api.openapi.dalBaseUrl` 中配置代理目的地的访问地址
 
-## `combined` 模式
+### `combined` 模式
 
 - 参考 [api-combine](../examples/api-combine) 项目
 - 参考 [@mrapi/dal](./DAL.zh-CN.md) 文档，正确创建 `prisma schema` 相关文件，否则可能会导致生成 prismaClient 失败
