@@ -1,6 +1,51 @@
-# @mrapi/api 配置说明
+# @mrapi/api 配置项
 
-## 配置参数
+ 当前配置仅提供给 `@mrapi/api` 使用。
+
+**注意\: 请先查看 [mrapi 整体配置项说明](./Common.zh-CN.md)**
+
+## 参数说明
+
+```ts
+// @mrapi/api config
+api: {
+  // @mrapi/api openapi config
+  openapi: {
+    // @mrapi/api openapi custom api dir
+    dir: '/src/openapi',
+    // @mrapi/api openapi custom api preifx
+    prefix: '/api',
+  },
+
+  // @mrapi/api graphql config
+  graphql: {
+    // @mrapi/api graphql custom api dir
+    dir: '/src/graphql',
+    // @mrapi/api graphql api prefix
+    path: '/graphql',
+    // @mrapi/api graphql playground
+    playground: 'playground',
+    // @mrapi/api graphql sources
+    sources: [],
+  },
+
+  // @mrapi/api server config
+  server: {
+    // @mrapi/api server listen port
+    port: 1358,
+    // @mrapi/api server type
+    type: 'standalone',
+    // @mrapi/api fastify server options
+    options: {},
+  },
+  // @mrapi/api prisma schema names array
+  schemaNames: [],
+  // auto run scripts mrapi generate
+  autoGenerate: true,
+  // mrapi db choose header key
+  schemaIdentity: 'mrapi-schema',
+}
+```
 
 - `tenantIdentity`: String.默认值`mrapi-pmt` 多租户在 header 中的 key 值
 - `api`: Object. api 包配置

@@ -2,6 +2,8 @@
 
 [@mrapi/cli](https://github.com/mrapi-js/mrapi/tree/master/packages/cli)
 
+用于辅助构建标准化的 mrapi 项目
+
 ## 安装
 
 ```bash
@@ -42,6 +44,8 @@ const { inputSchemaDir, schemaDir, outputDir, managementUrl } = this.mrapiConfig
 
 ## generate
 
+用于初始化多租户管理实例，并生成 [DAL](./DAL.zh-CN.md) 需要的 `prisma client` 、 `nexus type` 、 `oas` 代码。
+
 此命令大致做了以下几件事：
 
 1. 清除冗余目录或文件；
@@ -73,7 +77,7 @@ Options:
   -h, --help       display help for command
 ```
 
-#### name
+#### --name
 
 对应 `schema` 配置的文件名，`prisma client` 唯一标识。
 
@@ -93,7 +97,7 @@ const outputPath = path.join(cwd, outputDir, name)
 
 **注意\:当值为 `"management"` 时，只生成多租户管理的 `prisma client`。避免值等于 `"schema"`，因为此值将预留给多租户管理表配置文件。**
 
-#### cnt
+#### --cnt
 
 生成 CURD 的参数
 
@@ -105,7 +109,7 @@ const outputPath = path.join(cwd, outputDir, name)
 
 `"disableQueries"` 表示不生成 `queries`，`"disableMutations"` 表示不生成 `mutations`。
 
-#### m
+#### --m
 
 启用配置文件中的哪些 `model`
 
@@ -115,7 +119,7 @@ const outputPath = path.join(cwd, outputDir, name)
 
 为空表示启用全部 `model`
 
-#### em
+#### --em
 
 与 `--m` 相反且互斥，表示忽略哪些 `model`
 
@@ -125,7 +129,7 @@ const outputPath = path.join(cwd, outputDir, name)
 
 为空表示不忽略任何 `model`
 
-#### eqm
+#### --eqm
 
 哪些 `model` 同时忽略 `queries` 和 `mutations`
 
