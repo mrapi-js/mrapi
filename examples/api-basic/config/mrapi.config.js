@@ -1,4 +1,4 @@
-exports.defualt = {
+exports.default = {
   api: {
     server: {
       port: 1358, // default
@@ -11,7 +11,7 @@ exports.defualt = {
       prefix: '/api', // default
     },
     graphql: {
-      dir: '/src/graphql',  // default
+      dir: '/src/graphql', // default
       sources: [
         {
           name: 'auth',
@@ -21,5 +21,5 @@ exports.defualt = {
         },
       ],
     },
-  }
+  },
 }

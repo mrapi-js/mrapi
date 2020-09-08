@@ -87,11 +87,14 @@ const defaultConfig: MrapiConfig = {
 
 export default function getConfig(str?: string): MrapiConfig {
   let config
-  const configPath = path.join(process.cwd(), str || 'config/mrapi.config.js')
+  const configPath = path.join(
+    process.cwd(),
+    str || process.env.MRAPICONFIG_PATH || 'config/mrapi.config.js',
+  )
   try {
     config = require(configPath)
-    if (config.defualt) {
-      config = config.defualt
+    if (config.default) {
+      config = config.default
     }
   } catch {}
 
