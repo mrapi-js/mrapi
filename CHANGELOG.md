@@ -2,6 +2,31 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="1.0.0-beta.2"></a>
+# 1.0.0-beta.2 (2020-09-08)
+
+
+### Bug Fixes
+
+* default wrong character ([d0cbf84](https://github.com/mrapi-js/mrapi/commit/d0cbf84))
+
+
+### Features
+
+* getConfig path -> process.env.MRAPICONFIG_PATH ([323f607](https://github.com/mrapi-js/mrapi/commit/323f607))
+
+
+
+<a name="1.0.0-beta.1"></a>
+# 1.0.0-beta.1 (2020-09-07)
+
+
+
+<a name="1.0.0-beta.0"></a>
+# 1.0.0-beta.0 (2020-09-07)
+
+
+
 <a name="1.0.0"></a>
 # [1.0.0](https://github.com/mrapi-js/mrapi/compare/v0.9.0...v1.0.0) (2020-09-07)
 
