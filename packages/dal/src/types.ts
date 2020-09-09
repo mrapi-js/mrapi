@@ -36,10 +36,15 @@ export interface DALSchemaOptions {
     enable?: boolean
     options?: graphqlOptions
   }
-  openAPI?: {
-    enable?: boolean
-    options?: openAPIOptions
-  }
+  openAPI?:
+    | {
+        enable?: true
+        options: openAPIOptions
+      }
+    | {
+        enable: false
+        options?: openAPIOptions
+      }
 }
 
 export interface DALOption extends DALSchemaOptions {
