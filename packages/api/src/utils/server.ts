@@ -147,7 +147,8 @@ export default class Server {
    * @returns {Promise} listen address
    */
   async start(): Promise<string> {
-    const addr = await this.app.listen(this.options.server.port)
+    const addr = await this.app.listen(this.options.server.port, '0.0.0.0')
+    logger.info(`Routes Tree\n${this.app.printRoutes()}`)
     return addr
   }
 }

@@ -58,6 +58,7 @@ importers:
       '@mrapi/cli': 'link:../../packages/cli'
       '@mrapi/dal': 'link:../../packages/dal'
       '@nexus/schema': 0.15.0
+      '@prisma/cli': 2.6.2
       cross-env: 7.0.2
     devDependencies:
       ts-node-dev: 1.0.0-pre.62_typescript@4.0.2
@@ -68,6 +69,7 @@ importers:
       '@mrapi/cli': 'workspace:*'
       '@mrapi/dal': 'workspace:*'
       '@nexus/schema': ^0.15.0
+      '@prisma/cli': ^2.4.1
       cross-env: ^7.0.2
       ts-node-dev: 1.0.0-pre.62
       tslib: ^2.0.1
@@ -742,6 +744,7 @@ packages:
       fetchache: 0.0.3
       graphql: 15.3.0
       tsee: 1.3.0_typescript@4.0.2
+      typescript: 4.0.2
     dev: false
     peerDependencies:
       graphql: '*'
