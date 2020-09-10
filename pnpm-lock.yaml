@@ -193,16 +193,6 @@ importers:
       prettier: ^2.1.1
       tslib: ^2.0.1
       typescript: ^4.0.2
-  packages/create-mrapi-app:
-    dependencies:
-      fs-extra: 9.0.1
-      tslib: 2.0.1
-    devDependencies:
-      typescript: 3.9.7
-    specifiers:
-      fs-extra: ^9.0.1
-      tslib: ^2.0.1
-      typescript: ^3.9.7
   packages/dal:
     dependencies:
       '@mrapi/common': 'link:../common'
@@ -8555,6 +8545,7 @@ packages:
     resolution:
       integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
   /typescript/3.9.7:
+    dev: false
     engines:
       node: '>=4.2.0'
     hasBin: true
