@@ -127,12 +127,17 @@ class GenerateCommand extends Command {
     }
     if (em) {
       em.split(',').forEach((item: string) => {
-        nexusParams.excludeModels[item] = { name: item }
+        nexusParams.excludeModels.push({
+          name: item,
+          queries: true,
+          mutations: true,
+        })
       })
     }
     if (eqm) {
       nexusParams.excludeQueriesAndMutations = eqm.split(',')
     }
+
     const nexusGenerate = new NexusGenerate(nexusParams)
     await nexusGenerate.run()
     await nexusGenerate.toJS()

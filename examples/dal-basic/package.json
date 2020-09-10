@@ -14,7 +14,7 @@
     "gen2": "npx mrapi generate --name two",
     "gen3": "npx mrapi generate --name three",
     "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts",
-    "gen1-eqm": "npx mrapi generate --name one --eqm findOne,createOne"
+    "gen1-eqm": "npx mrapi generate --name one --eqm findOne,createOne --em Post"
   },
   "author": "",
   "license": "ISC",
