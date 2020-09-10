@@ -3,6 +3,12 @@
   "version": "1.0.0-beta.2",
   "main": "lib/index.js",
   "author": "neikvon",
+  "contributors": [
+    {
+      "name": "kring",
+      "url": "https://github.com/364734461"
+    }
+  ],
   "license": "MIT",
   "files": [
     "lib",
