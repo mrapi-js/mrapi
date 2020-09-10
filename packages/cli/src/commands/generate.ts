@@ -41,28 +41,22 @@ class GenerateCommand extends Command {
         ],
       },
       {
-        key: 'models',
+        key: 'm',
         flags: ['--m <options>', 'Generate models'],
       },
       {
-        key: 'excludeModels',
+        key: 'em',
         flags: ['--em <options>', 'Exclude generate models'],
       },
       {
-        key: 'excludeQueriesAndMutations',
+        key: 'eqm',
         flags: ['--eqm <options>', 'Exclude Queries and Mutations'],
       },
     ],
   }
 
   async execute() {
-    const {
-      name,
-      cnt,
-      models,
-      excludeModels,
-      excludeQueriesAndMutations,
-    } = this.argv
+    const { name, cnt, m, em, eqm } = this.argv
     const {
       inputSchemaDir,
       schemaDir,
@@ -128,19 +122,22 @@ class GenerateCommand extends Command {
         }
       })
     }
-    if (models) {
-      nexusParams.models = models.split(',')
+    if (m) {
+      nexusParams.models = m.split(',')
     }
-    if (excludeModels) {
-      excludeModels.split(',').forEach((item: string) => {
-        nexusParams.excludeModels[item] = { name: item }
+    if (em) {
+      em.split(',').forEach((item: string) => {
+        nexusParams.excludeModels.push({
+          name: item,
+          queries: true,
+          mutations: true,
+        })
       })
     }
-    if (excludeQueriesAndMutations) {
-      nexusParams.excludeQueriesAndMutations = excludeQueriesAndMutations.split(
-        ',',
-      )
+    if (eqm) {
+      nexusParams.excludeQueriesAndMutations = eqm.split(',')
     }
+
     const nexusGenerate = new NexusGenerate(nexusParams)
     await nexusGenerate.run()
     await nexusGenerate.toJS()

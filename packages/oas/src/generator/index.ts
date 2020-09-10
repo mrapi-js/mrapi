@@ -168,15 +168,21 @@ export class OasGenerator extends Generators {
    * generate oas paths files
    */
   private genPaths(model: any, mapping: any, modelObj: any) {
-    const modelName = `${model.name.charAt(0).toLowerCase()}${model.name.slice(
-      1,
-    )}`
+    const modelName = this.smallModel(model.name)
+
+    const exclude = this.excludedOperations(model.name)
+    const ableQueries = this.disableQueries(model.name)
+    const ableMutations = this.disableMutations(model.name)
 
     // paths -> users
     this.outputFile(
       getCrud(
         modelsTmpFn,
-        { GET: true, POST: true, DELETE: true },
+        {
+          GET: ableQueries && !exclude.includes('findMany'),
+          POST: ableMutations && !exclude.includes('createOne'),
+          DELETE: ableMutations && !exclude.includes('deleteMany'),
+        },
         { modelName, plural: mapping.plural, name: model.name },
       ),
       join(this.options.output, `paths/${mapping.plural}.js`),
@@ -190,7 +196,11 @@ export class OasGenerator extends Generators {
     this.outputFile(
       getCrud(
         modelTmpFn,
-        { GET: true, PUT: true, DELETE: true },
+        {
+          GET: ableQueries && !exclude.includes('findOne'),
+          PUT: ableMutations && !exclude.includes('updateOne'),
+          DELETE: ableMutations && !exclude.includes('deleteOne'),
+        },
         { modelName, plural: mapping.plural, name: model.name },
         `{
   name: '${pathId.name}',

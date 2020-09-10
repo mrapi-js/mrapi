@@ -16,6 +16,8 @@ DAL 是基于 [prisma 2](https://www.prisma.io/) 的上层应用框架。我们�
   - [x] graphql
   - [x] openAPI
   - [ ] gRPC
+  - [ ] web socket
+- [ ] 自定义事务
 - [ ] 服务接入（日志、监控、频控等）
 
 ## 安装
