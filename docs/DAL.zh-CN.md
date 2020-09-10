@@ -110,6 +110,14 @@ app.start() // 默认ip、端口启动服务
 ```ts
 import { OptionsData } from 'express-graphql'
 
+interface openAPIOptions {
+  dependencies?: {
+    [name: string]: Function | Promise<Function>
+  }
+  oasDir: string
+  validateApiDoc?: boolean
+}
+
 export interface DALOption {
   name: string
   nexusDir?: string
@@ -122,16 +130,17 @@ export interface DALOption {
     enable?: boolean
     options?: OptionsData
   }
-  openAPI?: {
-    enable?: boolean
-    options?: {
-      dependencies?: {
-        [name: string]: Function | Promise<Function>
+
+  
+  openAPI?: 
+    | {
+        enable?: true
+        options: openAPIOptions
       }
-      oasDir: string
-      validateApiDoc?: boolean
-    }
-  }
+    | {
+        enable: false
+        options?: openAPIOptions
+      } 
 }
 
 export type DALOptions = DALOption[]
@@ -202,15 +211,21 @@ openAPI 服务配置信息
 - 参数类型：`object`
 
 ```ts
-{
-  enable?: boolean // 是否启用 openAPI, 默认启用
-  options?: {
-    dependencies?: { // oas dependencies 方法扩展
-      [name: string]: Function | Promise<Function>
-    }
-    oasDir: string // oas 目录
-    validateApiDoc?: boolean // 是否校验 oas 文档
+| {
+    enable?: true // 是否启用 openAPI, 默认启用
+    options: openAPIOptions
   }
+| {
+    enable: false
+    options?: openAPIOptions
+  }
+
+openAPIOptions?: {
+  dependencies?: { // oas dependencies 方法扩展
+    [name: string]: Function | Promise<Function>
+  }
+  oasDir: string // oas 目录
+  validateApiDoc?: boolean // 是否校验 oas 文档
 }
 ```
 

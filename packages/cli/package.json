@@ -13,6 +13,12 @@
     "node": ">=10.12"
   },
   "author": "neikvon",
+  "contributors": [
+    {
+      "name": "kring",
+      "url": "https://github.com/364734461"
+    }
+  ],
   "license": "MIT",
   "scripts": {
     "build": "tsc -b .",
