@@ -156,6 +156,7 @@ class GenerateCommand extends Command {
 generator client {
   provider = "prisma-client-js"
   output   = "${output}"
+  previewFeatures = ["transactionApi"]
 }
 
 datasource db {
