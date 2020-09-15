@@ -12,6 +12,7 @@ interface IObjType {
       type?: string
       schema?: any
       $ref?: any
+      items?: any
     }
   }
   required: string[]
@@ -30,16 +31,10 @@ function getFieldType(type: string) {
       return 'string'
     case 'Float':
       return 'number'
+    case 'null':
+      return 'null'
   }
-  throw new Error('Unknown field type.')
-}
-
-function findInputType(inputTypes: any[], modelName: string) {
-  for (const inputType of inputTypes) {
-    if (inputType.name === `${modelName}CreateInput`) {
-      return inputType
-    }
-  }
+  throw new Error('Unknown field type. type: ' + type)
 }
 
 function dealModels(models: any[]) {
@@ -93,23 +88,18 @@ export class OasGenerator extends Generators {
       },
     }
 
-    models.forEach((model: any) => {
-      const obj: IObjType = {
-        type: 'object',
-        properties: {},
-        required: [],
-      }
+    function dealModelDefinitions(inputType: any, hasObj: boolean = false) {
       const inputObj: IObjType = {
         type: 'object',
         properties: {},
         required: [],
       }
 
-      // inputTypes
-      const inputType = findInputType(inputTypes, model.name) || {}
       inputType?.fields.forEach((field: any) => {
         const fieldInputType = Array.isArray(field.inputType)
-          ? field.inputType[0]
+          ? field.inputType.length >= 2
+            ? field.inputType[1]
+            : field.inputType[0]
           : field.inputType
         if (fieldInputType.kind === 'scalar') {
           const type = getFieldType(fieldInputType?.type)
@@ -118,18 +108,56 @@ export class OasGenerator extends Generators {
             type,
           }
           fieldInputType?.isRequired && inputObj.required.push(field.name)
+        } else if (hasObj && fieldInputType.kind === 'object') {
+          if (['AND', 'OR', 'NOT'].includes(field.name)) {
+            inputObj.properties[field.name] = {
+              type: 'array',
+              description: `${fieldInputType.type} list.`,
+              items: {
+                type: 'object',
+                description: fieldInputType.type,
+                $ref: `#/definitions/${fieldInputType.type}`,
+              },
+            }
+          } else {
+            inputObj.properties[field.name] = {
+              type: 'object',
+              description: fieldInputType.type,
+              $ref: `#/definitions/${fieldInputType.type}`,
+            }
+          }
+
+          fieldInputType?.isRequired && inputObj.required.push(field.name)
         }
-        // else if (fieldInputType.kind === 'object') {
-        //   inputObj.properties[field.name] = {
-        //     type: 'object',
-        //     description: field.name,
-        //     $ref: `#/definitions/${field.name}`,
-        //   }
-        //   fieldInputType?.isRequired && inputObj.required.push(field.name)
-        // }
       })
 
-      // outputTypes
+      if (inputObj.required.length <= 0) {
+        delete inputObj.required
+      }
+
+      modelDefinitions[inputType.name] = inputObj
+    }
+
+    // inputTypes
+    // There's no filtering going on here
+    inputTypes.forEach((inputType: any) => {
+      if (/CreateInput$/.test(inputType.name)) {
+        dealModelDefinitions(inputType)
+      } else if (/WhereInput$/.test(inputType.name)) {
+        dealModelDefinitions(inputType, true)
+      } else if (/Filter$/.test(inputType.name)) {
+        dealModelDefinitions(inputType)
+      }
+    })
+
+    // outputTypes
+    models.forEach((model: any) => {
+      const obj: IObjType = {
+        type: 'object',
+        properties: {},
+        required: [],
+      }
+
       model.fields.forEach((field: any) => {
         if (!this.excludeFields(model.name).includes(field.name)) {
           if (field.outputType.kind === 'scalar') {
@@ -151,8 +179,11 @@ export class OasGenerator extends Generators {
         }
       })
 
+      if (obj.required.length <= 0) {
+        delete obj.required
+      }
+
       modelDefinitions[model.name] = obj
-      modelDefinitions[`${model.name}CreateInput`] = inputObj
 
       const mapping = mappings.find((m: any) => m.model === model.name)
       this.genPaths(model, mapping, allModelsObj[model.name])

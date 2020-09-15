@@ -1,6 +1,6 @@
 model User {
-    num       Int      @unique @default(autoincrement())
-    stringId  String   @id
+    num       Int      @id @default(autoincrement())
+    stringId  String   @unique
     name      String?
     date      DateTime
     isBoolean Boolean

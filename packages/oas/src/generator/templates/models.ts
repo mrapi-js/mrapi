@@ -14,13 +14,19 @@ export const modelsTmpFn = {
     operationId: 'get${data.name}s',
     tags: ['${data.plural}'],
     parameters: [
-      ${parameters.where}
       ${parameters.orderBy}
       ${parameters.skip}
       ${parameters.take}
       ${parameters.cursor}
       ${parameters.select}
       ${parameters.include}
+      {
+        name: 'where',
+        in: 'query',
+        type: 'string',
+        required: false,
+        description: 'Wraps all model fields in a type so that the list can be filtered by any property. reference models: "#/definitions/${data.name}WhereInput" to JSON string.',
+      },
     ],
     responses: {
       200: {

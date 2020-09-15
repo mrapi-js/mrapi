@@ -167,7 +167,7 @@ class Fillter {
   filterOther(
     result: FindManyFilter,
     key: string,
-    val: string[],
+    val: string,
     filtering: boolean,
   ) {
     if (!filtering) {
@@ -177,21 +177,9 @@ class Fillter {
     let isContinue = false
 
     if (key === 'where') {
-      if (Array.isArray(val)) {
-        // id_in:1,2,3
-        for (const item of val) {
-          const arr = item.split(':')
-          if (arr.length === 2) {
-            // TODO: 待添加白名单逻辑
-            const vals = ['in', 'not_in'].includes(arr[0])
-              ? [...new Set(arr[1].split(','))]
-              : arr[1]
-            if (!result.where) {
-              result.where = {}
-            }
-            result.where[arr[0]] = vals
-          }
-        }
+      const obj = JSON.parse(val)
+      if (obj) {
+        result.where = obj
       }
 
       isContinue = true
