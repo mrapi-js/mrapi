@@ -14,33 +14,11 @@
 
 #### where
 
-- 参数类型：`string`
+- 参数类型：`JSON string`
 
-将所有模型字段包装在类型中，以便可以由任何属性筛选列表。逗号分隔
+将所有模型字段包装在类型中，以便可以由任何属性筛选列表。
 
-```ts
-// 白名单列表
-export const FILTERING = [
-  'equals',
-  'not',
-  'in',
-  'not_in',
-  'lt',
-  'lte',
-  'gt',
-  'gte',
-  'contains',
-  'not_contains',
-  'starts_with',
-  'not_starts_with',
-  'ends_with',
-  'not_ends_with',
-]
-```
-
-**注意\: 需要 Encode 编码，因为属性间用 “,” 分隔，值也是用 “,” 分隔。**
-
-如：`id_in:${encode(1,2,3)},name:test`
+**注意：详情查看文档中对应的 Models**
 
 #### orderBy
 
