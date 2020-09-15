@@ -1,5 +1,3 @@
-import { FILTERING } from '../../constants'
-
 export { modelTmpFn } from './{model}'
 export { modelsTmpFn } from './models'
 
@@ -14,18 +12,6 @@ const TMP_DEFAULT_RESPONSE = `default: {
 // in "query", "header", "path", "formData", "body"
 // type "string", "number", "integer", "boolean", "array", "file"
 const parameters = {
-  where: `{
-    name: 'where',
-    in: 'query',
-    type: 'array',
-    items: {
-      type: "string",
-    },
-    required: false,
-    description: 'Wraps all model fields in a type so that the list can be filtered by any property. Supported types "${FILTERING.join(
-      '", "',
-    )}". Example: id_in:1,2,3',
-  },`,
   orderBy: `{
     name: 'orderBy',
     in: 'query',

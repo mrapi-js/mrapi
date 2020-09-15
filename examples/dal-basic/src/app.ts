@@ -5,7 +5,7 @@ const options: DALOptions = [
   {
     name: 'one',
     defaultTenant: {
-      name: 'dev', // 视乎可以不要 name
+      name: 'dev',
       // url: 'file:../config/db/prod.db',
     },
   },
