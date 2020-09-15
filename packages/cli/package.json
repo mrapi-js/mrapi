@@ -1,37 +1,45 @@
 {
   "name": "@mrapi/cli",
-  "version": "0.8.1",
+  "version": "1.0.0-beta.3",
   "main": "lib/index.js",
   "bin": {
     "mrapi": "./bin/run"
   },
   "files": [
     "lib",
-    "bin",
-    "resource"
+    "bin"
   ],
   "engines": {
     "node": ">=10.12"
   },
   "author": "neikvon",
+  "contributors": [
+    {
+      "name": "kring",
+      "url": "https://github.com/364734461"
+    }
+  ],
   "license": "MIT",
   "scripts": {
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
-    "prisma": "prisma",
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
   "dependencies": {
-    "@mrapi/core": "workspace:*",
     "@mrapi/common": "workspace:*",
-    "@mrapi/multi-tenant": "workspace:*",
-    "commander": "^6.0.0",
-    "dotenv": "^8.2.0"
+    "@mrapi/nexus": "workspace:*",
+    "@mrapi/oas": "workspace:*",
+    "@prisma-multi-tenant/shared": "2.3.1",
+    "chalk": "^4.1.0",
+    "commander": "^6.1.0",
+    "dotenv": "^8.2.0",
+    "fs-extra": "^9.0.1",
+    "prisma-multi-tenant": "2.3.1"
   },
   "devDependencies": {
-    "@prisma/cli": "^2.3.0",
-    "tslib": "^2.0.0",
-    "typescript": "^3.9.7"
+    "@types/fs-extra": "^9.0.1",
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.2"
   },
   "prettier": {
     "semi": false,

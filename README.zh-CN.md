@@ -2,14 +2,19 @@
 
 [English](./README.md)
 
+...(特性介绍)
+
 ## 文档目录
 
-- [x] [入门](./docs/Getting-Started.zh-CN.md)
-- [x] [服务器方法](./docs/Mrapi.zh-CN.md)
-- [x] 配置项
-  - [x] [database](./docs/Configuration/database.zh-CN.md)
-  - [x] [plugins](./docs/Configuration/plugins.zh-CN.md)
-- [ ] [GraphQL API](./docs/GraphQL-API.zh-CN.md)
-- [x] [OpenAPI](./docs/OpenAPI.zh-CN.md)
+- [ ] [入门](./docs/Getting-Started.zh-CN.md)
+- [x] 配置项说明
+  - [x] [common](./docs/Configuration/Common.zh-CN.md)
+  - [x] [@mrapi/dal](./docs/Configuration/DAL.zh-CN.md)
+  - [x] [@mrapi/api](./docs/Configuration/API.zh-CN.md)
 - [x] [CLI](./docs/CLI.zh-CN.md)
-- [ ] [部署方式](./docs/Deployment.zh-CN.md)
+- [x] [DAL](./docs/DAL.zh-CN.md)
+  - [x] [GraphQL API](./docs/DAL/GraphQL-API.zh-CN.md)
+  - [x] [OpenAPI](./docs/DAL/OpenAPI.zh-CN.md)
+- [x] [API](./docs/API.zh-CN.md)
+- [x] [项目示例](./docs/Examples.zh-CN.md)
+- [x] [部署方式](./docs/Deployment.zh-CN.md)

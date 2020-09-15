@@ -1,0 +1,34 @@
+{
+  "name": "api-basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "/lib/index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only --ignore-watch /.meshrc.js ./src/app.ts",
+    "debug": "cross-env ts-node-dev --inspect --respawn --transpile-only --ignore-watch /.meshrc.js ./src/app.ts",
+    "prod": "cross-env NODE_ENV=production node dist/app",
+    "build": "tsc",
+    "clean": "rm -rf dist",
+    "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
+    "generate:prisma": "prisma generate",
+    "generate:nexus": "ts-node-dev --transpile-only src/nexus-schema"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mrapi/api": "workspace:*",
+    "@nexus/schema": "^0.15.0",
+    "cross-env": "^7.0.2"
+  },
+  "devDependencies": {
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.2",
+    "ts-node-dev": "1.0.0-pre.62"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

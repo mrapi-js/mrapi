@@ -1,21 +1,31 @@
 {
   "name": "@mrapi/common",
-  "version": "0.8.1",
+  "version": "1.0.0-beta.3",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
-  "dependencies": {
-    "find-node-modules": "^2.1.0",
-    "deepmerge": "^4.2.2"
+  "publishConfig": {
+    "access": "public",
+    "directory": "lib"
   },
-  "devDependencies": {
-    "tslib": "^2.0.0",
-    "typescript": "^3.9.7"
+  "dependencies": {
+    "deepmerge": "^4.2.2",
+    "find-node-modules": "^2.1.0",
+    "fs-extra": "^9.0.1",
+    "prettier": "^2.1.1",
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.2"
   },
   "author": "neikvon",
+  "contributors": [
+    {
+      "name": "kring",
+      "url": "https://github.com/364734461"
+    }
+  ],
   "license": "MIT",
   "files": [
     "lib"

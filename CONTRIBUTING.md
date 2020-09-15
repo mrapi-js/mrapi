@@ -26,7 +26,6 @@ pnpm i
 pnpm run dev
 ```
 
-
 ## Git Commit
 
 1. Add commit plugin
@@ -35,10 +34,10 @@ pnpm run dev
 
    ```bash
    # install fbi
-   npm i -g fbi
+   npm i -g fbi@next
 
    # add commit plugin
-   fbi add https://github.com/fbi-templates/fbi-task-commit.git
+   fbi add factory-commands
    ```
 
 2. Commit
@@ -48,9 +47,3 @@ pnpm run dev
 
    # if you wanna release new version, please check 'Bump the package version? Yes'
    ```
-
-## List of packages
-
-- cli
-- core
-- create-mrapi-app

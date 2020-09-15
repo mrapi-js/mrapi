@@ -1,0 +1,42 @@
+{
+  "name": "@mrapi/oas",
+  "version": "1.0.0-beta.3",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput --watch",
+    "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
+  },
+  "publishConfig": {
+    "access": "public",
+    "directory": "lib"
+  },
+  "dependencies": {
+    "@mrapi/common": "workspace:*",
+    "chalk": "^4.1.0"
+  },
+  "devDependencies": {
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.2"
+  },
+  "author": "neikvon",
+  "contributors": [
+    {
+      "name": "kring",
+      "url": "https://github.com/364734461"
+    }
+  ],
+  "license": "MIT",
+  "files": [
+    "lib",
+    "templates"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mrapi-js/mrapi/issues"
+  },
+  "homepage": "https://github.com/mrapi-js/mrapi#readme"
+}

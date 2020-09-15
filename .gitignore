@@ -8,7 +8,4 @@ tmp/
 *.log
 package-lock.json
 yarn.lock
-examples/nexus-graphql/src/schema/generated
-examples/nexus-graphql/node_modules
-examples/nexus-graphql/prisma/migrations
-examples/nexus-graphql/prisma/.env
+.vscode

@@ -2,7 +2,6 @@
   "compilerOptions": {
     "incremental": true,
 
-    "outDir": "lib",
     "baseUrl": ".",
 
     "target": "es2018",
@@ -24,12 +23,7 @@
     "noUnusedLocals": true,
     "skipLibCheck": true,
 
-    "composite": true,
-    "paths": {
-      "@mrapi/core": ["packages/core/src/index.ts"],
-      "@mrapi/cli": ["packages/cli/src/index.ts"],
-      "create-mrapi-app": ["packages/create-mrapi-app/src/index.ts"]
-    }
+    "composite": true
   },
   "include": ["packages", "scripts", "typings/**/*.ts"],
   "exclude": ["**/node_modules", "**/lib"]

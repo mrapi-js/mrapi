@@ -20,7 +20,9 @@
 
 ### 一、创建一个 mrapi 项目
 
-我们内置了 `create-mrapi-app` ci 库，方便大家快速初始化项目。
+我们内置了 [create-mrapi-app](https://github.com/mrapi-js/create-mrapi-app) 库，方便大家快速初始化项目。
+
+这里以最简单的 DAL 项目为例（[查看更新](https://github.com/mrapi-js/create-mrapi-app)）：
 
 ```bash
 # 推荐以下命令
@@ -39,43 +41,42 @@ pnpx create-mrapi-app my-project
 
 ### 二、修改配置文件
 
-查看配置 [config/database](./docs/Configuration/database.zh-CN.md)、[config/plugins](./docs/Configuration/plugins.zh-CN.md) 等
+查看配置 [config/mrapi.config.js](./docs/Configuration/common.zh-CN.md)
 
-### 三、自定义 Mrapi Server
+### 三、自定义 prisma schema
 
-```js
-// 新建实例
-const mrapi = new Mrapi({...})
+如：
 
-// 启动服务
-mrapi
-  .start()
-  .then(({ app, address }) => {
-    app.log.info(`GraphQL Server:     ${address}/graphql`)
-    app.log.info(`GraphQL Playground: ${address}/playground`)
-  })
+```prisma
+# one.prisma
+
+model User {
+  email String  @unique
+  id    Int     @default(autoincrement()) @id
+  name  String?
+  Post  Post[]
+}
+
+model Post {
+  authorId  Int?
+  content   String?
+  id        Int     @default(autoincrement()) @id
+  published Boolean @default(false)
+  title     String
+  User      User?   @relation(fields: [authorId], references: [id])
+}
 ```
 
-> ## Tips
->
-> 本文档中的示例，默认情况下只监听本地 `127.0.0.1` 端口。要监听所有有效的 IPv4 端口，需要将代码修改为监听 `0.0.0.0`。
->
-> 默认端口：`1358`
+### 四、运行项目
 
-更多详情 [Mrapi server](./Mrapi.zh-CN.md)
+首先编译依赖项文件
 
-### 四、验证服务
-
-1. 以 `DEV` 模式启动应用程序
-
-```bash
-npm run start:dev
+```
+npx mrapi generate --name one
 ```
 
-2. 以 `PROD` 模式启动应用程序
+开发者环境运行
 
-```bash
-npm run build && npm run start:prod
 ```
-
-访问 `GraphQL Server` 和 `GraphQL Playground` 地址，验证 [OpenAPI](./OpenAPI.zh-CN.md) / [GraphQL](./GraphQL-API.zh-CN.md) 接口。
+npx ts-node-dev --respawn --transpile-only ./src/app.ts
+```

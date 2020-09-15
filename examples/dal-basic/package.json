@@ -1,0 +1,42 @@
+{
+  "name": "dal-basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
+    "prod": "cross-env NODE_ENV=production node dist/src/app",
+    "build": "rm -rf dist && npm run generate && tsc",
+    "clean": "rm -rf dist && rm -rf node_modules",
+    "generate": "npm run gen1 && npm run gen2",
+    "gen-management": "npx mrapi generate --name management",
+    "gen1": "npx mrapi generate --name one",
+    "gen2": "npx mrapi generate --name two",
+    "gen3": "npx mrapi generate --name three",
+    "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts",
+    "gen1-eqm": "npx mrapi generate --name one --eqm findOne,createOne --em Post"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mrapi/dal": "workspace:*",
+    "@mrapi/cli": "workspace:*",
+    "cross-env": "^7.0.2",
+    "@prisma/cli": "^2.4.1",
+    "prisma-multi-tenant": "2.3.1",
+    "@nexus/schema": "0.15.0"
+  },
+  "devDependencies": {
+    "tslib": "^2.0.1",
+    "fs-extra": "^9.0.1",
+    "prettier": "^2.1.1",
+    "typescript": "^4.0.2",
+    "ts-node-dev": "1.0.0-pre.62"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

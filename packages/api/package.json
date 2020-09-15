@@ -1,0 +1,69 @@
+{
+  "name": "@mrapi/api",
+  "version": "1.0.0-beta.3",
+  "main": "lib/index.js",
+  "author": "neikvon",
+  "license": "MIT",
+  "files": [
+    "lib",
+    "bin",
+    "resource"
+  ],
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput --watch",
+    "prisma": "prisma",
+    "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
+  },
+  "dependencies": {
+    "@graphql-mesh/config": "0.8.0",
+    "@graphql-mesh/graphql": "^0.5.1",
+    "@graphql-mesh/runtime": "^0.6.0",
+    "@graphql-mesh/transform-prefix": "^0.5.1",
+    "@graphql-mesh/transform-snapshot": "^0.5.1",
+    "@graphql-tools/stitch": "6.0.18",
+    "@mrapi/common": "workspace:*",
+    "@nexus/schema": "^0.15.0",
+    "fastify": "^3.3.0",
+    "fastify-gql": "^5.6.0",
+    "fastify-reply-from": "^3.2.0",
+    "graphql": "^15.3.0",
+    "logrotator": "^1.1.0",
+    "nexus": "^0.26.1",
+    "pino": "^6.6.0",
+    "pino-multi-stream": "^5.1.1",
+    "pino-pretty": "^4.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^14.6.4",
+    "@types/pino": "^6.3.0",
+    "@types/pino-multi-stream": "^5.0.0",
+    "tslib": "^2.0.1",
+    "typescript": "^4.0.2"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "publishConfig": {
+    "access": "public",
+    "directory": "lib"
+  },
+  "engines": {
+    "node": ">= 10.3"
+  },
+  "resolutions": {
+    "graphql": "15.3.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mrapi-js/mrapi/issues"
+  },
+  "homepage": "https://github.com/mrapi-js/mrapi#readme",
+  "gitHead": "38fd5b78bfd78e63f3f8d0d394a6f7d53eb234b1"
+}
