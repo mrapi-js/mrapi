@@ -34,7 +34,6 @@
     "commander": "^6.1.0",
     "dotenv": "^8.2.0",
     "fs-extra": "^9.0.1",
-    "is-plain-object": "4.1.1",
     "prisma-multi-tenant": "2.3.1"
   },
   "devDependencies": {
