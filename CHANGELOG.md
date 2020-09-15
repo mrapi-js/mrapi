@@ -1,6 +1,25 @@
-# Change Log
+# Changelog
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [1.0.0-beta.4](https://github.com/mrapi-js/mrapi/compare/v1.0.0...v1.0.0-beta.4) (2020-09-15)
+
+
+### Features
+
+* **update oas:** prisma 2.6.x update -> oas users.js GET  params.where ([c207373](https://github.com/mrapi-js/mrapi/commit/c2073733bf203baa564708d4008346ca0fbdf8f4))
+* add "contributors" ([244b642](https://github.com/mrapi-js/mrapi/commit/244b6424d60448440077a57ffeaec8d69d5984d3))
+* getConfig path -> process.env.MRAPICONFIG_PATH ([323f607](https://github.com/mrapi-js/mrapi/commit/323f607999fd4df5966e459b1ac48fd8080eb363))
+* prisma transactionApi ([e38c458](https://github.com/mrapi-js/mrapi/commit/e38c4583f2620001c852d8af49fedb8a458b8492))
+* update pkg version ([6993517](https://github.com/mrapi-js/mrapi/commit/6993517f3300839b95a914b10a09facd4ae1e30d))
+
+
+### Bug Fixes
+
+* cli params bug ([76439ab](https://github.com/mrapi-js/mrapi/commit/76439ab6b93dd3708503b78fd211bda9764e78d1))
+* default wrong character ([d0cbf84](https://github.com/mrapi-js/mrapi/commit/d0cbf849e354fdc9a1bf688a4c057f697d642cbb))
+* fix dal type.d.ts ([493371d](https://github.com/mrapi-js/mrapi/commit/493371db5e6f302f374b91f231703a0329599236))
+* update generate ignore ([19e43ae](https://github.com/mrapi-js/mrapi/commit/19e43ae1b78f11c0bc81824371932749ce426f3d))
 
 <a name="1.0.0-beta.2"></a>
 # 1.0.0-beta.2 (2020-09-08)
