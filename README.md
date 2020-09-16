@@ -99,7 +99,7 @@ npx ts-node-dev --respawn --transpile-only ./src/app.ts
 You can find the Mrapi documentation on the [website](https://mrapi-js.github.io/docs/).
 
 
-- [x] [Getting Started]([./docs/Getting-Started.md](https://mrapi-js.github.io/docs/GettingStart.html))
+- [x] [Getting Started](https://mrapi-js.github.io/docs/GettingStart.html)
 - [ ] Configuration
   - [x] [common](https://mrapi-js.github.io/docs/Configuration/Common.html)
   - [x] [@mrapi/dal](https://mrapi-js.github.io/docs/Configuration/DAL.html)
