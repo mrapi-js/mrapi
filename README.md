@@ -61,7 +61,36 @@ View configuration：[config/mrapi.config.js](https://mrapi-js.github.io/docs/Co
 
 ### Third step: customize mrapi server
 
-....
+such as: 
+```prisma
+# one.prisma
+
+model User {
+  email String  @unique
+  id    Int     @default(autoincrement()) @id
+  name  String?
+  Post  Post[]
+}
+
+model Post {
+  authorId  Int?
+  content   String?
+  id        Int     @default(autoincrement()) @id
+  published Boolean @default(false)
+  title     String
+  User      User?   @relation(fields: [authorId], references: [id])
+}
+
+```
+### Fourth, Run the project
+First compile the dependency file
+```terminal
+npx mrapi generate --name one
+```
+Run in developer environment
+```termianl
+npx ts-node-dev --respawn --transpile-only ./src/app.ts
+```
 
 
 
