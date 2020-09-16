@@ -50,7 +50,7 @@ $  yarn create-mrapi-app my-project
 $  npx create-mrapi-app my-project
 
 # or
-$	 pnpx create-mrapi-app my-project
+$  pnpx create-mrapi-app my-project
 ```
 
 And now, the project has  been generated!
@@ -70,18 +70,18 @@ View configuration：[config/mrapi.config.js](https://mrapi-js.github.io/docs/Co
 You can find the Mrapi documentation on the [website](https://mrapi-js.github.io/docs/).
 
 
-- [ ] [Getting Started]([./docs/Getting-Started.md](https://mrapi-js.github.io/docs/GettingStart.html))
+- [x] [Getting Started]([./docs/Getting-Started.md](https://mrapi-js.github.io/docs/GettingStart.html))
 - [ ] Configuration
-  - [ ] [common](https://mrapi-js.github.io/docs/Configuration/Common.html)
-  - [ ] [@mrapi/dal]((https://mrapi-js.github.io/docs/Configuration/DAL.html))
-  - [ ] [@mrapi/api](https://mrapi-js.github.io/docs/Configuration/API.html)
-- [ ] [CLI](https://mrapi-js.github.io/docs/CLI.html)
-- [ ] [DAL](https://mrapi-js.github.io/docs/DAL/DAL.html)
-  - [ ] [GraphQL API](https://mrapi-js.github.io/docs/DAL/GraphQl-API.html)
-  - [ ] [OpenAPI](https://mrapi-js.github.io/docs/DAL/OpenAPI.html)
-- [ ] [API](https://mrapi-js.github.io/docs/API.html)
+  - [x] [common](https://mrapi-js.github.io/docs/Configuration/Common.html)
+  - [x] [@mrapi/dal](https://mrapi-js.github.io/docs/Configuration/DAL.html)
+  - [x] [@mrapi/api](https://mrapi-js.github.io/docs/Configuration/API.html)
+- [x] [CLI](https://mrapi-js.github.io/docs/CLI.html)
+- [x] [DAL](https://mrapi-js.github.io/docs/DAL/DAL.html)
+  - [x] [GraphQL API](https://mrapi-js.github.io/docs/DAL/GraphQl-API.html)
+  - [x] [OpenAPI](https://mrapi-js.github.io/docs/DAL/OpenAPI.html)
+- [x] [API](https://mrapi-js.github.io/docs/API.html)
 - [x] [Examples](https://mrapi-js.github.io/docs/Examples.html)
-- [ ] [Deployment](https://mrapi-js.github.io/docs/Deployment.html)
+- [x] [Deployment](https://mrapi-js.github.io/docs/Deployment.html)
 
 ## License
 
