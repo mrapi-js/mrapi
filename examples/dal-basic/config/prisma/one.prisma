@@ -5,6 +5,7 @@ model User {
   Post  Post[]
 }
 
+// gegegee  model Post {'
 model Post {
   authorId  Int?
   content   String?
@@ -13,3 +14,11 @@ model Post {
   title     String
   User      User?   @relation(fields: [authorId], references: [id])
 }
+
+// this is a test enum
+model Yoga {
+  emm Int @id
+  // helloga
+}
+
+/// hello[]
