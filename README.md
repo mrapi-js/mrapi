@@ -1,5 +1,5 @@
 <p align="center">
-  <a href="https://mrapi-js.github.io/docs/" target="_blank" rel="noopener noreferrer"><img width="100" src="./assets/logo.png" alt="mrapi logo"></a>
+  <a href="https://mrapi-js.github.io/docs/" target="_blank" rel="noopener noreferrer"><img width="200" src="./assets/logo.png" alt="mrapi logo"></a>
 </p>
 
 mrapi is a framework for rapid development of API or DAL applications.
