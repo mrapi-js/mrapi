@@ -1,5 +1,6 @@
 import { enumType, inputObjectType, objectType, plugin } from '@nexus/schema'
 import { NexusAcceptedTypeDef } from '@nexus/schema/dist/builder'
+import { DateTimeResolver, JSONResolver } from 'graphql-scalars'
 
 import { getPrismaDmmf } from '@mrapi/common'
 
@@ -18,6 +19,8 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
             t.int('count', { nullable: false })
           },
         }),
+        DateTimeResolver,
+        JSONResolver,
       ]
 
       dmmf.datamodel.models.forEach((input: any) => {

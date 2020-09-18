@@ -1,8 +1,9 @@
 model User {
-  email String  @unique
-  id    Int     @default(autoincrement()) @id
-  name  String?
-  Post  Post[]
+  email     String   @unique
+  id        Int      @default(autoincrement()) @id
+  name      String?
+  timesssss DateTime
+  Post      Post[]
 }
 
 model Post {
@@ -12,9 +13,4 @@ model Post {
   published Boolean @default(false)
   title     String
   User      User?   @relation(fields: [authorId], references: [id])
-}
-
-model Yoga {
-  emm  Int      @id
-  date DateTime
 }

@@ -240,6 +240,7 @@ importers:
       '@mrapi/common': 'link:../common'
       '@nexus/schema': 0.15.0
       chalk: 4.1.0
+      graphql-scalars: registry.npmjs.org/graphql-scalars/1.2.7
     devDependencies:
       tslib: 2.0.1
       typescript: 4.0.2
@@ -247,6 +248,7 @@ importers:
       '@mrapi/common': 'workspace:*'
       '@nexus/schema': 0.15.0
       chalk: ^4.1.0
+      graphql-scalars: 1.2.7
       tslib: ^2.0.1
       typescript: ^4.0.2
   packages/oas:
@@ -9584,6 +9586,18 @@ packages:
       registry: 'https://registry.yarnpkg.com/'
       tarball: 'https://registry.npmjs.org/globby/-/globby-11.0.1.tgz'
     version: 11.0.1
+  registry.npmjs.org/graphql-scalars/1.2.7:
+    dev: false
+    engines:
+      node: '>=10'
+    name: graphql-scalars
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-bkB/OEsfiYm/hMwSnZfg91SZ3ChOM6Dnw5LZkUN68IXtBGKrBxjw8kXbD3bBXhWpjaKshvNVG7ZK3vFtfBmwrQ==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/graphql-scalars/-/graphql-scalars-1.2.7.tgz'
+    version: 1.2.7
   registry.npmjs.org/has-flag/3.0.0:
     dev: true
     engines:
