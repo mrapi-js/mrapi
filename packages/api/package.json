@@ -18,6 +18,7 @@
   "dependencies": {
     "@graphql-mesh/config": "0.8.0",
     "@graphql-mesh/graphql": "^0.5.1",
+    "@graphql-mesh/openapi": "^0.5.7",
     "@graphql-mesh/runtime": "^0.6.0",
     "@graphql-mesh/transform-prefix": "^0.5.1",
     "@graphql-mesh/transform-snapshot": "^0.5.1",
