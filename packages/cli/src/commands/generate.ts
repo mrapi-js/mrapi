@@ -95,35 +95,41 @@ class GenerateCommand extends Command {
     // 2. Generate schema.prisma
     const inputSchemaFile = readFileSync(inputSchemaPath)
     const pureSchemaFile = this.getNoCommentContent(inputSchemaFile)
-    let supportroviders: PROVIDER_TYPE[] = provider
+    let supportProviders: PROVIDER_TYPE[] = provider
       ? provider.trim().split(',')
-      : datasourceProvider
+      : this.getCustomProvider(pureSchemaFile)
 
     if (this.isScalarTypeArrayOccurs(pureSchemaFile)) {
-      if (provider) {
+      if (
+        provider &&
+        (supportProviders.length > 1 ||
+          !supportProviders.includes('postgresql'))
+      ) {
         throw new Error(
           'If primitive array occurs, provider can only be "postgresql".',
         )
       }
-      supportroviders = ['postgresql']
+      supportProviders = ['postgresql']
     } else {
-      const index = supportroviders.indexOf('sqlite')
+      const index = supportProviders.indexOf('sqlite')
       if (
-        index !== -1 &&
-        (this.isNormalTypeOccurs(pureSchemaFile, '(Json\\s*\\[\\]|Json\\s+)') ||
-          this.isNormalTypeOccurs(pureSchemaFile, 'enum\\s+'))
+        index > -1 &&
+        this.isNormalTypeOccurs(
+          pureSchemaFile,
+          '(\\s+Json\\s*\\[\\]|\\s+Json\\s*|\\n\\s*enum\\s+)',
+        )
       ) {
-        if (provider) {
+        if (provider && supportProviders.includes('sqlite')) {
           throw new Error(
             'If "Json" or "enum" occurs, provider can not be "sqlite".',
           )
         }
-        supportroviders.splice(index, 1)
+        supportProviders.splice(index, 1)
       }
     }
 
     // if there is no provider avaliable, throw error.
-    if (supportroviders.length <= 0) {
+    if (supportProviders.length <= 0) {
       throw new Error(
         'Datasource provider can not be empty, please check if or not current connector can support this kind of grammer in your schema.',
       )
@@ -131,7 +137,11 @@ class GenerateCommand extends Command {
 
     writeFileSync(
       outputSchemaPath,
-      this.createSchemaPrisma(outputPath, inputSchemaFile, supportroviders),
+      this.createSchemaPrisma(
+        outputPath,
+        this.getNoDatasourceContent(inputSchemaFile),
+        supportProviders,
+      ),
     )
 
     // 3. Generate PMT
@@ -233,7 +243,7 @@ ${content}
 
   isScalarTypeArrayOccurs(content: string): boolean {
     // Judge whether or not enum array occurs.
-    const enumDefined = new RegExp('\\s*enum\\s+(([a-z]*[A-Z]*)?)\\s*{', 'g')
+    const enumDefined = new RegExp('\\n\\s*enum\\s+(([a-z]*[A-Z]*)?)\\s*{', 'g')
     const enumTypeNameArr = []
     let result
     while ((result = enumDefined.exec(content)) != null) {
@@ -243,7 +253,7 @@ ${content}
       if (
         this.isNormalTypeOccurs(
           content,
-          '(' + enumTypeNameArr.join('|') + ')\\s*\\[\\]',
+          '\\s+(' + enumTypeNameArr.join('|') + ')\\s*\\[\\]',
         )
       ) {
         return true
@@ -253,12 +263,13 @@ ${content}
     // Primitive array judgement.
     return this.isNormalTypeOccurs(
       content,
-      '(Json|String|Boolean|Int|Float|DateTime)\\s*\\[\\]',
+      '\\s+(Json|String|Boolean|Int|Float|DateTime)\\s*\\[\\]',
     )
   }
 
   isNormalTypeOccurs(content: string, patternStr: string): boolean {
     const pattern = new RegExp('.*' + patternStr, 'g')
+
     return pattern.exec(content) !== null
   }
 
@@ -266,6 +277,31 @@ ${content}
   getNoCommentContent(content: string): string {
     const commentPattern = /\s*(\/){2,}.*/g
     return content.replace(commentPattern, '')
+  }
+
+  // Remove custom datasource from file content
+  getNoDatasourceContent(content: string): string {
+    const datasourcePattern = /\s*datasource\s+([^}]*)\}/g
+    return content.replace(datasourcePattern, '')
+  }
+
+  // Get datasource provider from file content
+  getCustomProvider(content: string): PROVIDER_TYPE[] {
+    const providerPattern = /\s*datasource\s+([^}]*)provider\s*=\s*((.*)?)\n[^}]*\}/g
+    const matchStr = providerPattern.exec(content)
+
+    if (matchStr !== null) {
+      // The second sub-expression find the provider
+      const customInput = JSON.parse(matchStr[2])
+
+      if (customInput instanceof Array) {
+        return customInput
+      }
+
+      return [customInput as PROVIDER_TYPE]
+    }
+
+    return datasourceProvider
   }
 }
 
