@@ -2,9 +2,19 @@ model User {
   email String  @unique
   id    Int     @default(autoincrement()) @id
   name  String?
+  test Test[]
+  nn TTT []
+  yy DDD[]
 }
 
-enum TestEnum {
-  XENUM
-  YENUM
+model Test {
+  id Int @id
+}
+
+enum TTT {
+  XXX
+}
+
+enum DDD {
+  YYY
 }
