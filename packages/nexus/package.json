@@ -15,7 +15,8 @@
     "@mrapi/common": "workspace:*",
     "@nexus/schema": "0.15.0",
     "chalk": "^4.1.0",
-    "graphql-scalars": "1.2.7"
+    "graphql-scalars": "1.2.7",
+    "graphql": "^15.3.0"
   },
   "devDependencies": {
     "tslib": "^2.0.1",

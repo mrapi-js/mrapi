@@ -35,7 +35,7 @@
     "express": "^4.17.1",
     "express-graphql": "^0.11.0",
     "express-openapi": "^7.0.1",
-    "graphql": "15.3.0",
+    "graphql": "^15.3.0",
     "is-plain-object": "5.0.0",
     "swagger-ui-express": "^4.1.4"
   },

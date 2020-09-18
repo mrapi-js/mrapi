@@ -1,8 +1,46 @@
-import { enumType, inputObjectType, objectType, plugin } from '@nexus/schema'
+import {
+  enumType,
+  inputObjectType,
+  objectType,
+  plugin,
+  scalarType,
+} from '@nexus/schema'
+import { Kind, ValueNode, ObjectValueNode } from 'graphql'
 import { NexusAcceptedTypeDef } from '@nexus/schema/dist/builder'
 import { DateTimeResolver, JSONResolver } from 'graphql-scalars'
 
 import { getPrismaDmmf } from '@mrapi/common'
+
+function parseObject(ast: ObjectValueNode, variables: any): any {
+  const value = Object.create(null)
+  ast.fields.forEach((field) => {
+    // eslint-disable-next-line no-use-before-define
+    value[field.name.value] = parseLiteral(field.value, variables)
+  })
+
+  return value
+}
+
+function parseLiteral(ast: ValueNode, variables: any): any {
+  switch (ast.kind) {
+    case Kind.STRING:
+    case Kind.BOOLEAN:
+      return ast.value
+    case Kind.INT:
+    case Kind.FLOAT:
+      return parseFloat(ast.value)
+    case Kind.OBJECT:
+      return parseObject(ast, variables)
+    case Kind.LIST:
+      return ast.values.map((n) => parseLiteral(n, variables))
+    case Kind.NULL:
+      return null
+    case Kind.VARIABLE: {
+      const name = ast.name.value
+      return variables ? variables[name] : undefined
+    }
+  }
+}
 
 export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
   plugin({
@@ -11,6 +49,19 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
       'This plugin to add Prisma select to your resolver and prisma admin queries and mutations and all models input types',
     onInstall() {
       const dmmf = getPrismaDmmf(prismaClient)
+
+      const JSON = scalarType({
+        name: 'Json',
+        asNexusMethod: 'Json',
+        description: 'Json custom scalar type',
+        parseValue(value) {
+          return value
+        },
+        serialize(value) {
+          return value
+        },
+        parseLiteral,
+      })
 
       const nexusSchemaInputs: NexusAcceptedTypeDef[] = [
         objectType({
@@ -21,6 +72,7 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
         }),
         DateTimeResolver,
         JSONResolver,
+        JSON,
       ]
 
       dmmf.datamodel.models.forEach((input: any) => {

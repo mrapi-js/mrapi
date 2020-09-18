@@ -55,7 +55,7 @@
     "node": ">= 10.3"
   },
   "resolutions": {
-    "graphql": "15.3.0"
+    "graphql": "^15.3.0"
   },
   "repository": {
     "type": "git",
