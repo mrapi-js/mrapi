@@ -34,7 +34,7 @@ pnpm run dev
 
    ```bash
    # install fbi
-   npm i -g fbi@next
+   npm i -g fbi
 
    # add commit plugin
    fbi add factory-commands

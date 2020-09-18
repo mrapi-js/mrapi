@@ -7,6 +7,7 @@ mrapi is a framework for rapid development of API or DAL applications.
 [Website](https://mrapi-js.github.io/docs/)
 
 ## Overview
+
 Hello! Thank you for checking out Mrapi!
 Mrapi is a lightweight, out-of-the-box, nodejs server framework, Born for construction
 Use Node.js and Koa for better enterprise frameworks and applications
@@ -14,14 +15,14 @@ Use Node.js and Koa for better enterprise frameworks and applications
 Born to build enterprise-level nodejs applications faster
 
 ## Core features
-+ Easier to use
-+ Automation
-+ Flexible and Extendible
-+ Highly performant
-+ TypeScript Support
+
+- Easier to use
+- Automation
+- Flexible and Extendible
+- Highly performant
+- TypeScript Support
 
 Let's start!
-
 
 ## Requirements
 
@@ -59,7 +60,7 @@ $  npx create-mrapi-app my-project
 $  pnpx create-mrapi-app my-project
 ```
 
-And now, the project has  been generated!
+And now, the project has been generated!
 
 ### Second step: Modify the configuration file
 
@@ -67,7 +68,8 @@ View configuration：[config/mrapi.config.js](https://mrapi-js.github.io/docs/Co
 
 ### Third step: customize mrapi server
 
-such as: 
+such as:
+
 ```prisma
 # one.prisma
 
@@ -88,25 +90,27 @@ model Post {
 }
 
 ```
+
 ### Fourth, Run the project
+
 First compile the dependency file
+
 ```terminal
 npx mrapi generate --name one
 ```
+
 Run in developer environment
+
 ```termianl
 npx ts-node-dev --respawn --transpile-only ./src/app.ts
 ```
-
-
 
 ## Documentation
 
 You can find the Mrapi documentation on the [website](https://mrapi-js.github.io/docs/).
 
-
 - [x] [Getting Started](https://mrapi-js.github.io/docs/GettingStart.html)
-- [ ] Configuration
+- [x] Configuration
   - [x] [common](https://mrapi-js.github.io/docs/Configuration/Common.html)
   - [x] [@mrapi/dal](https://mrapi-js.github.io/docs/Configuration/DAL.html)
   - [x] [@mrapi/api](https://mrapi-js.github.io/docs/Configuration/API.html)
