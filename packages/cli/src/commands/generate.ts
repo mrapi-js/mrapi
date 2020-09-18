@@ -83,9 +83,25 @@ class GenerateCommand extends Command {
     await runShell(`rm -rf ${outputPath} ${outputSchemaPath}`)
 
     // 2. Generate schema.prisma
+    const inputSchemaFile = readFileSync(inputSchemaPath);
+
+    // analysis input to decide provider
+    // if '[]' occurs, provider can only be pg.  if 'enum' occurs, provider can not be sqlite.
+    const supportroviders: ("sqlite" | "mysql" | "postgresql")[] = ["sqlite", "mysql", "postgresql"];
+
+    if (this.isArrayTypeOccurs(inputSchemaFile)) {
+      console.log('schema has array, provider might be postgresql');
+      supportroviders.includes("sqlite") && supportroviders.splice(supportroviders.indexOf("sqlite"), 1);
+      supportroviders.includes("mysql") && supportroviders.splice(supportroviders.indexOf("mysql"), 1);
+    }
+    if (this.isEnumTypeOccurs(inputSchemaFile)) {
+      console.log('schema has enum, provider should not be sqlite');
+      supportroviders.includes("sqlite") && supportroviders.splice(supportroviders.indexOf("sqlite"), 1);
+    }
+
     writeFileSync(
       outputSchemaPath,
-      this.createSchemaPrisma(outputPath, readFileSync(inputSchemaPath)),
+      this.createSchemaPrisma(outputPath, inputSchemaFile, supportroviders),
     )
 
     // 3. Generate PMT
@@ -152,7 +168,11 @@ class GenerateCommand extends Command {
     await openAPIGenerate.run()
   }
 
-  createSchemaPrisma = (output: string, content: string) => `
+  createSchemaPrisma = (
+    output: string, 
+    content: string, 
+    provider: ("sqlite" | "mysql" | "postgresql")[]
+    ) => `
 generator client {
   provider = "prisma-client-js"
   output   = "${output}"
@@ -160,7 +180,7 @@ generator client {
 }
 
 datasource db {
-  provider = ["sqlite", "mysql", "postgresql"]
+  provider = [${provider.map(i => `\"${i}\"`).join(", ")}]
   url      = env("DATABASE_URL")
 }
 
@@ -179,6 +199,46 @@ ${content}
     if (exitCode !== 0) {
       throw new Error('Generate a management exception.')
     }
+  }
+
+  isArrayTypeOccurs(content: string): boolean {
+    // array in comments
+    const commentArrPattern = /(\/).+\[\]/g;
+    // all array
+    const arrPattern = /.+\[\]/g;
+
+    const commentMatch = commentArrPattern.exec(content);
+    const allMatch = arrPattern.exec(content);
+
+    if (allMatch === null) {
+      return false;
+    }
+
+    if (commentMatch === null) {
+      return true;
+    }
+
+    return commentMatch.length !== allMatch.length;
+  }
+
+  isEnumTypeOccurs(content: string): boolean {
+    // enum in comments
+    const commentEnumPattern = /(\/).*enum\s+/g;
+    // all enum
+    const enumPattern = /.*enum\s+/g;
+
+    const commentMatch = commentEnumPattern.exec(content);
+    const allMatch = enumPattern.exec(content);
+
+    if (allMatch === null) {
+      return false;
+    }
+
+    if (commentMatch === null) {
+      return true;
+    }
+
+    return commentMatch.length !== allMatch.length;
   }
 }
 
