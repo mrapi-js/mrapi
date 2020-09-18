@@ -171,10 +171,7 @@ export class GenerateNexus extends Generators {
       field.outputType.type === 'DateTime' ||
       field.outputType.type === 'Json'
     ) {
-      options.type =
-        field.outputType.type === 'Json'
-          ? field.outputType.type.toUpperCase()
-          : field.outputType.type
+      options.type = field.outputType.type
     }
     if (field.args.length > 0) {
       field.args.forEach((arg: any) => {

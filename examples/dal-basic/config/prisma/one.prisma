@@ -2,8 +2,8 @@ model User {
   email     String   @unique
   id        Int      @default(autoincrement()) @id
   name      String?
-  timesssss DateTime
-  jsontest  Json
+  // timesssss DateTime
+  // jsontest  Json
   Post      Post[]
 }
 
