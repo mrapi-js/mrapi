@@ -18,9 +18,11 @@ import { Generator as OASGenerate } from '@mrapi/oas'
 import Command, { CommandParams } from './common'
 import type { MrapiConfig, GeneratorOptions } from '@mrapi/common'
 
+type PROVIDER_TYPE = 'sqlite' | 'mysql' | 'postgresql'
+const datasourceProvider: PROVIDER_TYPE[] = ['sqlite', 'mysql', 'postgresql']
+
 const cntWhiteList = ['disableQueries', 'disableMutations']
 const cntWhiteListSet = new Set(cntWhiteList)
-type PROVIDER_TYPE = 'sqlite' | 'mysql' | 'postgresql';
 
 class GenerateCommand extends Command {
   static params: CommandParams = {
@@ -53,11 +55,18 @@ class GenerateCommand extends Command {
         key: 'eqm',
         flags: ['--eqm <options>', 'Exclude Queries and Mutations'],
       },
+      {
+        key: 'provider',
+        flags: [
+          '--provider <options>',
+          `Datasource provider list: ${datasourceProvider.join(',')}.`,
+        ],
+      },
     ],
   }
 
   async execute() {
-    const { name, cnt, m, em, eqm } = this.argv
+    const { name, cnt, m, em, eqm, provider } = this.argv
     const {
       inputSchemaDir,
       schemaDir,
@@ -85,39 +94,44 @@ class GenerateCommand extends Command {
 
     // 2. Generate schema.prisma
     const inputSchemaFile = readFileSync(inputSchemaPath)
-    const pureSchemaFile = this.getNoCommentContent(inputSchemaFile);
-    const supportroviders: PROVIDER_TYPE[] = this.getCustomProvider(pureSchemaFile);
+    const pureSchemaFile = this.getNoCommentContent(inputSchemaFile)
+    let supportroviders: PROVIDER_TYPE[] = provider
+      ? provider.trim().split(',')
+      : datasourceProvider
 
-    // If primitive array occurs, provider can only be 'postgresql'.
     if (this.isScalarTypeArrayOccurs(pureSchemaFile)) {
-      supportroviders.splice(0, supportroviders.length);
-      supportroviders.push('postgresql');
-    }
-
-    // If 'Json' occurs, provider can not be 'sqlite'.
-    if (
-      supportroviders.includes('sqlite') &&
-      this.isJsonTypeOccurs(pureSchemaFile)
-    ) {
-      supportroviders.splice(supportroviders.indexOf('sqlite'), 1);
-    }
-
-    // If 'enum' occurs, provider can not be 'sqlite'.
-    if (
-      supportroviders.includes('sqlite') &&
-      this.isEnumTypeOccurs(pureSchemaFile)
-    ) {
-      supportroviders.splice(supportroviders.indexOf('sqlite'), 1);
+      if (provider) {
+        throw new Error(
+          'If primitive array occurs, provider can only be "postgresql".',
+        )
+      }
+      supportroviders = ['postgresql']
+    } else {
+      const index = supportroviders.indexOf('sqlite')
+      if (
+        index !== -1 &&
+        (this.isNormalTypeOccurs(pureSchemaFile, '(Json\\s*\\[\\]|Json\\s+)') ||
+          this.isNormalTypeOccurs(pureSchemaFile, 'enum\\s+'))
+      ) {
+        if (provider) {
+          throw new Error(
+            'If "Json" or "enum" occurs, provider can not be "sqlite".',
+          )
+        }
+        supportroviders.splice(index, 1)
+      }
     }
 
     // if there is no provider avaliable, throw error.
     if (supportroviders.length <= 0) {
-      throw new Error('datasource provider can not be empty, please check if or not current connector can support this kind of grammer in your schema.')
+      throw new Error(
+        'Datasource provider can not be empty, please check if or not current connector can support this kind of grammer in your schema.',
+      )
     }
 
     writeFileSync(
       outputSchemaPath,
-      this.createSchemaPrisma(outputPath, this.getNoDatasourceContent(inputSchemaFile), supportroviders),
+      this.createSchemaPrisma(outputPath, inputSchemaFile, supportroviders),
     )
 
     // 3. Generate PMT
@@ -196,7 +210,7 @@ generator client {
 }
 
 datasource db {
-  provider = [${provider.map((i) => `\"${i}\"`).join(', ')}]
+  provider = ["${provider.join('", "')}"]
   url      = env("DATABASE_URL")
 }
 
@@ -217,76 +231,41 @@ ${content}
     }
   }
 
-  getCustomProvider(content: string): PROVIDER_TYPE[] {
-    const providerPattern = /\s*provider\s*=\s*((.*)?)\n/ig;
-    const matchStr = providerPattern.exec(content);
-
-    if (matchStr !== null) {
-      const customInput = JSON.parse(matchStr[1]);
-
-      if (customInput instanceof Array) {
-        return customInput;
-      }
-
-      return [ customInput as PROVIDER_TYPE ];
-    }
-    
-    return [
-      'sqlite',
-      'mysql',
-      'postgresql',
-    ];
-  }
-
   isScalarTypeArrayOccurs(content: string): boolean {
-
     // Judge whether or not enum array occurs.
-    const enumDefined = new RegExp("\\s*enum\\s+(([a-z]*[A-Z]*)?)\\s*{","g");
-    const enumTypeNameArr = [];
-    let result;
-    while ((result = enumDefined.exec(content)) != null)  {
-      enumTypeNameArr.push(result[1].trim());
+    const enumDefined = new RegExp('\\s*enum\\s+(([a-z]*[A-Z]*)?)\\s*{', 'g')
+    const enumTypeNameArr = []
+    let result
+    while ((result = enumDefined.exec(content)) != null) {
+      enumTypeNameArr.push(result[1].trim())
     }
     if (enumTypeNameArr.length !== 0) {
-      if (this.isNormalTypeOccurs(content, "(" + enumTypeNameArr.join("|") + ")\\s*\\[\\]")) {
-        return true;
+      if (
+        this.isNormalTypeOccurs(
+          content,
+          '(' + enumTypeNameArr.join('|') + ')\\s*\\[\\]',
+        )
+      ) {
+        return true
       }
     }
 
     // Primitive array judgement.
-    return this.isNormalTypeOccurs(content, "(Json|String|Boolean|Int|Float|DateTime)\\s*\\[\\]");
-  }
-
-  isJsonTypeOccurs(content: string): boolean {
-    return this.isNormalTypeOccurs(content, "(Json\\s*\\[\\]|Json\\s+)");
-  }
-
-  isEnumTypeOccurs(content: string): boolean {
-    return this.isNormalTypeOccurs(content, "enum\\s+");
+    return this.isNormalTypeOccurs(
+      content,
+      '(Json|String|Boolean|Int|Float|DateTime)\\s*\\[\\]',
+    )
   }
 
   isNormalTypeOccurs(content: string, patternStr: string): boolean {
-    const pattern = new RegExp(".*" + patternStr,"g");
-
-    const allMatch = pattern.exec(content)
-
-    if (allMatch === null) {
-      return false
-    }
-
-    return true;
+    const pattern = new RegExp('.*' + patternStr, 'g')
+    return pattern.exec(content) !== null
   }
 
   // Remove comments from file content
   getNoCommentContent(content: string): string {
-    const commentPattern = /\s*(\/){2,}.*/g;
-    return content.replace(commentPattern, "");
-  }
-
-  // Remove custom datasource from file content
-  getNoDatasourceContent(content: string): string {
-    const datasourcePattern = /.*datasource\s+db([\s\S]*?)\}/g;
-    return content.replace(datasourcePattern, "");
+    const commentPattern = /\s*(\/){2,}.*/g
+    return content.replace(commentPattern, '')
   }
 }
 
