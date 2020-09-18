@@ -119,7 +119,7 @@ class GenerateCommand extends Command {
           '(\\s+Json\\s*\\[\\]|\\s+Json\\s*|\\n\\s*enum\\s+)',
         )
       ) {
-        if (provider && supportProviders.includes('sqlite')) {
+        if (provider) {
           throw new Error(
             'If "Json" or "enum" occurs, provider can not be "sqlite".',
           )
