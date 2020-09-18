@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/api",
-  "version": "1.0.0-beta.3",
+  "version": "1.0.0-beta.6",
   "main": "lib/index.js",
   "author": "neikvon",
   "license": "MIT",
@@ -56,7 +56,7 @@
     "node": ">= 10.3"
   },
   "resolutions": {
-    "graphql": "15.3.0"
+    "graphql": "^15.3.0"
   },
   "repository": {
     "type": "git",
