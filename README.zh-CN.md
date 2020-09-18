@@ -1,4 +1,9 @@
-# mrapi 简体中文文档 (WIP)
+<p align="center">
+  <a href="https://mrapi-js.github.io/docs/" target="_blank" rel="noopener noreferrer"><img width="200" src="./assets/logo.png" alt="mrapi logo"></a>
+</p>
+
+mrapi 是一个快速开发API或DAL应用的框架。
+
 
 [English](./README.md)
 
