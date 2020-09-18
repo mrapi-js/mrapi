@@ -18,6 +18,8 @@ model Post {
 // this is a test enum
 model Yoga {
   emm Int @id
+  yyy Int[]
+  date DateTime
   // helloga
 }
 
