@@ -33,6 +33,8 @@ function getFieldType(type: string) {
       return 'number'
     case 'null':
       return 'null'
+    case 'Json':
+      return 'string'
   }
   throw new Error('Unknown field type. type: ' + type)
 }

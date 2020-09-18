@@ -67,9 +67,11 @@ export interface DefaultConfig {
 
 export interface GraphqlConfig {
   name: string
+  type?: string
   endpoint: string
   prefix: string
   snapshot?: boolean
+  headers?: Obj
 }
 
 export interface ApiOptions {
@@ -102,4 +104,4 @@ export interface Obj {
 }
 
 type ValueOrArray<T> = T | ArrayOfValueOrArray<T>
-interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}
+interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> { }

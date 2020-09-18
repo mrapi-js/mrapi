@@ -54,6 +54,29 @@ function getGraphqlConfig(gConfig: GraphqlConfig): Obj {
       },
     ],
   }
+  switch (gConfig.type) {
+    case 'openapi':
+      Object.assign(ret, {
+        handler: {
+          openapi: {
+            source: gConfig.endpoint,
+            operationHeaders: gConfig.headers || {},
+          },
+        },
+      })
+      break
+    case 'graphql':
+    default:
+      Object.assign(ret, {
+        handler: {
+          graphql: {
+            endpoint: gConfig.endpoint,
+            operationHeaders: gConfig.headers || {},
+          },
+        },
+      })
+      break
+  }
   if (gConfig.snapshot) {
     Object.assign(ret.transforms[0], {
       snapshot: {

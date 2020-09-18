@@ -1,7 +1,48 @@
-import { enumType, inputObjectType, objectType, plugin } from '@nexus/schema'
+import {
+  enumType,
+  inputObjectType,
+  objectType,
+  plugin,
+  scalarType,
+} from '@nexus/schema'
 import { NexusAcceptedTypeDef } from '@nexus/schema/dist/builder'
+import {
+  DateTimeResolver,
+  // JSONResolver
+} from 'graphql-scalars'
 
 import { getPrismaDmmf } from '@mrapi/common'
+
+function parseObject(ast: any, variables: any): any {
+  const value = Object.create(null)
+  ast.fields.forEach((field: any) => {
+    // eslint-disable-next-line no-use-before-define
+    value[field.name.value] = parseLiteral(field.value, variables)
+  })
+
+  return value
+}
+
+function parseLiteral(ast: any, variables: any): any {
+  switch (ast.kind) {
+    case 'StringValue':
+    case 'BooleanValue':
+      return ast.value
+    case 'IntValue':
+    case 'FloatValue':
+      return parseFloat(ast.value)
+    case 'ObjectValue':
+      return parseObject(ast, variables)
+    case 'ListValue':
+      return ast.values.map((n: any) => parseLiteral(n, variables))
+    case 'NullValue':
+      return null
+    case 'Variable': {
+      const name = ast.name.value
+      return variables ? variables[name] : undefined
+    }
+  }
+}
 
 export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
   plugin({
@@ -11,6 +52,19 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
     onInstall() {
       const dmmf = getPrismaDmmf(prismaClient)
 
+      const JsonResolver = scalarType({
+        name: 'Json',
+        asNexusMethod: 'Json',
+        description: 'Json custom scalar type',
+        parseValue(value) {
+          return value
+        },
+        serialize(value) {
+          return value
+        },
+        parseLiteral,
+      })
+
       const nexusSchemaInputs: NexusAcceptedTypeDef[] = [
         objectType({
           name: 'BatchPayload',
@@ -18,6 +72,9 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
             t.int('count', { nullable: false })
           },
         }),
+        DateTimeResolver,
+        // JSONResolver,
+        JsonResolver,
       ]
 
       dmmf.datamodel.models.forEach((input: any) => {

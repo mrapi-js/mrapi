@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0-beta.6](https://github.com/mrapi-js/mrapi/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2020-09-18)
+
+
+### Features
+
+* nexus add graphql-scalars to scalarType "DateTime" and "JSON" ([0aef129](https://github.com/mrapi-js/mrapi/commit/0aef1292a66867409eef21d76e69d4c227cee373))
+* nexus add Json ([bc91f83](https://github.com/mrapi-js/mrapi/commit/bc91f83d4a699c80582095e1694ff01b3e92ded9))
+* support nexus generate Json field ([f0ce9f2](https://github.com/mrapi-js/mrapi/commit/f0ce9f258dae92d2e1f4bf04b46d6267639aed83))
+
+
+### Bug Fixes
+
+* **cli:** fix schema auto generate ([084720a](https://github.com/mrapi-js/mrapi/commit/084720a0e6e329047d57ad84dba0391a4346dc56))
+* **cli:** prisma schema生成时根据原schema内容判断datasource provider的种类 ([32b42c1](https://github.com/mrapi-js/mrapi/commit/32b42c1ed58499d084b8d1271ab13493034bcf2a))
+* **cli generate:** provider generate ([79d53ef](https://github.com/mrapi-js/mrapi/commit/79d53efae0b2b113c275fd39ada3483fc9f91e33)), closes [#40](https://github.com/mrapi-js/mrapi/issues/40)
+* **cli generate:** take datasource provider from schema file ([c72c3b5](https://github.com/mrapi-js/mrapi/commit/c72c3b5a51a0e7b3cd96ec1bfcbd9089d4a61e4c))
+
 ## [1.0.0-beta.5](https://github.com/mrapi-js/mrapi/compare/v1.0.0-beta.4...v1.0.0-beta.5) (2020-09-15)
 
 ## [1.0.0-beta.4](https://github.com/mrapi-js/mrapi/compare/v1.0.0...v1.0.0-beta.4) (2020-09-15)
