@@ -94,14 +94,19 @@ class GenerateCommand extends Command {
 
     // 2. Generate schema.prisma
     const inputSchemaFile = readFileSync(inputSchemaPath)
+    /// Get file content without comments
     const pureSchemaFile = this.getNoCommentContent(inputSchemaFile)
+    /// Get custom datasource provider from file content
+    const providerFromFile = this.getCustomProvider(pureSchemaFile)
+    /// For judging whether or not there's custom datasource provider in content
+    const isCustomProvider = provider || providerFromFile || false
     let supportProviders: PROVIDER_TYPE[] = provider
       ? provider.trim().split(',')
-      : this.getCustomProvider(pureSchemaFile)
+      : providerFromFile || datasourceProvider
 
     if (this.isScalarTypeArrayOccurs(pureSchemaFile)) {
       if (
-        provider &&
+        isCustomProvider &&
         (supportProviders.length > 1 ||
           !supportProviders.includes('postgresql'))
       ) {
@@ -119,7 +124,7 @@ class GenerateCommand extends Command {
           '(\\s+Json\\s*\\[\\]|\\s+Json\\s*|\\n\\s*enum\\s+)',
         )
       ) {
-        if (provider) {
+        if (isCustomProvider) {
           throw new Error(
             'If "Json" or "enum" occurs, provider can not be "sqlite".',
           )
@@ -291,17 +296,17 @@ ${content}
     const matchStr = providerPattern.exec(content)
 
     if (matchStr !== null) {
-      // The second sub-expression find the provider
+      // The second sub-expression is the provider
       const customInput = JSON.parse(matchStr[2])
 
-      if (customInput instanceof Array) {
+      if (Array.isArray(customInput)) {
         return customInput
       }
 
       return [customInput as PROVIDER_TYPE]
     }
 
-    return datasourceProvider
+    return null
   }
 }
 
