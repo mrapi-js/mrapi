@@ -12,7 +12,7 @@ importers:
       eslint-plugin-promise: 4.2.1
       eslint-plugin-standard: 4.0.1_eslint@7.9.0
       execa: 4.0.3
-      husky: registry.npmjs.org/husky/4.3.0
+      husky: 4.3.0
       jest: 26.4.2
       prettier: 2.1.1
       semver: 7.3.2
@@ -102,7 +102,7 @@ importers:
       typescript: ^4.0.2
   packages/api:
     dependencies:
-      '@graphql-mesh/config': 0.8.0_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/config': 0.8.4_graphql@15.3.0+typescript@4.0.2
       '@graphql-mesh/graphql': 0.5.1_graphql@15.3.0+typescript@4.0.2
       '@graphql-mesh/openapi': 0.5.7_graphql@15.3.0+typescript@4.0.2
       '@graphql-mesh/runtime': 0.6.0_graphql@15.3.0+typescript@4.0.2
@@ -127,15 +127,15 @@ importers:
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
-      '@graphql-mesh/config': 0.8.0
-      '@graphql-mesh/graphql': ^0.5.1
-      '@graphql-mesh/openapi': ^0.5.7
-      '@graphql-mesh/runtime': ^0.6.0
-      '@graphql-mesh/transform-prefix': ^0.5.1
-      '@graphql-mesh/transform-snapshot': ^0.5.1
+      '@graphql-mesh/config': 0.8.4
+      '@graphql-mesh/graphql': 0.5.1
+      '@graphql-mesh/openapi': 0.5.7
+      '@graphql-mesh/runtime': 0.6.0
+      '@graphql-mesh/transform-prefix': 0.5.1
+      '@graphql-mesh/transform-snapshot': 0.5.1
       '@graphql-tools/stitch': 6.0.18
       '@mrapi/common': 'workspace:*'
-      '@nexus/schema': ^0.15.0
+      '@nexus/schema': 0.15.0
       '@types/node': ^14.6.4
       '@types/pino': ^6.3.0
       '@types/pino-multi-stream': ^5.0.0
@@ -144,7 +144,7 @@ importers:
       fastify-reply-from: ^3.2.0
       graphql: ^15.3.0
       logrotator: ^1.1.0
-      nexus: ^0.26.1
+      nexus: 0.26.1
       pino: ^6.6.0
       pino-multi-stream: ^5.1.1
       pino-pretty: ^4.2.1
@@ -209,7 +209,7 @@ importers:
       express-graphql: 0.11.0_graphql@15.3.0
       express-openapi: 7.0.1
       graphql: 15.3.0
-      is-plain-object: registry.npmjs.org/is-plain-object/5.0.0
+      is-plain-object: 5.0.0
       swagger-ui-express: 4.1.4_express@4.17.1
     devDependencies:
       '@types/node': 14.6.4
@@ -624,9 +624,9 @@ packages:
     dev: false
     resolution:
       integrity: sha512-W98NvvOe/Med3o66xTO03pd7a2omZebH79PV64gSE+ceDdU8uxQhFTa7ISiD1kseyqyOrMyW5/MNdsGEU02i3Q==
-  /@graphql-mesh/cache-inmemory-lru/0.4.2_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/cache-inmemory-lru/0.4.5_graphql@15.3.0+typescript@4.0.2:
     dependencies:
-      '@graphql-mesh/types': 0.8.1_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/types': 0.9.2_graphql@15.3.0+typescript@4.0.2
       '@types/lru-cache': 5.1.0
       graphql: 15.3.0
       lru-cache: 6.0.0
@@ -635,19 +635,19 @@ packages:
       graphql: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-NRjgOfJDoDutQahJ2xmyJemPr+1gdZ6rNSTnm0+/XXue2Uq/ATj0wqz/nNWOvdqSodbNpybTwoALVF1CU5mX7Q==
-  /@graphql-mesh/config/0.8.0_graphql@15.3.0+typescript@4.0.2:
+      integrity: sha512-U1FU7kozVm3BMhe9pS0vpkIuOSuwwhD8xEnhJ54I04+msVNj0DBY5IZWDac0uEoZIWA8Q+BTJc6RQuD5UjR0QA==
+  /@graphql-mesh/config/0.8.4_graphql@15.3.0+typescript@4.0.2:
     dependencies:
-      '@graphql-mesh/cache-inmemory-lru': 0.4.2_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/merger-stitching': 0.6.0_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/runtime': 0.6.0_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/types': 0.8.1_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/utils': 0.5.0_graphql@15.3.0
-      '@graphql-tools/graphql-file-loader': 6.2.1_graphql@15.3.0
-      '@graphql-tools/load': 6.2.1_graphql@15.3.0
-      '@graphql-tools/merge': 6.2.1_graphql@15.3.0
-      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
-      ajv: 6.12.3
+      '@graphql-mesh/cache-inmemory-lru': 0.4.5_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/merger-stitching': 0.6.4_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/runtime': 0.6.4_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/types': 0.9.2_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/utils': 0.5.2_graphql@15.3.0
+      '@graphql-tools/graphql-file-loader': 6.2.2_graphql@15.3.0
+      '@graphql-tools/load': 6.2.2_graphql@15.3.0
+      '@graphql-tools/merge': 6.2.2_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.2_graphql@15.3.0
+      ajv: 6.12.5
       cosmiconfig: 7.0.0
       graphql: 15.3.0
       lodash: 4.17.20
@@ -657,7 +657,7 @@ packages:
       graphql: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-uvE6jgn0wxdqCtnBaQuCEFulM+4OgINer8NK0p+8cUU1erzxDThNTTHuMWWdy3eCvqdETUlmm5rahKrHPv/Afw==
+      integrity: sha512-NlNbNq0rO0pQgdZABx26IIdV6E9bh3WSo5DVgJC3YGBnKMSrNrAHJ2HrqmbFX2270KbcScKfeBTZ6hxAEZKXPQ==
   /@graphql-mesh/graphql/0.5.1_graphql@15.3.0+typescript@4.0.2:
     dependencies:
       '@graphql-mesh/types': 0.8.1_graphql@15.3.0+typescript@4.0.2
@@ -672,14 +672,14 @@ packages:
       typescript: '*'
     resolution:
       integrity: sha512-ss4bw4FyJKQmLZoMQ0dMDpZdxH6P0LX0TzIAbRTDPeYZHQY/jQHzU+reMK+rqSSYsXzMi5ccyvBVEWs8CgJB/A==
-  /@graphql-mesh/merger-stitching/0.6.0_graphql@15.3.0+typescript@4.0.2:
+  /@graphql-mesh/merger-stitching/0.6.4_graphql@15.3.0+typescript@4.0.2:
     dependencies:
-      '@graphql-mesh/types': 0.8.1_graphql@15.3.0+typescript@4.0.2
-      '@graphql-mesh/utils': 0.5.0_graphql@15.3.0
-      '@graphql-tools/schema': 6.2.1_graphql@15.3.0
-      '@graphql-tools/stitch': 6.2.1_graphql@15.3.0
-      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
-      '@graphql-tools/wrap': 6.2.1_graphql@15.3.0
+      '@graphql-mesh/types': 0.9.2_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/utils': 0.5.2_graphql@15.3.0
+      '@graphql-tools/schema': 6.2.2_graphql@15.3.0
+      '@graphql-tools/stitch': 6.2.2_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.2_graphql@15.3.0
+      '@graphql-tools/wrap': 6.2.2_graphql@15.3.0
       fetchache: 0.0.3
       graphql: 15.3.0
     dev: false
@@ -687,7 +687,7 @@ packages:
       graphql: '*'
       typescript: '*'
     resolution:
-      integrity: sha512-+9Ljiw6goUhs76d1KVNq5DrsII2j2XtO3KYj6F5bNHXkJmiVphHOnwG8jOBsdy8iZK5V6nkrI9K6/OFqKtI41A==
+      integrity: sha512-RgWFuHqvy7QYvifNC7z2roZCDfyaWCbXnVw8HBxzxoaZ1OspGgqlZhT4h6iO47wcPoyEZoZ8Ol6EptT1tRKkKg==
   /@graphql-mesh/openapi/0.5.7_graphql@15.3.0+typescript@4.0.2:
     dependencies:
       '@graphql-mesh/types': 0.9.2_graphql@15.3.0+typescript@4.0.2
@@ -725,6 +725,22 @@ packages:
       typescript: '*'
     resolution:
       integrity: sha512-uhDIT3CqHq1SgwXh+n3Rc7P7i2lV87CiuGatNI9FViuOUqaDoVVyWZrbVaFHAh14l0f9VwIeN1H72BnnJ49zlg==
+  /@graphql-mesh/runtime/0.6.4_graphql@15.3.0+typescript@4.0.2:
+    dependencies:
+      '@graphql-mesh/types': 0.9.2_graphql@15.3.0+typescript@4.0.2
+      '@graphql-mesh/utils': 0.5.2_graphql@15.3.0
+      '@graphql-tools/delegate': 6.2.2_graphql@15.3.0
+      '@graphql-tools/resolvers-composition': 6.2.2_graphql@15.3.0
+      '@graphql-tools/schema': 6.2.2_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.2_graphql@15.3.0
+      '@graphql-tools/wrap': 6.2.2_graphql@15.3.0
+      graphql: 15.3.0
+    dev: false
+    peerDependencies:
+      graphql: '*'
+      typescript: '*'
+    resolution:
+      integrity: sha512-EnVI4J7N1KRwg+cDEOEUmTLvMU7mev4iLq1U/pP9sGCTMP5MWvS/IQXgjVG5eubnexUOQ0AISidDm8h512mqBA==
   /@graphql-mesh/transform-prefix/0.5.1_graphql@15.3.0+typescript@4.0.2:
     dependencies:
       '@graphql-mesh/types': 0.8.1_graphql@15.3.0+typescript@4.0.2
@@ -774,6 +790,7 @@ packages:
       fetchache: 0.0.3
       graphql: 15.3.0
       tsee: 1.3.0_typescript@4.0.2
+      typescript: 4.0.2
     dev: false
     peerDependencies:
       graphql: '*'
@@ -823,9 +840,9 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-g/6aPcPSzusLK8wMF5ZhWaeR1/XRLwBIZsvutiUN7GxX2rP8YIHVnlghKmXjhId0GqaSAd7jMR7VKzbQre7CkQ==
-  /@graphql-tools/batch-delegate/6.2.1_graphql@15.3.0:
+  /@graphql-tools/batch-delegate/6.2.2_graphql@15.3.0:
     dependencies:
-      '@graphql-tools/delegate': 6.2.1_graphql@15.3.0
+      '@graphql-tools/delegate': 6.2.2_graphql@15.3.0
       dataloader: 2.0.0
       graphql: 15.3.0
       tslib: 2.0.1
@@ -833,7 +850,7 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
-      integrity: sha512-3+gruxgPuUDosgoynSmjFFEWIFOJY7nKQ49jRJuCfvjy5sm62GlARtNLfIWRJWjbE40Fye9sHQQ6Dc8YJoZBuw==
+      integrity: sha512-xXJKVvBxafdn9tVWe3oJreTHuFAKWblw4zK0KvKhEVJOjPytKweGCZI3kTs9hdmjgPz1ZjSQEVvgmZJ0GubrWA==
   /@graphql-tools/delegate/6.0.18_graphql@15.3.0:
     dependencies:
       '@ardatan/aggregate-error': 0.0.1
@@ -875,10 +892,10 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-8VycfZYQ+m4HgajewQT6v6BzAEFxc6mh6rO+uqewnvh143nvv3ud4nXEAfOddUm0PrE6iD3Ng2BZtPSWF5mt+w==
-  /@graphql-tools/graphql-file-loader/6.2.1_graphql@15.3.0:
+  /@graphql-tools/graphql-file-loader/6.2.2_graphql@15.3.0:
     dependencies:
-      '@graphql-tools/import': 6.2.1_graphql@15.3.0
-      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
+      '@graphql-tools/import': 6.2.2_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.2_graphql@15.3.0
       fs-extra: 9.0.1
       graphql: 15.3.0
       tslib: 2.0.1
@@ -886,8 +903,8 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
-      integrity: sha512-HfM6kC48KTDhVizeuJVOmh+nJD8s1SefK8aZgFBvnXVWW+HdPx2+T5MH6sSVvqgMrlCxLxuyuwcPIcXqpvYvxA==
-  /@graphql-tools/import/6.2.1_graphql@15.3.0:
+      integrity: sha512-dKuOk4vH2WWzVGydL13FjdR3WEmJHMoud3MXF9uyvLcjuDm9L0r+PdSI1PSPiCYs7Ii2bJ8zgmdz32jCBHZszA==
+  /@graphql-tools/import/6.2.2_graphql@15.3.0:
     dependencies:
       fs-extra: 9.0.1
       graphql: 15.3.0
@@ -897,11 +914,11 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
-      integrity: sha512-10mMCB8x4s0P010n8HHiUExg5m2NMr3Hm30WRSoP3P0m8Q0l8AmwXVwHUtykEaWhu+4xvFZ5Hl3fS+Wm0f7jdg==
-  /@graphql-tools/load/6.2.1_graphql@15.3.0:
+      integrity: sha512-fxQx+960CBzG6+MGGRaWv9tQ71ir2NZQeVC2dfieQLv5/LXH0fqKe9ltYCfJFskscAmzWeuS19Sibhdn0JMecw==
+  /@graphql-tools/load/6.2.2_graphql@15.3.0:
     dependencies:
-      '@graphql-tools/merge': 6.2.1_graphql@15.3.0
-      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
+      '@graphql-tools/merge': 6.2.2_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.2_graphql@15.3.0
       globby: 11.0.1
       graphql: 15.3.0
       import-from: 3.0.0
@@ -914,7 +931,7 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
-      integrity: sha512-PkM2xv/bBFQIkmgCX0LsZnHBuJY5YhDrpsljdD+0mXw2b9w0zUG2qIqBoMBLfG3ncjduE9Hwl1oKSBhFUPJmyA==
+      integrity: sha512-p5fvGSvtrIjL3rmQbdESnYH5zxqdKeQOIwoPnfvx6uDqqm3HaRBzS+k5V/PkhGsFRR5VFrqA8kPAbE87BYpkqw==
   /@graphql-tools/merge/6.0.18_graphql@15.3.0:
     dependencies:
       '@graphql-tools/schema': 6.0.18_graphql@15.3.0
@@ -926,17 +943,17 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-XAFbqMyXsExnuzgr5+JQC8mxsYp0aGIR0m+GbleQDZSlqDOL2maF5xM3dGOOkguz0Paa7ei/5UfnMXyRU3cW/w==
-  /@graphql-tools/merge/6.2.1_graphql@15.3.0:
+  /@graphql-tools/merge/6.2.2_graphql@15.3.0:
     dependencies:
-      '@graphql-tools/schema': 6.2.1_graphql@15.3.0
-      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
+      '@graphql-tools/schema': 6.2.2_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.2_graphql@15.3.0
       graphql: 15.3.0
       tslib: 2.0.1
     dev: false
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
-      integrity: sha512-GJyMOYM2JyZhvMlVwpUZUv5ocvWCh+/KdPCCzXqo3Va/kOO1ntm8lKGNf3JZpQDgpC5FvaQfsu/b5pE7TBFxyw==
+      integrity: sha512-2YyErSvq4hn5mjE6qJ/0Q8r3WU9JB3+obv2xyvb+oW+E/T1iYRJGxSFldi6lqO5IADZz8QASLJeSpRBw40gpBg==
   /@graphql-tools/resolvers-composition/6.2.1_graphql@15.3.0:
     dependencies:
       '@graphql-tools/utils': 6.2.1_graphql@15.3.0
@@ -948,6 +965,17 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-1jfkd8fL9TD84zATiJu2t9JwyzQjH6Ju7apICSEV8AGPfvknU944Y4cnOa0pClF/gjaqqoUEPq4WOA/A2qBUwQ==
+  /@graphql-tools/resolvers-composition/6.2.2_graphql@15.3.0:
+    dependencies:
+      '@graphql-tools/utils': 6.2.2_graphql@15.3.0
+      graphql: 15.3.0
+      lodash: 4.17.20
+      tslib: 2.0.1
+    dev: false
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-Ejrf/5eyg+QCQ5TZaBIttiBmwQ3RQD+eF1zcLN9aXF7S6nz90CEKzZjPHxvEfC2ZeMWDZhq81BPDk0mvUsqJuA==
   /@graphql-tools/schema/6.0.18_graphql@15.3.0:
     dependencies:
       '@graphql-tools/utils': 6.0.18_graphql@15.3.0
@@ -994,14 +1022,14 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-NZLcanKCH+AZHSAMtTnvNEgU8lZm4RBj7glWsFwQhGILfxkdk5R7MSmpjI7CgHMvG8vICD/RS9ziRINpVbj/oQ==
-  /@graphql-tools/stitch/6.2.1_graphql@15.3.0:
+  /@graphql-tools/stitch/6.2.2_graphql@15.3.0:
     dependencies:
-      '@graphql-tools/batch-delegate': 6.2.1_graphql@15.3.0
-      '@graphql-tools/delegate': 6.2.1_graphql@15.3.0
-      '@graphql-tools/merge': 6.2.1_graphql@15.3.0
-      '@graphql-tools/schema': 6.2.1_graphql@15.3.0
-      '@graphql-tools/utils': 6.2.1_graphql@15.3.0
-      '@graphql-tools/wrap': 6.2.1_graphql@15.3.0
+      '@graphql-tools/batch-delegate': 6.2.2_graphql@15.3.0
+      '@graphql-tools/delegate': 6.2.2_graphql@15.3.0
+      '@graphql-tools/merge': 6.2.2_graphql@15.3.0
+      '@graphql-tools/schema': 6.2.2_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.2_graphql@15.3.0
+      '@graphql-tools/wrap': 6.2.2_graphql@15.3.0
       graphql: 15.3.0
       is-promise: 4.0.0
       tslib: 2.0.1
@@ -1009,7 +1037,7 @@ packages:
     peerDependencies:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
-      integrity: sha512-l1FOFEl/YJsry9B480TzZpKbckwP4n1fT7YE+ky28kQkooldOwxBnXMu5ae3r/KJdXCOyJDpmDhn9ZWc/fEVDw==
+      integrity: sha512-VysuOBik1ICqsgV3VGXysJfdUl4/ro95rsnREma9BJP3oNqriPd6v8JhrnZqP2LbfzF7G2xndRoSRAQgYOzsUQ==
   /@graphql-tools/url-loader/6.2.1_graphql@15.3.0:
     dependencies:
       '@graphql-tools/delegate': 6.2.1_graphql@15.3.0
@@ -1096,6 +1124,19 @@ packages:
       graphql: ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-bjmN2Xh3haRp5tMDNPpUDV/9IlvFfmG9umsAOb3WFRJBoVi/dX0YwWIyucM3WBVix4ory8Op5eT4KkoKeaFSMw==
+  /@graphql-tools/wrap/6.2.2_graphql@15.3.0:
+    dependencies:
+      '@graphql-tools/delegate': 6.2.2_graphql@15.3.0
+      '@graphql-tools/schema': 6.2.2_graphql@15.3.0
+      '@graphql-tools/utils': 6.2.2_graphql@15.3.0
+      graphql: 15.3.0
+      is-promise: 4.0.0
+      tslib: 2.0.1
+    dev: false
+    peerDependencies:
+      graphql: ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-FjCE+NvMwcCiAlt9EAw9uDi2zblE4Z5CEkY+z4NRO1AmCB5THoWJKG+csPh8tGuU80mAJI51Wy9FQGyUo/EU0g==
   /@hapi/bourne/2.0.0:
     dev: false
     resolution:
@@ -1711,7 +1752,6 @@ packages:
     resolution:
       integrity: sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==
   /@types/parse-json/4.0.0:
-    dev: false
     resolution:
       integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
   /@types/pino-multi-stream/5.0.0:
@@ -2143,15 +2183,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-4I7Td01quW/RpocfNayFdFVk1qSuoh0E7JrbRJ16nH01HhKFQ88INq9Sd+nd72zqRySlr9BmDA8xlEJ6vJMrYA==
-  /ajv/6.12.3:
-    dependencies:
-      fast-deep-equal: 3.1.3
-      fast-json-stable-stringify: 2.1.0
-      json-schema-traverse: 0.4.1
-      uri-js: 4.4.0
-    dev: false
-    resolution:
-      integrity: sha512-4K0cK3L1hsqk9xIb2z9vs/XU+PGJZ9PNpJRDS9YLzmNdX6jmVPfamLvTJr0aDAusnHyCHO6MjzlkAsgtqp9teA==
   /ajv/6.12.4:
     dependencies:
       fast-deep-equal: 3.1.3
@@ -2160,6 +2191,15 @@ packages:
       uri-js: 4.4.0
     resolution:
       integrity: sha512-eienB2c9qVQs2KWexhkrdMLVDoIQCz5KSeLxwg9Lzk4DOfBtIK9PQwwufcsn1jjGuf9WZmqPMbGxOzfcuphJCQ==
+  /ajv/6.12.5:
+    dependencies:
+      fast-deep-equal: 3.1.3
+      fast-json-stable-stringify: 2.1.0
+      json-schema-traverse: 0.4.1
+      uri-js: 4.4.0
+    dev: false
+    resolution:
+      integrity: sha512-lRF8RORchjpKG50/WFf8xmg7sgCLFiYNNnqdKflk63whMQcWR5ngGjiSXkL9bjxy6B2npOK2HSMN49jEBMSkag==
   /ansi-colors/4.1.1:
     dev: true
     engines:
@@ -2950,6 +2990,7 @@ packages:
     dev: true
     resolution:
       integrity: sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ==
+      registry: 'https://registry.yarnpkg.com/'
   /class-utils/0.3.6:
     dependencies:
       arr-union: 3.1.0
@@ -3094,6 +3135,11 @@ packages:
       node: '>=4.0.0'
     resolution:
       integrity: sha512-6P6g0uetGpW/sdyUy/iQQCbFF0kWVMSIVSyYz7Zgjcgh8mgw8PQzDNZeyZ5DQ2gM7LBoZPHmnjz8rUthkBG5tw==
+  /compare-versions/3.6.0:
+    dev: true
+    resolution:
+      integrity: sha512-W6Af2Iw1z4CB7q4uU4hv646dW9GQuBM+YpC0UvUCWSD8w90SJjp+ujJuXaEMtAXBtSqGfMPuFOVn4/+FlaqfBA==
+      registry: 'https://registry.yarnpkg.com/'
   /component-emitter/1.3.0:
     dev: true
     resolution:
@@ -3177,7 +3223,6 @@ packages:
       parse-json: 5.1.0
       path-type: 4.0.0
       yaml: 1.10.0
-    dev: false
     engines:
       node: '>=10'
     resolution:
@@ -4456,6 +4501,16 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==
+      registry: 'https://registry.yarnpkg.com/'
+  /find-versions/3.2.0:
+    dependencies:
+      semver-regex: 2.0.0
+    dev: true
+    engines:
+      node: '>=6'
+    resolution:
+      integrity: sha512-P8WRou2S+oe222TOCHitLy8zj+SIsVJh52VP4lvXkaFVnOFFdoWv1H1Jjvel1aI6NCFOAaeAVm8qrI0odiLcww==
+      registry: 'https://registry.yarnpkg.com/'
   /findup-sync/4.0.0:
     dependencies:
       detect-file: 1.0.0
@@ -4798,16 +4853,6 @@ packages:
       node: 10.x || 12.x || 14.x
     resolution:
       integrity: sha512-eXBvuvJLisrEjv6Roq7cp+X9fjW7pTSTF4M7lFlOtADQoisLbkOb5WXeZYbD4rbHJbOU4U7/JRxG73e16Rz6YQ==
-  /graphql-scalars/1.2.6_graphql@14.7.0:
-    dependencies:
-      graphql: 14.7.0
-    dev: false
-    engines:
-      node: '>=10'
-    peerDependencies:
-      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
-    resolution:
-      integrity: sha512-k/88kZVXIuUKQuVLokokkKU2lnFEZ9aTn7O0fDweJpISd0pP5fQU1wzPN0jarH4Lnadr4092PfyIUtCcKzkeAw==
   /graphql-scalars/1.2.6_graphql@15.3.0:
     dependencies:
       graphql: 15.3.0
@@ -4826,8 +4871,16 @@ packages:
       graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
     resolution:
       integrity: sha512-bkB/OEsfiYm/hMwSnZfg91SZ3ChOM6Dnw5LZkUN68IXtBGKrBxjw8kXbD3bBXhWpjaKshvNVG7ZK3vFtfBmwrQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/graphql-scalars/-/graphql-scalars-1.2.7.tgz'
+  /graphql-scalars/1.2.7_graphql@14.7.0:
+    dependencies:
+      graphql: 14.7.0
+    dev: false
+    engines:
+      node: '>=10'
+    peerDependencies:
+      graphql: ^0.8.0 || ^0.9.0 || ^0.10.0 || ^0.11.0 || ^0.12.0 || ^0.13.0 || ^14.0.0 || ^15.0.0
+    resolution:
+      integrity: sha512-bkB/OEsfiYm/hMwSnZfg91SZ3ChOM6Dnw5LZkUN68IXtBGKrBxjw8kXbD3bBXhWpjaKshvNVG7ZK3vFtfBmwrQ==
   /graphql-subscriptions/1.1.0_graphql@14.7.0:
     dependencies:
       graphql: 14.7.0
@@ -5053,6 +5106,26 @@ packages:
       node: '>=8.12.0'
     resolution:
       integrity: sha512-SEQu7vl8KjNL2eoGBLF3+wAjpsNfA9XMlXAYj/3EdaNfAlxKthD1xjEQfGOUhllCGGJVNY34bRr6lPINhNjyZw==
+  /husky/4.3.0:
+    dependencies:
+      chalk: 4.1.0
+      ci-info: 2.0.0
+      compare-versions: 3.6.0
+      cosmiconfig: 7.0.0
+      find-versions: 3.2.0
+      opencollective-postinstall: 2.0.3
+      pkg-dir: 4.2.0
+      please-upgrade-node: 3.2.0
+      slash: 3.0.0
+      which-pm-runs: 1.0.0
+    dev: true
+    engines:
+      node: '>=10'
+    hasBin: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-tTMeLCLqSBqnflBZnlVDhpaIMucSGaYyX6855jM4AguGeWCeSzNdb1mfyWduTZ3pe3SJVvVWGL0jO1iKZVPfTA==
+      registry: 'https://registry.yarnpkg.com/'
   /iconv-lite/0.4.24:
     dependencies:
       safer-buffer: 2.1.2
@@ -5392,6 +5465,13 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-h5PpgXkWitc38BBMYawTYMWJHFZJVnBquFE57xFpjB8pJFiF6gZ+bU+WyI/yqXiFR5mdLsgYNaPe8uao6Uv9Og==
+  /is-plain-object/5.0.0:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==
+      registry: 'https://registry.yarnpkg.com/'
   /is-potential-custom-element-name/1.0.0:
     dev: true
     resolution:
@@ -6260,6 +6340,7 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==
+      registry: 'https://registry.yarnpkg.com/'
   /lodash.memoize/4.1.2:
     dev: false
     resolution:
@@ -6608,7 +6689,7 @@ packages:
       get-port: 5.1.1
       graphql: 14.7.0
       graphql-request: 2.1.0-next.3
-      graphql-scalars: 1.2.6_graphql@14.7.0
+      graphql-scalars: 1.2.7_graphql@14.7.0
       http-errors: 1.8.0
       lodash: 4.17.20
       node-fetch: 2.6.1
@@ -7029,6 +7110,12 @@ packages:
     dev: false
     resolution:
       integrity: sha512-6pi4/Fw+JIW1HHda2Ij7LRJ5QJ8f6YzaXnsRA6m44BJz8nLq/j5gVFzPBKJo+uOFhAeHqZC/3uzhTpYPga3Q/A==
+  /opencollective-postinstall/2.0.3:
+    dev: true
+    hasBin: true
+    resolution:
+      integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
+      registry: 'https://registry.yarnpkg.com/'
   /optionator/0.8.3:
     dependencies:
       deep-is: 0.1.3
@@ -7132,6 +7219,7 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A==
+      registry: 'https://registry.yarnpkg.com/'
   /p-map/4.0.0:
     dependencies:
       aggregate-error: 3.1.0
@@ -7230,6 +7318,7 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==
+      registry: 'https://registry.yarnpkg.com/'
   /path-is-absolute/1.0.1:
     engines:
       node: '>=0.10.0'
@@ -7368,6 +7457,7 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
+      registry: 'https://registry.yarnpkg.com/'
   /pkg-up/3.1.0:
     dependencies:
       find-up: 3.0.0
@@ -7376,6 +7466,13 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-nDywThFk1i4BQK4twPQ6TA4RT8bDY96yeuCVBWL3ePARCiEKDRSrNGbFIgUJpLp+XeIR65v8ra7WuJOFUBtkMA==
+  /please-upgrade-node/3.2.0:
+    dependencies:
+      semver-compare: 1.0.0
+    dev: true
+    resolution:
+      integrity: sha512-gQR3WpIgNIKwBMVLkpMUeR3e1/E1y42bqDQZfql+kDeXd8COYfM8PQA4X6y7a8u9Ua9FHmsrrmirW2vHs45hWg==
+      registry: 'https://registry.yarnpkg.com/'
   /pluralize/8.0.0:
     dev: false
     engines:
@@ -7956,6 +8053,18 @@ packages:
     optional: true
     resolution:
       integrity: sha1-DnNQrN7ICxEIUoeG7B1EGNEbOW0=
+  /semver-compare/1.0.0:
+    dev: true
+    resolution:
+      integrity: sha1-De4hahyUGrN+nvsXiPavxf9VN/w=
+      registry: 'https://registry.yarnpkg.com/'
+  /semver-regex/2.0.0:
+    dev: true
+    engines:
+      node: '>=6'
+    resolution:
+      integrity: sha512-mUdIBBvdn0PLOeP3TEkMH7HHeUP3GjsXCwKarjv/kGmUFOYg1VqEemKhoQpWMu6X2I8kHeuVdGibLGkVK+/5Qw==
+      registry: 'https://registry.yarnpkg.com/'
   /semver-store/0.3.0:
     dev: false
     resolution:
@@ -8143,6 +8252,7 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
+      registry: 'https://registry.yarnpkg.com/'
   /slice-ansi/2.1.0:
     dependencies:
       ansi-styles: 3.2.1
@@ -9204,6 +9314,11 @@ packages:
   /which-module/2.0.0:
     resolution:
       integrity: sha1-2e8H3Od7mQK4o6j6SzHD4/fm6Ho=
+  /which-pm-runs/1.0.0:
+    dev: true
+    resolution:
+      integrity: sha1-Zws6+8VS4LVd9rd4DKdGFfI60cs=
+      registry: 'https://registry.yarnpkg.com/'
   /which-typed-array/1.1.2:
     dependencies:
       available-typed-arrays: 1.0.2
@@ -9338,7 +9453,6 @@ packages:
     resolution:
       integrity: sha512-3wdGidZyq5PB084XLES5TpOSRA3wjXAlIWMhum2kRcv/41Sn2emQ0dycQW4uZXLejwKvg6EsvbdlVL+FYEct7A==
   /yaml/1.10.0:
-    dev: false
     engines:
       node: '>= 6'
     resolution:
@@ -9384,528 +9498,3 @@ packages:
     dev: false
     resolution:
       integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
-  registry.npmjs.org/@babel/code-frame/7.10.4:
-    dependencies:
-      '@babel/highlight': registry.npmjs.org/@babel/highlight/7.10.4
-    dev: true
-    name: '@babel/code-frame'
-    resolution:
-      integrity: sha512-vG6SvB6oYEhvgisZNFRmRCUkLz11c7rp+tbNTynGqc6mS1d5ATd/sGyV6W0KZZnXRKMTzZDRgQT3Ou9jhpAfUg==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/@babel/code-frame/-/code-frame-7.10.4.tgz'
-    version: 7.10.4
-  registry.npmjs.org/@babel/helper-validator-identifier/7.10.4:
-    dev: true
-    name: '@babel/helper-validator-identifier'
-    resolution:
-      integrity: sha512-3U9y+43hz7ZM+rzG24Qe2mufW5KhvFg/NhnNph+i9mgCtdTCtMJuI1TMkrIUiK7Ix4PYlRF9I5dhqaLYA/ADXw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/@babel/helper-validator-identifier/-/helper-validator-identifier-7.10.4.tgz'
-    version: 7.10.4
-  registry.npmjs.org/@babel/highlight/7.10.4:
-    dependencies:
-      '@babel/helper-validator-identifier': registry.npmjs.org/@babel/helper-validator-identifier/7.10.4
-      chalk: registry.npmjs.org/chalk/2.4.2
-      js-tokens: registry.npmjs.org/js-tokens/4.0.0
-    dev: true
-    name: '@babel/highlight'
-    resolution:
-      integrity: sha512-i6rgnR/YgPEQzZZnbTHHuZdlE8qyoBNalD6F+q4vAFlcMEcqmkoG+mPqJYJCo63qPf74+Y1UZsl3l6f7/RIkmA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/@babel/highlight/-/highlight-7.10.4.tgz'
-    version: 7.10.4
-  registry.npmjs.org/@types/color-name/1.1.1:
-    dev: true
-    name: '@types/color-name'
-    resolution:
-      integrity: sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/@types/color-name/-/color-name-1.1.1.tgz'
-    version: 1.1.1
-  registry.npmjs.org/@types/parse-json/4.0.0:
-    dev: true
-    name: '@types/parse-json'
-    resolution:
-      integrity: sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/@types/parse-json/-/parse-json-4.0.0.tgz'
-    version: 4.0.0
-  registry.npmjs.org/ansi-styles/3.2.1:
-    dependencies:
-      color-convert: registry.npmjs.org/color-convert/1.9.3
-    dev: true
-    engines:
-      node: '>=4'
-    name: ansi-styles
-    resolution:
-      integrity: sha512-VT0ZI6kZRdTh8YyJw3SMbYm/u+NqfsAxEpWO0Pf9sq8/e94WxxOpPKx9FR1FlyCtOVDNOQ+8ntlqFxiRc+r5qA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/ansi-styles/-/ansi-styles-3.2.1.tgz'
-    version: 3.2.1
-  registry.npmjs.org/ansi-styles/4.2.1:
-    dependencies:
-      '@types/color-name': registry.npmjs.org/@types/color-name/1.1.1
-      color-convert: registry.npmjs.org/color-convert/2.0.1
-    dev: true
-    engines:
-      node: '>=8'
-    name: ansi-styles
-    resolution:
-      integrity: sha512-9VGjrMsG1vePxcSweQsN20KY/c4zN0h9fLjqAbwbPfahM3t+NL+M9HC8xeXG2I8pX5NoamTGNuomEUFI7fcUjA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/ansi-styles/-/ansi-styles-4.2.1.tgz'
-    version: 4.2.1
-  registry.npmjs.org/callsites/3.1.0:
-    dev: true
-    engines:
-      node: '>=6'
-    name: callsites
-    resolution:
-      integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/callsites/-/callsites-3.1.0.tgz'
-    version: 3.1.0
-  registry.npmjs.org/chalk/2.4.2:
-    dependencies:
-      ansi-styles: registry.npmjs.org/ansi-styles/3.2.1
-      escape-string-regexp: registry.npmjs.org/escape-string-regexp/1.0.5
-      supports-color: registry.npmjs.org/supports-color/5.5.0
-    dev: true
-    engines:
-      node: '>=4'
-    name: chalk
-    resolution:
-      integrity: sha512-Mti+f9lpJNcwF4tWV8/OrTTtF1gZi+f8FqlyAdouralcFWFQWF2+NgCHShjkCb+IFBLq9buZwE1xckQU4peSuQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/chalk/-/chalk-2.4.2.tgz'
-    version: 2.4.2
-  registry.npmjs.org/chalk/4.1.0:
-    dependencies:
-      ansi-styles: registry.npmjs.org/ansi-styles/4.2.1
-      supports-color: registry.npmjs.org/supports-color/7.2.0
-    dev: true
-    engines:
-      node: '>=10'
-    name: chalk
-    resolution:
-      integrity: sha512-qwx12AxXe2Q5xQ43Ac//I6v5aXTipYrSESdOgzrN+9XjgEpyjpKuvSGaN4qE93f7TQTlerQQ8S+EQ0EyDoVL1A==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/chalk/-/chalk-4.1.0.tgz'
-    version: 4.1.0
-  registry.npmjs.org/ci-info/2.0.0:
-    dev: true
-    name: ci-info
-    resolution:
-      integrity: sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/ci-info/-/ci-info-2.0.0.tgz'
-    version: 2.0.0
-  registry.npmjs.org/color-convert/1.9.3:
-    dependencies:
-      color-name: registry.npmjs.org/color-name/1.1.3
-    dev: true
-    name: color-convert
-    resolution:
-      integrity: sha512-QfAUtd+vFdAtFQcC8CCyYt1fYWxSqAiK2cSD6zDB8N3cpsEBAvRxp9zOGg6G/SHHJYAT88/az/IuDGALsNVbGg==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/color-convert/-/color-convert-1.9.3.tgz'
-    version: 1.9.3
-  registry.npmjs.org/color-convert/2.0.1:
-    dependencies:
-      color-name: registry.npmjs.org/color-name/1.1.4
-    dev: true
-    engines:
-      node: '>=7.0.0'
-    name: color-convert
-    resolution:
-      integrity: sha512-RRECPsj7iu/xb5oKYcsFHSppFNnsj/52OVTRKb4zP5onXwVF3zVmmToNcOfGC+CRDpfK/U584fMg38ZHCaElKQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/color-convert/-/color-convert-2.0.1.tgz'
-    version: 2.0.1
-  registry.npmjs.org/color-name/1.1.3:
-    dev: true
-    name: color-name
-    resolution:
-      integrity: sha1-p9BVi9icQveV3UIyj3QIMcpTvCU=
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/color-name/-/color-name-1.1.3.tgz'
-    version: 1.1.3
-  registry.npmjs.org/color-name/1.1.4:
-    dev: true
-    name: color-name
-    resolution:
-      integrity: sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/color-name/-/color-name-1.1.4.tgz'
-    version: 1.1.4
-  registry.npmjs.org/compare-versions/3.6.0:
-    dev: true
-    name: compare-versions
-    resolution:
-      integrity: sha512-W6Af2Iw1z4CB7q4uU4hv646dW9GQuBM+YpC0UvUCWSD8w90SJjp+ujJuXaEMtAXBtSqGfMPuFOVn4/+FlaqfBA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/compare-versions/-/compare-versions-3.6.0.tgz'
-    version: 3.6.0
-  registry.npmjs.org/cosmiconfig/7.0.0:
-    dependencies:
-      '@types/parse-json': registry.npmjs.org/@types/parse-json/4.0.0
-      import-fresh: registry.npmjs.org/import-fresh/3.2.1
-      parse-json: registry.npmjs.org/parse-json/5.1.0
-      path-type: registry.npmjs.org/path-type/4.0.0
-      yaml: registry.npmjs.org/yaml/1.10.0
-    dev: true
-    engines:
-      node: '>=10'
-    name: cosmiconfig
-    resolution:
-      integrity: sha512-pondGvTuVYDk++upghXJabWzL6Kxu6f26ljFw64Swq9v6sQPUL3EUlVDV56diOjpCayKihL6hVe8exIACU4XcA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/cosmiconfig/-/cosmiconfig-7.0.0.tgz'
-    version: 7.0.0
-  registry.npmjs.org/error-ex/1.3.2:
-    dependencies:
-      is-arrayish: registry.npmjs.org/is-arrayish/0.2.1
-    dev: true
-    name: error-ex
-    resolution:
-      integrity: sha512-7dFHNmqeFSEt2ZBsCriorKnn3Z2pj+fd9kmI6QoWw4//DL+icEBfc0U7qJCisqrTsKTjw4fNFy2pW9OqStD84g==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/error-ex/-/error-ex-1.3.2.tgz'
-    version: 1.3.2
-  registry.npmjs.org/escape-string-regexp/1.0.5:
-    dev: true
-    engines:
-      node: '>=0.8.0'
-    name: escape-string-regexp
-    resolution:
-      integrity: sha1-G2HAViGQqN/2rjuyzwIAyhMLhtQ=
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/escape-string-regexp/-/escape-string-regexp-1.0.5.tgz'
-    version: 1.0.5
-  registry.npmjs.org/find-up/4.1.0:
-    dependencies:
-      locate-path: registry.npmjs.org/locate-path/5.0.0
-      path-exists: registry.npmjs.org/path-exists/4.0.0
-    dev: true
-    engines:
-      node: '>=8'
-    name: find-up
-    resolution:
-      integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/find-up/-/find-up-4.1.0.tgz'
-    version: 4.1.0
-  registry.npmjs.org/find-versions/3.2.0:
-    dependencies:
-      semver-regex: registry.npmjs.org/semver-regex/2.0.0
-    dev: true
-    engines:
-      node: '>=6'
-    name: find-versions
-    resolution:
-      integrity: sha512-P8WRou2S+oe222TOCHitLy8zj+SIsVJh52VP4lvXkaFVnOFFdoWv1H1Jjvel1aI6NCFOAaeAVm8qrI0odiLcww==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/find-versions/-/find-versions-3.2.0.tgz'
-    version: 3.2.0
-  registry.npmjs.org/has-flag/3.0.0:
-    dev: true
-    engines:
-      node: '>=4'
-    name: has-flag
-    resolution:
-      integrity: sha1-tdRU3CGZriJWmfNGfloH87lVuv0=
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/has-flag/-/has-flag-3.0.0.tgz'
-    version: 3.0.0
-  registry.npmjs.org/has-flag/4.0.0:
-    dev: true
-    engines:
-      node: '>=8'
-    name: has-flag
-    resolution:
-      integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/has-flag/-/has-flag-4.0.0.tgz'
-    version: 4.0.0
-  registry.npmjs.org/husky/4.3.0:
-    dependencies:
-      chalk: registry.npmjs.org/chalk/4.1.0
-      ci-info: registry.npmjs.org/ci-info/2.0.0
-      compare-versions: registry.npmjs.org/compare-versions/3.6.0
-      cosmiconfig: registry.npmjs.org/cosmiconfig/7.0.0
-      find-versions: registry.npmjs.org/find-versions/3.2.0
-      opencollective-postinstall: registry.npmjs.org/opencollective-postinstall/2.0.3
-      pkg-dir: registry.npmjs.org/pkg-dir/4.2.0
-      please-upgrade-node: registry.npmjs.org/please-upgrade-node/3.2.0
-      slash: registry.npmjs.org/slash/3.0.0
-      which-pm-runs: registry.npmjs.org/which-pm-runs/1.0.0
-    dev: true
-    engines:
-      node: '>=10'
-    hasBin: true
-    name: husky
-    requiresBuild: true
-    resolution:
-      integrity: sha512-tTMeLCLqSBqnflBZnlVDhpaIMucSGaYyX6855jM4AguGeWCeSzNdb1mfyWduTZ3pe3SJVvVWGL0jO1iKZVPfTA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/husky/-/husky-4.3.0.tgz'
-    version: 4.3.0
-  registry.npmjs.org/import-fresh/3.2.1:
-    dependencies:
-      parent-module: registry.npmjs.org/parent-module/1.0.1
-      resolve-from: registry.npmjs.org/resolve-from/4.0.0
-    dev: true
-    engines:
-      node: '>=6'
-    name: import-fresh
-    resolution:
-      integrity: sha512-6e1q1cnWP2RXD9/keSkxHScg508CdXqXWgWBaETNhyuBFz+kUZlKboh+ISK+bU++DmbHimVBrOz/zzPe0sZ3sQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/import-fresh/-/import-fresh-3.2.1.tgz'
-    version: 3.2.1
-  registry.npmjs.org/is-arrayish/0.2.1:
-    dev: true
-    name: is-arrayish
-    resolution:
-      integrity: sha1-d8mYQFJ6qOyxqLppe4BkWnqSap0=
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/is-arrayish/-/is-arrayish-0.2.1.tgz'
-    version: 0.2.1
-  registry.npmjs.org/is-plain-object/5.0.0:
-    dev: false
-    engines:
-      node: '>=0.10.0'
-    name: is-plain-object
-    resolution:
-      integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/is-plain-object/-/is-plain-object-5.0.0.tgz'
-    version: 5.0.0
-  registry.npmjs.org/js-tokens/4.0.0:
-    dev: true
-    name: js-tokens
-    resolution:
-      integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/js-tokens/-/js-tokens-4.0.0.tgz'
-    version: 4.0.0
-  registry.npmjs.org/json-parse-even-better-errors/2.3.1:
-    dev: true
-    name: json-parse-even-better-errors
-    resolution:
-      integrity: sha512-xyFwyhro/JEof6Ghe2iz2NcXoj2sloNsWr/XsERDK/oiPCfaNhl5ONfp+jQdAZRQQ0IJWNzH9zIZF7li91kh2w==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/json-parse-even-better-errors/-/json-parse-even-better-errors-2.3.1.tgz'
-    version: 2.3.1
-  registry.npmjs.org/lines-and-columns/1.1.6:
-    dev: true
-    name: lines-and-columns
-    resolution:
-      integrity: sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.1.6.tgz'
-    version: 1.1.6
-  registry.npmjs.org/locate-path/5.0.0:
-    dependencies:
-      p-locate: registry.npmjs.org/p-locate/4.1.0
-    dev: true
-    engines:
-      node: '>=8'
-    name: locate-path
-    resolution:
-      integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/locate-path/-/locate-path-5.0.0.tgz'
-    version: 5.0.0
-  registry.npmjs.org/opencollective-postinstall/2.0.3:
-    dev: true
-    hasBin: true
-    name: opencollective-postinstall
-    resolution:
-      integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/opencollective-postinstall/-/opencollective-postinstall-2.0.3.tgz'
-    version: 2.0.3
-  registry.npmjs.org/p-limit/2.3.0:
-    dependencies:
-      p-try: registry.npmjs.org/p-try/2.2.0
-    dev: true
-    engines:
-      node: '>=6'
-    name: p-limit
-    resolution:
-      integrity: sha512-//88mFWSJx8lxCzwdAABTJL2MyWB12+eIY7MDL2SqLmAkeKU9qxRvWuSyTjm3FUmpBEMuFfckAIqEaVGUDxb6w==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/p-limit/-/p-limit-2.3.0.tgz'
-    version: 2.3.0
-  registry.npmjs.org/p-locate/4.1.0:
-    dependencies:
-      p-limit: registry.npmjs.org/p-limit/2.3.0
-    dev: true
-    engines:
-      node: '>=8'
-    name: p-locate
-    resolution:
-      integrity: sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/p-locate/-/p-locate-4.1.0.tgz'
-    version: 4.1.0
-  registry.npmjs.org/p-try/2.2.0:
-    dev: true
-    engines:
-      node: '>=6'
-    name: p-try
-    resolution:
-      integrity: sha512-R4nPAVTAU0B9D35/Gk3uJf/7XYbQcyohSKdvAxIRSNghFl4e71hVoGnBNQz9cWaXxO2I10KTC+3jMdvvoKw6dQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/p-try/-/p-try-2.2.0.tgz'
-    version: 2.2.0
-  registry.npmjs.org/parent-module/1.0.1:
-    dependencies:
-      callsites: registry.npmjs.org/callsites/3.1.0
-    dev: true
-    engines:
-      node: '>=6'
-    name: parent-module
-    resolution:
-      integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/parent-module/-/parent-module-1.0.1.tgz'
-    version: 1.0.1
-  registry.npmjs.org/parse-json/5.1.0:
-    dependencies:
-      '@babel/code-frame': registry.npmjs.org/@babel/code-frame/7.10.4
-      error-ex: registry.npmjs.org/error-ex/1.3.2
-      json-parse-even-better-errors: registry.npmjs.org/json-parse-even-better-errors/2.3.1
-      lines-and-columns: registry.npmjs.org/lines-and-columns/1.1.6
-    dev: true
-    engines:
-      node: '>=8'
-    name: parse-json
-    resolution:
-      integrity: sha512-+mi/lmVVNKFNVyLXV31ERiy2CY5E1/F6QtJFEzoChPRwwngMNXRDQ9GJ5WdE2Z2P4AujsOi0/+2qHID68KwfIQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/parse-json/-/parse-json-5.1.0.tgz'
-    version: 5.1.0
-  registry.npmjs.org/path-exists/4.0.0:
-    dev: true
-    engines:
-      node: '>=8'
-    name: path-exists
-    resolution:
-      integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/path-exists/-/path-exists-4.0.0.tgz'
-    version: 4.0.0
-  registry.npmjs.org/path-type/4.0.0:
-    dev: true
-    engines:
-      node: '>=8'
-    name: path-type
-    resolution:
-      integrity: sha512-gDKb8aZMDeD/tZWs9P6+q0J9Mwkdl6xMV8TjnGP3qJVJ06bdMgkbBlLU8IdfOsIsFz2BW1rNVT3XuNEl8zPAvw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/path-type/-/path-type-4.0.0.tgz'
-    version: 4.0.0
-  registry.npmjs.org/pkg-dir/4.2.0:
-    dependencies:
-      find-up: registry.npmjs.org/find-up/4.1.0
-    dev: true
-    engines:
-      node: '>=8'
-    name: pkg-dir
-    resolution:
-      integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/pkg-dir/-/pkg-dir-4.2.0.tgz'
-    version: 4.2.0
-  registry.npmjs.org/please-upgrade-node/3.2.0:
-    dependencies:
-      semver-compare: registry.npmjs.org/semver-compare/1.0.0
-    dev: true
-    name: please-upgrade-node
-    resolution:
-      integrity: sha512-gQR3WpIgNIKwBMVLkpMUeR3e1/E1y42bqDQZfql+kDeXd8COYfM8PQA4X6y7a8u9Ua9FHmsrrmirW2vHs45hWg==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/please-upgrade-node/-/please-upgrade-node-3.2.0.tgz'
-    version: 3.2.0
-  registry.npmjs.org/resolve-from/4.0.0:
-    dev: true
-    engines:
-      node: '>=4'
-    name: resolve-from
-    resolution:
-      integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/resolve-from/-/resolve-from-4.0.0.tgz'
-    version: 4.0.0
-  registry.npmjs.org/semver-compare/1.0.0:
-    dev: true
-    name: semver-compare
-    resolution:
-      integrity: sha1-De4hahyUGrN+nvsXiPavxf9VN/w=
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/semver-compare/-/semver-compare-1.0.0.tgz'
-    version: 1.0.0
-  registry.npmjs.org/semver-regex/2.0.0:
-    dev: true
-    engines:
-      node: '>=6'
-    name: semver-regex
-    resolution:
-      integrity: sha512-mUdIBBvdn0PLOeP3TEkMH7HHeUP3GjsXCwKarjv/kGmUFOYg1VqEemKhoQpWMu6X2I8kHeuVdGibLGkVK+/5Qw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/semver-regex/-/semver-regex-2.0.0.tgz'
-    version: 2.0.0
-  registry.npmjs.org/slash/3.0.0:
-    dev: true
-    engines:
-      node: '>=8'
-    name: slash
-    resolution:
-      integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/slash/-/slash-3.0.0.tgz'
-    version: 3.0.0
-  registry.npmjs.org/supports-color/5.5.0:
-    dependencies:
-      has-flag: registry.npmjs.org/has-flag/3.0.0
-    dev: true
-    engines:
-      node: '>=4'
-    name: supports-color
-    resolution:
-      integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/supports-color/-/supports-color-5.5.0.tgz'
-    version: 5.5.0
-  registry.npmjs.org/supports-color/7.2.0:
-    dependencies:
-      has-flag: registry.npmjs.org/has-flag/4.0.0
-    dev: true
-    engines:
-      node: '>=8'
-    name: supports-color
-    resolution:
-      integrity: sha512-qpCAvRl9stuOHveKsn7HncJRvv501qIacKzQlO/+Lwxc9+0q2wLyv4Dfvt80/DPn2pqOBsJdDiogXGR9+OvwRw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/supports-color/-/supports-color-7.2.0.tgz'
-    version: 7.2.0
-  registry.npmjs.org/which-pm-runs/1.0.0:
-    dev: true
-    name: which-pm-runs
-    resolution:
-      integrity: sha1-Zws6+8VS4LVd9rd4DKdGFfI60cs=
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/which-pm-runs/-/which-pm-runs-1.0.0.tgz'
-    version: 1.0.0
-  registry.npmjs.org/yaml/1.10.0:
-    dev: true
-    engines:
-      node: '>= 6'
-    name: yaml
-    resolution:
-      integrity: sha512-yr2icI4glYaNG+KWONODapy2/jDdMSDnrONSjblABjD9B4Z5LgiircSt8m8sRZFNi08kG9Sm0uSHtEmP3zaEGg==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.npmjs.org/yaml/-/yaml-1.10.0.tgz'
-    version: 1.10.0
