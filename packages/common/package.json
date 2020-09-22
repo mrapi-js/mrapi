@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/common",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc -b .",
@@ -27,7 +27,9 @@
     }
   ],
   "license": "MIT",
-  "files": ["lib"],
+  "files": [
+    "lib"
+  ],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mrapi-js/mrapi.git"

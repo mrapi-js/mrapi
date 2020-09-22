@@ -1,11 +1,14 @@
 {
   "name": "@mrapi/cli",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "main": "lib/index.js",
   "bin": {
     "mrapi": "./bin/run"
   },
-  "files": ["lib", "bin"],
+  "files": [
+    "lib",
+    "bin"
+  ],
   "engines": {
     "node": ">=10.12"
   },
