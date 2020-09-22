@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.2](https://github.com/mrapi-js/mrapi/compare/v1.0.0-beta.6...v1.0.2) (2020-09-22)
+
+
+### Features
+
+* add graphql mesh openapi ([022a4d6](https://github.com/mrapi-js/mrapi/commit/022a4d6901630ea3cb47fdbd34bda74c85a10924))
+* merge origin ([bc56a9b](https://github.com/mrapi-js/mrapi/commit/bc56a9b6e11e5b69b289e42f9c5205b42b91544b))
+
+
+### Bug Fixes
+
+* @mrapi/api lack dependencies after build ([ea7f350](https://github.com/mrapi-js/mrapi/commit/ea7f35078d56cd701f58a6c0493f742426e22cbb))
+* fix rm -rf in windows ([d9bdf81](https://github.com/mrapi-js/mrapi/commit/d9bdf81583519e90b8a699fe7051fa196e4447ba))
+* fix rm -rf Windows ([3503b4a](https://github.com/mrapi-js/mrapi/commit/3503b4a3e3838af2945d5bf161441a0520f93c4f))
+* **cli generate:** Modify throw errors' condition during prisma schema generating. ([e1959b3](https://github.com/mrapi-js/mrapi/commit/e1959b365b13bc48be416fdb7e788b57e96f59ba))
+* lock packages version ([93cc540](https://github.com/mrapi-js/mrapi/commit/93cc540948113412d2a1d6ad5e21b655a6091cff))
+
 ## [1.0.0](https://github.com/mrapi-js/mrapi/compare/v1.0.0-beta.6...v1.0.0) (2020-09-20)
 
 
