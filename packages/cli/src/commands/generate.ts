@@ -90,7 +90,7 @@ class GenerateCommand extends Command {
     const outputPath = path.join(cwd, outputDir, name)
 
     // 1. Clean
-    await runShell(`rm -rf ${outputPath} ${outputSchemaPath}`)
+    await runShell(`shx rm -rf ${outputPath} ${outputSchemaPath}`)
 
     // 2. Generate schema.prisma
     const inputSchemaFile = readFileSync(inputSchemaPath)

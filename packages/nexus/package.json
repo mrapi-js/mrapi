@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
-    "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
+    "clean": "shx rm -rf lib && shx rm -rf tsconfig.tsbuildinfo && shx rm -rf node_modules"
   },
   "publishConfig": {
     "access": "public",
@@ -20,7 +20,8 @@
   },
   "devDependencies": {
     "tslib": "^2.0.1",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "shx": "^0.3.2"
   },
   "author": "neikvon",
   "contributors": [
@@ -30,9 +31,7 @@
     }
   ],
   "license": "MIT",
-  "files": [
-    "lib"
-  ],
+  "files": ["lib"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mrapi-js/mrapi.git"
