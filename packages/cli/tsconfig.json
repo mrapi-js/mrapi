@@ -6,5 +6,5 @@
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
   "references": [{ "path": "../dal" }],
-  "include": ["./src/**/*"]
+  "include": ["typings.d.ts", "./src/**/*"]
 }

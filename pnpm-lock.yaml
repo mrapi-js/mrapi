@@ -161,6 +161,7 @@ importers:
       dotenv: 8.2.0
       fs-extra: 9.0.1
       prisma-multi-tenant: 2.3.1
+      shelljs: registry.npmjs.org/shelljs/0.8.4
     devDependencies:
       '@types/fs-extra': 9.0.1
       tslib: 2.0.1
@@ -176,6 +177,7 @@ importers:
       dotenv: ^8.2.0
       fs-extra: ^9.0.1
       prisma-multi-tenant: 2.3.1
+      shelljs: ^0.8.4
       tslib: ^2.0.1
       typescript: ^4.0.2
   packages/common:
@@ -1685,8 +1687,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-3c+yGKvVP5Y9TYBEibGNR+kLtijnj7mYrXRg+WpFb2X9xm04g/DXYkfg4hmzJQosc9snFNUPkbYIhu+KAm6jJw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.6.tgz'
   /@types/json5/0.0.29:
     dev: true
     resolution:
@@ -1866,8 +1866,6 @@ packages:
         optional: true
     resolution:
       integrity: sha512-Hoxyt99EA9LMmqo/5PuWWPeWeB3mKyvibfJ1Hy5SfiUpjE8Nqp+5QNd9fOkzL66+fqvIWSIE+Ett16LGMzCGnQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/@typescript-eslint/eslint-plugin/-/eslint-plugin-4.1.1.tgz'
   /@typescript-eslint/experimental-utils/4.0.1_eslint@7.9.0+typescript@4.0.2:
     dependencies:
       '@types/json-schema': 7.0.6
@@ -1885,8 +1883,6 @@ packages:
       typescript: '*'
     resolution:
       integrity: sha512-gAqOjLiHoED79iYTt3F4uSHrYmg/GPz/zGezdB0jAdr6S6gwNiR/j7cTZ8nREKVzMVKLd9G3xbg1sV9GClW3sw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-4.0.1.tgz'
   /@typescript-eslint/experimental-utils/4.1.1_eslint@7.9.0+typescript@4.0.2:
     dependencies:
       '@types/json-schema': 7.0.6
@@ -1904,8 +1900,6 @@ packages:
       typescript: '*'
     resolution:
       integrity: sha512-jzYsNciHoa4Z3c1URtmeT/bamYm8Dwfw6vuN3WHIE/BXb1iC4KveAnXDErTAZtPVxTYBaYn3n2gbt6F6D2rm1A==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/@typescript-eslint/experimental-utils/-/experimental-utils-4.1.1.tgz'
   /@typescript-eslint/parser/4.0.1_eslint@7.9.0+typescript@4.0.2:
     dependencies:
       '@typescript-eslint/scope-manager': 4.0.1
@@ -1943,8 +1937,6 @@ packages:
       node: ^8.10.0 || ^10.13.0 || >=11.10.1
     resolution:
       integrity: sha512-0W8TTobCvIIQ2FsrYTffyZGAAFUyIbEHq5EYJb1m7Rpd005jrnOvKOo8ywCLhs/Bm17C+KsrUboBvBAARQVvyA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-4.1.1.tgz'
   /@typescript-eslint/types/4.0.1:
     dev: true
     engines:
@@ -1957,8 +1949,6 @@ packages:
       node: ^8.10.0 || ^10.13.0 || >=11.10.1
     resolution:
       integrity: sha512-zrBiqOKYerMTllKcn+BP+i1b7LW/EbMMYytroXMxUTvFPn1smkCu0D7lSAx29fTUO4jnwV0ljSvYQtn2vNrNxA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/@typescript-eslint/types/-/types-4.1.1.tgz'
   /@typescript-eslint/typescript-estree/4.0.1_typescript@4.0.2:
     dependencies:
       '@typescript-eslint/types': 4.0.1
@@ -2001,8 +1991,6 @@ packages:
         optional: true
     resolution:
       integrity: sha512-2AUg5v0liVBsqbGxBphbJ0QbGqSRVaF5qPoTPWcxop+66vMdU1h4CCvHxTC47+Qb+Pr4l2RhXDd41JNpwcQEKw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/@typescript-eslint/typescript-estree/-/typescript-estree-4.1.1.tgz'
   /@typescript-eslint/visitor-keys/4.0.1:
     dependencies:
       '@typescript-eslint/types': 4.0.1
@@ -2021,8 +2009,6 @@ packages:
       node: ^8.10.0 || ^10.13.0 || >=11.10.1
     resolution:
       integrity: sha512-/EOOXbA2ferGLG6RmCHEQ0lTTLkOlXYDgblCmQk3tIU7mTPLm4gKhFMeeUSe+bcchTUsKeCk8xcpbop5Zr/8Rw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/@typescript-eslint/visitor-keys/-/visitor-keys-4.1.1.tgz'
   /@wry/equality/0.1.11:
     dependencies:
       tslib: 1.13.0
@@ -2990,7 +2976,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-5tK7EtrZ0N+OLFMthtqOj4fI2Jeb88C4CAZPu25LDVUgXJ0A3Js4PMGqrn0JU1W0Mh1/Z8wZzYPxqUrXeBboCQ==
-      registry: 'https://registry.yarnpkg.com/'
   /class-utils/0.3.6:
     dependencies:
       arr-union: 3.1.0
@@ -3139,7 +3124,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-W6Af2Iw1z4CB7q4uU4hv646dW9GQuBM+YpC0UvUCWSD8w90SJjp+ujJuXaEMtAXBtSqGfMPuFOVn4/+FlaqfBA==
-      registry: 'https://registry.yarnpkg.com/'
   /component-emitter/1.3.0:
     dev: true
     resolution:
@@ -3369,8 +3353,6 @@ packages:
       ms: 2.1.2
     resolution:
       integrity: sha512-pYAIzeRo8J6KPEaJ0VWOh5Pzkbw/RetuzehGM7QRRX5he4fPHx2rdKMB256ehJCkX+XRQm16eZLqLNS8RSZXZw==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/debug/-/debug-4.1.1.tgz'
   /decamelize/1.2.0:
     engines:
       node: '>=0.10.0'
@@ -3857,8 +3839,6 @@ packages:
       typescript: '*'
     resolution:
       integrity: sha512-8tYFDqOHGr7vVfdVYspmlV4sRBTylrM4gSLgkGKlO6F+djDOEJ+tEU7I50smUs7AIvFnNZutXUQAMgI9s9N6xQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/eslint-plugin-jest/-/eslint-plugin-jest-24.0.1.tgz'
   /eslint-plugin-node/11.1.0_eslint@7.9.0:
     dependencies:
       eslint: 7.9.0
@@ -3898,8 +3878,6 @@ packages:
       node: '>=8.0.0'
     resolution:
       integrity: sha512-iiGRvtxWqgtx5m8EyQUJihBloE4EnYeGE/bz1wSPwJE6tZuJUtHlhqDM4Xj2ukE8Dyy1+HCZ4hE0fzIVMzb58w==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/eslint-scope/-/eslint-scope-5.1.0.tgz'
   /eslint-utils/2.1.0:
     dependencies:
       eslint-visitor-keys: 1.3.0
@@ -3965,8 +3943,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-V6QyhX21+uXp4T+3nrNfI3hQNBDa/P8ga7LoQOenwrlEFXrEnUEE+ok1dMtaS3b6rmLXhT1TkTIsG75HMLbknA==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/eslint/-/eslint-7.9.0.tgz'
   /espree/7.3.0:
     dependencies:
       acorn: 7.4.0
@@ -4501,7 +4477,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-PpOwAdQ/YlXQ2vj8a3h8IipDuYRi3wceVQQGYWxNINccq40Anw7BlsEXCMbt1Zt+OLA6Fq9suIpIWD0OsnISlw==
-      registry: 'https://registry.yarnpkg.com/'
   /find-versions/3.2.0:
     dependencies:
       semver-regex: 2.0.0
@@ -4510,7 +4485,6 @@ packages:
       node: '>=6'
     resolution:
       integrity: sha512-P8WRou2S+oe222TOCHitLy8zj+SIsVJh52VP4lvXkaFVnOFFdoWv1H1Jjvel1aI6NCFOAaeAVm8qrI0odiLcww==
-      registry: 'https://registry.yarnpkg.com/'
   /findup-sync/4.0.0:
     dependencies:
       detect-file: 1.0.0
@@ -4659,8 +4633,6 @@ packages:
     dev: true
     resolution:
       integrity: sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz'
   /gauge/2.7.4:
     dependencies:
       aproba: 1.2.0
@@ -5125,7 +5097,6 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-tTMeLCLqSBqnflBZnlVDhpaIMucSGaYyX6855jM4AguGeWCeSzNdb1mfyWduTZ3pe3SJVvVWGL0jO1iKZVPfTA==
-      registry: 'https://registry.yarnpkg.com/'
   /iconv-lite/0.4.24:
     dependencies:
       safer-buffer: 2.1.2
@@ -5471,7 +5442,6 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-VRSzKkbMm5jMDoKLbltAkFQ5Qr7VDiTFGXxYFXXowVj387GeGNOCsOH6Msy00SGZ3Fp84b1Naa1psqgcCIEP5Q==
-      registry: 'https://registry.yarnpkg.com/'
   /is-potential-custom-element-name/1.0.0:
     dev: true
     resolution:
@@ -6340,7 +6310,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-t7hw9pI+WvuwNJXwk5zVHpyhIqzg2qTlklJOf0mVxGSbe3Fp2VieZcduNYjaLDoy6p9uGpQEGWG87WpMKlNq8g==
-      registry: 'https://registry.yarnpkg.com/'
   /lodash.memoize/4.1.2:
     dev: false
     resolution:
@@ -7115,7 +7084,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-8AV/sCtuzUeTo8gQK5qDZzARrulB3egtLzFgteqB2tcT4Mw7B8Kt7JcDHmltjz6FOAHsvTevk70gZEbhM4ZS9Q==
-      registry: 'https://registry.yarnpkg.com/'
   /optionator/0.8.3:
     dependencies:
       deep-is: 0.1.3
@@ -7219,7 +7187,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-R79ZZ/0wAxKGu3oYMlz8jy/kbhsNrS7SKZ7PxEHBgJ5+F2mtFW2fK2cOtBh1cHYkQsbzFV7I+EoRKe6Yt0oK7A==
-      registry: 'https://registry.yarnpkg.com/'
   /p-map/4.0.0:
     dependencies:
       aggregate-error: 3.1.0
@@ -7318,7 +7285,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w==
-      registry: 'https://registry.yarnpkg.com/'
   /path-is-absolute/1.0.1:
     engines:
       node: '>=0.10.0'
@@ -7457,7 +7423,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-HRDzbaKjC+AOWVXxAU/x54COGeIv9eb+6CkDSQoNTt4XyWoIJvuPsXizxu/Fr23EiekbtZwmh1IcIG/l/a10GQ==
-      registry: 'https://registry.yarnpkg.com/'
   /pkg-up/3.1.0:
     dependencies:
       find-up: 3.0.0
@@ -7472,7 +7437,6 @@ packages:
     dev: true
     resolution:
       integrity: sha512-gQR3WpIgNIKwBMVLkpMUeR3e1/E1y42bqDQZfql+kDeXd8COYfM8PQA4X6y7a8u9Ua9FHmsrrmirW2vHs45hWg==
-      registry: 'https://registry.yarnpkg.com/'
   /pluralize/8.0.0:
     dev: false
     engines:
@@ -7780,8 +7744,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-ZOIzd8yVsQQA7j8GCSlPGXwg5PfmA1mrq0JP4nGhh54LaKN3xdai/vHUDu74pKwV8OxseMS65u2NImosQcSD0Q==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/regexpp/-/regexpp-3.1.0.tgz'
   /remove-trailing-separator/1.1.0:
     resolution:
       integrity: sha1-wkvOKig62tW8P1jg1IJJuSN52O8=
@@ -8057,14 +8019,12 @@ packages:
     dev: true
     resolution:
       integrity: sha1-De4hahyUGrN+nvsXiPavxf9VN/w=
-      registry: 'https://registry.yarnpkg.com/'
   /semver-regex/2.0.0:
     dev: true
     engines:
       node: '>=6'
     resolution:
       integrity: sha512-mUdIBBvdn0PLOeP3TEkMH7HHeUP3GjsXCwKarjv/kGmUFOYg1VqEemKhoQpWMu6X2I8kHeuVdGibLGkVK+/5Qw==
-      registry: 'https://registry.yarnpkg.com/'
   /semver-store/0.3.0:
     dev: false
     resolution:
@@ -8084,8 +8044,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-OrOb32TeeambH6UrhtShmF7CRDqhL6/5XpPNp2DuRH6+9QLw/orhp72j87v8Qa1ScDkvrrBNpZcDejAirJmfXQ==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/semver/-/semver-7.3.2.tgz'
   /send/0.17.1:
     dependencies:
       debug: 2.6.9
@@ -8252,7 +8210,6 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-g9Q1haeby36OSStwb4ntCGGGaKsaVSjQ68fBxoQcutl5fS1vuY18H3wSt3jFyFtrkx+Kz0V1G85A4MyAdDMi2Q==
-      registry: 'https://registry.yarnpkg.com/'
   /slice-ansi/2.1.0:
     dependencies:
       ansi-styles: 3.2.1
@@ -8981,8 +8938,6 @@ packages:
       typescript: '>=2.8.0 || >= 3.2.0-dev || >= 3.3.0-dev || >= 3.4.0-dev || >= 3.5.0-dev || >= 3.6.0-dev || >= 3.6.0-beta || >= 3.7.0-dev || >= 3.7.0-beta'
     resolution:
       integrity: sha512-kzeQ5B8H3w60nFY2g8cJIuH7JDpsALXySGtwGJ0p2LSjLgay3NdIpqq5SoOBe46bKDW2iq25irHCr8wjomUS2g==
-      registry: 'https://registry.yarnpkg.com/'
-      tarball: 'https://registry.yarnpkg.com/tsutils/-/tsutils-3.17.1.tgz'
   /tunnel-agent/0.6.0:
     dependencies:
       safe-buffer: 5.2.1
@@ -9318,7 +9273,6 @@ packages:
     dev: true
     resolution:
       integrity: sha1-Zws6+8VS4LVd9rd4DKdGFfI60cs=
-      registry: 'https://registry.yarnpkg.com/'
   /which-typed-array/1.1.2:
     dependencies:
       available-typed-arrays: 1.0.2
@@ -9498,3 +9452,165 @@ packages:
     dev: false
     resolution:
       integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
+  registry.npmjs.org/balanced-match/1.0.0:
+    dev: false
+    name: balanced-match
+    resolution:
+      integrity: sha1-ibTRmasr7kneFk6gK4nORi1xt2c=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/balanced-match/-/balanced-match-1.0.0.tgz'
+    version: 1.0.0
+  registry.npmjs.org/brace-expansion/1.1.11:
+    dependencies:
+      balanced-match: registry.npmjs.org/balanced-match/1.0.0
+      concat-map: registry.npmjs.org/concat-map/0.0.1
+    dev: false
+    name: brace-expansion
+    resolution:
+      integrity: sha512-iCuPHDFgrHX7H2vEI/5xpz07zSHB00TpugqhmYtVmMO6518mCuRMoOYFldEBl0g187ufozdaHgWKcYFb61qGiA==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/brace-expansion/-/brace-expansion-1.1.11.tgz'
+    version: 1.1.11
+  registry.npmjs.org/concat-map/0.0.1:
+    dev: false
+    name: concat-map
+    resolution:
+      integrity: sha1-2Klr13/Wjfd5OnMDajug1UBdR3s=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/concat-map/-/concat-map-0.0.1.tgz'
+    version: 0.0.1
+  registry.npmjs.org/fs.realpath/1.0.0:
+    dev: false
+    name: fs.realpath
+    resolution:
+      integrity: sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/fs.realpath/-/fs.realpath-1.0.0.tgz'
+    version: 1.0.0
+  registry.npmjs.org/glob/7.1.6:
+    dependencies:
+      fs.realpath: registry.npmjs.org/fs.realpath/1.0.0
+      inflight: registry.npmjs.org/inflight/1.0.6
+      inherits: registry.npmjs.org/inherits/2.0.4
+      minimatch: registry.npmjs.org/minimatch/3.0.4
+      once: registry.npmjs.org/once/1.4.0
+      path-is-absolute: registry.npmjs.org/path-is-absolute/1.0.1
+    dev: false
+    name: glob
+    resolution:
+      integrity: sha512-LwaxwyZ72Lk7vZINtNNrywX0ZuLyStrdDtabefZKAY5ZGJhVtgdznluResxNmPitE0SAO+O26sWTHeKSI2wMBA==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/glob/-/glob-7.1.6.tgz'
+    version: 7.1.6
+  registry.npmjs.org/inflight/1.0.6:
+    dependencies:
+      once: registry.npmjs.org/once/1.4.0
+      wrappy: registry.npmjs.org/wrappy/1.0.2
+    dev: false
+    name: inflight
+    resolution:
+      integrity: sha1-Sb1jMdfQLQwJvJEKEHW6gWW1bfk=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/inflight/-/inflight-1.0.6.tgz'
+    version: 1.0.6
+  registry.npmjs.org/inherits/2.0.4:
+    dev: false
+    name: inherits
+    resolution:
+      integrity: sha512-k/vGaX4/Yla3WzyMCvTQOXYeIHvqOKtnqBduzTHpzpQZzAskKMhZ2K+EnBiSM9zGSoIFeMpXKxa4dYeZIQqewQ==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/inherits/-/inherits-2.0.4.tgz'
+    version: 2.0.4
+  registry.npmjs.org/interpret/1.4.0:
+    dev: false
+    engines:
+      node: '>= 0.10'
+    name: interpret
+    resolution:
+      integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/interpret/-/interpret-1.4.0.tgz'
+    version: 1.4.0
+  registry.npmjs.org/minimatch/3.0.4:
+    dependencies:
+      brace-expansion: registry.npmjs.org/brace-expansion/1.1.11
+    dev: false
+    name: minimatch
+    resolution:
+      integrity: sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz'
+    version: 3.0.4
+  registry.npmjs.org/once/1.4.0:
+    dependencies:
+      wrappy: registry.npmjs.org/wrappy/1.0.2
+    dev: false
+    name: once
+    resolution:
+      integrity: sha1-WDsap3WWHUsROsF9nFC6753Xa9E=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/once/-/once-1.4.0.tgz'
+    version: 1.4.0
+  registry.npmjs.org/path-is-absolute/1.0.1:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    name: path-is-absolute
+    resolution:
+      integrity: sha1-F0uSaHNVNP+8es5r9TpanhtcX18=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/path-is-absolute/-/path-is-absolute-1.0.1.tgz'
+    version: 1.0.1
+  registry.npmjs.org/path-parse/1.0.6:
+    dev: false
+    name: path-parse
+    resolution:
+      integrity: sha512-GSmOT2EbHrINBf9SR7CDELwlJ8AENk3Qn7OikK4nFYAu3Ote2+JYNVvkpAEQm3/TLNEJFD/xZJjzyxg3KBWOzw==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/path-parse/-/path-parse-1.0.6.tgz'
+    version: 1.0.6
+  registry.npmjs.org/rechoir/0.6.2:
+    dependencies:
+      resolve: registry.npmjs.org/resolve/1.17.0
+    dev: false
+    engines:
+      node: '>= 0.10'
+    name: rechoir
+    resolution:
+      integrity: sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/rechoir/-/rechoir-0.6.2.tgz'
+    version: 0.6.2
+  registry.npmjs.org/resolve/1.17.0:
+    dependencies:
+      path-parse: registry.npmjs.org/path-parse/1.0.6
+    dev: false
+    name: resolve
+    resolution:
+      integrity: sha512-ic+7JYiV8Vi2yzQGFWOkiZD5Z9z7O2Zhm9XMaTxdJExKasieFCr+yXZ/WmXsckHiKl12ar0y6XiXDx3m4RHn1w==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/resolve/-/resolve-1.17.0.tgz'
+    version: 1.17.0
+  registry.npmjs.org/shelljs/0.8.4:
+    dependencies:
+      glob: registry.npmjs.org/glob/7.1.6
+      interpret: registry.npmjs.org/interpret/1.4.0
+      rechoir: registry.npmjs.org/rechoir/0.6.2
+    dev: false
+    engines:
+      node: '>=4'
+    hasBin: true
+    name: shelljs
+    resolution:
+      integrity: sha512-7gk3UZ9kOfPLIAbslLzyWeGiEqx9e3rxwZM0KE6EL8GlGwjym9Mrlx5/p33bWTu9YG6vcS4MBxYZDHYr5lr8BQ==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/shelljs/-/shelljs-0.8.4.tgz'
+    version: 0.8.4
+  registry.npmjs.org/wrappy/1.0.2:
+    dev: false
+    name: wrappy
+    resolution:
+      integrity: sha1-tSQ9jz7BqjXxNkYFvA0QNuMKtp8=
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/wrappy/-/wrappy-1.0.2.tgz'
+    version: 1.0.2

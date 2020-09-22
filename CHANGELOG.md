@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/mrapi-js/mrapi/compare/v1.0.0-beta.6...v1.0.0) (2020-09-20)
+
+
+### Features
+
+* add graphql mesh openapi ([022a4d6](https://github.com/mrapi-js/mrapi/commit/022a4d6901630ea3cb47fdbd34bda74c85a10924))
+* merge origin ([bc56a9b](https://github.com/mrapi-js/mrapi/commit/bc56a9b6e11e5b69b289e42f9c5205b42b91544b))
+
+
+### Bug Fixes
+
+* lock packages version ([93cc540](https://github.com/mrapi-js/mrapi/commit/93cc540948113412d2a1d6ad5e21b655a6091cff))
+
 ## [1.0.0-beta.6](https://github.com/mrapi-js/mrapi/compare/v1.0.0-beta.5...v1.0.0-beta.6) (2020-09-18)
 
 

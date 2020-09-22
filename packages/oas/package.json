@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/oas",
-  "version": "1.0.0-beta.6",
+  "version": "1.0.0",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc -b .",
@@ -27,10 +27,7 @@
     }
   ],
   "license": "MIT",
-  "files": [
-    "lib",
-    "templates"
-  ],
+  "files": ["lib", "templates"],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/mrapi-js/mrapi.git"
