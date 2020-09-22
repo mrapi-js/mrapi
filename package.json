@@ -2,10 +2,7 @@
   "name": "mrapi-workspace",
   "version": "1.0.0",
   "private": true,
-  "workspaces": [
-    "packages/*",
-    "examples/*"
-  ],
+  "workspaces": ["packages/*", "examples/*"],
   "scripts": {
     "clean": "pnpm recursive run clean && rm -rf node_modules",
     "build": "pnpm run build --filter @mrapi/common && pnpm run build --filter @mrapi/nexus && pnpm run build --filter @mrapi/oas && pnpm run build --filter @mrapi/cli && pnpm run build --filter @mrapi/dal && pnpm run build --filter @mrapi/api",

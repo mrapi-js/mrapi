@@ -105,6 +105,13 @@ export default function genConfig(options: ApiOptions): ApiOptions {
   // verify options
   optionsVerify(config)
 
+  // replace custome dir in production env
+  const isDev = process.env.NODE_ENV !== 'production'
+  if (!isDev) {
+    config.graphql.dir = config.graphql.dir.replace(/src/g, 'dist')
+    config.openapi.dir = config.openapi.dir.replace(/src/g, 'dist')
+  }
+
   // generage graphql-mesh config and write file
   const graphqlConfigs: Obj[] = []
   config.graphql.sources.forEach((s: GraphqlConfig) => {

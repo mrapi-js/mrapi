@@ -10,11 +10,7 @@
     }
   ],
   "license": "MIT",
-  "files": [
-    "lib",
-    "bin",
-    "resource"
-  ],
+  "files": ["lib", "bin", "resource"],
   "scripts": {
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
