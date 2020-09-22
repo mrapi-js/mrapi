@@ -1,6 +1,7 @@
 import chalk from 'chalk'
 import path from 'path'
 import commander from 'commander'
+import shelljs from 'shelljs'
 import {
   clientManagementPath,
   getNodeModules,
@@ -8,7 +9,6 @@ import {
 
 import {
   spawnShell,
-  runShell,
   getUrlAndProvider,
   readFileSync,
   writeFileSync,
@@ -90,7 +90,7 @@ class GenerateCommand extends Command {
     const outputPath = path.join(cwd, outputDir, name)
 
     // 1. Clean
-    await runShell(`shx rm -rf ${outputPath} ${outputSchemaPath}`)
+    await shelljs.rm('-rf', outputPath, outputSchemaPath)
 
     // 2. Generate schema.prisma
     const inputSchemaFile = readFileSync(inputSchemaPath)

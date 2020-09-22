@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
-    "clean": "shx rm -rf lib && shx rm -rf tsconfig.tsbuildinfo && shx rm -rf node_modules"
+    "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
   "dependencies": {
     "@mrapi/common": "workspace:*",
@@ -32,7 +32,7 @@
     "dotenv": "^8.2.0",
     "fs-extra": "^9.0.1",
     "prisma-multi-tenant": "2.3.1",
-    "shx": "^0.3.2"
+    "shelljs": "^0.8.4"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.1",
