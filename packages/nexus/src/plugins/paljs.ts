@@ -5,15 +5,17 @@ import {
   plugin,
   scalarType,
 } from '@nexus/schema'
-import { Kind, ValueNode, ObjectValueNode } from 'graphql'
 import { NexusAcceptedTypeDef } from '@nexus/schema/dist/builder'
-import { DateTimeResolver, JSONResolver } from 'graphql-scalars'
+import {
+  DateTimeResolver,
+  // JSONResolver
+} from 'graphql-scalars'
 
 import { getPrismaDmmf } from '@mrapi/common'
 
-function parseObject(ast: ObjectValueNode, variables: any): any {
+function parseObject(ast: any, variables: any): any {
   const value = Object.create(null)
-  ast.fields.forEach((field) => {
+  ast.fields.forEach((field: any) => {
     // eslint-disable-next-line no-use-before-define
     value[field.name.value] = parseLiteral(field.value, variables)
   })
@@ -21,21 +23,21 @@ function parseObject(ast: ObjectValueNode, variables: any): any {
   return value
 }
 
-function parseLiteral(ast: ValueNode, variables: any): any {
+function parseLiteral(ast: any, variables: any): any {
   switch (ast.kind) {
-    case Kind.STRING:
-    case Kind.BOOLEAN:
+    case 'StringValue':
+    case 'BooleanValue':
       return ast.value
-    case Kind.INT:
-    case Kind.FLOAT:
+    case 'IntValue':
+    case 'FloatValue':
       return parseFloat(ast.value)
-    case Kind.OBJECT:
+    case 'ObjectValue':
       return parseObject(ast, variables)
-    case Kind.LIST:
-      return ast.values.map((n) => parseLiteral(n, variables))
-    case Kind.NULL:
+    case 'ListValue':
+      return ast.values.map((n: any) => parseLiteral(n, variables))
+    case 'NullValue':
       return null
-    case Kind.VARIABLE: {
+    case 'Variable': {
       const name = ast.name.value
       return variables ? variables[name] : undefined
     }
@@ -50,7 +52,7 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
     onInstall() {
       const dmmf = getPrismaDmmf(prismaClient)
 
-      const JSON = scalarType({
+      const JsonResolver = scalarType({
         name: 'Json',
         asNexusMethod: 'Json',
         description: 'Json custom scalar type',
@@ -71,8 +73,8 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
           },
         }),
         DateTimeResolver,
-        JSONResolver,
-        JSON,
+        // JSONResolver,
+        JsonResolver,
       ]
 
       dmmf.datamodel.models.forEach((input: any) => {
