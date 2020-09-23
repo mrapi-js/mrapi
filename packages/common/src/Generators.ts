@@ -1,11 +1,9 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
-import OS from 'os'
 import { join } from 'path'
+import glob from 'glob'
 
 import { spawnShell, formation } from './shell'
 import type { Mutation, GeneratorOptions as Options, Query } from './types'
-
-const glob = require('glob')
 
 const tscOptions = [
   '-t es2018',

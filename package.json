@@ -20,7 +20,7 @@
     "prettier": "pnpm run prettier:packages && pnpm run prettier:scripts && pnpm run prettier:docs",
     "prettier:packages": "prettier --write packages/**/*.ts",
     "prettier:scripts": "prettier --write scripts/**/*.ts",
-    "prettier:docs": "prettier --write docs/* README.md README.zh-CN.md"
+    "prettier:docs": "prettier --write README.md"
   },
   "husky": {
     "hooks": {
