@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync, writeFileSync } from 'fs'
+import OS from 'os'
 import { join } from 'path'
 
 import { spawnShell, formation } from './shell'
@@ -120,12 +121,36 @@ export class Generators {
   protected formation = formation
 
   async toJS() {
+    const execStatusAssert = (code: number) => {
+      if (code !== 0) {
+        throw new Error('Generate nexus types exception.')
+      }
+    }
+
     const { output } = this.options
+    const currentOS = OS.type()
+
+    // Execute 'tsc' in windows
+    if (currentOS === 'Windows_NT') {
+      const glob = require('glob')
+      let files: string[] = []
+      files = files.concat(await glob.sync(`${output}/*.ts`))
+      files = files.concat(await glob.sync(`${output}/**/*.ts`))
+      files = files.concat(await glob.sync(`${output}/**/**/*.ts`))
+
+      const exitPalCode = await spawnShell(
+        `npx tsc ${tscOptions} ${files.join(' ')}`,
+      )
+      execStatusAssert(exitPalCode)
+
+      return
+    }
+
+    // Glob is block in windows.
+    // The script underline cannot execute successfully in windows.
     const exitPalCode = await spawnShell(
       `npx tsc ${tscOptions} ${output}/*.ts ${output}/**/*.ts ${output}/**/**/*.ts`,
     )
-    if (exitPalCode !== 0) {
-      throw new Error('Generate nexus types exception.')
-    }
+    execStatusAssert(exitPalCode)
   }
 }

@@ -213,6 +213,8 @@ class GenerateCommand extends Command {
     await openAPIGenerate.run()
   }
 
+  // Prisma generator cannot recongize path like 'c:\xxx\xxx', but path.join will produce path like that in windows.
+  // So here has a special process with param - output.
   createSchemaPrisma = (
     output: string,
     content: string,
@@ -220,7 +222,7 @@ class GenerateCommand extends Command {
   ) => `
 generator client {
   provider = "prisma-client-js"
-  output   = "${output}"
+  output   = "${output.replace(/\\/ig, '/')}"
   previewFeatures = ["transactionApi"]
 }
 
