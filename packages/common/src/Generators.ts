@@ -5,6 +5,8 @@ import { join } from 'path'
 import { spawnShell, formation } from './shell'
 import type { Mutation, GeneratorOptions as Options, Query } from './types'
 
+const glob = require('glob')
+
 const tscOptions = [
   '-t es2018',
   '--lib esnext',
@@ -121,36 +123,24 @@ export class Generators {
   protected formation = formation
 
   async toJS() {
-    const execStatusAssert = (code: number) => {
-      if (code !== 0) {
-        throw new Error('Generate nexus types exception.')
-      }
-    }
-
     const { output } = this.options
-    const currentOS = OS.type()
 
-    // Execute 'tsc' in windows
-    if (currentOS === 'Windows_NT') {
-      const glob = require('glob')
-      let files: string[] = []
-      files = files.concat(await glob.sync(`${output}/*.ts`))
-      files = files.concat(await glob.sync(`${output}/**/*.ts`))
-      files = files.concat(await glob.sync(`${output}/**/**/*.ts`))
-
-      const exitPalCode = await spawnShell(
-        `npx tsc ${tscOptions} ${files.join(' ')}`,
-      )
-      execStatusAssert(exitPalCode)
-
-      return
-    }
-
-    // Glob is block in windows.
+    // Glob is blocked in windows. That is `npx tsc **/*.ts` cannot execute in windows. It maybe a problem of npx.
     // The script underline cannot execute successfully in windows.
+    // const exitPalCode = await spawnShell(
+    //   `npx tsc ${tscOptions} ${output}/*.ts ${output}/**/*.ts ${output}/**/**/*.ts`,
+    // )
+
+    const files: string[] = [
+      ...glob.sync(`${output}/*.ts`),
+      ...glob.sync(`${output}/**/*.ts`),
+      ...glob.sync(`${output}/**/**/*.ts`),
+    ]
     const exitPalCode = await spawnShell(
-      `npx tsc ${tscOptions} ${output}/*.ts ${output}/**/*.ts ${output}/**/**/*.ts`,
+      `npx tsc ${tscOptions} ${files.join(' ')}`,
     )
-    execStatusAssert(exitPalCode)
+    if (exitPalCode !== 0) {
+      throw new Error('Generate nexus types exception.')
+    }
   }
 }
