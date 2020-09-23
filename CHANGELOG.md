@@ -2,6 +2,15 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.3](https://github.com/mrapi-js/mrapi/compare/v1.0.2...v1.0.3) (2020-09-23)
+
+
+### Bug Fixes
+
+* add @types/glob and delete os ([32aa804](https://github.com/mrapi-js/mrapi/commit/32aa804f4532f0fd8601c079ace76e9e8c248c8d))
+* fix Windows bug ([f28d954](https://github.com/mrapi-js/mrapi/commit/f28d95446ad38fa412b2423eca41bb6427f57208)), closes [#48](https://github.com/mrapi-js/mrapi/issues/48)
+* **cli and common:** Fix the compatity with windows ([297f740](https://github.com/mrapi-js/mrapi/commit/297f7409fa010446866a70bd36e3f0b829d1c15d))
+
 ### [1.0.2](https://github.com/mrapi-js/mrapi/compare/v1.0.0-beta.6...v1.0.2) (2020-09-22)
 
 
