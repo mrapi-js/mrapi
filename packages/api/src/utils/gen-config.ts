@@ -53,7 +53,7 @@ function getGraphqlConfig(gConfig: GraphqlConfig): Obj {
           value: gConfig.prefix,
         },
       },
-      ...gConfig.transforms,
+      ...(gConfig.transforms || []),
     ],
   }
   switch (gConfig.type) {
