@@ -1,12 +1,14 @@
 import genConfig from './utils/gen-config'
 import Server from './utils/server'
 import { meshSchema } from './utils/graphql'
-import { GraphQLSchema, ApiOptions } from './types'
 import logger from './utils/logger'
 import genPrisma from './utils/gen-prisma'
+import type { GraphQLSchema, ApiOptions } from './types'
+
 export * from './types'
 
 export const log = logger
+
 export default class API {
   baseDir: string
   options: ApiOptions

@@ -1,9 +1,10 @@
 import * as fs from 'fs'
 import util from 'util'
 import assert from 'assert'
-import { GraphqlConfig, Obj, ApiOptions } from '../types'
-import logger from './logger'
+
 import { getConfig, merge } from '@mrapi/common'
+import logger from './logger'
+import type { GraphqlConfig, Obj, ApiOptions } from '../types'
 
 function optionsVerify(config: ApiOptions) {
   const { openapi, graphql, server, schemaNames } = config
@@ -52,6 +53,7 @@ function getGraphqlConfig(gConfig: GraphqlConfig): Obj {
           value: gConfig.prefix,
         },
       },
+      ...(gConfig.transforms || []),
     ],
   }
   switch (gConfig.type) {

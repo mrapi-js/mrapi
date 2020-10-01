@@ -1,9 +1,10 @@
 import pino from 'pino'
 import fs from 'fs'
-import { Level } from '../types'
 import path from 'path'
 import pinoms from 'pino-multi-stream'
-const { rotator } = require('logrotator')
+import { rotator } from 'logrotator'
+
+import type { Level } from '../types'
 
 const logPath = path.join(process.cwd(), 'logs')
 
