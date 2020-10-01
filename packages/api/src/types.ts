@@ -71,6 +71,7 @@ export interface GraphqlConfig {
   prefix: string
   snapshot?: boolean
   headers?: Obj
+  transforms?: any[]
 }
 
 export interface ApiOptions {
