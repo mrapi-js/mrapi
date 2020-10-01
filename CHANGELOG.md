@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.1](https://github.com/mrapi-js/mrapi/compare/v1.1.0...v1.1.1) (2020-10-01)
+
+
+### Bug Fixes
+
+* fix gConfig.transforms bug ([a2681fe](https://github.com/mrapi-js/mrapi/commit/a2681fe577de7f5b63df40149b89e17b06d6e67b))
+
 ## [1.1.0](https://github.com/mrapi-js/mrapi/compare/v1.0.3...v1.1.0) (2020-10-01)
 
 
