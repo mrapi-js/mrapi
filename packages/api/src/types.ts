@@ -7,7 +7,6 @@ import {
 } from 'fastify'
 import { Server, IncomingMessage, ServerResponse } from 'http'
 import { NexusGraphQLSchema } from '@nexus/schema/dist/definitions/_types'
-// export { PrismaClient } from '@prisma/client'
 
 export { ExecuteMeshFn } from '@graphql-mesh/runtime'
 export { GraphQLSchema } from 'graphql'
@@ -72,6 +71,7 @@ export interface GraphqlConfig {
   prefix: string
   snapshot?: boolean
   headers?: Obj
+  transforms?: any[]
 }
 
 export interface ApiOptions {
@@ -104,4 +104,4 @@ export interface Obj {
 }
 
 type ValueOrArray<T> = T | ArrayOfValueOrArray<T>
-interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> { }
+interface ArrayOfValueOrArray<T> extends Array<ValueOrArray<T>> {}

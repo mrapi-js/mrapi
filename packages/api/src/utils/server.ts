@@ -1,7 +1,8 @@
 import fastify from 'fastify'
 import path from 'path'
+
 import logger from './logger'
-import {
+import type {
   App,
   GraphQLSchema,
   ExecuteMeshFn,
