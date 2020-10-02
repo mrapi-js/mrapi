@@ -4,11 +4,7 @@
   "main": "lib/index.js",
   "author": "neikvon",
   "license": "MIT",
-  "files": [
-    "lib",
-    "bin",
-    "resource"
-  ],
+  "files": ["lib", "bin", "resource"],
   "scripts": {
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
@@ -16,6 +12,7 @@
     "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
   },
   "dependencies": {
+    "prettier": "^2.1.2",
     "@graphql-mesh/config": "0.8.4",
     "@graphql-mesh/graphql": "0.5.1",
     "@graphql-mesh/openapi": "0.5.7",
@@ -36,6 +33,7 @@
     "pino-pretty": "^4.2.1"
   },
   "devDependencies": {
+    "@types/prettier": "^2.1.1",
     "@types/node": "^14.6.4",
     "@types/pino": "^6.3.0",
     "@types/pino-multi-stream": "^5.0.0",

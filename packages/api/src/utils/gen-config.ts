@@ -1,8 +1,8 @@
-import * as fs from 'fs'
-import util from 'util'
 import assert from 'assert'
+import prettier from 'prettier'
+import path from 'path'
 
-import { getConfig, merge } from '@mrapi/common'
+import { getConfig, merge, writeFileSync } from '@mrapi/common'
 import logger from './logger'
 import type { GraphqlConfig, Obj, ApiOptions } from '../types'
 
@@ -119,21 +119,27 @@ export default function genConfig(options: ApiOptions): ApiOptions {
   config.graphql.sources.forEach((s: GraphqlConfig) => {
     graphqlConfigs.push(getGraphqlConfig(s))
   })
-  fs.writeFileSync(
-    `./${outputConfigName}`,
-    `
-  module.exports = {
-    sources: ${JSON.stringify(graphqlConfigs)}
-  }
-  `,
+
+  const outputConfigNameFilePath = path.join(process.cwd(), outputConfigName)
+  writeFileSync(
+    outputConfigNameFilePath,
+    prettier.format(
+      `module.exports = { sources: ${JSON.stringify(graphqlConfigs)} }`,
+    ),
+  )
+  logger.info(
+    `[Start] generater config file "${outputConfigNameFilePath}" done.`,
   )
 
   logger.info(`
-~~~~~~~~~~Config Start~~~~~~~~~~~~~~~
-${util.inspect(config, { compact: true })}
+~~~~~~~~~~ Config Start ~~~~~~~~~~~~~~~
+
+${prettier.format(JSON.stringify(config), {
+  parser: 'json',
+})}
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 `)
-  logger.info(`[Start] gen config file ${outputConfigName} done`)
 
   return config
 }

@@ -120,10 +120,12 @@ importers:
       pino: 6.6.0
       pino-multi-stream: 5.1.1
       pino-pretty: 4.2.1
+      prettier: registry.npmjs.org/prettier/2.1.2
     devDependencies:
       '@types/node': 14.6.4
       '@types/pino': 6.3.0
       '@types/pino-multi-stream': 5.0.0
+      '@types/prettier': registry.npmjs.org/@types/prettier/2.1.1
       tslib: 2.0.1
       typescript: 4.0.2
     specifiers:
@@ -139,6 +141,7 @@ importers:
       '@types/node': ^14.6.4
       '@types/pino': ^6.3.0
       '@types/pino-multi-stream': ^5.0.0
+      '@types/prettier': ^2.1.1
       fastify: ^3.3.0
       fastify-gql: ^5.6.0
       fastify-reply-from: ^3.2.0
@@ -148,6 +151,7 @@ importers:
       pino: ^6.6.0
       pino-multi-stream: ^5.1.1
       pino-pretty: ^4.2.1
+      prettier: ^2.1.2
       tslib: ^2.0.1
       typescript: ^4.0.2
   packages/cli:
@@ -1433,6 +1437,15 @@ packages:
       '@prisma/cli': ^2.4.1
     resolution:
       integrity: sha512-2zIwagTNuf0DJ5G7GiPapssW47r2RULGXAFRFlTJ+OPpTRksAYparVWqaUKFGOUjyEbs5u5fYMoF6rwZnSK5AQ==
+  /@prisma-multi-tenant/shared/2.3.1_@prisma+cli@2.6.2:
+    dependencies:
+      '@prisma/cli': 2.6.2
+      '@prisma/client': 2.6.2_@prisma+cli@2.6.2
+    dev: false
+    peerDependencies:
+      '@prisma/cli': ^2.4.1
+    resolution:
+      integrity: sha512-2zIwagTNuf0DJ5G7GiPapssW47r2RULGXAFRFlTJ+OPpTRksAYparVWqaUKFGOUjyEbs5u5fYMoF6rwZnSK5AQ==
   /@prisma/cli/2.6.2:
     dev: false
     engines:
@@ -1443,6 +1456,21 @@ packages:
       integrity: sha512-aDzA1kWwmfyt1FeTzayZ6fDc9uXRo+gt+KFsR9bNqHtdge2aZLA9N/ft9+1627HOADIQgfTFw41K0GOMBJQ48w==
   /@prisma/client/2.6.2:
     dependencies:
+      pkg-up: 3.1.0
+    dev: false
+    engines:
+      node: '>=10'
+    peerDependencies:
+      '@prisma/cli': '*'
+    peerDependenciesMeta:
+      '@prisma/cli':
+        optional: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-SYbW6+Lcd/OcY6p9vjI845ERl77Z+rOcB0zh6RKQdxr8R6yZHc7aDUnjcp8fZr245HnLLRnCpfkAfqQ3lvLP8g==
+  /@prisma/client/2.6.2_@prisma+cli@2.6.2:
+    dependencies:
+      '@prisma/cli': 2.6.2
       pkg-up: 3.1.0
     dev: false
     engines:
@@ -5197,7 +5225,6 @@ packages:
       node: '>= 0.10'
     resolution:
       integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
-      registry: 'https://registry.yarnpkg.com/'
   /ip-regex/2.1.0:
     dev: true
     engines:
@@ -7473,7 +7500,7 @@ packages:
       integrity: sha512-zK6Gd8zDsEiVydOCGLkoBoZuqv8VTiHyAbKznXe/gaph/DAeZOmit9yMfgIz5adIgAMMs5XfoYSwAX3jcCO1tA==
   /prisma-multi-tenant/2.3.1:
     dependencies:
-      '@prisma-multi-tenant/shared': 2.3.1
+      '@prisma-multi-tenant/shared': 2.3.1_@prisma+cli@2.6.2
       '@prisma/cli': 2.6.2
       arg: 4.1.3
       chalk: 4.1.0
@@ -7708,7 +7735,6 @@ packages:
       node: '>= 0.10'
     resolution:
       integrity: sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=
-      registry: 'https://registry.yarnpkg.com/'
   /redent/1.0.0:
     dependencies:
       indent-string: 2.1.0
@@ -8147,7 +8173,6 @@ packages:
     hasBin: true
     resolution:
       integrity: sha512-7gk3UZ9kOfPLIAbslLzyWeGiEqx9e3rxwZM0KE6EL8GlGwjym9Mrlx5/p33bWTu9YG6vcS4MBxYZDHYr5lr8BQ==
-      registry: 'https://registry.yarnpkg.com/'
   /shellwords/0.1.1:
     dev: true
     optional: true
@@ -9465,3 +9490,22 @@ packages:
     dev: false
     resolution:
       integrity: sha512-PQ2PC7R9rslx84ndNBZB/Dkv8V8fZEpk83RLgXtYd0fwUgEjseMn1Dgajh2x6S8QbZAFa9p2qVCEuYZNgve0dQ==
+  registry.npmjs.org/@types/prettier/2.1.1:
+    dev: true
+    name: '@types/prettier'
+    resolution:
+      integrity: sha512-2zs+O+UkDsJ1Vcp667pd3f8xearMdopz/z54i99wtRDI5KLmngk7vlrYZD0ZjKHaROR03EznlBbVY9PfAEyJIQ==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/@types/prettier/-/prettier-2.1.1.tgz'
+    version: 2.1.1
+  registry.npmjs.org/prettier/2.1.2:
+    dev: false
+    engines:
+      node: '>=10.13.0'
+    hasBin: true
+    name: prettier
+    resolution:
+      integrity: sha512-16c7K+x4qVlJg9rEbXl7HEGmQyZlG4R9AgP+oHKRMsMsuk8s+ATStlf1NpDqyBI1HpVyfjLOeMhH2LvuNvV5Vg==
+      registry: 'https://registry.yarnpkg.com/'
+      tarball: 'https://registry.npmjs.org/prettier/-/prettier-2.1.2.tgz'
+    version: 2.1.2
