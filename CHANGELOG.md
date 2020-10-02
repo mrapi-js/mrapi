@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.2](https://github.com/mrapi-js/mrapi/compare/v1.1.1...v1.1.2) (2020-10-02)
+
+
+### Features
+
+* update api console ([2109b29](https://github.com/mrapi-js/mrapi/commit/2109b29a0958a314e09aa29ab35d6c18dd2bd85c))
+
 ### [1.1.1](https://github.com/mrapi-js/mrapi/compare/v1.1.0...v1.1.1) (2020-10-01)
 
 
