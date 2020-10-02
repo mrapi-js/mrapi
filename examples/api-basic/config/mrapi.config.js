@@ -25,7 +25,7 @@ exports.default = {
         // {
         name: 'auth',
         endpoint: 'http://106.52.61.221:30141/graphql', // should be replaced
-        prefix: 'auth_',
+        prefix: '',
         snapshot: false
       }],
     },
