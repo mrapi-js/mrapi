@@ -49,7 +49,7 @@ function getGraphqlConfig(gConfig: GraphqlConfig): Obj {
     transforms: [
       {
         prefix: {
-          includeRootOperations: true,
+          includeRootOperations: Boolean(gConfig.prefix),
           value: gConfig.prefix,
         },
       },
@@ -135,8 +135,8 @@ export default function genConfig(options: ApiOptions): ApiOptions {
 ~~~~~~~~~~ Config Start ~~~~~~~~~~~~~~~
 
 ${prettier.format(JSON.stringify(config), {
-  parser: 'json',
-})}
+    parser: 'json',
+  })}
 
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 `)
