@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.1.3](https://github.com/mrapi-js/mrapi/compare/v1.1.2...v1.1.3) (2020-10-02)
+
+
+### Bug Fixes
+
+* mershed operationName prefix remove ([ce145fe](https://github.com/mrapi-js/mrapi/commit/ce145fef4fcb50bb2aee15a58638d29782cc3602))
+* mershed operationName prefix remove ([036f4b9](https://github.com/mrapi-js/mrapi/commit/036f4b9707dd2f0bef42b090eacf04df04b8bcc8))
+
 ### [1.1.2](https://github.com/mrapi-js/mrapi/compare/v1.1.1...v1.1.2) (2020-10-02)
 
 
