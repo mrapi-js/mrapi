@@ -1,18 +1,13 @@
 import merge from 'deepmerge'
 
-import getConfig, { MrapiConfig } from './getConfig'
-import getPrisma, { getPrismaClient, getPrismaDmmf } from './getPrisma'
-import { Generators } from './Generators'
+import { Generators } from './generators'
+import getPrisma, { getPrismaClient, getPrismaDmmf } from './prisma'
 
 export * from './types'
 export * from './shell'
 export * from './utils'
-export {
-  merge,
-  getConfig,
-  MrapiConfig,
-  getPrisma,
-  getPrismaClient,
-  getPrismaDmmf,
-  Generators,
-}
+export * from './logger'
+export * from './config'
+export * as fs from 'fs-extra'
+
+export { merge, getPrisma, getPrismaClient, getPrismaDmmf, Generators }

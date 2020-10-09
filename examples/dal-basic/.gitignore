@@ -1,7 +1,0 @@
-node_modules/
-dist/
-
-!prisma/schema.prisma
-prisma/*
-
-api-v1/*

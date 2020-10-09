@@ -1,33 +1,18 @@
-import fs from 'fs'
-import { DBProvider } from './types'
-
-export const pathExists = async (
-  path: string,
-  options: { [name: string]: boolean } = {},
-): Promise<boolean> => {
-  const mode = options.read
-    ? fs.constants.R_OK
-    : options.write
-    ? fs.constants.W_OK
-    : options.exec
-    ? fs.constants.X_OK
-    : fs.constants.F_OK
-  return await new Promise((resolve) => {
-    fs.access(path, mode, (err) => {
-      resolve(!err)
-    })
-  })
-}
-
 let nodeModules: string
-export const getNodeModules = (): string => {
-  if (nodeModules) return nodeModules
+export const getNodeModules = (fresh = false): string => {
+  if (nodeModules && !fresh) return nodeModules
 
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   const findNodeModules = require('find-node-modules')
   nodeModules = findNodeModules({ cwd: process.cwd(), relative: false })[0]
 
   return nodeModules
+}
+
+enum DBProvider {
+  postgresql = 'postgresql',
+  mysql = 'mysql',
+  sqlite = 'sqlite',
 }
 
 export const getUrlAndProvider = (url: string) => {

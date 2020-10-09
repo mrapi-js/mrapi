@@ -1,7 +1,7 @@
 import path from 'path'
 import commander from 'commander'
 
-import type { MrapiConfig } from '@mrapi/common'
+import type { mrapi } from '@mrapi/common'
 
 interface CommandOptions {
   key: string
@@ -18,15 +18,10 @@ export default class Command {
   name: string
   runner: any
   argv: any
-  mrapiConfig: MrapiConfig
-
   static params: CommandParams
-
   private readonly program: commander.Command
 
-  constructor(program: commander.Command, mrapiConfig: MrapiConfig) {
-    this.mrapiConfig = mrapiConfig
-
+  constructor(program: commander.Command, public options: mrapi.cli.Options) {
     this.name = this.constructor.name.replace(/Command$/, '').toLowerCase()
 
     // Create command
@@ -35,7 +30,7 @@ export default class Command {
     let programCommand = program
       .command(this.name)
       .description(params.description)
-      .option('--env <path>', 'env filePath', this.mrapiConfig.envPath)
+      .option('--env <path>', 'env filePath', this.options.paths.env)
     params.options.forEach((option) => {
       programCommand = programCommand[
         option.required ? 'requiredOption' : 'option'

@@ -1,0 +1,33 @@
+{
+  "name": "@mrapi/types",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput --watch",
+    "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "tslib": "^2.0.2",
+    "typescript": "^4.0.3"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "publishConfig": {
+    "access": "public",
+    "directory": "lib"
+  },
+  "engines": {
+    "node": ">= 10.3"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "ISC"
+}
