@@ -14,9 +14,4 @@ export class Generator {
 
     console.log(chalk.green('\n✅  GenerateNexus run successful.\n'))
   }
-
-  async toJS() {
-    // await this.generator.toJS()
-    // console.log(chalk.green('\n✅  GenerateNexus toJS successful.\n'))
-  }
 }

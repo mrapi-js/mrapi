@@ -4,11 +4,7 @@ import { fs, Generators } from '@mrapi/common'
 import { getCrud } from './templates'
 
 export class GenerateNexus extends Generators {
-  // private readonly indexPath = this.output('index.ts')
-  // private index = this.readIndex()
   private readonly includeModel = {}
-  // private indexJS: string[] = []
-  // private indexTS = this.readIndex()
 
   private indexPath = this.output(this.withExtension('index'))
   private indexTS = this.readIndex()

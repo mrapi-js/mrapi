@@ -25,15 +25,7 @@ export default async function generateGraphql({
     schema: outputDir,
     output: join(outputDir, 'nexus-types'),
   } as Partial<mrapi.generate.Options>)
-  // {
-  //   schema: outputDir,
-  //   output: palOutput,
-  //   excludeFields: [],
-  //   excludeModels: [],
-  //   excludeFieldsByModel: {},
-  //   excludeQueriesAndMutationsByModel: {},
-  //   excludeQueriesAndMutations: [],
-  // }
+
   if (options.cnt) {
     options.cnt.split(',').forEach((item: string) => {
       if (cntWhiteListSet.has(item)) {
@@ -41,9 +33,11 @@ export default async function generateGraphql({
       }
     })
   }
+
   if (options.m) {
     nexusParams.models = options.m.split(',')
   }
+
   if (options.em) {
     options.em.split(',').forEach((item: string) => {
       nexusParams.excludeModels.push({
@@ -53,6 +47,7 @@ export default async function generateGraphql({
       })
     })
   }
+
   if (options.eqm) {
     nexusParams.excludeQueriesAndMutations = options.eqm.split(
       ',',
@@ -61,7 +56,6 @@ export default async function generateGraphql({
 
   const nexusGenerate = new NexusGenerate(nexusParams)
   await nexusGenerate.run()
-  // await nexusGenerate.toJS()
 
   return { nexusParams }
 }

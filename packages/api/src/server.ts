@@ -68,11 +68,11 @@ export default class Server {
    * @returns {Void}
    */
   loadPlugins() {
-    if (!this.options.plugins) {
+    if (!this.options.server.plugins) {
       return
     }
 
-    for (const [name, options] of Object.entries(this.options.plugins)) {
+    for (const [name, options] of Object.entries(this.options.server.plugins)) {
       this.app.register(require(name), options || {})
     }
   }

@@ -5,20 +5,6 @@ import { existsSync, mkdirSync, writeFileSync } from 'fs'
 
 import { formation } from './shell'
 
-// const tscOptions = [
-//   '-t es2018',
-//   '--lib esnext',
-//   '--module commonjs',
-//   '--moduleResolution node',
-//   '--allowSyntheticDefaultImports',
-//   '--esModuleInterop',
-//   '--importHelpers',
-//   '--resolveJsonModule',
-//   '--sourceMap false ',
-//   '--declaration',
-//   '--skipLibCheck',
-// ].join(' ')
-
 export class Generators {
   protected options: mrapi.generate.Options = {
     schema: '',
@@ -152,30 +138,7 @@ export class Generators {
     return this.isJS ? 'babel' : 'babel-ts'
   }
 
-  // protected formation = formation
   protected formation(text: string) {
     return formation(text, this.parser)
   }
-
-  // async toJS() {
-  //   const { output } = this.options
-
-  //   // Glob is blocked in windows. That is `npx tsc **/*.ts` cannot execute in windows. It maybe a problem of npx.
-  //   // The script underline cannot execute successfully in windows.
-  //   // const exitPalCode = await spawnShell(
-  //   //   `npx tsc ${tscOptions} ${output}/*.ts ${output}/**/*.ts ${output}/**/**/*.ts`,
-  //   // )
-
-  //   const files: string[] = [
-  //     ...glob.sync(`${output}/*.ts`),
-  //     ...glob.sync(`${output}/**/*.ts`),
-  //     ...glob.sync(`${output}/**/**/*.ts`),
-  //   ]
-  //   const exitPalCode = await spawnShell(
-  //     `npx tsc ${tscOptions} ${files.join(' ')}`,
-  //   )
-  //   if (exitPalCode !== 0) {
-  //     throw new Error('Generate nexus types exception.')
-  //   }
-  // }
 }

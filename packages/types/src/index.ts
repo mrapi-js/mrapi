@@ -1,7 +1,6 @@
 import type { IncomingMessage, ServerResponse } from 'http'
 
 // types for mrapi config
-
 declare namespace mrapi {
   type PathObject = {
     input?: string
@@ -182,49 +181,5 @@ declare namespace mrapi {
     generate?: generate.Options
   }
 }
-
-// declare const Mrapi: {
-//   name: string
-// }
-
-// interface Mrapi {
-//   (): string
-// }
-
-// declare function Mrapi(): Mrapi
-// export as namespace babel
-
-// /** Remove keys K in T */
-// type Omit<T, K> = { [key in Exclude<keyof T, K>]: T[key] }
-
-// /** Remove undefined as a possible value for keys K in T */
-// type Defined<T, K extends keyof T> = Omit<T, K> &
-//   { [key in K]: Exclude<T[key], undefined> }
-
-// /** Convert T to T[] and T | undefined to T[] | undefined */
-// type ToArray<T> = Array<Exclude<T, undefined>> | Extract<T, undefined>
-
-// /** Gives string[] if T is an array type, otherwise string. Preserves | undefined. */
-// type ToString<T> =
-//   | (Exclude<T, undefined> extends any[] ? string[] : string)
-//   | Extract<T, undefined>
-
-// /** Gives number[] if T is an array type, otherwise number. Preserves | undefined. */
-// type ToNumber<T> =
-//   | (Exclude<T, undefined> extends any[] ? number[] : number)
-//   | Extract<T, undefined>
-
-/*
-declare class LRUCache<K, V> {
-    constructor(options?: LRUCache.Options<K, V>);
-    constructor(max: number);
-}
-
-declare namespace LRUCache {
-    interface Options<K, V> {
-    }
-}
-
-*/
 
 export = mrapi
