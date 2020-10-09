@@ -5,34 +5,6 @@ import { resolve, isAbsolute } from 'path'
 
 import { logger } from './logger'
 
-// const defaultConfig: Mrapi.Config = {
-//   cli: {
-//     // .env filePath
-//     // envPath: 'config/.env',
-//     paths: {
-//       env: 'config/.env',
-//     },
-//   },
-// }
-
-// const defaultOpenapiConfig = {
-//   // @mrapi/api openapi custom api dir
-//   dir: '',
-//   // @mrapi/api openapi custom api preifx
-//   prefix: '/api',
-// }
-
-// const defaultGraphqlConfig: any = {
-//   // @mrapi/api graphql custom api dir
-//   dir: '',
-//   // @mrapi/api graphql api prefix
-//   path: '/graphql',
-//   // @mrapi/api graphql playground
-//   playground: 'playground',
-//   // @mrapi/api graphql sources
-//   // sources: [],
-// }
-
 export const defaultLoggerOptions: Mrapi.LoggerOptions = {
   name: 'mrapi',
   level: 'info',
@@ -53,24 +25,6 @@ export function resolveConfig(str?: string): Mrapi.Config {
     logger.error(err.message)
     process.exit(1)
   }
-
-  // userConfig = userConfig || defaultConfig
-
-  // const openapiConfig = userConfig.api?.openapi
-  //   ? Object.assign({}, defaultOpenapiConfig, userConfig.api.openapi)
-  //   : null
-  // const graphqlConfig = userConfig.api?.graphql
-  //   ? Object.assign({}, defaultGraphqlConfig, userConfig.api.graphql)
-  //   : null
-  // const config = (defaultConfig, userConfig)
-  // if (openapiConfig) {
-  //   config.api.openapi = openapiConfig
-  // }
-  // if (graphqlConfig) {
-  //   config.api.graphql = graphqlConfig
-  // }
-
-  // return config
 }
 
 function resolveConfigPath(): string {

@@ -93,7 +93,6 @@ export default class Command {
     // debug
     if (process.env.NODE_ENV !== 'production') {
       console.log(`${this.name} argv =`, this.argv, '\n')
-      // console.log('\nprocess.env:', process.env, '\n')
     }
     return true
   }
