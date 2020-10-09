@@ -1,35 +1,22 @@
-export default (schema?: boolean) => `
+export default `
 #{import}
 
-${
-  schema
-    ? `
-export const #{Model}DeleteOneMutation = mutationField${staticData};
-`
-    : `
-schema.extendType({
-  type: 'Mutation',
-  definition(t) {
-    t.field${staticData};
-  },
-});
-`
-}
-`
-
-const staticData = `('deleteOne#{Model}', {
+#{exportTs}const #{Model}DeleteOneMutation = mutationField('deleteOne#{Model}', {
   type: '#{Model}',
   nullable: true,
   args: {
-    where: #{schema}arg({
+    where: arg({
       type: '#{Model}WhereUniqueInput',
       nullable: false,
     }),
-    select: '#{Model}Select',
-    #{includeModel}
   },
-  resolve: async (_parent, args, { prisma }) => {
+  resolve: async (_parent, { where }, { prisma, select }) => {
     #{onDelete}
-    return prisma.#{model}.delete(args) as any
+    return prisma.#{model}.delete({
+      where,
+      ...select,
+    })
   },
-})`
+});
+#{exportJs}
+`;

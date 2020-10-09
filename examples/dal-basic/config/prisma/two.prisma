@@ -1,5 +1,10 @@
-model User {
-  email String  @unique
-  id    Int     @default(autoincrement()) @id
-  name  String?
+// model User {
+//   email String  @unique
+//   id    Int     @id @default(autoincrement())
+//   name  String?
+// }
+
+model Comment {
+  id      Int    @id @default(autoincrement())
+  content String
 }

@@ -1,26 +1,26 @@
-import { existsSync, mkdirSync, writeFileSync } from 'fs'
+import type { mrapi } from './types'
+
 import { join } from 'path'
-import glob from 'glob'
+import { existsSync, mkdirSync, writeFileSync } from 'fs'
 
-import { spawnShell, formation } from './shell'
-import type { Mutation, GeneratorOptions as Options, Query } from './types'
+import { formation } from './shell'
 
-const tscOptions = [
-  '-t es2018',
-  '--lib esnext',
-  '--module commonjs',
-  '--moduleResolution node',
-  '--allowSyntheticDefaultImports',
-  '--esModuleInterop',
-  '--importHelpers',
-  '--resolveJsonModule',
-  '--sourceMap false ',
-  '--declaration',
-  '--skipLibCheck',
-].join(' ')
+// const tscOptions = [
+//   '-t es2018',
+//   '--lib esnext',
+//   '--module commonjs',
+//   '--moduleResolution node',
+//   '--allowSyntheticDefaultImports',
+//   '--esModuleInterop',
+//   '--importHelpers',
+//   '--resolveJsonModule',
+//   '--sourceMap false ',
+//   '--declaration',
+//   '--skipLibCheck',
+// ].join(' ')
 
 export class Generators {
-  protected options: Options = {
+  protected options: mrapi.generate.Options = {
     schema: '',
     output: '',
     excludeFields: [],
@@ -29,9 +29,14 @@ export class Generators {
     excludeQueriesAndMutations: [],
     excludeQueriesAndMutationsByModel: {},
   }
-
-  protected queries: Query[] = ['findOne', 'findMany', 'findCount', 'aggregate']
-  protected mutations: Mutation[] = [
+  protected isJS?: boolean = false
+  protected queries: mrapi.generate.Query[] = [
+    'findOne',
+    'findMany',
+    'findCount',
+    'aggregate',
+  ]
+  protected mutations: mrapi.generate.Mutation[] = [
     'createOne',
     'updateOne',
     'upsertOne',
@@ -40,8 +45,9 @@ export class Generators {
     'deleteMany',
   ]
 
-  constructor(customOptions?: Partial<Options>) {
+  constructor(customOptions?: Partial<mrapi.generate.Options>) {
     this.options = { ...this.options, ...customOptions }
+    this.isJS = this.options.javascript
   }
 
   protected async dmmf() {
@@ -64,6 +70,10 @@ export class Generators {
         model.name !== 'BatchPayload' &&
         (!this.options.models || this.options.models.includes(model.name)),
     )
+  }
+
+  protected withExtension(filename: string) {
+    return filename + (this.isJS ? '.js' : '.ts')
   }
 
   protected excludeFields(model: string) {
@@ -108,6 +118,26 @@ export class Generators {
     return join(this.options.output, ...paths)
   }
 
+  protected getIndexContent(files: string[]) {
+    const lines: string[] = []
+    if (this.isJS) lines.push('module.exports = {')
+    files.forEach((file) => {
+      if (this.isJS) {
+        lines.push(`  ...require('./${file}'),`)
+      } else {
+        lines.push(`export * from './${file}'`)
+      }
+    })
+    if (this.isJS) lines.push('}')
+    return lines.join('\n')
+  }
+
+  protected getImport(content: string, path: string) {
+    return this.isJS
+      ? `const ${content} = require('${path}')`
+      : `import ${content} from '${path}'`
+  }
+
   protected createFileIfNotfound(
     path: string,
     fileName: string,
@@ -118,27 +148,34 @@ export class Generators {
       writeFileSync(join(path, fileName), content)
   }
 
-  protected formation = formation
-
-  async toJS() {
-    const { output } = this.options
-
-    // Glob is blocked in windows. That is `npx tsc **/*.ts` cannot execute in windows. It maybe a problem of npx.
-    // The script underline cannot execute successfully in windows.
-    // const exitPalCode = await spawnShell(
-    //   `npx tsc ${tscOptions} ${output}/*.ts ${output}/**/*.ts ${output}/**/**/*.ts`,
-    // )
-
-    const files: string[] = [
-      ...glob.sync(`${output}/*.ts`),
-      ...glob.sync(`${output}/**/*.ts`),
-      ...glob.sync(`${output}/**/**/*.ts`),
-    ]
-    const exitPalCode = await spawnShell(
-      `npx tsc ${tscOptions} ${files.join(' ')}`,
-    )
-    if (exitPalCode !== 0) {
-      throw new Error('Generate nexus types exception.')
-    }
+  protected get parser() {
+    return this.isJS ? 'babel' : 'babel-ts'
   }
+
+  // protected formation = formation
+  protected formation(text: string) {
+    return formation(text, this.parser)
+  }
+
+  // async toJS() {
+  //   const { output } = this.options
+
+  //   // Glob is blocked in windows. That is `npx tsc **/*.ts` cannot execute in windows. It maybe a problem of npx.
+  //   // The script underline cannot execute successfully in windows.
+  //   // const exitPalCode = await spawnShell(
+  //   //   `npx tsc ${tscOptions} ${output}/*.ts ${output}/**/*.ts ${output}/**/**/*.ts`,
+  //   // )
+
+  //   const files: string[] = [
+  //     ...glob.sync(`${output}/*.ts`),
+  //     ...glob.sync(`${output}/**/*.ts`),
+  //     ...glob.sync(`${output}/**/**/*.ts`),
+  //   ]
+  //   const exitPalCode = await spawnShell(
+  //     `npx tsc ${tscOptions} ${files.join(' ')}`,
+  //   )
+  //   if (exitPalCode !== 0) {
+  //     throw new Error('Generate nexus types exception.')
+  //   }
+  // }
 }

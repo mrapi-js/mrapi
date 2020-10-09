@@ -1,12 +1,13 @@
+import type { mrapi } from '@mrapi/common'
+
 import chalk from 'chalk'
 
 import { GenerateNexus } from './nexus'
-import type { GeneratorOptions } from '@mrapi/common'
 
 export class Generator {
   generator = new GenerateNexus({ ...this.options, nexusSchema: true })
 
-  constructor(private readonly options?: Partial<GeneratorOptions>) {}
+  constructor(private readonly options?: Partial<mrapi.generate.Options>) {}
 
   async run() {
     await this.generator.run()
@@ -15,8 +16,7 @@ export class Generator {
   }
 
   async toJS() {
-    await this.generator.toJS()
-
-    console.log(chalk.green('\n✅  GenerateNexus toJS successful.\n'))
+    // await this.generator.toJS()
+    // console.log(chalk.green('\n✅  GenerateNexus toJS successful.\n'))
   }
 }

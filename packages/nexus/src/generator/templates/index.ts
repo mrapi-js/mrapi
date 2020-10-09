@@ -1,3 +1,5 @@
+import type { mrapi } from '@mrapi/common'
+
 import findOne from './findOne'
 import findMany from './findMany'
 import findCount from './findCount'
@@ -8,9 +10,8 @@ import upsertOne from './upsertOne'
 import deleteMany from './deleteMany'
 import updateMany from './updateMany'
 import aggregate from './aggregate'
-import type { QueriesAndMutations } from '@mrapi/common'
 
-const crud: { [key in QueriesAndMutations]: (schema?: boolean) => string } = {
+const crud: { [key in mrapi.generate.QueriesAndMutations]: string } = {
   findOne,
   findMany,
   findCount,
@@ -23,28 +24,38 @@ const crud: { [key in QueriesAndMutations]: (schema?: boolean) => string } = {
   aggregate,
 }
 
+function caplital(name: string) {
+  return name.charAt(0).toUpperCase() + name.slice(1)
+}
+
 export function getCrud(
   model: string,
   type: 'query' | 'mutation',
-  key: QueriesAndMutations,
+  key: mrapi.generate.QueriesAndMutations,
   onDelete?: boolean,
-  schema?: boolean,
-  includeModel?: boolean,
+  isJS?: boolean,
 ) {
+  function getImport(content: string, path: string) {
+    return isJS
+      ? `const ${content} = require('${path}')`
+      : `import ${content} from '${path}'`
+  }
   const modelLower = model.charAt(0).toLowerCase() + model.slice(1)
-  const importString = schema
-    ? `import { ${
-        type === 'query' ? 'queryField' : 'mutationField'
-      }, arg } from '@nexus/schema'`
-    : 'import { schema } from "nexus"'
-  return crud[key](schema)
+  const importString = getImport(
+    `{ ${type === 'query' ? 'queryField' : 'mutationField'}, arg }`,
+    '@nexus/schema',
+  )
+  return crud[key]
     .replace(/#{Model}/g, model)
     .replace(/#{model}/g, modelLower)
     .replace(/#{import}/g, importString)
-    .replace(/#{schema}/g, schema ? '' : 'schema.')
+    .replace(/#{as}/g, isJS ? '' : ' as any')
+    .replace(/#{exportTs}/g, isJS ? '' : 'export ')
     .replace(
-      /#{includeModel}/g,
-      includeModel ? `include: '${model}Include'` : '',
+      /#{exportJs}/g,
+      isJS
+        ? `module.exports = {${model}${caplital(key)}${caplital(type)}}`
+        : '',
     )
     .replace(
       /#{onDelete}/g,

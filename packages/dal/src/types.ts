@@ -1,54 +1,49 @@
-import { OptionsData } from 'express-graphql'
+import type mrapi from '@mrapi/types'
+import type { OptionsData } from 'express-graphql'
+import type { ExpressOpenAPIArgs } from 'express-openapi'
+import type { MultiTenant } from '@prisma-multi-tenant/client'
 
-export interface ServerOptions {
-  host?: string
-  port?: number
-  tenantIdentity?: string
-}
+declare module '@mrapi/types' {
+  // interface GraphqlOptions extends mrapi.dal.GraphqlOptions, OptionsData {}
 
-export type graphqlOptions = OptionsData
+  // interface OpenapiOptions extends mrapi.dal.OpenapiOptions {
+  //   docs?: ExpressOpenAPIArgs & {
+  //     app?: any
+  //   }
+  // }
 
-export interface openAPIOptions {
-  dependencies?: {
-    [name: string]: Function | Promise<Function>
-  }
-  oasDir: string
-  validateApiDoc?: boolean
-}
+  // interface ServerOptions extends mrapi.dal.ServerOptions {}
 
-export interface RouteOptions {
-  graphql?: graphqlOptions
-  openAPI?: openAPIOptions
-  enableRepeat?: boolean
-  prismaClientDir?: string
-}
+  // interface ServiceOptions extends mrapi.dal.ServiceOptions {
+  //   graphql?: GraphqlOptions
+  //   openapi?: OpenapiOptions
+  //   multiTenant?: MultiTenant<any>
+  // }
 
-export interface DefaultTenant {
-  name?: string
-  url?: string
-}
+  // interface DALOptions extends mrapi.dal.Options {
+  //   services: ServiceOptions[]
+  //   logger?: mrapi.LoggerOptions
+  //   pmtErrorThrow?: boolean
+  // }
 
-export interface DALSchemaOptions {
-  nexusDir?: string
-  prismaClientDir?: string
-  defaultTenant?: DefaultTenant
-  graphql?: {
-    enable?: boolean
-    options?: graphqlOptions
-  }
-  openAPI?:
-    | {
-        enable?: true
-        options: openAPIOptions
+  // extends types of mrapi.dal configs
+  namespace dal {
+    interface Options {
+      logger?: mrapi.LoggerOptions // from @mrapi/common
+    }
+
+    interface GraphqlOptions extends OptionsData {}
+
+    interface ServiceOptions {
+      multiTenant?: MultiTenant<any>
+    }
+
+    interface OpenapiOptions {
+      docs?: ExpressOpenAPIArgs & {
+        app?: any
       }
-    | {
-        enable: false
-        options?: openAPIOptions
-      }
+    }
+  }
 }
 
-export interface DALOption extends DALSchemaOptions {
-  name: string
-}
-
-export type DALOptions = DALOption[]
+export { mrapi }

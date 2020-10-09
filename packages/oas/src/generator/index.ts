@@ -20,20 +20,21 @@ interface IObjType {
 
 // Reference URL: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#dataTypeFormat
 function getFieldType(type: string) {
-  switch (type) {
-    case 'Int':
+  const lowercaseType = type.toLowerCase()
+  switch (lowercaseType) {
+    case 'int':
       return 'integer'
-    case 'String':
+    case 'string':
       return 'string'
-    case 'Boolean':
+    case 'boolean':
       return 'boolean'
-    case 'DateTime':
+    case 'datetime':
       return 'string'
-    case 'Float':
+    case 'float':
       return 'number'
     case 'null':
-      return 'null'
-    case 'Json':
+      return 'string'
+    case 'json':
       return 'string'
   }
   throw new Error('Unknown field type. type: ' + type)
@@ -98,11 +99,11 @@ export class OasGenerator extends Generators {
       }
 
       inputType?.fields.forEach((field: any) => {
-        const fieldInputType = Array.isArray(field.inputType)
-          ? field.inputType.length >= 2
-            ? field.inputType[1]
-            : field.inputType[0]
-          : field.inputType
+        const fieldInputType = Array.isArray(field.inputTypes)
+          ? field.inputTypes.length >= 2
+            ? field.inputTypes[1]
+            : field.inputTypes[0]
+          : field.inputTypes
         if (fieldInputType.kind === 'scalar') {
           const type = getFieldType(fieldInputType?.type)
           inputObj.properties[field.name] = {

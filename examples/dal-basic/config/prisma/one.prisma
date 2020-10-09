@@ -1,16 +1,16 @@
 model User {
-  email     String   @unique
-  id        Int      @default(autoincrement()) @id
-  name      String?
+  email String  @unique
+  id    Int     @id @default(autoincrement())
+  name  String?
   // timesssss DateTime
   // jsontest  Json
-  Post      Post[]
+  Post  Post[]
 }
 
 model Post {
   authorId  Int?
   content   String?
-  id        Int     @default(autoincrement()) @id
+  id        Int     @id @default(autoincrement())
   published Boolean @default(false)
   title     String
   User      User?   @relation(fields: [authorId], references: [id])

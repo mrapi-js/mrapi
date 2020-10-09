@@ -1,13 +1,38 @@
-import { existsSync } from 'fs'
 import { join } from 'path'
+import { fs, Generators } from '@mrapi/common'
 
-import { Generators, writeFileSync, readFileSync } from '@mrapi/common'
 import { getCrud } from './templates'
 
 export class GenerateNexus extends Generators {
-  private readonly indexPath = this.output('index.ts')
-  private index = this.readIndex()
+  // private readonly indexPath = this.output('index.ts')
+  // private index = this.readIndex()
   private readonly includeModel = {}
+  // private indexJS: string[] = []
+  // private indexTS = this.readIndex()
+
+  private indexPath = this.output(this.withExtension('index'))
+  private indexTS = this.readIndex()
+  private indexJS: string[] = []
+
+  protected getImport(content: string, path: string) {
+    return this.isJS
+      ? `const ${content} = require('${path}')`
+      : `import ${content} from '${path}'`
+  }
+
+  protected getIndexContent(files: string[]) {
+    const lines: string[] = []
+    if (this.isJS) lines.push('module.exports = {')
+    files.forEach((file) => {
+      if (this.isJS) {
+        lines.push(`  ...require('./${file}'),`)
+      } else {
+        lines.push(`export * from './${file}'`)
+      }
+    })
+    if (this.isJS) lines.push('}')
+    return lines.join('\n')
+  }
 
   async run() {
     const datamodel = await this.datamodel()
@@ -21,27 +46,33 @@ export class GenerateNexus extends Generators {
     }
 
     await this.createModels()
-    this.createIndex()
+    await this.createIndex()
   }
 
   private async createModels() {
     const models = await this.models()
-    models.forEach((model: any) => {
-      const exportString = `export * from './${model.name}'`
-      if (!this.index.includes(exportString)) {
-        this.index = `export * from './${model.name}'\n${this.index}`
+    models.forEach(async (model: any) => {
+      if (this.isJS) {
+        this.indexJS.push(model.name)
+      } else {
+        const exportString = `export * from './${model.name}'`
+        if (!this.indexTS.includes(exportString)) {
+          this.indexTS = `export * from './${model.name}'\n${this.indexTS}`
+        }
       }
 
-      let fileContent = `${
-        this.options.nexusSchema
-          ? 'import { objectType } from "@nexus/schema"'
-          : 'import { schema } from "nexus"'
-      }\n\n`
+      let fileContent = `${this.getImport(
+        '{ objectType }',
+        '@nexus/schema',
+      )}\n\n`
 
-      fileContent += `${
-        this.options.nexusSchema ? `export const ${model.name} = ` : 'schema.'
-      }objectType({
+      fileContent += `${!this.isJS ? 'export ' : ''}const ${
+        model.name
+      } = objectType({
   name: '${model.name}',
+  nonNullDefaults: {
+    output: true
+  },
   definition(t) {
     `
       model.fields.forEach((field: any) => {
@@ -49,8 +80,7 @@ export class GenerateNexus extends Generators {
           const options = this.getOptions(field)
           if (
             field.outputType.kind === 'scalar' &&
-            field.outputType.type !== 'DateTime' &&
-            field.outputType.type !== 'Json'
+            field.outputType.type !== 'DateTime'
           ) {
             fileContent += `t.${(field.outputType
               .type as String).toLowerCase()}('${field.name}'${options})\n`
@@ -60,25 +90,28 @@ export class GenerateNexus extends Generators {
         }
       })
 
-      fileContent += '},\n})\n\n'
+      fileContent += `},\n})\n\n${
+        this.isJS ? `module.exports = {${model.name}}` : ''
+      }`
       const path = this.output(model.name)
       this.mkdir(path)
-      writeFileSync(
-        join(path, 'type.ts'),
-        this.formation(fileContent, 'babel-ts'),
+      await fs.writeFile(
+        join(path, this.withExtension('type')),
+        this.formation(fileContent),
       )
 
-      let modelIndex = 'export * from "./type"\n'
-      modelIndex += this.createQueriesAndMutations(model.name)
-      this.createIndex(path, modelIndex)
+      await this.createIndex(
+        path,
+        ['type'].concat(await this.createQueriesAndMutations(model.name)),
+      )
     })
   }
 
-  private createQueriesAndMutations(name: string) {
+  private async createQueriesAndMutations(name: string) {
     const exclude = this.excludedOperations(name)
-    let modelIndex = ''
+    let modelIndex: string[] = []
     if (this.disableQueries(name)) {
-      let queriesIndex = ''
+      const queriesIndex: string[] = []
       const path = this.output(name, 'queries')
       this.queries
         .filter((item) => !exclude.includes(item))
@@ -88,29 +121,26 @@ export class GenerateNexus extends Generators {
             'query',
             item,
             this.options.onDelete,
-            this.options.nexusSchema,
-            !!this.includeModel[name],
+            this.isJS,
           )
           this.createFileIfNotfound(
             path,
-            `${item}.ts`,
-            this.formation(itemContent, 'babel-ts'),
+            this.withExtension(item),
+            this.formation(itemContent),
           )
-          queriesIndex += `export * from './${item}'
-`
+          queriesIndex.push(item)
         })
-      if (queriesIndex && this.options.nexusSchema) {
-        modelIndex += `export * from './queries'
-`
-        writeFileSync(
-          join(path, 'index.ts'),
-          this.formation(queriesIndex, 'babel-ts'),
+      if (queriesIndex) {
+        modelIndex.push('queries')
+        await fs.writeFile(
+          join(path, this.withExtension('index')),
+          this.formation(this.getIndexContent(queriesIndex)),
         )
       }
     }
 
     if (this.disableMutations(name)) {
-      let mutationsIndex = ''
+      const mutationsIndex: string[] = []
       const path = this.output(name, 'mutations')
       this.mutations
         .filter((item) => !exclude.includes(item))
@@ -120,69 +150,69 @@ export class GenerateNexus extends Generators {
             'mutation',
             item,
             this.options.onDelete,
-            this.options.nexusSchema,
-            !!this.includeModel[name],
+            this.isJS,
           )
           this.createFileIfNotfound(
             path,
-            `${item}.ts`,
-            this.formation(itemContent, 'babel-ts'),
+            this.withExtension(item),
+            this.formation(itemContent),
           )
-          mutationsIndex += `export * from './${item}'
-`
+          mutationsIndex.push(item)
         })
-      if (mutationsIndex && this.options.nexusSchema) {
-        modelIndex += 'export * from "./mutations"'
-        writeFileSync(
-          join(path, 'index.ts'),
-          this.formation(mutationsIndex, 'babel-ts'),
+      if (mutationsIndex) {
+        modelIndex.push('mutations')
+        await fs.writeFile(
+          join(path, this.withExtension('index')),
+          this.formation(this.getIndexContent(mutationsIndex)),
         )
       }
     }
     return modelIndex
   }
 
-  private createIndex(path?: string, content?: string) {
-    if (this.options.nexusSchema) {
-      if (path && content) {
-        writeFileSync(
-          join(path, 'index.ts'),
-          this.formation(content, 'babel-ts'),
-        )
-      } else {
-        writeFileSync(
-          this.output('index.ts'),
-          this.formation(this.index, 'babel-ts'),
-        )
-      }
+  private async createIndex(path?: string, content?: string[]) {
+    if (path && content) {
+      await fs.writeFile(
+        join(path, this.withExtension('index')),
+        this.formation(this.getIndexContent(content)),
+      )
+    } else {
+      await fs.writeFile(
+        this.output(this.withExtension('index')),
+        this.formation(
+          this.isJS ? this.getIndexContent(this.indexJS) : this.indexTS,
+        ),
+      )
     }
   }
 
   private readIndex() {
-    return existsSync(this.indexPath) ? readFileSync(this.indexPath) : ''
+    return fs.pathExistsSync(this.indexPath)
+      ? fs.readFileSync(this.indexPath, {
+          encoding: 'utf8',
+        })
+      : ''
   }
 
   private getOptions(field: any) {
     const options: any = field.outputType.isList
       ? { nullable: false, list: [true] }
-      : { nullable: !field.outputType.isRequired }
+      : { nullable: !field.isRequired }
     if (
       field.outputType.kind !== 'scalar' ||
-      field.outputType.type === 'DateTime' ||
-      field.outputType.type === 'Json'
-    ) {
-      options.type = field.outputType.type
-    }
+      field.outputType.type === 'DateTime'
+    )
+      options['type'] = field.outputType.type
     if (field.args.length > 0) {
       field.args.forEach((arg: any) => {
-        if (!options.args) options.args = {}
-        options.args[arg.name] = arg.inputType[0].type
+        if (!options['args']) options['args'] = {}
+        options['args'][arg.name] = arg.inputTypes[0].type
       })
     }
     let toString = JSON.stringify(options)
     if (field.outputType.kind === 'object') {
       toString = toString.slice(0, -1)
-      toString += `, resolve(parent: any) {
+      toString += `, resolve(parent${this.isJS ? '' : ': any'}) {
       return parent['${field.name}']
     },
     }`

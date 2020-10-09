@@ -1,36 +1,24 @@
-export default (schema?: boolean) => `
+export default `
 #{import}
 
-${
-  schema
-    ? `
-export const #{Model}FindManyQuery = queryField${staticData};
-`
-    : `
-schema.extendType({
-  type: 'Query',
-  definition(t) {
-    t.field${staticData};
-  },
-});
-`
-}
-`
-
-const staticData = `('findMany#{Model}', {
+#{exportTs}const #{Model}FindManyQuery = queryField('findMany#{Model}', {
   type: '#{Model}',
   nullable: true,
   list: true,
   args: {
     where: '#{Model}WhereInput',
-    orderBy: #{schema}arg({ type: '#{Model}OrderByInput', list: true }),
+    orderBy: arg({ type: '#{Model}OrderByInput', list: true }),
     cursor: '#{Model}WhereUniqueInput',
+    distinct: '#{Model}DistinctFieldEnum',
     skip: 'Int',
     take: 'Int',
-    select: '#{Model}Select',
-    #{includeModel}
   },
-  resolve(_parent, args, {prisma}) {
-    return prisma.#{model}.findMany(args) as any
+  resolve(_parent, args, {prisma, select}) {
+    return prisma.#{model}.findMany({
+      ...args,
+      ...select,
+    })
   },
-})`
+});
+#{exportJs}
+`;

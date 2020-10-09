@@ -1,7 +1,7 @@
-import Api, { log } from '@mrapi/api'
-  ; (async function () {
-    const api = new Api()
-    await api.start()
-  })().catch((err) => {
-    log.error(err)
-  })
+import Api from '@mrapi/api'
+
+const app = new Api()
+
+app.start().catch((err: Error) => {
+  app.logger.error(err)
+})

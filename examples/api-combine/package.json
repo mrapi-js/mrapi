@@ -8,7 +8,7 @@
     "debug": "cross-env ts-node-dev --inspect --respawn --transpile-only --ignore-watch /.meshrc.js ./src/app.ts",
     "prod": "cross-env NODE_ENV=production node dist/app",
     "build": "tsc",
-    "clean": "rm -rf dist",
+    "clean": "rm -rf dist && rm -rf node_modules",
     "gen": "npx mrapi generate --schema=\"prisma/two.prisma\" --outDir=\"dist/types/two\"",
     "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
     "generate:prisma": "prisma generate",
@@ -20,14 +20,14 @@
     "@mrapi/api": "workspace:*",
     "@mrapi/dal": "workspace:*",
     "@mrapi/cli": "workspace:*",
-    "@prisma/cli": "^2.4.1",
+    "@prisma/cli": "^2.8.1",
     "cross-env": "^7.0.2",
-    "@nexus/schema": "^0.15.0"
+    "@nexus/schema": "^0.16.0"
   },
   "devDependencies": {
-    "tslib": "^2.0.1",
-    "typescript": "^4.0.2",
-    "ts-node-dev": "1.0.0-pre.62"
+    "tslib": "^2.0.2",
+    "typescript": "^4.0.3",
+    "ts-node-dev": "1.0.0-pre.63"
   },
   "prettier": {
     "semi": false,

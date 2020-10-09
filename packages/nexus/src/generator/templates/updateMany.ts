@@ -1,35 +1,21 @@
-export default (schema?: boolean) => `
+export default `
 #{import}
 
-${
-  schema
-    ? `
-export const #{Model}UpdateManyMutation = mutationField${staticData};
-`
-    : `
-schema.extendType({
-  type: 'Mutation',
-  definition(t) {
-    t.field${staticData};
-  },
-});
-`
-}
-`
-
-const staticData = `('updateMany#{Model}', {
+#{exportTs}const #{Model}UpdateManyMutation = mutationField('updateMany#{Model}', {
   type: 'BatchPayload',
   args: {
-    where: #{schema}arg({
+    where: arg({
       type: '#{Model}WhereInput',
       nullable: true,
     }),
-    data: #{schema}arg({
+    data: arg({
       type: '#{Model}UpdateManyMutationInput',
       nullable: false,
     }),
   },
   resolve(_parent, args, { prisma }) {
-    return prisma.#{model}.updateMany(args)
+    return prisma.#{model}.updateMany(args#{as})
   },
-})`
+});
+#{exportJs}
+`;

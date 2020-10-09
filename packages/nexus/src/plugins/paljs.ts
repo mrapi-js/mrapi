@@ -164,16 +164,12 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
             name: input.name,
             definition(t) {
               input.fields.forEach((field: any) => {
-                let inputType: any
-                if (
-                  field.inputType.length > 1 &&
-                  field.inputType[1].type !== 'null' &&
-                  field.name !== 'not'
-                ) {
-                  inputType = field.inputType[1]
-                } else {
-                  inputType = field.inputType[0]
-                }
+                const index: number =
+                  field.inputTypes.length > 1 &&
+                  field.inputTypes[1].kind === 'object'
+                    ? 1
+                    : 0
+                const inputType = field.inputTypes[index]
                 const fieldConfig: { [key: string]: any; type: string } = {
                   type: inputType.type as string,
                 }
@@ -198,7 +194,7 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
                     type: field.outputType.type as string,
                   }
                   if (field.outputType.isRequired) fieldConfig.nullable = false
-                  if (field.outputType.isList) fieldConfig.list = true
+                  if (field.outputType.isList) fieldConfig.list = [true]
                   t.field(field.name, fieldConfig)
                 })
               },
