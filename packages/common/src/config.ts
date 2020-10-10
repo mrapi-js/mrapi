@@ -1,11 +1,12 @@
-import type Mrapi from '@mrapi/types'
+import type mrapi from '@mrapi/types'
 
-import fs from 'fs-extra'
-import { resolve, isAbsolute } from 'path'
+import Ajv from 'ajv'
+import { join, isAbsolute } from 'path'
 
 import { logger } from './logger'
+import { requireResolve } from './utils'
 
-export const defaultLoggerOptions: Mrapi.LoggerOptions = {
+export const defaultLoggerOptions: mrapi.LoggerOptions = {
   name: 'mrapi',
   level: 'info',
   prettyPrint: {
@@ -15,38 +16,77 @@ export const defaultLoggerOptions: Mrapi.LoggerOptions = {
   },
 }
 
-export function resolveConfig(str?: string): Mrapi.Config {
-  const configPath = resolveConfigPath()
+export function resolveConfig(
+  path?: string,
+  cwd = process.cwd(),
+): mrapi.Config {
+  let configPath = ''
 
-  try {
-    const config = require(configPath)
-    return config.default || config
-  } catch (err) {
-    logger.error(err.message)
-    process.exit(1)
-  }
-}
-
-function resolveConfigPath(): string {
-  const cwd = process.cwd()
-  const envPath = process.env.MRAPICONFIG_PATH
-  if (envPath) {
-    const customPath = isAbsolute(envPath)
-      ? resolve(envPath)
-      : resolve(cwd, envPath)
-    if (customPath) {
-      return customPath
+  if (path) {
+    try {
+      configPath = requireResolve(join(cwd, path))
+    } catch (err) {
+      console.error(
+        `can not resolve config file from path "${path}" and cwd "${cwd}"`,
+      )
     }
   }
-  const jsConfigPath = resolve(cwd, 'mrapi.config.js')
-  if (fs.pathExistsSync(jsConfigPath)) {
-    return jsConfigPath
+
+  if (!configPath) {
+    const envPath = process.env.MRAPICONFIG_PATH
+    if (envPath) {
+      const customPath = isAbsolute(envPath) ? envPath : join(cwd, envPath)
+      try {
+        configPath = requireResolve(customPath)
+      } catch {}
+    }
   }
-  // TODO: remove on next version
-  const oldConfigPath = resolve(cwd, 'config/mrapi.config.js')
-  if (fs.pathExistsSync(oldConfigPath)) {
-    return oldConfigPath
-  }
-  return ''
+
   // TODO: support .ts config
+  if (!configPath) {
+    try {
+      configPath = requireResolve(join(cwd, 'mrapi.config'))
+    } catch {}
+  }
+
+  // TODO: remove on next version
+  if (!configPath) {
+    try {
+      configPath = requireResolve(join(cwd, 'config/mrapi.config'))
+    } catch {}
+  }
+
+  if (!configPath) {
+    logger.error('Can not find mrapi config file.')
+    process.exit(1)
+  }
+
+  const config = require(configPath)
+  return config.default || config
+}
+
+export function validateConfig(
+  config: any,
+  schemaPath: string,
+  dataVar = 'data',
+) {
+  const ajv = new Ajv({
+    strict: false,
+    verbose: true,
+    allowUnionTypes: true,
+    allErrors: true,
+  })
+  const jsonSchema = require(schemaPath)
+  const validate = ajv.compile(jsonSchema, true)
+
+  if (!validate(config)) {
+    logger.error(
+      `Mrapi Configuration is not valid:\n${ajv.errorsText(validate.errors, {
+        separator: '\n',
+        dataVar,
+      })}`,
+    )
+    return false
+  }
+  return true
 }
