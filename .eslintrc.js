@@ -54,5 +54,6 @@ module.exports = {
         checksVoidReturn: false,
       },
     ],
+    "@typescript-eslint/no-namespace": "off"
   },
 }
