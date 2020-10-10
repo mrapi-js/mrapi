@@ -27,7 +27,7 @@ export default class Service {
   }
 
   private async init() {
-    // this.setManagementEnv()
+    this.setManagementEnv()
 
     const prismaClientPath = this.options?.paths?.prismaClient
     if (!prismaClientPath || !fs.pathExistsSync(prismaClientPath)) {
@@ -40,7 +40,7 @@ export default class Service {
 
     let PrismaManagementClientClass: PrismaClient
     if (this.options?.management?.enable) {
-      const prismaManagementClientPath = this.options?.paths?.managementClient
+      const prismaManagementClientPath = this.options.management.prismaClient
       if (
         !prismaManagementClientPath ||
         !fs.pathExistsSync(prismaManagementClientPath)
@@ -87,7 +87,7 @@ export default class Service {
     // )
     // process.env.MANAGEMENT_PROVIDER = provider
     process.env.MANAGEMENT_URL = this.options.management.database
-    process.env.MANAGEMENT_OUTPUT = this.options.paths.managementClient
+    process.env.MANAGEMENT_OUTPUT = this.options.management.prismaClient
   }
 
   release() {
