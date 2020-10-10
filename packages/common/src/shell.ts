@@ -19,7 +19,11 @@ export const runShell = async (
       cmd,
       {
         cwd: process.cwd(),
-        ...options,
+        ...(options || {}),
+        env: {
+          ...process.env,
+          ...(options?.env || {}),
+        },
       },
       (
         error: Error | null,
@@ -63,22 +67,11 @@ export const spawnShell = (
   )
 }
 
-export const runPrisma = async (
-  cmd: string,
-  options?: SpawnOptions,
-  logger?: Logger,
-) => {
-  const log = getLogger(logger, { name: 'mrapi-cmd' })
+export const runPrisma = async (cmd: string, options?: ExecOptions) => {
   const cmdStr =
     'npx prisma ' + (cmd.includes('migrate') ? cmd + ' --experimental' : cmd)
 
-  try {
-    const exitCode = await spawnShell(cmdStr, options)
-    return exitCode
-  } catch (err) {
-    log.error(err)
-    return 1
-  }
+  return runShell(cmdStr, options)
 }
 
 export const useYarn = async (): Promise<boolean> => {

@@ -14,7 +14,7 @@ const defaultGenerateOptions: Partial<mrapi.generate.Options> = {
   javascript: true,
 }
 
-export default async function generate({
+export async function generate({
   name,
   provider,
   options,
@@ -50,7 +50,6 @@ export default async function generate({
     if (!dalOptions.management.enable) {
       throw new Error('management not enabled')
     }
-    console.log(JSON.stringify(dalOptions, null, 2))
     await generateManagement(dalOptions.management)
     return
   }

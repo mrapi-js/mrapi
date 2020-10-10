@@ -1,9 +1,13 @@
 import DAL from '../..'
 
 import { join, resolve } from 'path'
-import { resolveConfig, runPrisma, validateConfig } from '@mrapi/common'
+import { fs, resolveConfig, runPrisma, validateConfig } from '@mrapi/common'
 
-export default async function migrate(name: string, action = '') {
+export async function migrate(
+  name: string,
+  action = '',
+  tenants: string[] = [],
+) {
   const { generate } = resolveConfig()
 
   if (generate) {
@@ -26,12 +30,28 @@ export default async function migrate(name: string, action = '') {
       throw new Error('management not enabled')
     }
 
-    const managementSchema = join(dalOptions.management.schema)
+    if (dalOptions.management?.database.startsWith('file:')) {
+      // ensure db dir
+      await fs.ensureDir(join(dalOptions.management.prismaClient, 'db'))
+    }
+
+    const managementSchema = join(
+      dalOptions.management.prismaClient,
+      'schema.prisma',
+    )
     if (!action || action === 'save') {
-      await migrateSave(managementSchema, dalOptions.management.database)
+      await migrateSave(
+        managementSchema,
+        dalOptions.management.database,
+        dalOptions.management.prismaClient,
+      )
     }
     if (!action || action === 'up') {
-      await migrateUp(managementSchema, dalOptions.management.database)
+      await migrateUp({
+        schema: managementSchema,
+        dbUrl: dalOptions.management.database,
+        output: dalOptions.management.prismaClient,
+      })
     }
     return
   }
@@ -43,28 +63,54 @@ export default async function migrate(name: string, action = '') {
   }
   const schema = join(service.paths.output, 'schema.prisma')
 
-  for (const url of Object.values(service.tenants)) {
-    if (!action || action === 'save') {
+  let saved = false
+
+  for (const [name, url] of Object.entries(service.tenants)) {
+    if (url.startsWith('file:')) {
+      // ensure db dir
+      await fs.ensureDir(join(service.paths.output, 'db'))
+    }
+
+    if ((!action || action === 'save') && !saved) {
       await migrateSave(schema, url)
+      saved = true
+      console.log(`service "${service.name}" migrated save`)
     }
     if (!action || action === 'up') {
-      await migrateUp(schema, url)
+      await migrateUp({ schema, dbUrl: url })
+      console.log(`tenant "${name}" migrated up`)
     }
   }
 }
 
-async function migrateSave(schema: string, dbUrl: string) {
-  return runPrisma(`migrate save --schema=${schema}`, {
-    env: {
-      DATABASE_URL: dbUrl,
-    },
+export async function migrateSave(
+  schema: string,
+  dbUrl: string,
+  output?: string,
+) {
+  return runPrisma(`migrate save --schema=${schema} --create-db --name=""`, {
+    env: output
+      ? { MANAGEMENT_URL: dbUrl, MANAGEMENT_OUTPUT: output }
+      : {
+          DATABASE_URL: dbUrl,
+        },
   })
 }
 
-async function migrateUp(schema: string, dbUrl: string) {
-  return runPrisma(`migrate up --schema=${schema}`, {
-    env: {
-      DATABASE_URL: dbUrl,
-    },
+export async function migrateUp({
+  schema,
+  dbUrl,
+  output,
+}: {
+  schema: string
+  dbUrl: string
+  output?: string
+}) {
+  return runPrisma(`migrate up --schema=${schema} --create-db`, {
+    env: output
+      ? { MANAGEMENT_URL: dbUrl, MANAGEMENT_OUTPUT: output }
+      : {
+          DATABASE_URL: dbUrl,
+        },
   })
 }

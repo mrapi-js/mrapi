@@ -9,6 +9,7 @@ import { isPlainObject } from 'is-plain-object'
 import { fs, merge, getPrismaClient } from '@mrapi/common'
 import { MultiTenant } from '@prisma-multi-tenant/client'
 import { defaultServiceOptions } from './config'
+import { migrateUp } from './helpers/migrate/'
 
 export default class Service {
   name: string
@@ -27,7 +28,7 @@ export default class Service {
   }
 
   private async init() {
-    this.setManagementEnv()
+    // this.setManagementEnv()
 
     const prismaClientPath = this.options?.paths?.prismaClient
     if (!prismaClientPath || !fs.pathExistsSync(prismaClientPath)) {
@@ -61,7 +62,6 @@ export default class Service {
       ...(PrismaManagementClientClass
         ? { PrismaClientManagement: PrismaManagementClientClass }
         : {}),
-      // ...this.options,
     })
 
     if (this.options.graphql.enable) {
@@ -81,11 +81,6 @@ export default class Service {
   }
 
   private setManagementEnv() {
-    // set environment variables for prisma-multi-tenant
-    // const { url, provider } = getUrlAndProvider(
-    //   this.options.management.database,
-    // )
-    // process.env.MANAGEMENT_PROVIDER = provider
     process.env.MANAGEMENT_URL = this.options.management.database
     process.env.MANAGEMENT_OUTPUT = this.options.management.prismaClient
   }
@@ -100,23 +95,39 @@ export default class Service {
     this.setManagementEnv()
 
     const name = tenantName || this.options.defaultTenant
+    const url = this.options.tenants[name]
+
+    if (!url) {
+      throw new Error(`Tenant id "${name}" not configured.`)
+    }
 
     const options = {
-      DATABASE_URL: this.options.tenants[name],
+      DATABASE_URL: url,
     }
 
-    if (tenantUrl) {
-      const prisma = await this.multiTenant.directGet(
-        {
+    let tenant
+    try {
+      tenant = await this.multiTenant.get(name, options)
+    } catch (err) {
+      this.logger.warn(err.message)
+    }
+    if (!tenant) {
+      try {
+        tenant = await this.multiTenant.management.create({
           name,
-          url: tenantUrl,
-        },
-        options,
-      )
-      return prisma
+          url,
+        })
+
+        await migrateUp({
+          schema: join(this.options.paths.output, 'schema.prisma'),
+          dbUrl: url,
+        })
+      } catch (err) {
+        this.logger.warn(err.message)
+      }
     }
 
-    return this.multiTenant.get(name, options)
+    return tenant
   }
 
   /**

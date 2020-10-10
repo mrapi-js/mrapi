@@ -1,2 +1,2 @@
-export * as generate from './generate'
-export * as migrate from './migrate'
+export { generate } from './generate'
+export { migrate } from './migrate'

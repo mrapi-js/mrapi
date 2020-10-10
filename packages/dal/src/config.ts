@@ -15,7 +15,7 @@ export const defaultServerOptions: Partial<mrapi.dal.ServerOptions> = {
   host: '0.0.0.0',
   port: 1358,
   // multi-tenant identification (use in HTTP Request Header)
-  tenantIdentity: 'mrapi-pmt',
+  tenantIdentity: 'mrapi-tenant-id',
   // Remove routes of the same name before adding them.
   enableRouteRepeat: true,
   endpoint: {
@@ -100,8 +100,15 @@ export function resolveOptions(options?: mrapi.dal.Options): mrapi.dal.Options {
   }
 
   if (!dalOptions.management?.prismaClient) {
-    dalOptions.management.prismaClient =
+    dalOptions['management']['prismaClient'] =
       defaultDalOptions.management.prismaClient
+  }
+
+  if (!dalOptions.management.database) {
+    dalOptions['management']['database'] = `file:${join(
+      defaultDalOptions.management.prismaClient,
+      'db/management.db',
+    )}`
   }
 
   dalOptions['services'] = (dalOptions?.services || []).map(

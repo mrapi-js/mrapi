@@ -216,7 +216,7 @@ export default class Server {
     const getPrisma = async (req: any) => {
       // TODO: more params
       const tenantName: any = await this.getTenantIdentity(req)
-      return await this.getPrisma(name, tenantName)
+      return this.getPrisma(name, tenantName)
     }
     const opts = {
       ...openapiOptions.docs,
