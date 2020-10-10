@@ -8,11 +8,8 @@
     "prod": "cross-env NODE_ENV=production node dist/src/app",
     "build": "rm -rf dist && npm run generate && tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "generate": "npm run gen1 && npm run gen2",
-    "gen-management": "npx mrapi generate --name management",
-    "gen1": "npx mrapi generate --name one",
-    "gen2": "npx mrapi generate --name two",
-    "gen3": "npx mrapi generate --name three",
+    "generate": "npx mrapi generate --names management one two",
+    "migrate": "npx mrapi migrate --names management one two",
     "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts",
     "gen1-eqm": "npx mrapi generate --name one --eqm findOne,createOne --em Post"
   },
@@ -27,7 +24,7 @@
     "@nexus/schema": "0.16.0"
   },
   "devDependencies": {
-    "tslib": "^2.0.2",
+    "tslib": "^2.0.3",
     "fs-extra": "^9.0.1",
     "prettier": "^2.1.2",
     "typescript": "^4.0.3",

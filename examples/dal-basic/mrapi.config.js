@@ -1,25 +1,37 @@
 exports.default = {
   dal: {
-    server: {},
-    managementUrl: 'file:config/db/management.db',
-    enableRepeatRoute: false,
+    // managementUrl: 'file:config/db/management.db',
+    // enableRepeatRoute: false,
     // pmtErrorThrow: true,
     services: [
       {
         name: 'one',
-        defaultTenant: {
-          name: 'dev',
-          // url: 'file:../config/db/prod.db',
+        schema: './config/one.prisma',
+        tenants: {
+          dev: '',
         },
+        defaultTenant: 'dev',
+        // defaultTenant: {
+        //   name: 'dev',
+        //   // url: 'file:../config/db/prod.db',
+        // },
         openapi: {
           enable: true,
+        },
+        paths: {
+          input: '',
+          output: '',
+          nexus: '',
+          // prismaClient: '',
+          // managementClient: '',
         },
       },
       {
         name: 'two',
-        defaultTenant: {
-          name: 'dev',
+        tenants: {
+          dev: '',
         },
+        defaultTenant: 'dev',
         openapi: {
           enable: false,
         },
@@ -30,6 +42,14 @@ exports.default = {
         // prismaClientDir?: string;
       },
     ],
+    management: {
+      enable: true,
+      schema: './config/management.prisma',
+      database: 'file:./database/management.db',
+      prismaClient: '',
+    },
+    // logger: 111,
+    // aaa: 0,
   },
   // managementUrl: 'mysql://root:123456@127.0.0.1/management'
 }
