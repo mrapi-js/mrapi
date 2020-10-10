@@ -1,9 +1,15 @@
 import type { mrapi } from './types'
 
 import cors from 'cors'
-import { join, isAbsolute } from 'path'
 import bodyParser from 'body-parser'
-import { resolveConfig, merge } from '@mrapi/common'
+import { join, resolve, isAbsolute } from 'path'
+import { clientManagementPath } from '@prisma-multi-tenant/shared'
+import {
+  validateConfig,
+  resolveConfig,
+  getNodeModules,
+  merge,
+} from '@mrapi/common'
 
 export const defaultServerOptions: Partial<mrapi.dal.ServerOptions> = {
   host: '0.0.0.0',
@@ -42,74 +48,125 @@ export const defaultServiceOptions: Partial<mrapi.dal.ServiceOptions> = {}
 
 export const defaultDalOptions: Partial<mrapi.dal.Options> = {
   paths: {
-    input: 'config/prisma',
+    input: 'config',
     output: 'node_modules/.mrapi',
   },
   // In the event of a multi-tenant exception, whether or not an error is thrown.
-  pmtErrorThrow: false,
-  // management config
+  pmtErrorThrow: true,
+  // multi-tenant management config
   management: {
     enable: true,
-    dbUrl: 'file:config/db/management.db',
+    schema: './config/management.prisma',
+    database: 'file:./db/management.db',
+    // prisma-multi-tenant's default path
+    prismaClient: join(getNodeModules(), clientManagementPath),
   },
 }
 
 export function resolveOptions(options?: mrapi.dal.Options): mrapi.dal.Options {
   const cwd = process.cwd()
-  const { dal } = resolveConfig()
+  const config = resolveConfig()
+  const isValid = validateConfig(
+    config.dal,
+    resolve(__dirname, '../schemas/dal.json'),
+    'dal',
+  )
+
+  if (!isValid) {
+    process.exit()
+  }
+
   const dalOptions = merge(
     {
       ...defaultDalOptions,
-      ...(dal || {}),
+      ...(config?.dal || {}),
     },
     options || {},
   ) as mrapi.dal.Options
 
-  if (!isAbsolute(dalOptions.paths.input)) {
-    dalOptions.paths.input = join(cwd, dalOptions.paths.input)
+  if (!isAbsolute(dalOptions.paths?.input)) {
+    dalOptions['paths']['input'] = join(cwd, dalOptions.paths?.input || '')
   }
 
-  if (!isAbsolute(dalOptions.paths.output)) {
-    dalOptions.paths.output = join(cwd, dalOptions.paths.output)
+  if (!isAbsolute(dalOptions.paths?.output)) {
+    dalOptions['paths']['output'] = join(cwd, dalOptions.paths?.output || '')
   }
 
-  dalOptions.services = dalOptions.services.map(
+  if (!isAbsolute(dalOptions.management.schema)) {
+    dalOptions['management']['schema'] = join(
+      cwd,
+      dalOptions.management?.schema || '',
+    )
+  }
+
+  if (!dalOptions.management?.prismaClient) {
+    dalOptions.management.prismaClient =
+      defaultDalOptions.management.prismaClient
+  }
+
+  dalOptions['services'] = (dalOptions?.services || []).map(
     (serviceOptions: mrapi.dal.ServiceOptions): mrapi.dal.ServiceOptions => {
       const serviceOuputRoot = join(
         dalOptions.paths.output,
         serviceOptions.name,
       )
+      const management = merge(
+        dalOptions.management,
+        serviceOptions.management || {},
+      )
+      management.prismaClient = isAbsolute(management.prismaClient)
+        ? management.prismaClient
+        : join(cwd, management.prismaClient)
 
-      return merge(serviceOptions, {
-        name: serviceOptions.name,
-        graphql: {
-          ...defaultGraphqlOptions,
-          ...(serviceOptions.graphql || {}),
-        },
-        openapi: {
-          ...defaultOpenapiOptions,
-          ...(serviceOptions.openapi || {}),
-          oasDir: join(serviceOuputRoot, 'api'),
-        },
-        paths: {
-          input: dalOptions.paths.input,
-          output: serviceOuputRoot,
-          nexus: join(
+      const tenants = serviceOptions.tenants || {}
+
+      for (const [tenantName, dbUrl] of Object.entries(
+        serviceOptions.tenants,
+      )) {
+        if (!dbUrl.trim()) {
+          // set default db url (sqlite)
+          tenants[tenantName] = `file:${join(
             serviceOuputRoot,
-            serviceOptions.paths?.nexus || 'nexus-types',
-          ),
-          prismaClient: join(
-            serviceOuputRoot,
-            serviceOptions.paths?.prismaClient || '',
-          ),
-          // managementClient
-        },
-        management: serviceOptions.management || dalOptions.management,
-      } as mrapi.dal.ServiceOptions)
+            'db',
+            `${tenantName}.db`,
+          )}`
+        }
+      }
+
+      return merge(
+        serviceOptions,
+        merge(defaultServiceOptions, {
+          name: serviceOptions.name,
+          schema:
+            serviceOptions.schema ||
+            join(dalOptions.paths.input, `${serviceOptions.name}.prisma`),
+          tenants,
+          graphql: {
+            ...defaultGraphqlOptions,
+            ...(serviceOptions.graphql || {}),
+          },
+          openapi: {
+            ...defaultOpenapiOptions,
+            ...(serviceOptions.openapi || {}),
+            oasDir: join(serviceOuputRoot, 'api'),
+          },
+          paths: {
+            input: dalOptions.paths.input,
+            output: serviceOuputRoot,
+            nexus: join(
+              serviceOuputRoot,
+              serviceOptions.paths?.nexus || 'nexus-types',
+            ),
+            // extra
+            prismaClient: serviceOuputRoot,
+          },
+          management,
+        }),
+      )
     },
   )
 
-  dalOptions.server = merge(defaultServerOptions, dalOptions.server)
+  dalOptions.server = merge(defaultServerOptions, dalOptions?.server || {})
 
   return dalOptions
 }

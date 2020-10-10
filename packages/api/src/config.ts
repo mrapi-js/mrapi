@@ -1,10 +1,12 @@
 import type { mrapi } from './types'
 
 import assert from 'assert'
+import { resolve } from 'path'
 import {
   fs,
   merge,
   resolveConfig,
+  validateConfig,
   defaultLoggerOptions as commonLoggerOptions,
 } from '@mrapi/common'
 
@@ -60,7 +62,7 @@ function optionsVerify(config: mrapi.api.Options) {
       )
       if (openapi) {
         assert(
-          openapi.dalBaseUrl,
+          openapi && !openapi.dalBaseUrl,
           `${errorStr}standlone type need openapi.dalBaseUrl`,
         )
       }
@@ -86,12 +88,21 @@ export function resolveOptions(
   options: mrapi.api.Options,
   logger: mrapi.Logger,
 ) {
-  const mrapiConfig = resolveConfig()
-  if (!mrapiConfig) {
+  const config = resolveConfig()
+  if (!config) {
     throw new Error('can not detect mrapi config')
   }
-  const apiConfig = merge(defaultApiOptions, mrapiConfig.api)
-  const apiOptions: mrapi.api.Options = merge(apiConfig, options)
+  const isValid = validateConfig(
+    config.api,
+    resolve(__dirname, '../schemas/api.json'),
+    'api',
+  )
+  if (!isValid) {
+    process.exit()
+  }
+
+  const apiConfig = merge(defaultApiOptions, config.api)
+  const apiOptions: mrapi.api.Options = merge(apiConfig, options || {})
 
   // TODO: verify options
   optionsVerify(apiOptions)

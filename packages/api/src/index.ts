@@ -16,9 +16,12 @@ export default class API {
   private dal: any
 
   constructor(public options?: mrapi.api.Options, logger?: mrapi.Logger) {
+    this.logger = getLogger(logger, {
+      name: 'mrapi-api',
+      ...(options?.logger || {}),
+    })
     this.options = resolveOptions(options, this.logger)
     this.server = new Server(this.options, this.logger)
-    this.logger = getLogger(logger, this.options.logger)
   }
 
   private combinedWithDAL(): GraphQLSchema[] {

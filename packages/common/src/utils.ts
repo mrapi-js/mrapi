@@ -49,3 +49,11 @@ export const getUrlAndProvider = (url: string) => {
     provider,
   }
 }
+
+export const requireResolve = (path: string): string => {
+  let result = ''
+  try {
+    result = require.resolve(path)
+  } catch {}
+  return result
+}

@@ -1,29 +1,27 @@
-import type { mrapi } from '../types'
+import type { mrapi } from '../../types'
 
 import { join } from 'path'
 import { fs } from '@mrapi/common'
 
-import { defaultDatabaseTypes } from '../config'
+import { defaultDatabaseTypes } from '../../config'
 
 export default async function generatePrismaSchema({
   name,
+  schema,
   paths,
   provider,
   cwd = process.cwd(),
-}: {
-  name: string
-  paths: mrapi.PathObject
+}: mrapi.dal.ServiceOptions & {
   provider: string
   cwd?: string
 }) {
-  const outputDir = join(paths.output, name)
-  const outputSchemaPath = `${outputDir}.prisma`
+  const outputDir = paths.output
+  const outputSchemaPath = join(outputDir, 'schema.prisma')
 
   // clean
   await fs.remove(outputDir)
-  await fs.remove(outputSchemaPath)
 
-  const inputSchemaPath = join(paths.input, `${name}.prisma`)
+  const inputSchemaPath = schema
   const inputSchemaFileContent = await fs.readFile(inputSchemaPath, 'utf8')
   /// Get file content without comments
   const pureSchemaFile = getNoCommentContent(inputSchemaFileContent)
@@ -70,18 +68,15 @@ export default async function generatePrismaSchema({
     )
   }
 
-  await fs.outputFile(
-    outputSchemaPath,
-    createSchemaPrisma(
-      outputDir,
-      getNoDatasourceContent(inputSchemaFileContent),
-      supportProviders,
-    ),
-    {
-      encoding: 'utf8',
-    },
+  const prismaSchema = createSchemaPrisma(
+    outputDir,
+    getNoDatasourceContent(inputSchemaFileContent),
+    supportProviders,
   )
 
+  await fs.outputFile(outputSchemaPath, prismaSchema, {
+    encoding: 'utf8',
+  })
   return { outputDir, outputSchemaPath }
 }
 

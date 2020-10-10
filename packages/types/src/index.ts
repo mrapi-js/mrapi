@@ -9,7 +9,9 @@ declare namespace mrapi {
 
   type ManagementObject = {
     enable?: boolean
-    dbUrl?: string
+    database?: string
+    schema?: string
+    prismaClient?: string
   }
 
   type Modify<T, R> = Omit<T, keyof R> & R
@@ -34,13 +36,14 @@ declare namespace mrapi {
 
     interface ServiceOptions {
       name: string
+      schema?: string
       graphql?: GraphqlOptions
       openapi?: OpenapiOptions
-      tenantOptions?: any
-      defaultTenant?: {
-        name?: string
-        url?: string
+      tenants: {
+        [key: string]: string
       }
+      defaultTenant?: string
+      tenantOptions?: any
       paths?: PathObject & {
         nexus?: string
         prismaClient?: string
@@ -58,7 +61,7 @@ declare namespace mrapi {
         graphql?: string
         openapi?: string
       }
-      // middlewares for express
+      // middlewares
       middlewares?: {
         fn: Function
         options?: any

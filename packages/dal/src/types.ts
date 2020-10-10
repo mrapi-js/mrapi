@@ -1,4 +1,4 @@
-import type mrapi from '@mrapi/types'
+import type { mrapi } from '@mrapi/common'
 import type { OptionsData } from 'express-graphql'
 import type { ExpressOpenAPIArgs } from 'express-openapi'
 import type { MultiTenant } from '@prisma-multi-tenant/client'

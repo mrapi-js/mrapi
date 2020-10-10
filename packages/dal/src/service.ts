@@ -6,9 +6,8 @@ import { paljsPlugin } from '@mrapi/nexus'
 import { makeSchema } from '@nexus/schema'
 import { PrismaClient } from '@prisma/client'
 import { isPlainObject } from 'is-plain-object'
+import { fs, merge, getPrismaClient } from '@mrapi/common'
 import { MultiTenant } from '@prisma-multi-tenant/client'
-import { merge, getPrismaClient, getUrlAndProvider } from '@mrapi/common'
-
 import { defaultServiceOptions } from './config'
 
 export default class Service {
@@ -28,22 +27,41 @@ export default class Service {
   }
 
   private async init() {
-    this.setManager()
+    // this.setManagementEnv()
 
-    const prismaClient: PrismaClient = getPrismaClient(
-      this.options.paths.prismaClient,
-    )
-
-    if (!prismaClient) {
+    const prismaClientPath = this.options?.paths?.prismaClient
+    if (!prismaClientPath || !fs.pathExistsSync(prismaClientPath)) {
       this.logger.error(
-        `please generate PrismaClient for "${this.name}" service first`,
+        'PrismaClient not generated yet. Please run "mrapi generate" first.',
       )
-      return
+      process.exit(1)
+    }
+    const PrismaClientClass: PrismaClient = getPrismaClient(prismaClientPath)
+
+    let PrismaManagementClientClass: PrismaClient
+    if (this.options?.management?.enable) {
+      const prismaManagementClientPath = this.options?.paths?.managementClient
+      if (
+        !prismaManagementClientPath ||
+        !fs.pathExistsSync(prismaManagementClientPath)
+      ) {
+        this.logger.error(
+          'PrismaManagementClient not generated yet. Please run "mrapi generate" first.',
+        )
+        process.exit(1)
+      }
+      PrismaManagementClientClass = getPrismaClient(prismaManagementClientPath)
     }
 
     this.multiTenant = new MultiTenant({
-      PrismaClient: prismaClient,
-      ...this.options,
+      useManagement: this.options.management.enable,
+      // options for PrismaClient
+      tenantOptions: {},
+      PrismaClient: PrismaClientClass,
+      ...(PrismaManagementClientClass
+        ? { PrismaClientManagement: PrismaManagementClientClass }
+        : {}),
+      // ...this.options,
     })
 
     if (this.options.graphql.enable) {
@@ -62,11 +80,14 @@ export default class Service {
     }
   }
 
-  private setManager() {
-    // set environment variables for prisma-multi-tanent
-    const { url, provider } = getUrlAndProvider(this.options.management.dbUrl)
-    process.env.MANAGEMENT_PROVIDER = provider
-    process.env.MANAGEMENT_URL = url
+  private setManagementEnv() {
+    // set environment variables for prisma-multi-tenant
+    // const { url, provider } = getUrlAndProvider(
+    //   this.options.management.database,
+    // )
+    // process.env.MANAGEMENT_PROVIDER = provider
+    process.env.MANAGEMENT_URL = this.options.management.database
+    process.env.MANAGEMENT_OUTPUT = this.options.paths.managementClient
   }
 
   release() {
@@ -76,17 +97,26 @@ export default class Service {
   }
 
   async getPrismaClient(tenantName?: string, tenantUrl?: string) {
-    const name = tenantName || this.options.defaultTenant.name
+    this.setManagementEnv()
+
+    const name = tenantName || this.options.defaultTenant
+
+    const options = {
+      DATABASE_URL: this.options.tenants[name],
+    }
 
     if (tenantUrl) {
-      const prisma = await this.multiTenant.directGet({
-        name,
-        url: tenantUrl,
-      })
+      const prisma = await this.multiTenant.directGet(
+        {
+          name,
+          url: tenantUrl,
+        },
+        options,
+      )
       return prisma
     }
 
-    return this.multiTenant.get(name)
+    return this.multiTenant.get(name, options)
   }
 
   /**

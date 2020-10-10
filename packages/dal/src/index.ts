@@ -7,7 +7,7 @@ import { merge, getLogger } from '@mrapi/common'
 
 export * from './types'
 
-export * as generate from './generate'
+export * from './helpers'
 
 export default class DAL {
   public server: Server

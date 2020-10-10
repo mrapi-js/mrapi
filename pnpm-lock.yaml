@@ -46,7 +46,7 @@ importers:
       cross-env: 7.0.2
     devDependencies:
       ts-node-dev: 1.0.0-pre.63_typescript@4.0.3
-      tslib: 2.0.2
+      tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
       '@mrapi/api': 'workspace:*'
@@ -56,7 +56,7 @@ importers:
       '@prisma/cli': ^2.8.1
       cross-env: ^7.0.2
       ts-node-dev: 1.0.0-pre.63
-      tslib: ^2.0.2
+      tslib: ^2.0.3
       typescript: ^4.0.3
   examples/api-standalone:
     dependencies:
@@ -65,14 +65,14 @@ importers:
       cross-env: 7.0.2
     devDependencies:
       ts-node-dev: 1.0.0-pre.63_typescript@4.0.3
-      tslib: 2.0.2
+      tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
       '@mrapi/api': 'workspace:*'
       '@nexus/schema': ^0.16.0
       cross-env: ^7.0.2
       ts-node-dev: 1.0.0-pre.63
-      tslib: ^2.0.2
+      tslib: ^2.0.3
       typescript: ^4.0.3
   examples/dal-basic:
     dependencies:
@@ -86,7 +86,7 @@ importers:
       fs-extra: 9.0.1
       prettier: 2.1.2
       ts-node-dev: 1.0.0-pre.63_typescript@4.0.3
-      tslib: 2.0.2
+      tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
       '@mrapi/cli': 'workspace:*'
@@ -98,7 +98,7 @@ importers:
       prettier: ^2.1.2
       prisma-multi-tenant: 2.3.1
       ts-node-dev: 1.0.0-pre.63
-      tslib: ^2.0.2
+      tslib: ^2.0.3
       typescript: ^4.0.3
   packages/api:
     dependencies:
@@ -126,8 +126,9 @@ importers:
       mercurius: 6.1.0
     devDependencies:
       '@types/node': 14.11.2
-      tslib: 2.0.2
+      tslib: 2.0.3
       typescript: 4.0.3
+      typescript-json-schema: 0.43.0
     specifiers:
       '@graphql-mesh/config': 0.10.10
       '@graphql-mesh/graphql': 0.7.4
@@ -152,8 +153,9 @@ importers:
       fastify-reply-from: ^3.3.0
       graphql: ^15.3.0
       mercurius: ^6.1.0
-      tslib: ^2.0.2
+      tslib: ^2.0.3
       typescript: ^4.0.3
+      typescript-json-schema: 0.43.0
   packages/cli:
     dependencies:
       '@mrapi/common': 'link:../common'
@@ -161,25 +163,26 @@ importers:
       commander: 6.1.0
       dotenv: 8.2.0
     devDependencies:
-      tslib: 2.0.2
+      tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
       '@mrapi/common': 'workspace:*'
       chalk: ^4.1.0
       commander: ^6.1.0
       dotenv: ^8.2.0
-      tslib: ^2.0.2
+      tslib: ^2.0.3
       typescript: ^4.0.3
   packages/common:
     dependencies:
       '@mrapi/types': 'link:../types'
+      ajv: 7.0.0-beta.0
       deepmerge: 4.2.2
       find-node-modules: 2.1.0
       fs-extra: 9.0.1
       pino: 6.7.0
       pino-pretty: 4.3.0
       prettier: 2.1.2
-      tslib: 2.0.2
+      tslib: 2.0.3
       typescript: 4.0.3
     devDependencies:
       '@types/fs-extra': 9.0.1
@@ -190,13 +193,14 @@ importers:
       '@types/fs-extra': ^9.0.1
       '@types/glob': ^7.1.3
       '@types/pino': ^6.3.2
+      ajv: 7.0.0-beta.0
       deepmerge: ^4.2.2
       find-node-modules: ^2.1.0
       fs-extra: ^9.0.1
       pino: ^6.7.0
       pino-pretty: ^4.3.0
       prettier: ^2.1.2
-      tslib: ^2.0.2
+      tslib: ^2.0.3
       typescript: ^4.0.3
   packages/dal:
     dependencies:
@@ -205,25 +209,28 @@ importers:
       '@mrapi/oas': 'link:../oas'
       '@mrapi/types': 'link:../types'
       '@nexus/schema': 0.16.0_graphql@15.3.0
-      '@prisma-multi-tenant/client': 2.3.1
-      '@prisma-multi-tenant/shared': 2.3.1
-      '@prisma/client': 2.8.1
+      '@prisma-multi-tenant/client': 2.3.1_@prisma+cli@2.8.1
+      '@prisma-multi-tenant/shared': 2.3.1_@prisma+cli@2.8.1
+      '@prisma/cli': 2.8.1
+      '@prisma/client': 2.8.1_@prisma+cli@2.8.1
       '@types/express': 4.17.8
       body-parser: 1.19.0
       cors: 2.8.5
       express: 4.17.1
       express-graphql: 0.11.0_graphql@15.3.0
-      express-openapi: 7.0.1
+      express-openapi: 7.0.2
       graphql: 15.3.0
       is-plain-object: 5.0.0
       prisma-multi-tenant: 2.3.1
       swagger-ui-express: 4.1.4_express@4.17.1
     devDependencies:
-      '@types/cors': 2.8.7
+      '@types/cors': 2.8.8
       '@types/node': 14.11.2
       '@types/swagger-ui-express': 4.1.2
-      tslib: 2.0.2
+      tslib: 2.0.3
+      typedoc: 0.19.2_typescript@4.0.3
       typescript: 4.0.3
+      typescript-json-schema: 0.43.0
     specifiers:
       '@mrapi/common': 'workspace:*'
       '@mrapi/nexus': 'workspace:*'
@@ -232,8 +239,9 @@ importers:
       '@nexus/schema': 0.16.0
       '@prisma-multi-tenant/client': 2.3.1
       '@prisma-multi-tenant/shared': 2.3.1
+      '@prisma/cli': 2.8.1
       '@prisma/client': 2.8.1
-      '@types/cors': 2.8.7
+      '@types/cors': 2.8.8
       '@types/express': ^4.17.8
       '@types/node': '*'
       '@types/swagger-ui-express': ^4.1.2
@@ -241,13 +249,15 @@ importers:
       cors: ^2.8.5
       express: ^4.17.1
       express-graphql: ^0.11.0
-      express-openapi: ^7.0.1
+      express-openapi: ^7.0.2
       graphql: ^15.3.0
       is-plain-object: 5.0.0
       prisma-multi-tenant: 2.3.1
       swagger-ui-express: ^4.1.4
-      tslib: ^2.0.2
+      tslib: ^2.0.3
+      typedoc: 0.19.2
       typescript: ^4.0.3
+      typescript-json-schema: 0.43.0
   packages/nexus:
     dependencies:
       '@mrapi/common': 'link:../common'
@@ -256,7 +266,7 @@ importers:
       chalk: 4.1.0
       graphql-scalars: 1.4.0
     devDependencies:
-      tslib: 2.0.2
+      tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
       '@mrapi/common': 'workspace:*'
@@ -264,28 +274,28 @@ importers:
       '@nexus/schema': 0.16.0
       chalk: ^4.1.0
       graphql-scalars: 1.4.0
-      tslib: ^2.0.2
+      tslib: ^2.0.3
       typescript: ^4.0.3
   packages/oas:
     dependencies:
       '@mrapi/common': 'link:../common'
       chalk: 4.1.0
     devDependencies:
-      tslib: 2.0.2
+      tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
       '@mrapi/common': 'workspace:*'
       chalk: ^4.1.0
-      tslib: ^2.0.2
+      tslib: ^2.0.3
       typescript: ^4.0.3
   packages/types:
     devDependencies:
       '@types/node': 14.11.2
-      tslib: 2.0.2
+      tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
       '@types/node': '*'
-      tslib: ^2.0.2
+      tslib: ^2.0.3
       typescript: ^4.0.3
 lockfileVersion: 5.1
 packages:
@@ -1340,26 +1350,28 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-1V9XOY4rDW0rehzbrcqAmHnz8e7SKvX27gh8Gt2WgB0+pdzdiLV83p72kZPU+jvMbS1qU5mauP2iOvO8rhmurQ==
-  /@prisma-multi-tenant/client/2.3.1:
+  /@prisma-multi-tenant/client/2.3.1_@prisma+cli@2.8.1:
     dependencies:
-      '@prisma-multi-tenant/shared': 2.3.1
+      '@prisma-multi-tenant/shared': 2.3.1_@prisma+cli@2.8.1
+      '@prisma/cli': 2.8.1
     dev: false
     peerDependencies:
       '@prisma/cli': ^2.4.1
     resolution:
       integrity: sha512-NYXz/dBlK1M9czIvGSGyhomoMOuzMJ5AApL+Hpg73h+vJmzbhNYJKXIYL4Ir3KEm5RJjAVhaLTTafISho6IFNQ==
-  /@prisma-multi-tenant/shared/2.3.1:
+  /@prisma-multi-tenant/shared/2.3.1_@prisma+cli@2.8.0:
     dependencies:
-      '@prisma/client': 2.8.0
+      '@prisma/cli': 2.8.0
+      '@prisma/client': 2.8.0_@prisma+cli@2.8.0
     dev: false
     peerDependencies:
       '@prisma/cli': ^2.4.1
     resolution:
       integrity: sha512-2zIwagTNuf0DJ5G7GiPapssW47r2RULGXAFRFlTJ+OPpTRksAYparVWqaUKFGOUjyEbs5u5fYMoF6rwZnSK5AQ==
-  /@prisma-multi-tenant/shared/2.3.1_@prisma+cli@2.8.0:
+  /@prisma-multi-tenant/shared/2.3.1_@prisma+cli@2.8.1:
     dependencies:
-      '@prisma/cli': 2.8.0
-      '@prisma/client': 2.8.0_@prisma+cli@2.8.0
+      '@prisma/cli': 2.8.1
+      '@prisma/client': 2.8.0_@prisma+cli@2.8.1
     dev: false
     peerDependencies:
       '@prisma/cli': ^2.4.1
@@ -1381,20 +1393,6 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-mEGJplClGnXI5ki4R0Xq8nq62zcyu7Wzdhybege+cFPZFUbFj0petaPZl/tqta9o5neDyvpU/lDgOwef6mwySg==
-  /@prisma/client/2.8.0:
-    dependencies:
-      pkg-up: 3.1.0
-    dev: false
-    engines:
-      node: '>=10'
-    peerDependencies:
-      '@prisma/cli': '*'
-    peerDependenciesMeta:
-      '@prisma/cli':
-        optional: true
-    requiresBuild: true
-    resolution:
-      integrity: sha512-5+GzRTkPnmv4OEV2tB8kwQt/xLLxBR/daJBcMt6pnnonJvrREsu0tSTdz2LJNPaj3kTT0fSS/OaeGMMdfVYSpw==
   /@prisma/client/2.8.0_@prisma+cli@2.8.0:
     dependencies:
       '@prisma/cli': 2.8.0
@@ -1410,8 +1408,24 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-5+GzRTkPnmv4OEV2tB8kwQt/xLLxBR/daJBcMt6pnnonJvrREsu0tSTdz2LJNPaj3kTT0fSS/OaeGMMdfVYSpw==
-  /@prisma/client/2.8.1:
+  /@prisma/client/2.8.0_@prisma+cli@2.8.1:
     dependencies:
+      '@prisma/cli': 2.8.1
+      pkg-up: 3.1.0
+    dev: false
+    engines:
+      node: '>=10'
+    peerDependencies:
+      '@prisma/cli': '*'
+    peerDependenciesMeta:
+      '@prisma/cli':
+        optional: true
+    requiresBuild: true
+    resolution:
+      integrity: sha512-5+GzRTkPnmv4OEV2tB8kwQt/xLLxBR/daJBcMt6pnnonJvrREsu0tSTdz2LJNPaj3kTT0fSS/OaeGMMdfVYSpw==
+  /@prisma/client/2.8.1_@prisma+cli@2.8.1:
+    dependencies:
+      '@prisma/cli': 2.8.1
       pkg-up: 3.1.0
     dev: false
     engines:
@@ -1479,12 +1493,12 @@ packages:
       '@types/node': 14.11.2
     resolution:
       integrity: sha512-2+FrkXY4zllzTNfJth7jOqEHC+enpLeGslEhpnTAkg21GkRrWV4SsAtqchtT4YS9/nODBU2/ZfsBY2X4J/dX7A==
-  /@types/cors/2.8.7:
+  /@types/cors/2.8.8:
     dependencies:
       '@types/express': 4.17.8
     dev: true
     resolution:
-      integrity: sha512-sOdDRU3oRS7LBNTIqwDkPJyq0lpHYcbMTt0TrjzsXbk/e37hcLTH6eZX7CdbDeN0yJJvzw9hFBZkbtCSbk/jAQ==
+      integrity: sha512-fO3gf3DxU2Trcbr75O7obVndW/X5k8rJNZkLXlQWStTHhP71PkRqjwPIEI0yMnJdg9R9OasjU+Bsr+Hr1xy/0w==
   /@types/express-serve-static-core/4.17.13:
     dependencies:
       '@types/node': 14.11.2
@@ -1808,6 +1822,14 @@ packages:
       uri-js: 4.4.0
     resolution:
       integrity: sha512-lRF8RORchjpKG50/WFf8xmg7sgCLFiYNNnqdKflk63whMQcWR5ngGjiSXkL9bjxy6B2npOK2HSMN49jEBMSkag==
+  /ajv/7.0.0-beta.0:
+    dependencies:
+      fast-deep-equal: 3.1.3
+      json-schema-traverse: 0.5.0
+      uri-js: 4.4.0
+    dev: false
+    resolution:
+      integrity: sha512-7hwYZ5gefadrdKkDNYzOSVtHsZR9I1wOn8Urve2xA9aBnT9aijBDoRl2pu51Wpz/iSLP6EULgGxog6yjCki/GA==
   /ansi-colors/4.1.1:
     dev: true
     engines:
@@ -3435,14 +3457,14 @@ packages:
     dev: false
     resolution:
       integrity: sha1-2+HoE5rssjT7attcAFnHXblzPSo=
-  /express-openapi/7.0.1:
+  /express-openapi/7.0.2:
     dependencies:
       express-normalize-query-params-middleware: 0.5.1
-      openapi-framework: 7.0.1
+      openapi-framework: 7.0.2
       openapi-types: 7.0.1
     dev: false
     resolution:
-      integrity: sha512-64YwTWpxgVGnwoLi4zvKaQ5RWIV0dkxVE4GGkBF7D89RI0/I6gTRUDL25Il4AK3cUqyLtxnX2X5BZ2YRvRx5uQ==
+      integrity: sha512-jQuqCLWx6aWLo5Z9CJA7tYGUE6mXE+I0c1hJTOkm6/O+MJ97tEVzrOxzTTCxUKq+E69TOTRxfkXKLDClgF3Pow==
   /express/4.17.1:
     dependencies:
       accepts: 1.3.7
@@ -4124,6 +4146,20 @@ packages:
     optional: true
     resolution:
       integrity: sha1-8QdIy+dq+WS3yWyTxrzCivEgwIE=
+  /handlebars/4.7.6:
+    dependencies:
+      minimist: 1.2.5
+      neo-async: 2.6.2
+      source-map: 0.6.1
+      wordwrap: 1.0.0
+    dev: true
+    engines:
+      node: '>=0.4.7'
+    hasBin: true
+    optionalDependencies:
+      uglify-js: 3.11.1
+    resolution:
+      integrity: sha512-1f2BACcBfiwAfStCKZNrUCgqNZkGsAT7UM3kkYtXuLo0KnaVfjKOyf7PRzB6++aK9STyT1Pd2ZCPe3EGOXleXA==
   /har-schema/2.0.0:
     dev: true
     engines:
@@ -4204,6 +4240,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-LChe/V32mnUQnTwTxd3aAlNMk8ia9tjCDb/LjYtoMrdAPApxLB+azejUk5ERZIZdIqvinwv6BAUuFXH/tQPdZA==
+  /highlight.js/10.2.1:
+    dev: true
+    resolution:
+      integrity: sha512-A+sckVPIb9zQTUydC9lpRX1qRFO/N0OKEh0NwIr65ckvWA/oMY8v9P3+kGRK3w2ULSh9E8v5MszXafodQ6039g==
   /homedir-polyfill/1.0.3:
     dependencies:
       parse-passwd: 1.0.0
@@ -4409,6 +4449,12 @@ packages:
       node: '>=8.0.0'
     resolution:
       integrity: sha512-JG3eIAj5V9CwcGvuOmoo6LB9kbAYT8HXffUl6memuszlwDC/qvFAJw49XJ5NROSFNPxp3iQg1GqkFhaY/CR0IA==
+  /interpret/1.4.0:
+    dev: true
+    engines:
+      node: '>= 0.10'
+    resolution:
+      integrity: sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
   /ip-regex/2.1.0:
     dev: true
     engines:
@@ -5298,6 +5344,10 @@ packages:
   /json-schema-traverse/0.4.1:
     resolution:
       integrity: sha512-xbbCH5dCYU5T8LcEhhuh7HJ88HXuW3qsI3Y0zOZFKfZEHcpWiHU/Jxzk629Brsab/mMiHQti9wMP+845RPe3Vg==
+  /json-schema-traverse/0.5.0:
+    dev: false
+    resolution:
+      integrity: sha512-x+TRJIQFskrNnFKE2Viz9FCSjK1vIh+H/uaBiOYszh/IcZmAFneQ35H4osWDJp1NPXccuV2I0RMXmi2ZS6Kqcg==
   /json-schema/0.2.3:
     dev: true
     resolution:
@@ -5310,6 +5360,12 @@ packages:
     dev: true
     resolution:
       integrity: sha1-nbe1lJatPzz+8wp1FC0tkwrXJlE=
+  /json-stable-stringify/1.0.1:
+    dependencies:
+      jsonify: 0.0.0
+    dev: true
+    resolution:
+      integrity: sha1-mnWdOcXy/1A/1TAGRu1EX4jE+a8=
   /json-stringify-safe/5.0.1:
     dev: true
     resolution:
@@ -5337,6 +5393,10 @@ packages:
       graceful-fs: 4.2.4
     resolution:
       integrity: sha512-jR2b5v7d2vIOust+w3wtFKZIfpC2pnRmFAhAC/BuweZFQR8qZzxH1OyrQ10HmdVYiXWkYUqPVsz91cG7EL2FBg==
+  /jsonify/0.0.0:
+    dev: true
+    resolution:
+      integrity: sha1-LHS27kHZPKUbe1qu6PUDYx0lKnM=
   /jsonpath-plus/4.0.0:
     dev: false
     engines:
@@ -5523,6 +5583,10 @@ packages:
       node: '>=10'
     resolution:
       integrity: sha512-Jo6dJ04CmSjuznwJSS3pUeWmd/H0ffTlkXXgwZi+eq1UCmqQwCh+eLsYOYCwY991i2Fah4h1BEMCx4qThGbsiA==
+  /lunr/2.3.9:
+    dev: true
+    resolution:
+      integrity: sha512-zTU3DaZaF3Rt9rhN3uBMGQD3dD2/vFQqnvZCDv4dl5iOzq2IZQqTxu90r4E5J+nP70J3ilqVCrbho2eWaeW8Ow==
   /make-dir/3.1.0:
     dependencies:
       semver: 6.3.0
@@ -5561,6 +5625,13 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-7Nyo8TFE5mDxtb1B8S80edmN+48=
+  /marked/1.2.0:
+    dev: true
+    engines:
+      node: '>= 8.16.2'
+    hasBin: true
+    resolution:
+      integrity: sha512-tiRxakgbNPBr301ihe/785NntvYyhxlqcL3YaC8CaxJQh7kiaEtrN9B/eK2I2943Yjkh5gw25chYFDQhOMCwMA==
   /media-typer/0.3.0:
     dev: false
     engines:
@@ -5768,6 +5839,10 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha512-hZXc7K2e+PgeI1eDBe/10Ard4ekbfrrqG8Ep+8Jmf4JID2bNg7NvCPOZN+kfF574pFQI7mum2AUqDidoKqcTOw==
+  /neo-async/2.6.2:
+    dev: true
+    resolution:
+      integrity: sha512-Yd3UES5mWCSqR+qNT93S3UoYUkqAZ9lLg8a7g9rimsWmYGK8cVToA4/sF3RrshdyV3sAGMXVUmpMYOw+dLpOuw==
   /next-tick/1.0.0:
     dev: false
     resolution:
@@ -6034,7 +6109,7 @@ packages:
     dev: false
     resolution:
       integrity: sha512-O9jhaZPEEJzI1HSG3Yw5rOIC0EpZ9PjRJgtksXKuSMyEoxUDnl7zQ27LuFRR1ykSMVhMt8vHMrQBQIwLW8S0yQ==
-  /openapi-framework/7.0.1:
+  /openapi-framework/7.0.2:
     dependencies:
       difunc: 0.0.4
       fs-routes: 7.0.1_glob@7.1.6
@@ -6043,7 +6118,7 @@ packages:
       js-yaml: 3.14.0
       openapi-default-setter: 7.0.1
       openapi-request-coercer: 7.0.1
-      openapi-request-validator: 7.0.1
+      openapi-request-validator: 7.0.2
       openapi-response-validator: 7.0.1
       openapi-schema-validator: 7.0.1
       openapi-security-handler: 7.0.1
@@ -6051,13 +6126,13 @@ packages:
       ts-log: 2.2.3
     dev: false
     resolution:
-      integrity: sha512-ENQHf+tEqeGp6vykUYiw0uHvMEM3Oqi0SaBs8JlciEuo/fhhqrPmNzNa45xPFYWKYRJ5KpdFWcDlOIYf9gRkog==
-  /openapi-jsonschema-parameters/7.0.1:
+      integrity: sha512-62gOWK5iq75HJVS0KWKuLXR7CYynjrbvgxLrTc0Tr0fTcI9ZiJV61KDmz9bz37rHhk/uQIVSMMuTjTC8bmyQtA==
+  /openapi-jsonschema-parameters/7.0.2:
     dependencies:
       openapi-types: 7.0.1
     dev: false
     resolution:
-      integrity: sha512-PuzKYEILBg4mu9uyoHn7wUGPrx3ds9YJr8t0yvOhAkNITWmXCjuh/HgfoOi+6MUu2Rapj+6tk6lYfeVPcgqi3g==
+      integrity: sha512-hCC8wsWu9qU/pWCUClAYmUyXRhAeXSZUCRV7NVlj/8+3fWrtTBwk8GKI2dRa5Up0yZ3pstGi3Ewzzuixbmh8sw==
   /openapi-request-coercer/7.0.1:
     dependencies:
       openapi-types: 7.0.1
@@ -6065,16 +6140,16 @@ packages:
     dev: false
     resolution:
       integrity: sha512-nKSRnLX7KQ3Iu1TTZ+1PdEoz0Ke47vH4EcZIM9EOkdqadCFj2pSG/6oMcyqipCs2X7oMFi9Df/UGDRnTdzmPog==
-  /openapi-request-validator/7.0.1:
+  /openapi-request-validator/7.0.2:
     dependencies:
       ajv: 6.12.5
       content-type: 1.0.4
-      openapi-jsonschema-parameters: 7.0.1
+      openapi-jsonschema-parameters: 7.0.2
       openapi-types: 7.0.1
       ts-log: 2.2.3
     dev: false
     resolution:
-      integrity: sha512-qQBI3iiQ2JFokg3tdIOLo38ny7xRNzJZgcMwAS13WFSrUE9kcA6JAHI2cC5x3Q0EPpOtxWnzOaXwiZUJJ7MDOQ==
+      integrity: sha512-0JV3gdHNqJgcHwgojPj2f6RqUI02uHI5yUBcKAtLhvQ9tkrgcVTAHdengPyfoLT35NDRWhhQuc8VhS/mUtFI0g==
   /openapi-response-validator/7.0.1:
     dependencies:
       ajv: 6.12.5
@@ -6700,6 +6775,14 @@ packages:
       node: '>=8.10.0'
     resolution:
       integrity: sha512-0xe001vZBnJEK+uKcj8qOhyAKPzIT+gStxWr3LCB0DwcXR5NZJ3IaC+yGnHCYzB/S7ov3m3EEbZI2zeNvX+hGQ==
+  /rechoir/0.6.2:
+    dependencies:
+      resolve: 1.17.0
+    dev: true
+    engines:
+      node: '>= 0.10'
+    resolution:
+      integrity: sha1-hSBLVNuoLVdC4oyWdW70OvUOM4Q=
   /redent/1.0.0:
     dependencies:
       indent-string: 2.1.0
@@ -7117,6 +7200,17 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==
+  /shelljs/0.8.4:
+    dependencies:
+      glob: 7.1.6
+      interpret: 1.4.0
+      rechoir: 0.6.2
+    dev: true
+    engines:
+      node: '>=4'
+    hasBin: true
+    resolution:
+      integrity: sha512-7gk3UZ9kOfPLIAbslLzyWeGiEqx9e3rxwZM0KE6EL8GlGwjym9Mrlx5/p33bWTu9YG6vcS4MBxYZDHYr5lr8BQ==
   /shellwords/0.1.1:
     dev: true
     optional: true
@@ -7797,8 +7891,12 @@ packages:
     resolution:
       integrity: sha512-SgIkNheinmEBgx1IUNirK0TUD4X9yjjBRTqqjggWCU3pUEqIk3/Uwl3yRixYKT6WjQuGiwDv4NomL3wqRCj+CQ==
   /tslib/2.0.2:
+    dev: false
     resolution:
       integrity: sha512-wAH28hcEKwna96/UacuWaVspVLkg4x1aDM9JlzqaQTOFczCktkVAb5fmXChgandR1EraDPs2w8P+ozM+oafwxg==
+  /tslib/2.0.3:
+    resolution:
+      integrity: sha512-uZtkfKblCEQtZKBF6EBXVZeQNl82yqtDQdv+eck8u7tdPxjLu2/lp5/uPW+um2tpuxINHWy3GhiccY7QgEaVHQ==
   /tsutils/3.17.1_typescript@4.0.3:
     dependencies:
       tslib: 1.13.0
@@ -7881,12 +7979,59 @@ packages:
       is-typedarray: 1.0.0
     resolution:
       integrity: sha512-zdu8XMNEDepKKR+XYOXAVPtWui0ly0NtohUscw+UmaHiAWT8hrV1rr//H6V+0DvJ3OQ19S979M0laLfX8rm82Q==
+  /typedoc-default-themes/0.11.4:
+    dev: true
+    engines:
+      node: '>= 8'
+    resolution:
+      integrity: sha512-Y4Lf+qIb9NTydrexlazAM46SSLrmrQRqWiD52593g53SsmUFioAsMWt8m834J6qsp+7wHRjxCXSZeiiW5cMUdw==
+  /typedoc/0.19.2_typescript@4.0.3:
+    dependencies:
+      fs-extra: 9.0.1
+      handlebars: 4.7.6
+      highlight.js: 10.2.1
+      lodash: 4.17.20
+      lunr: 2.3.9
+      marked: 1.2.0
+      minimatch: 3.0.4
+      progress: 2.0.3
+      semver: 7.3.2
+      shelljs: 0.8.4
+      typedoc-default-themes: 0.11.4
+      typescript: 4.0.3
+    dev: true
+    engines:
+      node: '>= 10.0.0'
+    hasBin: true
+    peerDependencies:
+      typescript: 3.9.x || 4.0.x
+    resolution:
+      integrity: sha512-oDEg1BLEzi1qvgdQXc658EYgJ5qJLVSeZ0hQ57Eq4JXy6Vj2VX4RVo18qYxRWz75ifAaYuYNBUCnbhjd37TfOg==
+  /typescript-json-schema/0.43.0:
+    dependencies:
+      '@types/json-schema': 7.0.6
+      glob: 7.1.6
+      json-stable-stringify: 1.0.1
+      typescript: 4.0.3
+      yargs: 15.4.1
+    dev: true
+    hasBin: true
+    resolution:
+      integrity: sha512-4c9IMlIlHYJiQtzL1gh2nIPJEjBgJjDUs50gsnnc+GFyDSK1oFM3uQIBSVosiuA/4t6LSAXDS9vTdqbQC6EcgA==
   /typescript/4.0.3:
     engines:
       node: '>=4.2.0'
     hasBin: true
     resolution:
       integrity: sha512-tEu6DGxGgRJPb/mVPIZ48e69xCn2yRmCgYmDugAVwmJ6o+0u1RI18eO7E7WBTLYLaEVVOhwQmcdhQHweux/WPg==
+  /uglify-js/3.11.1:
+    dev: true
+    engines:
+      node: '>=0.8.0'
+    hasBin: true
+    optional: true
+    resolution:
+      integrity: sha512-OApPSuJcxcnewwjSGGfWOjx3oix5XpmrK9Z2j0fTRlHGoZ49IU6kExfZTM0++fCArOOCet+vIfWwFHbvWqwp6g==
   /undici/2.0.5:
     dev: false
     resolution:
@@ -8168,6 +8313,10 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-Hz/mrNwitNRh/HUAtM/VT/5VH+ygD6DV7mYKZAtHOrbs8U7lvPS6xf7EJKMF0uW1KJCl0H701g3ZGus+muE5vQ==
+  /wordwrap/1.0.0:
+    dev: true
+    resolution:
+      integrity: sha1-J1hIEIkUVqQXHI0CJkQa3pDLyus=
   /wrap-ansi/6.2.0:
     dependencies:
       ansi-styles: 4.2.1

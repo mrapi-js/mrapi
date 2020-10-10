@@ -5,7 +5,7 @@ import { join } from 'path'
 import swaggerUi from 'swagger-ui-express'
 import express, { Express } from 'express'
 import { graphqlHTTP } from 'express-graphql'
-import { formation, fs } from '@mrapi/common'
+import { fs, formation, requireResolve } from '@mrapi/common'
 import { dependenciesPlugins } from '@mrapi/oas'
 import { initialize as initializeOpenAPI } from 'express-openapi'
 
@@ -200,10 +200,19 @@ export default class Server {
       return
     }
 
+    const definitionsPath = requireResolve(
+      join(openapiOptions.oasDir, 'definitions'),
+    )
+    if (!definitionsPath) {
+      this.logger.error(
+        `OpenAPI definitions for service "${name}" not found. Please run "mrapi generate" first.`,
+      )
+      process.exit(1)
+    }
+
     const endpoint = this.options.endpoint.openapi
     const basePath = `/${endpoint}/${name}`
-    const definitions =
-      require(join(openapiOptions.oasDir, 'definitions')) || {}
+    const definitions = require(definitionsPath) || {}
     const getPrisma = async (req: any) => {
       // TODO: more params
       const tenantName: any = await this.getTenantIdentity(req)

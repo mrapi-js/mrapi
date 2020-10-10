@@ -1,4 +1,4 @@
-import type { mrapi } from '../types'
+import type { mrapi } from '../../types'
 
 import { join } from 'path'
 import { Generator as OASGenerate } from '@mrapi/oas'
