@@ -2,7 +2,7 @@ export default {
   name: 'generate',
   description: 'Generate prisma schema and nexus types',
   options: [
-    ['--names <names...>', 'DAL service names and "management".'],
+    ['--services <services...>', 'DAL service names and "management".'],
     [
       '--cnt <options>',
       // `Generate CNT params. whiteList: ${cntWhiteList.join(',')}`,
@@ -16,9 +16,9 @@ export default {
     ],
   ],
   async fn(args: any, opts: any, execute: Function) {
-    const { names, provider, cnt, m, em, eqm } = opts
+    const { services, provider, cnt, m, em, eqm } = opts
 
-    for (const name of names) {
+    for (const name of services) {
       await execute({
         name,
         provider,
