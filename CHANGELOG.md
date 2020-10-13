@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.1](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2020-10-13)
+
+
+### Bug Fixes
+
+* **api:** pass tenant id in headers to DAL ([29c174c](https://github.com/mrapi-js/mrapi/commit/29c174c25e6401f1a9dda982c8ae0c782b4bfad8))
+* **types:** add 'build' script ([96ed047](https://github.com/mrapi-js/mrapi/commit/96ed047822e531ecd88aa3dc653f11492b5d7f0d))
+
 ## [2.0.0-alpha.0](https://github.com/mrapi-js/mrapi/compare/v1.1.1...v2.0.0-alpha.0) (2020-10-13)
 
 
