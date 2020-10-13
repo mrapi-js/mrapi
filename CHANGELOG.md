@@ -2,20 +2,28 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [1.1.3](https://github.com/mrapi-js/mrapi/compare/v1.1.2...v1.1.3) (2020-10-02)
+## [2.0.0-alpha.0](https://github.com/mrapi-js/mrapi/compare/v1.1.1...v2.0.0-alpha.0) (2020-10-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* Many changes are not compatible with the old version
+
+### Features
+
+* add config validation; refactor multi-tenant logic ([1ea3693](https://github.com/mrapi-js/mrapi/commit/1ea3693891ec3a84f1d1a3384fcce1f31d475d04))
+* eat: add config validation; refactor multi-tenant logic ([810c807](https://github.com/mrapi-js/mrapi/commit/810c8076a7feaf08667fae43b4b9cbebf32643a7))
 
 
 ### Bug Fixes
 
-* mershed operationName prefix remove ([ce145fe](https://github.com/mrapi-js/mrapi/commit/ce145fef4fcb50bb2aee15a58638d29782cc3602))
-* mershed operationName prefix remove ([036f4b9](https://github.com/mrapi-js/mrapi/commit/036f4b9707dd2f0bef42b090eacf04df04b8bcc8))
-
-### [1.1.2](https://github.com/mrapi-js/mrapi/compare/v1.1.1...v1.1.2) (2020-10-02)
+* **dal:** prisma migrate & generate ([c01195c](https://github.com/mrapi-js/mrapi/commit/c01195ce1483cdf7012482fe61c7de8dded78def))
+* fix management path error ([387b088](https://github.com/mrapi-js/mrapi/commit/387b088f94427bfacfaa8a7db11abbad0b5b90ea))
 
 
-### Features
+### Code Refactoring
 
-* update api console ([2109b29](https://github.com/mrapi-js/mrapi/commit/2109b29a0958a314e09aa29ab35d6c18dd2bd85c))
+* add @mrapi/db package ([32e164f](https://github.com/mrapi-js/mrapi/commit/32e164fab1ce0e376c5d889cbdf01472c6add3f8))
 
 ### [1.1.1](https://github.com/mrapi-js/mrapi/compare/v1.1.0...v1.1.1) (2020-10-01)
 
