@@ -1,13 +1,11 @@
 import type { mrapi } from '../../types'
 
-import { join } from 'path'
 import { Generator as OASGenerate } from '@mrapi/oas'
 
-export default async function generateOpenapi({ outputDir, nexusParams }: any) {
-  const oasOutput = join(outputDir, 'api')
+export default async function generateOpenapi({ nexusParams, paths }: any) {
   const oasParams: mrapi.generate.Options = {
     ...nexusParams,
-    output: oasOutput,
+    output: paths.outputOpenapi,
   }
   const openAPIGenerate = new OASGenerate(oasParams)
   await openAPIGenerate.run()

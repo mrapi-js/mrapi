@@ -8,8 +8,8 @@
     "prod": "cross-env NODE_ENV=production node dist/src/app",
     "build": "rm -rf dist && npm run generate && tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "generate": "npx mrapi generate --services management one two",
-    "migrate": "npx mrapi migrate --services management one two",
+    "generate": "npx mrapi generate --services blog",
+    "migrate": "npx mrapi migrate --services blog",
     "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts",
     "gen1-eqm": "npx mrapi generate --name one --eqm findOne,createOne --em Post"
   },

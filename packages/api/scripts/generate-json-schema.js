@@ -2,7 +2,7 @@ const { resolve, join } = require('path')
 const { fs } = require('@mrapi/common')
 const TJS = require('typescript-json-schema')
 
-function generate (id) {
+async function generate (id) {
   const settings = {
     id,
     ref: true,
@@ -32,9 +32,18 @@ function generate (id) {
 
   // We can either get the schema for one file and one type...
   const schema = TJS.generateSchema(program, `mrapi.${id}.Options`, settings)
-  // console.log(schema)
-  fs.writeFileSync(outputFile, JSON.stringify(schema))
+  await fs.ensureFile(outputFile)
+  await fs.outputJSON(outputFile, schema)
   console.log(`'${outputFile}' generated successfully`)
 }
 
-generate('api')
+;(async () => {
+  const targets = ['api']
+  try {
+    for (const id of targets) {
+      await generate(id)
+    }
+  } catch (err) {
+    console.log(err)
+  }
+})()

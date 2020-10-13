@@ -1,9 +1,10 @@
 import type { mrapi } from './types'
 
+import { merge, getLogger } from '@mrapi/common'
+
 import Server from './server'
 import Service from './service'
 import { resolveOptions } from './config'
-import { merge, getLogger } from '@mrapi/common'
 
 export * from './types'
 
@@ -30,13 +31,14 @@ export default class DAL {
    * Note: If "name" already exists, Please call "dal.removeService" first
    *
    */
-  addService(option: mrapi.dal.ServiceOptions): Service | null {
+  async addService(option: mrapi.dal.ServiceOptions) {
     if (this.services.get(option.name)) {
       this.logger.error(`Service "${option.name}" already exist`)
       return null
     }
 
     const service = new Service(option, this.logger)
+    await service.init()
 
     if (this.server) {
       this.server.addRoute({
@@ -77,30 +79,37 @@ export default class DAL {
     return this.services.has(name)
   }
 
-  addServices(options?: mrapi.dal.ServiceOptions[]) {
+  async addServices(options?: mrapi.dal.ServiceOptions[]) {
     const opts = options || this.options.services
-    return Array.isArray(opts) ? opts.map((opt) => this.addService(opt)) : []
+    if (!Array.isArray(opts)) {
+      return []
+    }
+
+    const promises = opts.map(async (opt) => await this.addService(opt))
+
+    return Promise.all(promises)
   }
 
   /**
-   * Get prisma instance by PMT
+   * Get DB client
    *
    */
-  getPrismaClient = async (serviceName: string, tenantName?: string) => {
+  getDBClient = async (serviceName: string, tenantName?: string) => {
     const service = this.services.get(serviceName)
-    return service.getPrismaClient(tenantName).catch((e: Error) => {
+    return service.getTenantClient(tenantName).catch((err: Error) => {
       // In the event of a multi-tenant exception, the document connection is guaranteed to be properly accessed.
-      if (this.options.pmtErrorThrow) {
-        throw e
-      }
+      // if (this.options.throwOriginalError) {
+      //   throw err
+      // }
+      this.logger.error(err)
       const message = `Check to see if a multi-tenant identity  has been added to the "Request Headers".`
       this.logger.error(`Tips: ${message}`)
       throw new Error(message)
     })
   }
 
-  getSchemas() {
-    const services = this.addServices()
+  async getSchemas() {
+    const services = await this.addServices()
     return services.map((service: Service) => service.options.graphql.schema)
   }
 
@@ -110,19 +119,17 @@ export default class DAL {
    * Note: When service is initialized, the default port configuration is logged.
    *
    */
-  // async start(options?: ServerOptions) {
-  // async start(options?: MrapiConfig['dal']['server']) {
   async start(options?: mrapi.dal.ServerOptions) {
     this.options.server = merge(this.options.server, options || {})
     if (!this.server) {
       this.server = new Server(
         this.options.server,
-        this.getPrismaClient,
+        this.getDBClient,
         this.logger,
       )
     }
     this.server.start(options)
-    this.addServices()
+    await this.addServices()
   }
 
   /**

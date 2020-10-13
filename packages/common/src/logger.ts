@@ -1,4 +1,5 @@
-import pino, { Logger, LoggerOptions } from 'pino'
+import type { LoggerOptions } from 'pino'
+import pino, { Logger } from 'pino'
 
 import { defaultLoggerOptions } from './config'
 

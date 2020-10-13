@@ -15,15 +15,18 @@ declare module '@mrapi/types' {
       meshConfigOuputPath?: string
     }
 
-    type ServerType = 'standalone' | 'combined'
     type App = FastifyInstance<Server, IncomingMessage, ServerResponse>
+
     interface Request extends FastifyRequest {}
+
     interface Response extends FastifyReply {}
+
     interface Context {
       request: Request
       reply: Response
       prisma: any
     }
+
     interface MeshConfig extends YamlConfig.Config {}
   }
 }

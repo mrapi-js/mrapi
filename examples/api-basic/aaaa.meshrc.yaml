@@ -1,0 +1,11 @@
+sources:
+  # The name you wish to set to your remote API, this will be used for building the GraphQL context
+  - name: Blog
+    handler:
+      graphql:
+        # A url to your remote GraphQL endpoint
+        endpoint: 'http://localhost:1358/graphql/blog'
+# transforms:
+# - resolversComposition:
+# resolver: '*.*'
+# composer: ''

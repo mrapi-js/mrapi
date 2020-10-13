@@ -1,4 +1,4 @@
-import type mrapi from '@mrapi/types'
+import type { mrapi } from './types'
 
 import Ajv from 'ajv'
 import { join, isAbsolute } from 'path'
@@ -19,7 +19,7 @@ export const defaultLoggerOptions: mrapi.LoggerOptions = {
 export function resolveConfig(
   path?: string,
   cwd = process.cwd(),
-): mrapi.Config {
+): { [key: string]: any } {
   let configPath = ''
 
   if (path) {

@@ -1,8 +1,0 @@
-type Query {
-  serverTime(type: String): ServerTimeOutputType
-}
-
-type ServerTimeOutputType {
-  """current server time"""
-  time: String!
-}

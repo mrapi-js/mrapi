@@ -1,0 +1,22 @@
+model Album {
+  id       Int     @id @default(autoincrement())
+  title    String
+  artist   Artist  @relation(fields: [artistId], references: [id])
+  tracks   Track[]
+  artistId Int
+}
+
+model Artist {
+  id     Int     @id @default(autoincrement())
+  name   String? @unique
+  albums Album[]
+}
+
+model Track {
+  id      Int    @id @default(autoincrement())
+  name    String
+  bytes   Int?
+  album   Album  @relation(fields: [albumId], references: [id])
+  price   Float
+  albumId Int
+}

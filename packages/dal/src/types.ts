@@ -1,10 +1,9 @@
 import type { mrapi } from '@mrapi/common'
+import type { PrismaClient } from '@prisma/client'
 import type { OptionsData } from 'express-graphql'
 import type { ExpressOpenAPIArgs } from 'express-openapi'
-import type { MultiTenant } from '@prisma-multi-tenant/client'
 
 declare module '@mrapi/types' {
-  // extends types of mrapi.dal configs
   namespace dal {
     interface Options {
       logger?: mrapi.LoggerOptions // from @mrapi/common
@@ -12,14 +11,17 @@ declare module '@mrapi/types' {
 
     interface GraphqlOptions extends OptionsData {}
 
-    interface ServiceOptions {
-      multiTenant?: MultiTenant<any>
-    }
-
     interface OpenapiOptions {
       docs?: ExpressOpenAPIArgs & {
         app?: any
       }
+    }
+  }
+
+  namespace db {
+    interface Options {
+      TenantClient?: PrismaClient
+      ManagementClient?: PrismaClient
     }
   }
 }

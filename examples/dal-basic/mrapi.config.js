@@ -1,41 +1,17 @@
-exports.default = {
+module.exports = {
   dal: {
     services: [
       {
-        name: 'one',
-        schema: './config/one.prisma',
-        tenants: {
-          dev: '',
-          // prod: '',
+        name: 'blog',
+        db: {
+          tenants: {
+            // empty: use default name from './config/*.prisma'
+            // tencent: '',
+            // MySQL
+            tencent: 'mysql://root:123456@0.0.0.0:3306/blog',
+          },
         },
-        defaultTenant: 'dev',
-        openapi: {
-          enable: true,
-        },
-        paths: {
-          input: '',
-          output: '',
-          nexus: '',
-        },
-      },
-      {
-        name: 'two',
-        tenants: {
-          dev: '',
-        },
-        defaultTenant: 'dev',
-        openapi: {
-          enable: false,
-        },
-        // graphql: {
-        //   enable: false,
-        // },
       },
     ],
-    management: {
-      enable: true,
-      schema: './config/management.prisma',
-      // database: 'file:./database/management.db',
-    },
   },
 }

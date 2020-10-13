@@ -1,19 +1,26 @@
 import type { mrapi } from './types'
 import type { GraphQLSchema } from 'graphql'
 
+import DB from '@mrapi/db'
 import { join } from 'path'
 import { paljsPlugin } from '@mrapi/nexus'
 import { makeSchema } from '@nexus/schema'
 import { PrismaClient } from '@prisma/client'
 import { isPlainObject } from 'is-plain-object'
 import { fs, merge, getPrismaClient } from '@mrapi/common'
-import { MultiTenant } from '@prisma-multi-tenant/client'
+
 import { defaultServiceOptions } from './config'
-import { migrateUp } from './helpers/migrate/'
+import { migrateSave, migrateUp } from './helpers/migrate/'
+
+interface DBInitParams {
+  database?: string
+  schema: string
+  Client: PrismaClient
+}
 
 export default class Service {
   name: string
-  multiTenant: MultiTenant<PrismaClient>
+  db: DB<PrismaClient>
 
   constructor(
     public options: mrapi.dal.ServiceOptions,
@@ -24,24 +31,24 @@ export default class Service {
       ...(options || {}),
     }
     this.name = this.options.name
-    this.init()
   }
 
-  private async init() {
-    // this.setManagementEnv()
+  async init() {
+    this.logger.debug(`initializing service "${this.name}"`)
 
-    const prismaClientPath = this.options?.paths?.prismaClient
+    const prismaClientPath = this.options?.paths?.outputPrismaClient
     if (!prismaClientPath || !fs.pathExistsSync(prismaClientPath)) {
       this.logger.error(
         'PrismaClient not generated yet. Please run "mrapi generate" first.',
       )
       process.exit(1)
     }
-    const PrismaClientClass: PrismaClient = getPrismaClient(prismaClientPath)
+    const TenantClient: PrismaClient = getPrismaClient(prismaClientPath)
 
-    let PrismaManagementClientClass: PrismaClient
-    if (this.options?.management?.enable) {
-      const prismaManagementClientPath = this.options.management.prismaClient
+    let ManagementClient: PrismaClient
+    if (this.options.db?.management) {
+      const prismaManagementClientPath = this.options.db.management
+        .outputPrismaClient
       if (
         !prismaManagementClientPath ||
         !fs.pathExistsSync(prismaManagementClientPath)
@@ -51,18 +58,10 @@ export default class Service {
         )
         process.exit(1)
       }
-      PrismaManagementClientClass = getPrismaClient(prismaManagementClientPath)
+      ManagementClient = getPrismaClient(prismaManagementClientPath)
     }
 
-    this.multiTenant = new MultiTenant({
-      useManagement: this.options.management.enable,
-      // options for PrismaClient
-      tenantOptions: {},
-      PrismaClient: PrismaClientClass,
-      ...(PrismaManagementClientClass
-        ? { PrismaClientManagement: PrismaManagementClientClass }
-        : {}),
-    })
+    await this.initDB(TenantClient, ManagementClient)
 
     if (this.options.graphql.enable) {
       delete this.options.graphql.enable
@@ -78,56 +77,45 @@ export default class Service {
     } else {
       delete this.options.openapi
     }
+    this.logger.debug(`initializd service "${this.name}"`)
   }
 
-  private setManagementEnv() {
-    process.env.MANAGEMENT_URL = this.options.management.database
-    process.env.MANAGEMENT_OUTPUT = this.options.management.prismaClient
+  private async initDB(
+    TenantClient: PrismaClient,
+    ManagementClient: PrismaClient,
+  ) {
+    this.db = new DB<PrismaClient>(
+      {
+        ...this.options.db,
+        TenantClient,
+        ManagementClient,
+        initialize: async ({ database, schema }: DBInitParams) => {
+          await migrateSave({
+            schema,
+            dbUrl: database,
+          })
+          await migrateUp({
+            schema,
+            dbUrl: database,
+          })
+        },
+      },
+      this.logger,
+    )
+    await this.db.init()
   }
 
   release() {
-    if (this.multiTenant) {
-      this.multiTenant.disconnect()
-    }
+    return this.db.disconnect()
   }
 
-  async getPrismaClient(tenantName?: string, tenantUrl?: string) {
-    this.setManagementEnv()
-
-    const name = tenantName || this.options.defaultTenant
-    const url = this.options.tenants[name]
-
-    if (!url) {
-      throw new Error(`Tenant id "${name}" not configured.`)
-    }
-
-    const options = {
-      DATABASE_URL: url,
-    }
-
+  async getTenantClient(tenantName?: string) {
     let tenant
     try {
-      tenant = await this.multiTenant.get(name, options)
-    } catch (err) {
-      this.logger.warn(err.message)
-    }
-    if (!tenant) {
-      try {
-        tenant = await this.multiTenant.management.create({
-          name,
-          url,
-        })
+      tenant = await this.db.get(tenantName)
+    } catch {}
 
-        await migrateUp({
-          schema: join(this.options.paths.output, 'schema.prisma'),
-          dbUrl: url,
-        })
-      } catch (err) {
-        this.logger.warn(err.message)
-      }
-    }
-
-    return tenant
+    return tenant.client
   }
 
   /**
@@ -138,11 +126,14 @@ export default class Service {
   private generateSchema(schema?: GraphQLSchema) {
     let types: any
     try {
-      const requireDirTypes = require(this.options.paths.nexus + '/')
+      const requireDirTypes = require(this.options.paths.outputGraphql + '/')
       types = requireDirTypes.default || requireDirTypes
     } catch (e) {
       console.log(e)
-      this.logger.error(`require nexus types "${this.options.paths.nexus}"`, e)
+      this.logger.error(
+        `require nexus types "${this.options.paths.outputGraphql}"`,
+        e,
+      )
       process.exit(1)
     }
 
@@ -151,16 +142,16 @@ export default class Service {
     }
 
     // make schema
-    const prismaClientPath = this.options.paths.prismaClient
+    const prismaClient = this.options.paths.outputPrismaClient
     return makeSchema(
       merge(
         {
           types,
-          plugins: [paljsPlugin({ prismaClient: prismaClientPath })],
+          plugins: [paljsPlugin({ prismaClient })],
           shouldGenerateArtifacts: process.env.NODE_ENV !== 'production', // 感觉生成的文件，只是方便编写 types
           outputs: {
-            schema: join(prismaClientPath, '/generated/schema.graphql'),
-            typegen: join(prismaClientPath, '/generated/nexus.ts'),
+            schema: join(prismaClient, '/generated/schema.graphql'),
+            typegen: join(prismaClient, '/generated/nexus.ts'),
           },
           prettierConfig: require.resolve('../package.json'),
           nonNullDefaults: {

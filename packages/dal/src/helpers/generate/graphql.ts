@@ -1,6 +1,5 @@
 import type { mrapi } from '../../types'
 
-import { join } from 'path'
 import { Generator as NexusGenerate } from '@mrapi/nexus'
 import { merge } from '@mrapi/common'
 
@@ -8,11 +7,11 @@ const cntWhiteList = ['disableQueries', 'disableMutations']
 const cntWhiteListSet = new Set(cntWhiteList)
 
 export default async function generateGraphql({
-  outputDir,
+  paths,
   options,
   generateOptions,
 }: {
-  outputDir: string
+  paths: mrapi.dal.ServicePaths
   options: {
     cnt?: string
     m?: string
@@ -21,9 +20,9 @@ export default async function generateGraphql({
   }
   generateOptions?: mrapi.generate.Options
 }) {
-  const nexusParams: mrapi.generate.Options = merge(generateOptions, {
-    schema: outputDir,
-    output: join(outputDir, 'nexus-types'),
+  const nexusParams: mrapi.generate.Options = merge(generateOptions || {}, {
+    schema: paths.outputPrismaClient,
+    output: paths.outputGraphql,
   } as Partial<mrapi.generate.Options>)
 
   if (options.cnt) {

@@ -1,28 +1,16 @@
 import type { mrapi } from '../../types'
 
-import { join } from 'path'
 import { fs } from '@mrapi/common'
 
 import { defaultDatabaseTypes } from '../../config'
 
-export default async function generatePrismaSchema({
-  name,
-  schema,
+export default async function generateSchema({
   paths,
   provider,
-  cwd = process.cwd(),
-}: mrapi.dal.ServiceOptions & {
+}: Partial<mrapi.dal.ServiceOptions> & {
   provider: string
-  cwd?: string
 }) {
-  const outputDir = paths.output
-  const outputSchemaPath = join(outputDir, 'schema.prisma')
-
-  // clean
-  await fs.remove(outputDir)
-
-  const inputSchemaPath = schema
-  const inputSchemaFileContent = await fs.readFile(inputSchemaPath, 'utf8')
+  const inputSchemaFileContent = await fs.readFile(paths.inputSchema, 'utf8')
   /// Get file content without comments
   const pureSchemaFile = getNoCommentContent(inputSchemaFileContent)
   /// Get custom datasource provider from file content
@@ -69,15 +57,14 @@ export default async function generatePrismaSchema({
   }
 
   const prismaSchema = createSchemaPrisma(
-    outputDir,
+    paths.outputPrismaClient,
     getNoDatasourceContent(inputSchemaFileContent),
     supportProviders,
   )
 
-  await fs.outputFile(outputSchemaPath, prismaSchema, {
+  await fs.outputFile(paths.outputSchema, prismaSchema, {
     encoding: 'utf8',
   })
-  return { outputDir, outputSchemaPath }
 }
 
 // Remove comments from file content
@@ -150,15 +137,16 @@ const createSchemaPrisma = (
   content: string,
   provider: mrapi.dal.DatabaseType[],
 ) => `
-generator client {
-  provider = "prisma-client-js"
-  output   = "${output.replace(/\\/gi, '/')}"
-  previewFeatures = ["transactionApi"]
-}
-
 datasource db {
   provider = ["${provider.join('", "')}"]
   url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  output          = "${output.replace(/\\/gi, '/')}"
+  binaryTargets   = ["native"]
+  previewFeatures = ["transactionApi"]
 }
 
 ${content}

@@ -114,7 +114,7 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
                   t.boolean(field.name, { nullable: true })
                 } else if (field.kind === 'object') {
                   t.field(field.name, {
-                    type: `FindMany${field.name}Args`,
+                    type: `FindMany${field.type}Args`,
                     nullable: true,
                   })
                 }
@@ -138,7 +138,7 @@ export const paljsPlugin = ({ prismaClient }: { prismaClient: string }) =>
                 input.fields.forEach((field: any) => {
                   if (field.kind === 'object') {
                     t.field(field.name, {
-                      type: `FindMany${field.name}Args`,
+                      type: `FindMany${field.type}Args`,
                       nullable: true,
                     })
                   }

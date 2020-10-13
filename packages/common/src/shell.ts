@@ -10,7 +10,7 @@ export const runShell = async (
   logger?: Logger,
 ): Promise<string | Buffer> => {
   const log = getLogger(logger, { name: 'mrapi-cmd' })
-  log.info(
+  log.debug(
     `Running command "${cmd}" with options ${JSON.stringify(options || {})}`,
   )
 
@@ -51,7 +51,7 @@ export const spawnShell = (
   logger?: Logger,
 ): Promise<number> => {
   const log = getLogger(logger, { name: 'mrapi-cmd' })
-  log.info(
+  log.debug(
     `Running command "${cmd}" with options ${JSON.stringify(options || {})}`,
   )
 

@@ -1,12 +1,11 @@
-import type { mrapi } from '@mrapi/common'
+import type { mrapi } from '../../types'
 
 import { resolve } from 'path'
-import { resolveConfig, validateConfig, merge } from '@mrapi/common'
+import { fs, resolveConfig, validateConfig, merge } from '@mrapi/common'
 
 import DAL from '../..'
-import generateManagement from './management'
 import generateSchema from './schema'
-import generateTenant from './tenant'
+import generatePrisma from './prisma'
 import generateGraphql from './graphql'
 import generateOpenapi from './openapi'
 
@@ -45,35 +44,45 @@ export async function generate({
   const dal = new DAL()
   const dalOptions = dal.options
 
-  // generate management
-  if (name === 'management') {
-    if (!dalOptions.management.enable) {
-      throw new Error('management not enabled')
+  let isManagement = name === 'management'
+  let paths
+  if (isManagement) {
+    paths = dalOptions.management
+  } else {
+    // validate service name
+    const service = dalOptions.services.find(
+      (service: mrapi.dal.ServiceOptions) => service.name === name,
+    )
+    if (!service) {
+      throw new Error(`Service "${name}" is not configured in "dal".`)
     }
-    await generateManagement(dalOptions.management)
-    return
+    paths = service.paths
   }
 
-  // validate service name
-  const service = dalOptions.services.find((service) => service.name === name)
-  if (!service) {
-    throw new Error(`Service "${name}" is not configured in "dal".`)
+  // clean
+  if (paths.output) {
+    await fs.emptyDir(paths.output)
   }
 
-  const { outputDir, outputSchemaPath } = await generateSchema({
-    ...service,
+  await generateSchema({
+    paths,
     provider,
   })
 
-  await generateTenant({
-    targetSchema: outputSchemaPath,
+  await generatePrisma({
+    paths,
   })
 
+  if (isManagement) {
+    return
+  }
+
+  // generate APIs
   const { nexusParams } = await generateGraphql({
-    outputDir,
+    paths,
     options,
-    generateOptions: merge(defaultGenerateOptions, generate || {}),
+    generateOptions: merge(defaultGenerateOptions || {}, generate || {}),
   })
 
-  await generateOpenapi({ outputDir, nexusParams })
+  await generateOpenapi({ paths, nexusParams })
 }

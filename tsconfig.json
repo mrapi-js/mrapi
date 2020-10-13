@@ -1,13 +1,11 @@
 {
   "compilerOptions": {
-    "incremental": true,
-
     "baseUrl": ".",
-
     "target": "es2018",
     "module": "commonjs",
-    "moduleResolution": "node",
     "lib": ["esnext"],
+    "moduleResolution": "node",
+    "incremental": true,
     "allowSyntheticDefaultImports": true,
     "esModuleInterop": true,
     "importHelpers": true,

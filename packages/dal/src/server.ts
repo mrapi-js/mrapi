@@ -5,8 +5,8 @@ import { join } from 'path'
 import swaggerUi from 'swagger-ui-express'
 import express, { Express } from 'express'
 import { graphqlHTTP } from 'express-graphql'
-import { fs, formation, requireResolve } from '@mrapi/common'
 import { dependenciesPlugins } from '@mrapi/oas'
+import { fs, requireResolve } from '@mrapi/common'
 import { initialize as initializeOpenAPI } from 'express-openapi'
 
 import { loggingMiddleware } from './middleware/logging'
@@ -73,7 +73,7 @@ export default class Server {
 
     this.routes.add(name)
     this.addGraphql(name, graphql)
-    this.addOpenapi(name, openapi, paths.prismaClient)
+    this.addOpenapi(name, openapi, paths)
   }
 
   removeRoute(name: string): boolean {
@@ -144,8 +144,8 @@ export default class Server {
   }
 
   private async getTenantIdentity(
-    req: mrapi.dal.Request,
-    res?: mrapi.dal.Response,
+    req: http.IncomingMessage,
+    res?: http.ServerResponse,
     params?: any,
   ) {
     const { tenantIdentity } = this.options
@@ -194,15 +194,14 @@ export default class Server {
   private addOpenapi(
     name: string,
     openapiOptions: mrapi.dal.OpenapiOptions,
-    prismaClientDir: string,
+    paths: mrapi.dal.ServicePaths,
   ) {
     if (typeof openapiOptions !== 'object') {
       return
     }
+    const output = paths.outputOpenapi
 
-    const definitionsPath = requireResolve(
-      join(openapiOptions.oasDir, 'definitions'),
-    )
+    const definitionsPath = requireResolve(join(output, 'definitions'))
     if (!definitionsPath) {
       this.logger.error(
         `OpenAPI definitions for service "${name}" not found. Please run "mrapi generate" first.`,
@@ -243,7 +242,7 @@ export default class Server {
           getPrisma,
         }),
       },
-      paths: join(openapiOptions.oasDir, 'paths'),
+      paths: join(output, 'paths'),
       pathsIgnore: new RegExp('.(spec|test)$'),
     }
     const openAPIInstance = initializeOpenAPI(opts)
@@ -264,12 +263,11 @@ export default class Server {
       `⭐️ [${name}] OpenAPI document: ${this.getUri()}${basePath}/swagger`,
     )
 
-    // generate apiDoc.json
-    prismaClientDir &&
-      fs.outputFileSync(
-        join(prismaClientDir, 'apiDoc.json'),
-        formation(JSON.stringify(apiDoc), 'json', ''),
-      )
+    // generate openapi/docs.json
+    fs.outputFileSync(
+      join(output, 'docs.json'),
+      JSON.stringify(apiDoc, null, 2),
+    )
   }
 
   private async applyMiddlewares() {

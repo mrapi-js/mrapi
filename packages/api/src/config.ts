@@ -101,7 +101,7 @@ export function resolveOptions(
     process.exit()
   }
 
-  const apiConfig = merge(defaultApiOptions, config.api)
+  const apiConfig = merge(defaultApiOptions, config.api || {})
   const apiOptions: mrapi.api.Options = merge(apiConfig, options || {})
 
   // TODO: verify options
