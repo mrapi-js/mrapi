@@ -3,7 +3,7 @@ import execa from 'execa'
 import { join } from 'path'
 import { promises as fs } from 'fs'
 
-const PACKAGES = ['common', 'nexus', 'oas', 'cli', 'dal', 'api']
+const PACKAGES = ['types', 'common', 'db', 'nexus', 'oas', 'cli', 'dal', 'api']
 // const DEPS = ['@mrapi/common', '@mrapi/nexus', '@mrapi/oas', '@mrapi/dal', '@mrapi/api']
 
 async function getLatestVersion(): Promise<string> {
