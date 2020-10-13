@@ -81,7 +81,7 @@ declare namespace mrapi {
 
   namespace api {
     interface Options {
-      server: ServerOptions
+      server?: ServerOptions
       openapi?: OpenapiOptions
       graphql?: GraphqlOptions
       autoGenerate?: boolean
