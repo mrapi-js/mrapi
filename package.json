@@ -12,6 +12,8 @@
     "watch": "pnpm run --parallel watch",
     "publish": "ts-node scripts/publish.ts",
     "publish:dry": "DRY_RUN=true ts-node scripts/publish.ts",
+    "publish:next": "TAG=next ts-node scripts/publish.ts",
+    "publish:next:dry": "TAG=next DRY_RUN=true ts-node scripts/publish.ts",
     "eslint": "pnpm run eslint:packages && pnpm run eslint:scripts",
     "eslint:packages": "eslint packages/**/*.ts",
     "eslint:packages-fix": "eslint packages/**/*.ts --fix",

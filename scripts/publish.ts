@@ -122,7 +122,7 @@ async function run(
   }
 }
 
-async function publish(dryRun: boolean) {
+async function publish(dryRun: boolean, tag = 'latest') {
   if (dryRun) {
     console.log(
       chalk.blue.bold(
@@ -136,7 +136,6 @@ async function publish(dryRun: boolean) {
   )
   const info = await getPackagesInfo(PACKAGES)
   const newVersion = await getLatestVersion()
-  const tag = 'latest'
 
   for (const [name, obj] of Object.entries(info)) {
     console.log(
@@ -164,7 +163,7 @@ async function publish(dryRun: boolean) {
 
 // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 if (!module.parent) {
-  publish(!!process.env.DRY_RUN).catch((e) => {
+  publish(!!process.env.DRY_RUN, process.env.TAG).catch((e) => {
     console.error(chalk.red.bold('Error: ') + `${e.stack || e.message}`)
     process.exit(1)
   })
