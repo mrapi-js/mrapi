@@ -2,54 +2,41 @@ import type { IncomingMessage, ServerResponse } from 'http'
 
 // types for mrapi config
 declare namespace mrapi {
-  type PathObject = {
-    input?: string
-    output?: string
-  }
-
-  type ManagementObject = {
-    enable?: boolean
-    database?: string
-    schema?: string
-    prismaClient?: string
-  }
-
-  type Modify<T, R> = Omit<T, keyof R> & R
-  type Omit<T, K> = Pick<T, Exclude<keyof T, K>>
-
-  type SuperMerge<T, U> = {
-    [K in keyof (T & U)]: K extends keyof T
-      ? T[K]
-      : K extends keyof U
-      ? U[K]
-      : never
-  }
-
   namespace dal {
     interface Options {
       paths?: PathObject
       server?: ServerOptions
       services?: ServiceOptions[]
-      management?: ManagementObject
-      pmtErrorThrow?: boolean
+      management?: PathObject
+      // throw multi-tenant original errors or not
+      throwOriginalError?: boolean
+    }
+
+    interface PathObject {
+      name?: string
+      input?: string
+      output?: string
+      database?: string
+      inputSchema?: string
+      outputSchema?: string
+      outputDatabase?: string
+      outputPrismaClient?: string
     }
 
     interface ServiceOptions {
       name: string
-      schema?: string
+      // GraphQL service options
       graphql?: GraphqlOptions
+      // OpenAPI service options
       openapi?: OpenapiOptions
-      tenants: {
-        [key: string]: string
-      }
-      defaultTenant?: string
-      tenantOptions?: any
-      paths?: PathObject & {
-        nexus?: string
-        prismaClient?: string
-        managementClient?: string
-      }
-      management?: ManagementObject
+      // multi-tenants config
+      db?: db.Options
+      paths?: ServicePaths
+    }
+
+    interface ServicePaths extends PathObject {
+      outputGraphql?: string
+      outputOpenapi?: string
     }
 
     interface ServerOptions {
@@ -61,12 +48,12 @@ declare namespace mrapi {
         graphql?: string
         openapi?: string
       }
-      // middlewares
-      middlewares?: {
+      // middlewares for express
+      middlewares?: Array<{
         fn: Function
         options?: any
         wrap?: boolean
-      }[]
+      }>
     }
 
     interface GraphqlOptions {
@@ -78,7 +65,7 @@ declare namespace mrapi {
       dependencies?: {
         [name: string]: Function | Promise<Function>
       }
-      oasDir?: string
+      // oasDir?: string
       validateApiDoc?: boolean
     }
 
@@ -104,7 +91,8 @@ declare namespace mrapi {
     }
 
     interface ServerOptions {
-      type?: 'standalone' | 'combined'
+      // TODO: 'mesh' | 'with-dal' | 'gateway'
+      type?: ServerType
       host?: string
       port?: number
       endpoint?: {
@@ -129,18 +117,46 @@ declare namespace mrapi {
     interface OpenapiOptions {
       dir?: string
       prefix?: string
+      // TODO: rename
       dalBaseUrl?: string
     }
+
+    // TODO: 'mesh' | 'with-dal' | 'gateway'
+    type ServerType = 'standalone' | 'combined'
   }
 
-  namespace cli {
+  namespace db {
     interface Options {
-      paths?: PathObject & {
-        env?: string
-      }
+      name?: string
+      management?: PathObject
+      tenants?: TenantsOption
+      defaultTenant?: string
+      tenantSchema?: string
+      TenantClient?: any
+      ManagementClient?: any
+      paths?: PathObject
+      initialize?: any
     }
+
+    interface PathObject {
+      name?: string
+      input?: string
+      output?: string
+      database?: string
+      inputSchema?: string
+      outputSchema?: string
+      outputDatabase?: string
+      outputPrismaClient?: string
+    }
+
+    type TenantsOption =
+      | {
+          [name: string]: string
+        }
+      | Array<{ options?: any } & PathObject>
   }
 
+  // Configs for code generation
   namespace generate {
     type Query = 'findOne' | 'findMany' | 'findCount' | 'aggregate'
 
@@ -180,7 +196,7 @@ declare namespace mrapi {
   interface Config {
     dal?: dal.Options
     api?: api.Options
-    cli?: cli.Options
+    db?: db.Options
     generate?: generate.Options
   }
 }

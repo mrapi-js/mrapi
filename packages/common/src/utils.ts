@@ -1,3 +1,5 @@
+import { join, isAbsolute } from 'path'
+
 let nodeModules: string
 export const getNodeModules = (fresh = false): string => {
   if (nodeModules && !fresh) return nodeModules
@@ -56,4 +58,8 @@ export const requireResolve = (path: string): string => {
     result = require.resolve(path)
   } catch {}
   return result
+}
+
+export const ensureAbsolutePath = (path: string, cwd = process.cwd()) => {
+  return isAbsolute(path) ? path : join(cwd, path || '')
 }

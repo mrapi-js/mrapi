@@ -8,7 +8,11 @@
   ],
   "scripts": {
     "clean": "pnpm recursive run clean && rm -rf node_modules",
+<<<<<<< HEAD
     "build": "pnpm run build --filter @mrapi/common && pnpm run build --filter @mrapi/nexus && pnpm run build --filter @mrapi/oas && pnpm run build --filter @mrapi/cli && pnpm run build --filter @mrapi/dal && pnpm run build --filter @mrapi/api",
+=======
+    "build": "pnpm run build --filter @mrapi/common && pnpm run build --filter @mrapi/nexus && pnpm run build --filter @mrapi/oas && pnpm run build --filter @mrapi/cli && pnpm run build --filter @mrapi/db && pnpm run build --filter @mrapi/dal && pnpm run build --filter @mrapi/api",
+>>>>>>> refactor: add @mrapi/db package
     "watch": "pnpm run --parallel watch",
     "publish": "ts-node scripts/publish.ts",
     "publish:dry": "DRY_RUN=true ts-node scripts/publish.ts",
@@ -20,7 +24,8 @@
     "prettier": "pnpm run prettier:packages && pnpm run prettier:scripts && pnpm run prettier:docs",
     "prettier:packages": "prettier --write packages/**/*.ts",
     "prettier:scripts": "prettier --write scripts/**/*.ts",
-    "prettier:docs": "prettier --write README.md"
+    "prettier:docs": "prettier --write README.md",
+    "generate-schema": "pnpm recursive run generate-schema"
   },
   "husky": {
     "hooks": {
