@@ -4,7 +4,10 @@ module.exports = {
       "name": "Blog",
       "handler": {
         "graphql": {
-          "endpoint": "http://localhost:1358/graphql/blog"
+          "endpoint": "http://localhost:1358/graphql/blog",
+          "operationHeaders": {
+            "mrapi-tenant-id": "{context.tenant}"
+          }
         }
       },
       "transforms": [

@@ -25,6 +25,7 @@ module.exports = {
     graphql: {
       dir: '/src/graphql',
     },
+    tenantIdentity: 'mrapi-tenant-id',
     service: {
       sources: [
         {
@@ -34,6 +35,9 @@ module.exports = {
             graphql: {
               // A url to your remote GraphQL endpoint
               endpoint: 'http://localhost:1358/graphql/blog',
+              operationHeaders: {
+                'mrapi-tenant-id': '{context.tenant}',
+              },
             },
           },
           // List of transforms to apply to the current API source, before unifying it with the rest of the sources

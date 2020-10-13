@@ -162,7 +162,7 @@ export default class Server {
         )
 
         if (!dbName || !dal) {
-          return ctx
+          return { ...ctx, tenant }
         }
 
         return {
