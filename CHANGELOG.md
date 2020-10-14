@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.3](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2020-10-14)
+
+
+### Bug Fixes
+
+* include schemas dir in npm package ([c05b158](https://github.com/mrapi-js/mrapi/commit/c05b158948031a74293d57636986bf35c1b66f4a))
+
 ## [2.0.0-alpha.2](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2020-10-14)
 
 
