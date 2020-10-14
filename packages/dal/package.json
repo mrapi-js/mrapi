@@ -12,8 +12,7 @@
   "license": "MIT",
   "files": [
     "lib",
-    "bin",
-    "resource"
+    "schemas"
   ],
   "scripts": {
     "build": "tsc -b .",
