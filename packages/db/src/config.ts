@@ -12,7 +12,7 @@ export const defaultTenantName = 'default'
 
 export const defaultTenantConfig = {
   name: defaultTenantName,
-  database: `${defaultTenantName}.db`,
+  database: `file:./${defaultTenantName}.db`,
 }
 
 const defaultManagementOptions: Partial<mrapi.db.PathObject> = {
@@ -139,7 +139,7 @@ export function resolveTenantsOptions(
     const name = tenant.name || defaultTenantName
     return {
       name,
-      database: resolveDatabasePath(tenant.database, output, name),
+      database: tenant.database,
     }
   }) as mrapi.db.TenantsOption
 }

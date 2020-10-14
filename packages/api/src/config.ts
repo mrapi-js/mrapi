@@ -30,7 +30,7 @@ export const defaultApiOptions: Partial<mrapi.api.Options> = {
   // prisma schema names array
   schemaNames: [],
   // auto run scripts mrapi generate
-  autoGenerate: true,
+  autoGenerate: false,
   // mrapi db choose header key
   schemaIdentity: 'mrapi-schema',
   openapi: {
@@ -118,18 +118,19 @@ export function resolveOptions(
     }
   }
 
-  //  has mesh config
-  if (apiOptions.service) {
-    fs.outputFileSync(
-      apiOptions.meshConfigOuputPath,
-      `module.exports = ${JSON.stringify(apiOptions.service, null, 2)}
-    `,
-    )
-    logger.debug(
-      `[Start] gen config file ${apiOptions.meshConfigOuputPath} done`,
-    )
+  if (!apiOptions.service) {
+    apiOptions.service = {
+      sources: [],
+    }
   }
 
+  //  has mesh config
+  fs.outputFileSync(
+    apiOptions.meshConfigOuputPath,
+    `module.exports = ${JSON.stringify(apiOptions.service, null, 2)}
+    `,
+  )
+  logger.debug(`[Start] gen config file ${apiOptions.meshConfigOuputPath} done`)
   logger.debug('apiConfig: ' + JSON.stringify(apiOptions, null, 2))
 
   return apiOptions
