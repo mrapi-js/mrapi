@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-alpha.2](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2020-10-14)
+
+
+### Bug Fixes
+
+* bugs ([74e0660](https://github.com/mrapi-js/mrapi/commit/74e0660c0c68f1817a9d8a5f138b7d7cb371c1fc))
+
 ## [2.0.0-alpha.1](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2020-10-13)
 
 
