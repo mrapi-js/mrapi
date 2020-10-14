@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/nexus",
-  "version": "2.0.0-alpha.1",
+  "version": "2.0.0-alpha.2",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc -b .",
@@ -12,8 +12,8 @@
     "directory": "lib"
   },
   "dependencies": {
-    "@mrapi/types": "workspace:*",
     "@mrapi/common": "workspace:*",
+    "@mrapi/types": "workspace:*",
     "@nexus/schema": "0.16.0",
     "graphql-scalars": "1.4.0"
   },
