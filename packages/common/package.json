@@ -38,7 +38,8 @@
   ],
   "license": "MIT",
   "files": [
-    "lib"
+    "lib",
+    "schemas"
   ],
   "repository": {
     "type": "git",
