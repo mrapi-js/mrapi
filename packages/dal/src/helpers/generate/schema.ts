@@ -7,8 +7,10 @@ import { defaultDatabaseTypes } from '../../config'
 export default async function generateSchema({
   paths,
   provider,
+  logger,
 }: Partial<mrapi.dal.ServiceOptions> & {
   provider: string
+  logger?: mrapi.Logger
 }) {
   const inputSchemaFileContent = await fs.readFile(paths.inputSchema, 'utf8')
   /// Get file content without comments
@@ -26,9 +28,10 @@ export default async function generateSchema({
       isCustomProvider &&
       (supportProviders.length > 1 || !supportProviders.includes('postgresql'))
     ) {
-      throw new Error(
+      logger.error(
         'If primitive array occurs, provider can only be "postgresql".',
       )
+      process.exit()
     }
     supportProviders = ['postgresql']
   } else {
@@ -41,9 +44,10 @@ export default async function generateSchema({
       )
     ) {
       if (isCustomProvider) {
-        throw new Error(
+        logger.error(
           'If "Json" or "enum" occurs, provider can not be "sqlite".',
         )
+        process.exit()
       }
       supportProviders.splice(index, 1)
     }
@@ -51,9 +55,10 @@ export default async function generateSchema({
 
   // if there is no provider avaliable, throw error.
   if (supportProviders.length <= 0) {
-    throw new Error(
+    logger.error(
       'Datasource provider can not be empty, please check if or not current connector can support this kind of grammer in your schema.',
     )
+    process.exit()
   }
 
   const prismaSchema = createSchemaPrisma(
@@ -145,8 +150,8 @@ datasource db {
 generator client {
   provider        = "prisma-client-js"
   output          = "${output.replace(/\\/gi, '/')}"
-  binaryTargets   = ["native"]
-  previewFeatures = ["transactionApi"]
+  binaryTargets   = [ "native" ]
+  previewFeatures = [ "transactionApi", "connectOrCreate", "atomicNumberOperations" ]
 }
 
 ${content}

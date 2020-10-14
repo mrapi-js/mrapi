@@ -3,10 +3,11 @@ import type { mrapi } from './types'
 import { getLogger } from '@mrapi/common'
 
 import { resolveOptions } from './config'
+import { createDBClientInstance } from './utils'
 import Tenant, { InternalTenantOptions } from './tenant'
-import { createDBClientInstance, checkFunction } from './utils'
 
-export { resolveOptions, Tenant }
+export * from './config'
+export { Tenant }
 
 // persistence version
 export default class Base<PrismaClient> {
@@ -15,8 +16,7 @@ export default class Base<PrismaClient> {
   protected client: PrismaClient | any
   protected defaultTenantName = 'default'
 
-  protected initialize: Function
-  protected initialized: boolean
+  protected migrateFn: Function
   protected TenantClient: PrismaClient
 
   constructor(
@@ -27,7 +27,7 @@ export default class Base<PrismaClient> {
       name: 'mrapi-db',
       ...(options?.logger || {}),
     })
-    this.initialize = options.initialize
+    this.migrateFn = options.migrateFn
     this.TenantClient = options.TenantClient
 
     this.options = resolveOptions(options)
@@ -40,17 +40,6 @@ export default class Base<PrismaClient> {
   }
 
   async init() {
-    if (this.initialized) {
-      return
-    }
-
-    if (!checkFunction(this.initialize, 'initialize')) {
-      return
-    }
-
-    this.logger.debug(`main client initialized`)
-    this.initialized = true
-
     // create all tenants
     for (const { name, database, options: opts } of this.options.tenants as ({
       options: any
@@ -66,13 +55,24 @@ export default class Base<PrismaClient> {
 
   async create(options: InternalTenantOptions) {
     if (this.client) {
+      let count = 0
       // if exist
-      const count = await this.client.count({
-        where: {
-          name: options.name,
-          service: this.options.name,
-        },
-      })
+      try {
+        count = await this.client.count({
+          where: {
+            name: options.name,
+            service: this.options.name,
+          },
+        })
+      } catch (err) {
+        if (err.message.includes('Error querying the database')) {
+          this.logger.error(
+            `Can not connect to database. Forgot to run "mrapi migrate" ?`,
+          )
+          return null
+        }
+        throw err
+      }
       if (count > 0) {
         this.logger.warn(`tenant "${options.name}" already exist`)
       } else {
@@ -95,10 +95,6 @@ export default class Base<PrismaClient> {
     const tenant = this.createCache(options)
 
     this.logger.debug(`tenant "${options.name}" cached`)
-
-    if (!tenant.initialized) {
-      await tenant.init()
-    }
 
     return tenant
   }
@@ -134,6 +130,11 @@ export default class Base<PrismaClient> {
     await tenant.client.$disconnect()
   }
 
+  async migrate(name?: string) {
+    const tenant = this.get(name)
+    await (await tenant).migrate()
+  }
+
   hasTenant(name: string) {
     return this.tenants.has(name)
   }
@@ -164,7 +165,7 @@ export default class Base<PrismaClient> {
   private createCache(options: InternalTenantOptions) {
     const tenant = new Tenant<PrismaClient>(
       options,
-      this.initialize,
+      this.migrateFn,
       this.TenantClient,
       this.logger,
     )

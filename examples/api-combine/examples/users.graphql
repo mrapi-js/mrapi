@@ -1,0 +1,7 @@
+{
+  findManyUser {
+    id
+    name
+    email
+  }
+}

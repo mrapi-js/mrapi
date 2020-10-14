@@ -27,12 +27,12 @@ export async function meshSchema(
     })
     logger.info(`meshConfig: ${JSON.stringify(meshConfig, null, 2)}`)
   } catch (err) {
-    logger.warn(err)
+    throw new Error(`findAndParse mesh config error => ${err}`)
   }
   try {
-    const { schema, execute: executeFn } = await getMesh(meshConfig)
+    const { schema: schemaMesh, execute: executeFn } = await getMesh(meshConfig)
     execute = executeFn
-    subschemas.push({ schema })
+    subschemas.push({ schema: schemaMesh })
   } catch (err) {
     logger.error(err)
   }
@@ -50,7 +50,7 @@ export async function meshSchema(
 }
 
 export const generateSchema = (schemaName: string) =>
-  runShell(`npx mrapi generate --name ${schemaName}`)
+  runShell(`npx mrapi generate --services ${schemaName}`)
 
 export const generateSchemas = (schemaNames: string[]) =>
   Promise.all(schemaNames.map((name: string) => generateSchema(name)))

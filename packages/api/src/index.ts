@@ -24,21 +24,15 @@ export default class API {
     this.server = new Server(this.options, this.logger)
   }
 
-  private combinedWithDAL(): GraphQLSchema[] {
-    const { options } = this
-    // get dal instance
+  private async combinedWithDAL(): Promise<GraphQLSchema[]> {
     let DAL
     try {
       DAL = require('@mrapi/dal').default
     } catch (err) {
       throw new Error('please install "@mrapi/dal" manually')
     }
-    const dal = new DAL(options.schemaNames.map((s) => ({ name: s })))
-    this.dal = dal
-    // add all schemas
-    // TODO: use @marpi/dal's new getSchemas()
-    options.schemaNames.forEach((name) => dal.addSchema(name))
-    const schemas = options.schemaNames.map((name) => dal.getSchema(name))
+    this.dal = new DAL()
+    const schemas = await this.dal.getSchemas()
     this.logger.info('[Start] get dal prisma/schema done')
     return schemas
   }
@@ -53,7 +47,13 @@ export default class API {
   private async startCombined() {
     if (this.options.autoGenerate)
       await generateSchemas(this.options.schemaNames)
-    const schemas = this.combinedWithDAL()
+
+    const schemas = await this.combinedWithDAL()
+
+    if (!Array.isArray(schemas)) {
+      return
+    }
+
     const { schema } = await meshSchema(this.options, schemas, this.logger)
     await this.server.loadGraphql(schema, undefined, this.dal)
     await this.server.loadOpenapi(this.dal)

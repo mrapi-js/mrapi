@@ -1,2 +1,1 @@
-export * from "./serv-time";
-export * from "./serv-time2";
+export * from './server-time'

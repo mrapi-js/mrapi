@@ -46,7 +46,7 @@ export default class Service {
     const TenantClient: PrismaClient = getPrismaClient(prismaClientPath)
 
     let ManagementClient: PrismaClient
-    if (this.options.db?.management) {
+    if (typeof this.options.db !== 'string' && this.options.db?.management) {
       const prismaManagementClientPath = this.options.db.management
         .outputPrismaClient
       if (
@@ -86,10 +86,12 @@ export default class Service {
   ) {
     this.db = new DB<PrismaClient>(
       {
-        ...this.options.db,
+        ...(typeof this.options.db === 'string'
+          ? { db: this.options.db }
+          : this.options.db),
         TenantClient,
         ManagementClient,
-        initialize: async ({ database, schema }: DBInitParams) => {
+        migrateFn: async ({ database, schema }: DBInitParams) => {
           await migrateSave({
             schema,
             dbUrl: database,
@@ -155,7 +157,10 @@ export default class Service {
           },
           prettierConfig: require.resolve('../package.json'),
           nonNullDefaults: {
+            // Whether output fields are non-null by default. default: false
             output: true,
+            // Whether input fields (field arguments, input type members) are non-null by default. default: false
+            // input: true,
           },
         },
         schema || {},

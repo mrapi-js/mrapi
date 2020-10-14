@@ -39,7 +39,7 @@ export const runShell = async (
           }
         }
         if (error) reject(error)
-        resolve(stdout)
+        else resolve(stdout)
       },
     )
   })
@@ -67,11 +67,15 @@ export const spawnShell = (
   )
 }
 
-export const runPrisma = async (cmd: string, options?: ExecOptions) => {
+export const runPrisma = async (
+  cmd: string,
+  options?: ExecOptions,
+  logger?: Logger,
+) => {
   const cmdStr =
     'npx prisma ' + (cmd.includes('migrate') ? cmd + ' --experimental' : cmd)
 
-  return runShell(cmdStr, options)
+  return runShell(cmdStr, options, logger)
 }
 
 export const useYarn = async (): Promise<boolean> => {

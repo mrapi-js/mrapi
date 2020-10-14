@@ -10,6 +10,7 @@ export default async function generateGraphql({
   paths,
   options,
   generateOptions,
+  logger,
 }: {
   paths: mrapi.dal.ServicePaths
   options: {
@@ -19,6 +20,7 @@ export default async function generateGraphql({
     eqm?: string
   }
   generateOptions?: mrapi.generate.Options
+  logger?: mrapi.Logger
 }) {
   const nexusParams: mrapi.generate.Options = merge(generateOptions || {}, {
     schema: paths.outputPrismaClient,
@@ -53,7 +55,7 @@ export default async function generateGraphql({
     ) as mrapi.generate.QueriesAndMutations[]
   }
 
-  const nexusGenerate = new NexusGenerate(nexusParams)
+  const nexusGenerate = new NexusGenerate(nexusParams, logger)
   await nexusGenerate.run()
 
   return { nexusParams }

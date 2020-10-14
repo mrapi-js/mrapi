@@ -13,12 +13,10 @@ export default `
     skip: 'Int',
     take: 'Int',
   },
-  resolve(_parent, args, {prisma, select}) {
-    return prisma.#{model}.findMany({
-      ...args,
-      ...select,
-    })
-  },
+  resolve: (_parent, args, {prisma, select}) => prisma.#{model}.findMany({
+    ...args,
+    ...select,
+  }),
 });
 #{exportJs}
-`;
+`

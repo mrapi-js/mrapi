@@ -9,7 +9,9 @@ type Query {
   findFirstPost(where: PostWhereInput, orderBy: [PostOrderByInput], cursor: PostWhereUniqueInput, distinct: PostDistinctFieldEnum, skip: Int, take: Int): Post
   findManyPostCount(where: PostWhereInput, orderBy: [PostOrderByInput], cursor: PostWhereUniqueInput, distinct: PostDistinctFieldEnum, skip: Int, take: Int): Int!
   aggregatePost(where: PostWhereInput, orderBy: [PostOrderByInput], cursor: PostWhereUniqueInput, distinct: PostDistinctFieldEnum, skip: Int, take: Int): AggregatePost
-  serverTime(type: String): ServerTimeOutputType
+
+  """get server time"""
+  serverTime(type: String): String
 }
 
 type Mutation {
@@ -484,9 +486,4 @@ type PostMinAggregateOutputType {
 type PostMaxAggregateOutputType {
   id: Int!
   userId: Int!
-}
-
-type ServerTimeOutputType {
-  """current server time"""
-  time: String!
 }

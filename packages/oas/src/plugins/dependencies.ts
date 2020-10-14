@@ -64,7 +64,7 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       }
     },
 
-    // // TODO: delete -> /api/users
+    // TODO: delete -> /api/users
     // deleteMany: async (
     //   req: any,
     //   _res: any,

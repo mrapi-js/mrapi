@@ -10,12 +10,10 @@ export default `
       nullable: false,
     }),
   },
-  resolve(_parent, { where }, { prisma, select }) {
-    return prisma.#{model}.findOne({
-      where,
-      ...select,
-    })
-  },
+  resolve: (_parent, { where }, { prisma, select }) => prisma.#{model}.findOne({
+    where,
+    ...select,
+  }),
 });
 #{exportJs}
-`;
+`

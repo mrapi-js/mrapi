@@ -9,10 +9,8 @@
     "prod": "cross-env NODE_ENV=production node dist/app",
     "build": "tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "gen": "npx mrapi generate --schema=\"prisma/two.prisma\" --outDir=\"dist/types/two\"",
-    "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
-    "generate:prisma": "prisma generate",
-    "generate:nexus": "ts-node-dev --transpile-only src/nexus-schema"
+    "generate": "npx mrapi generate --services blog",
+    "migrate": "npx mrapi migrate --services blog"
   },
   "author": "",
   "license": "ISC",
@@ -20,7 +18,7 @@
     "@mrapi/api": "workspace:*",
     "@mrapi/dal": "workspace:*",
     "@mrapi/cli": "workspace:*",
-    "@prisma/cli": "^2.8.1",
+    "@prisma/cli": "^2.9.0",
     "cross-env": "^7.0.2",
     "@nexus/schema": "^0.16.0"
   },

@@ -1,13 +1,23 @@
 import type { mrapi } from '../../types'
 
-import { resolve } from 'path'
-import { fs, resolveConfig, validateConfig, merge } from '@mrapi/common'
+import { dirname, resolve, relative } from 'path'
+import {
+  fs,
+  resolveConfig,
+  validateConfig,
+  merge,
+  getLogger,
+} from '@mrapi/common'
 
 import DAL from '../..'
 import generateSchema from './schema'
 import generatePrisma from './prisma'
 import generateGraphql from './graphql'
 import generateOpenapi from './openapi'
+
+const logger = getLogger(null, {
+  name: 'mrapi-generate',
+})
 
 const defaultGenerateOptions: Partial<mrapi.generate.Options> = {
   javascript: true,
@@ -44,19 +54,23 @@ export async function generate({
   const dal = new DAL()
   const dalOptions = dal.options
 
+  const logPrefix = `[${name}] `
   let isManagement = name === 'management'
   let paths
   if (isManagement) {
     paths = dalOptions.management
-  } else {
+  } else if (dalOptions.services) {
     // validate service name
-    const service = dalOptions.services.find(
+    const service = dalOptions.services?.find(
       (service: mrapi.dal.ServiceOptions) => service.name === name,
     )
     if (!service) {
-      throw new Error(`Service "${name}" is not configured in "dal".`)
+      logger.error(`Service "${name}" is not configured in "dal".`)
+      process.exit()
     }
     paths = service.paths
+  } else {
+    paths = dalOptions.paths
   }
 
   // clean
@@ -67,11 +81,24 @@ export async function generate({
   await generateSchema({
     paths,
     provider,
+    logger,
   })
+  logger.info(
+    `${logPrefix}prisma schema generate at: ${relative(
+      process.cwd(),
+      paths.outputSchema,
+    )}`,
+  )
 
   await generatePrisma({
     paths,
+    logger,
   })
+  logger.info(
+    `${logPrefix}prisma client generate at: ${dirname(
+      relative(process.cwd(), paths.outputSchema),
+    )}`,
+  )
 
   if (isManagement) {
     return
@@ -82,7 +109,20 @@ export async function generate({
     paths,
     options,
     generateOptions: merge(defaultGenerateOptions || {}, generate || {}),
+    logger,
   })
+  logger.info(
+    `${logPrefix}graphql generate at: ${relative(
+      process.cwd(),
+      paths.outputGraphql,
+    )}`,
+  )
 
-  await generateOpenapi({ paths, nexusParams })
+  await generateOpenapi({ paths, nexusParams, logger })
+  logger.info(
+    `${logPrefix}openapi generate at: ${relative(
+      process.cwd(),
+      paths.outputOpenapi,
+    )}`,
+  )
 }

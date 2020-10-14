@@ -1,10 +1,8 @@
-import type { FastifyError } from 'fastify'
 import type { MercuriusOptions } from 'mercurius'
 import type { mrapi, GraphQLSchema, ExecuteMeshFn } from './types'
 
 import path from 'path'
 import fastify from 'fastify'
-import { GraphQLError } from 'graphql'
 import { getLogger } from '@mrapi/common'
 
 export default class Server {
@@ -43,6 +41,7 @@ export default class Server {
           reply,
           prisma,
         }
+        // TODO: openapi
         // 访问的租户
         const tenant = request.headers[this.options.tenantIdentity]
         // 访问的DB
@@ -136,11 +135,6 @@ export default class Server {
     }
 
     const mercuriusOptions: MercuriusOptions = {
-      schema,
-      routes: true,
-      path: `${this.options.graphql.path}/:name`,
-      // graphiql: '',
-      ide: this.options.graphql.playground,
       context: async (
         request: mrapi.api.Request,
         reply: mrapi.api.Response,
@@ -169,26 +163,12 @@ export default class Server {
           ...ctx,
           tenant,
           dbName,
-          prisma: await dal.getPrisma(dbName, tenant),
+          prisma: await dal.getDBClient(dbName, tenant),
         }
       },
-      errorHandler: (
-        error: FastifyError,
-        request: mrapi.api.Request,
-        reply: mrapi.api.Response,
-      ) => {
-        // TODO
-        // this.log.error(err)
-        // log.info({ reply, error })
-
-        this.logger.error(error)
-        return {
-          errors: [new GraphQLError(error.message)],
-          // TS_SPECIFIC: TData. Motivation: https://github.com/graphql/graphql-js/pull/2490#issuecomment-639154229
-          data: null,
-          extensions: [],
-        }
-      },
+      ...this.options.graphql,
+      path: `${this.options.graphql.path}/:name`,
+      schema,
     }
     await this.app.register(require('mercurius'), mercuriusOptions)
 

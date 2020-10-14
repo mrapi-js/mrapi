@@ -14,13 +14,11 @@ export default `
       nullable: false,
     }),
   },
-  resolve(_parent, { data, where }, { prisma, select }) {
-    return prisma.#{model}.update({
-      where,
-      data,
-      ...select,
-    })
-  },
+  resolve: (_parent, { data, where }, { prisma, select }) => prisma.#{model}.update({
+    where,
+    data,
+    ...select,
+  }),
 });
 #{exportJs}
-`;
+`

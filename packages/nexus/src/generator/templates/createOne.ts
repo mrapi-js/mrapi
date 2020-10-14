@@ -10,12 +10,10 @@ export default `
       nullable: false,
     }),
   },
-  resolve(_parent, { data }, { prisma, select }) {
-    return prisma.#{model}.create({
-      data,
-      ...select,
-    })
-  },
+  resolve: (_parent, { data }, { prisma, select }) => prisma.#{model}.create({
+    data,
+    ...select,
+  }),
 });
 #{exportJs}
-`;
+`

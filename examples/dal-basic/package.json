@@ -8,8 +8,8 @@
     "prod": "cross-env NODE_ENV=production node dist/src/app",
     "build": "rm -rf dist && npm run generate && tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "generate": "npx mrapi generate --services blog",
-    "migrate": "npx mrapi migrate --services blog",
+    "generate": "npx mrapi generate --services default",
+    "migrate": "npx mrapi migrate --services default",
     "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts",
     "gen1-eqm": "npx mrapi generate --name one --eqm findOne,createOne --em Post"
   },
@@ -19,8 +19,7 @@
     "@mrapi/dal": "workspace:*",
     "@mrapi/cli": "workspace:*",
     "cross-env": "^7.0.2",
-    "@prisma/cli": "^2.8.1",
-    "prisma-multi-tenant": "2.3.1",
+    "@prisma/cli": "^2.9.0",
     "@nexus/schema": "0.16.0"
   },
   "devDependencies": {

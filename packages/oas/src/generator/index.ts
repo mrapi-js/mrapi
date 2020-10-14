@@ -1,7 +1,7 @@
-import chalk from 'chalk'
-import { join } from 'path'
+import type { mrapi } from '@mrapi/common'
 
-import { Generators, writeFileSync, formation } from '@mrapi/common'
+import { join } from 'path'
+import { Generators, writeFileSync, formation, getLogger } from '@mrapi/common'
 import { modelTmpFn, modelsTmpFn, getCrud } from './templates'
 
 interface IObjType {
@@ -57,6 +57,16 @@ function dealModels(models: any[]) {
 }
 
 export class OasGenerator extends Generators {
+  constructor(
+    options: Partial<mrapi.generate.Options>,
+    protected logger: mrapi.Logger,
+  ) {
+    super(options)
+    this.logger = getLogger(logger, {
+      name: 'mrapi-oas',
+    })
+  }
+
   private outputFile(content: string, outputPath: string) {
     writeFileSync(outputPath, formation(content))
   }
@@ -250,7 +260,5 @@ export class OasGenerator extends Generators {
 
   async run() {
     await this.genDefinitions()
-
-    console.log(chalk.green('\n✅  GenerateOAS run successful.\n'))
   }
 }

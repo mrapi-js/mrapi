@@ -69,7 +69,7 @@ export class GenerateNexus extends Generators {
   nonNullDefaults: {
     output: true
   },
-  definition(t) {
+  definition (t) {
     `
       model.fields.forEach((field: any) => {
         if (!this.excludeFields(model.name).includes(field.name)) {
@@ -208,10 +208,13 @@ export class GenerateNexus extends Generators {
     let toString = JSON.stringify(options)
     if (field.outputType.kind === 'object') {
       toString = toString.slice(0, -1)
-      toString += `, resolve(parent${this.isJS ? '' : ': any'}) {
-      return parent['${field.name}']
-    },
-    }`
+      // https://github.com/graphql-nexus/schema/releases/tag/v0.16.0
+      // list should be non-nullable
+      // L195: { nullable: false, list: [true] }
+      toString += `, resolve: parent${this.isJS ? '' : ': any'} => parent['${
+        field.name
+      }'] || ${field.outputType.isList ? '[]' : 'null'}
+    },`
     }
     return ', ' + toString
   }

@@ -18,12 +18,10 @@ export default `
       nullable: false,
     }),
   },
-  resolve(_parent, args, { prisma, select }) {
-    return prisma.#{model}.upsert({
-      ...args,
-      ...select,
-    })
-  },
+  resolve: (_parent, args, { prisma, select }) => prisma.#{model}.upsert({
+    ...args,
+    ...select,
+  }),
 });
 #{exportJs}
-`;
+`

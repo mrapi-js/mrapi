@@ -31,4 +31,5 @@ const Query = queryType({
 
 export const serverTimeSchema = makeSchema({
   types: [ServerTimeOutputType, Query],
+  outputs: false,
 })

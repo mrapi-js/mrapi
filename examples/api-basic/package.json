@@ -8,10 +8,7 @@
     "debug": "cross-env ts-node-dev --inspect --respawn --transpile-only --ignore-watch /.meshrc.js ./src/app.ts",
     "prod": "cross-env NODE_ENV=production node dist/app",
     "build": "tsc",
-    "clean": "rm -rf dist && rm -rf node_modules && rm -rf logs",
-    "generate": "npm -s run generate:prisma && npm -s run generate:nexus",
-    "generate:prisma": "prisma generate",
-    "generate:nexus": "ts-node-dev --transpile-only src/nexus-schema"
+    "clean": "rm -rf dist && rm -rf node_modules && rm -rf logs"
   },
   "author": "",
   "license": "ISC",

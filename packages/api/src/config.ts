@@ -44,8 +44,9 @@ export const defaultApiOptions: Partial<mrapi.api.Options> = {
     dir: '',
     // graphql api prefix
     path: '/graphql',
-    // graphql playground
-    playground: 'playground',
+    routes: true,
+    graphiql: 'playground',
+    ide: true,
   },
   logger: defaultLoggerOptions,
   server: defaultServerOptions,
@@ -104,7 +105,6 @@ export function resolveOptions(
   const apiConfig = merge(defaultApiOptions, config.api || {})
   const apiOptions: mrapi.api.Options = merge(apiConfig, options || {})
 
-  // TODO: verify options
   optionsVerify(apiOptions)
 
   // replace custome dir in production env
@@ -125,12 +125,12 @@ export function resolveOptions(
       `module.exports = ${JSON.stringify(apiOptions.service, null, 2)}
     `,
     )
-    logger.info(
+    logger.debug(
       `[Start] gen config file ${apiOptions.meshConfigOuputPath} done`,
     )
   }
 
-  logger.info('\napiConfig: ' + JSON.stringify(apiOptions, null, 2))
+  logger.debug('apiConfig: ' + JSON.stringify(apiOptions, null, 2))
 
   return apiOptions
 }

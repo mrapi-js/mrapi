@@ -12,10 +12,9 @@
     "directory": "lib"
   },
   "dependencies": {
-    "@mrapi/common": "workspace:*",
     "@mrapi/types": "workspace:*",
+    "@mrapi/common": "workspace:*",
     "@nexus/schema": "0.16.0",
-    "chalk": "^4.1.0",
     "graphql-scalars": "1.4.0"
   },
   "devDependencies": {

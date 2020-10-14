@@ -3,6 +3,7 @@ import type { mrapi } from './types'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import { join, resolve } from 'path'
+import { resolveOptions as resolveDbOptions } from '@mrapi/db'
 import {
   validateConfig,
   resolveConfig,
@@ -10,13 +11,14 @@ import {
   merge,
 } from '@mrapi/common'
 
-const defaults = {
+export const defaults = {
   graphql: 'graphql',
   openapi: 'openapi',
   prisma: 'prisma',
   management: 'management',
   schema: 'schema.prisma',
   managementSchema: 'management.prisma',
+  serviceName: 'default',
   db: 'db',
 }
 
@@ -121,8 +123,8 @@ export function resolveOptions(options?: mrapi.dal.Options): mrapi.dal.Options {
   // services
   dalOptions['services'] = (dalOptions?.services || []).map(
     (serviceOptions: mrapi.dal.ServiceOptions): mrapi.dal.ServiceOptions => {
+      serviceOptions.name = serviceOptions.name || defaults.serviceName
       serviceOptions.paths = serviceOptions.paths || {}
-
       serviceOptions.paths['input'] = ensureAbsolutePath(
         serviceOptions.paths?.input || dalOptions.paths.input,
       )
@@ -132,20 +134,30 @@ export function resolveOptions(options?: mrapi.dal.Options): mrapi.dal.Options {
         ),
       )
 
-      resolveServicePaths(serviceOptions)
+      resolveServicePaths(
+        serviceOptions as mrapi.dal.ServiceOptions & {
+          name?: string
+          db?: string
+        },
+      )
 
-      serviceOptions.db.name = serviceOptions.name
-      serviceOptions.db['management'] =
-        serviceOptions.db?.management || dalOptions.management
-      serviceOptions.db['paths'] = serviceOptions.db['paths'] || {}
-      serviceOptions.db.paths['output'] =
-        serviceOptions.db.paths['output'] || serviceOptions.paths.output
-      serviceOptions.db['tenantSchema'] = serviceOptions.paths.outputSchema
+      if (typeof serviceOptions.db !== 'string') {
+        // sync paths to db config
+        serviceOptions.db.paths = {
+          ...(serviceOptions.db.paths || {}),
+          ...serviceOptions.paths,
+        }
+      }
+
+      const dbOptions = resolveDbOptions(serviceOptions.db)
+      dbOptions.name = serviceOptions.name
+      dbOptions['management'] = dbOptions.management || dalOptions.management
+      dbOptions['tenantSchema'] = serviceOptions.paths.outputSchema
 
       return {
         ...defaultServiceOptions,
         ...serviceOptions,
-        name: serviceOptions.name,
+        db: dbOptions,
         graphql: {
           ...defaultGraphqlOptions,
           ...(serviceOptions.graphql || {}),
@@ -198,7 +210,9 @@ function resolvePaths(obj: any, paths: any, name?: string) {
   return obj
 }
 
-function resolveServicePaths(opts: mrapi.dal.ServiceOptions) {
+function resolveServicePaths(
+  opts: mrapi.dal.ServiceOptions & { name?: string; db?: string },
+) {
   opts.paths = resolvePaths(
     opts.paths,
     { input: opts.paths.input, output: opts.paths.output },
@@ -214,4 +228,6 @@ function resolveServicePaths(opts: mrapi.dal.ServiceOptions) {
     opts.paths.outputOpenapi || defaults.openapi,
     opts.paths.output,
   )
+
+  return opts
 }

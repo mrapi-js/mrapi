@@ -9,6 +9,7 @@ import { dependenciesPlugins } from '@mrapi/oas'
 import { fs, requireResolve } from '@mrapi/common'
 import { initialize as initializeOpenAPI } from 'express-openapi'
 
+import { defaults } from './config'
 import { loggingMiddleware } from './middleware/logging'
 
 type GetPrismaType = (
@@ -165,9 +166,10 @@ export default class Server {
       return
     }
 
-    const endpoint = this.options.endpoint.graphql
+    const endpoint = this.resolveServicePath(name, 'graphql')
+
     this.app.use(
-      `/${endpoint}/${name}`,
+      endpoint,
       graphqlHTTP(async (req, _res, _params) => {
         const createContext = async () => {
           const tenantName: any = await this.getTenantIdentity(
@@ -187,7 +189,7 @@ export default class Server {
     )
 
     this.logger.info(
-      `⭐️ [${name}] GraphQL service: ${this.getUri()}/${endpoint}/${name}`,
+      `⭐️ [${name}] GraphQL service:  ${this.getUri()}${endpoint}`,
     )
   }
 
@@ -209,8 +211,7 @@ export default class Server {
       process.exit(1)
     }
 
-    const endpoint = this.options.endpoint.openapi
-    const basePath = `/${endpoint}/${name}`
+    const endpoint = this.resolveServicePath(name, 'openapi')
     const definitions = require(definitionsPath) || {}
     const getPrisma = async (req: any) => {
       // TODO: more params
@@ -227,7 +228,7 @@ export default class Server {
           : openapiOptions.validateApiDoc,
       apiDoc: {
         swagger: '2.0',
-        basePath,
+        basePath: endpoint,
         info: {
           title: `[${name}] Started openAPI.`,
           version: '1.0.0',
@@ -249,7 +250,7 @@ export default class Server {
     const apiDoc = openAPIInstance.apiDoc
 
     this.app.use(
-      `${basePath}/swagger`,
+      `${endpoint}/swagger`,
       swaggerUi.serve,
       function swaggerUiSetup(...params: [any, any, any]) {
         swaggerUi.setup(apiDoc)(...params)
@@ -257,10 +258,10 @@ export default class Server {
     )
 
     this.logger.info(
-      `⭐️ [${name}] OpenAPI service: ${this.getUri()}${basePath}`,
+      `⭐️ [${name}] OpenAPI service:  ${this.getUri()}${endpoint}`,
     )
     this.logger.info(
-      `⭐️ [${name}] OpenAPI document: ${this.getUri()}${basePath}/swagger`,
+      `⭐️ [${name}] OpenAPI document: ${this.getUri()}${endpoint}/swagger`,
     )
 
     // generate openapi/docs.json
@@ -280,5 +281,11 @@ export default class Server {
   private readonly getUri = () => {
     const { port, host } = this.options
     return `http://${host}:${port}`
+  }
+
+  private resolveServicePath(name: string, type: 'graphql' | 'openapi') {
+    return `/${this.options.endpoint[type]}${
+      name === defaults.serviceName ? '' : `/${name}`
+    }`
   }
 }

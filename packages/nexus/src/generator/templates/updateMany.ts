@@ -13,9 +13,7 @@ export default `
       nullable: false,
     }),
   },
-  resolve(_parent, args, { prisma }) {
-    return prisma.#{model}.updateMany(args#{as})
-  },
+  resolve: (_parent, args, { prisma }) => prisma.#{model}.updateMany(args#{as}),
 });
 #{exportJs}
-`;
+`

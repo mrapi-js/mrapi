@@ -49,13 +49,6 @@ export function resolveConfig(
     } catch {}
   }
 
-  // TODO: remove on next version
-  if (!configPath) {
-    try {
-      configPath = requireResolve(join(cwd, 'config/mrapi.config'))
-    } catch {}
-  }
-
   if (!configPath) {
     logger.error('Can not find mrapi config file.')
     process.exit(1)
@@ -81,7 +74,7 @@ export function validateConfig(
 
   if (!validate(config)) {
     logger.error(
-      `Mrapi Configuration is not valid:\n${ajv.errorsText(validate.errors, {
+      `Mrapi Configuration is invalid:\n${ajv.errorsText(validate.errors, {
         separator: '\n',
         dataVar,
       })}`,

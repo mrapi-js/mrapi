@@ -19,6 +19,7 @@ export class Generators {
   protected queries: mrapi.generate.Query[] = [
     'findOne',
     'findMany',
+    'findFirst',
     'findCount',
     'aggregate',
   ]

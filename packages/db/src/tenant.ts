@@ -11,12 +11,11 @@ export interface InternalTenantOptions {
 
 export default class Tenant<PrismaClient> {
   client: PrismaClient | any
-  initialized: boolean
   name: string = 'default'
 
   constructor(
     private options: InternalTenantOptions,
-    private initialize: Function,
+    private migrateFn: Function,
     protected TenantClient: PrismaClient | any,
     protected logger?: mrapi.Logger,
   ) {
@@ -30,18 +29,13 @@ export default class Tenant<PrismaClient> {
     }
   }
 
-  async init() {
-    if (this.initialized) {
+  async migrate() {
+    if (!checkFunction(this.migrateFn, 'migrateFn')) {
       return
     }
 
-    if (!checkFunction(this.initialize, 'initialize')) {
-      return
-    }
-
-    await this.initialize(this.options)
-    this.logger.debug(`tenant client "${this.name}" initialized`)
-    this.initialized = true
+    await this.migrateFn(this.options)
+    this.logger.debug(`tenant "${this.name}" migrated`)
   }
 
   disconnect() {

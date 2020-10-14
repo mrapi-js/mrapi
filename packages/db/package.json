@@ -14,8 +14,8 @@
     "directory": "lib"
   },
   "dependencies": {
-    "@mrapi/common": "workspace:*",
-    "@mrapi/types": "workspace:*"
+    "@mrapi/types": "workspace:*",
+    "@mrapi/common": "workspace:*"
   },
   "devDependencies": {
     "tslib": "^2.0.3",

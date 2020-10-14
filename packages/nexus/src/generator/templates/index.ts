@@ -2,6 +2,7 @@ import type { mrapi } from '@mrapi/common'
 
 import findOne from './findOne'
 import findMany from './findMany'
+import findFirst from './findFirst'
 import findCount from './findCount'
 import createOne from './createOne'
 import updateOne from './updateOne'
@@ -14,6 +15,7 @@ import aggregate from './aggregate'
 const crud: { [key in mrapi.generate.QueriesAndMutations]: string } = {
   findOne,
   findMany,
+  findFirst,
   findCount,
   createOne,
   updateOne,

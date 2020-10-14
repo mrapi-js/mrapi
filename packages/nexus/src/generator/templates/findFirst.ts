@@ -1,8 +1,9 @@
 export default `
 #{import}
 
-#{exportTs}const #{Model}FindCountQuery = queryField('findMany#{Model}Count', {
-  type: 'Int',
+#{exportTs}const #{Model}FindFirstQuery = queryField('findFirst#{Model}', {
+  type: '#{Model}',
+  nullable: true,
   args: {
     where: '#{Model}WhereInput',
     orderBy: arg({ type: '#{Model}OrderByInput', list: true }),
@@ -11,7 +12,10 @@ export default `
     skip: 'Int',
     take: 'Int',
   },
-  resolve: (_parent, args, {prisma}) => prisma.#{model}.count(args#{as}),
+  resolve: (_parent, args, {prisma, select}) => prisma.#{model}.findFirst({
+    ...args,
+    ...select,
+  }),
 });
 #{exportJs}
 `

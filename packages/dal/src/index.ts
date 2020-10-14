@@ -99,11 +99,10 @@ export default class DAL {
       `getDBClient => serviceName: ${serviceName}, tenantName: ${tenantName}`,
     )
     const service = this.services.get(serviceName)
+    if (!service) {
+      throw new Error(`service "${serviceName}" not found`)
+    }
     return service.getTenantClient(tenantName).catch((err: Error) => {
-      // In the event of a multi-tenant exception, the document connection is guaranteed to be properly accessed.
-      // if (this.options.throwOriginalError) {
-      //   throw err
-      // }`
       this.logger.error(err)
       const message = `Check to see if a multi-tenant identity  has been added to the "Request Headers".`
       this.logger.error(`Tips: ${message}`)
