@@ -96,7 +96,7 @@ model Post {
 First compile the dependency file
 
 ```terminal
-npx mrapi generate --name one
+npx mrapi generate --services one
 ```
 
 Run in developer environment

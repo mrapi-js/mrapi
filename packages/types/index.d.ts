@@ -8,8 +8,7 @@ declare namespace mrapi {
       server?: ServerOptions
       services?: ServiceOptions[]
       management?: PathObject
-      // throw multi-tenant original errors or not
-      throwOriginalError?: boolean
+      name?: string
     }
 
     interface PathObject {
@@ -21,16 +20,17 @@ declare namespace mrapi {
       outputSchema?: string
       outputDatabase?: string
       outputPrismaClient?: string
+      [key: string]: string
     }
 
     interface ServiceOptions {
-      name: string
+      name?: string
+      // db config
+      db?: any // db.Options | string
       // GraphQL service options
       graphql?: GraphqlOptions
       // OpenAPI service options
       openapi?: OpenapiOptions
-      // multi-tenants config
-      db?: db.Options
       paths?: ServicePaths
     }
 
@@ -110,8 +110,7 @@ declare namespace mrapi {
 
     interface GraphqlOptions {
       dir?: string
-      path?: string
-      playground?: string | boolean
+      [key: string]: any
     }
 
     interface OpenapiOptions {
@@ -135,7 +134,7 @@ declare namespace mrapi {
       TenantClient?: any
       ManagementClient?: any
       paths?: PathObject
-      initialize?: any
+      migrateFn?: Function | AsyncFunction
     }
 
     interface PathObject {
@@ -147,18 +146,20 @@ declare namespace mrapi {
       outputSchema?: string
       outputDatabase?: string
       outputPrismaClient?: string
+      [key: string]: string
     }
 
-    type TenantsOption =
-      | {
-          [name: string]: string
-        }
-      | Array<{ options?: any } & PathObject>
+    type TenantsOption = Array<{ options?: any } & PathObject>
   }
 
   // Configs for code generation
   namespace generate {
-    type Query = 'findOne' | 'findMany' | 'findCount' | 'aggregate'
+    type Query =
+      | 'findOne'
+      | 'findMany'
+      | 'findFirst'
+      | 'findCount'
+      | 'aggregate'
 
     type Mutation =
       | 'createOne'
