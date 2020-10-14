@@ -99,7 +99,6 @@ export function resolveTenantsOptions(
   db: null | string | mrapi.db.Options,
 ): mrapi.db.TenantsOption {
   let tenants: mrapi.db.TenantsOption
-  let output = ensureAbsolutePath(defaultDBOptions.paths.output)
 
   if (!db) {
     tenants = [defaultTenantConfig]
@@ -125,12 +124,6 @@ export function resolveTenantsOptions(
     } else {
       throw new Error('DB tenants config invalid.')
     }
-
-    output = ensureAbsolutePath(
-      db.paths.outputDatabase ||
-        db.paths.output ||
-        defaultDBOptions.paths.output,
-    )
   } else {
     tenants = [defaultTenantConfig]
   }
