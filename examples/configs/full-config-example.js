@@ -7,8 +7,39 @@ module.exports = {
       {
         // service name
         name: '',
-        // db connection url or object
-        db: '',
+        // db connection configure object
+
+        db: {
+          /**
+           * single-tenant
+           */
+          tenants: [
+            {
+              name: 'default',
+              database: 'mysql://root:123456@0.0.0.0:3306/test',
+            },
+          ],
+          /**
+           * multi-tenants
+           * If you wanna use a management database to manage tenants,
+           * please configure the "dal.management" section.
+           *
+           * If keep tenant's database value empty, e.g.: tenants: { a: '', b: '' },
+           * then will use sqlite database defaultly.
+           */
+          // tenants: {
+          //   a: 'mysql://root:123456@0.0.0.0:3306/service1-a',
+          //   b: 'mysql://root:123456@0.0.0.0:3306/service1-b',
+          // },
+          // // set the default tenant name
+          // defaultTenant: 'a',
+
+          // options for prisma client
+          prismaOptions: {},
+          // middlewares for prisma client
+          prismaMiddlewares: [],
+        },
+
         // GraphQL service options
         graphql: {
           enable: true,
