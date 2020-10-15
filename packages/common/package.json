@@ -2,11 +2,11 @@
   "name": "@mrapi/common",
   "version": "2.0.0-beta.1",
   "main": "lib/index.js",
-  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
-    "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules"
+    "clean": "npm run clean:lib && rm -rf node_modules",
+    "clean:lib": "rm -rf lib && rm -rf tsconfig.tsbuildinfo"
   },
   "publishConfig": {
     "access": "public",

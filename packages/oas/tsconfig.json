@@ -1,9 +1,10 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./lib",
+    "rootDir": "src",
+    "outDir": "lib",
+    "allowJs": true,
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
-  "include": ["./src/**/*.ts", "./src/**/*.json"]
+  "include": ["typings.d.ts", "src/**/*"]
 }

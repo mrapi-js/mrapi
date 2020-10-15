@@ -1,10 +1,11 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "./src",
-    "outDir": "./lib",
+    "rootDir": "src",
+    "outDir": "lib",
+    "allowJs": true,
     "tsBuildInfoFile": "tsconfig.tsbuildinfo"
   },
-  "references": [{ "path": "../dal" }],
-  "include": ["typings.d.ts", "./src/**/*"]
+  "include": ["typings.d.ts", "src/**/*"],
+  "references": [{ "path": "../dal" }]
 }

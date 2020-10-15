@@ -18,8 +18,9 @@
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
     "prisma": "prisma",
-    "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules",
-    "generate-schema": "node ./scripts/generate-json-schema.js"
+    "clean": "npm run clean:lib && rm -rf node_modules",
+    "clean:lib": "rm -rf lib && rm -rf tsconfig.tsbuildinfo",
+    "generate:schema": "node ./scripts/generate-json-schema.js"
   },
   "dependencies": {
     "@mrapi/common": "workspace:*",

@@ -2,20 +2,20 @@
   "name": "@mrapi/db",
   "version": "2.0.0-beta.1",
   "main": "lib/index.js",
-  "types": "lib/index.d.ts",
   "scripts": {
     "build": "tsc -b .",
     "watch": "tsc --preserveWatchOutput --watch",
-    "clean": "rm -rf lib && rm -rf tsconfig.tsbuildinfo && rm -rf node_modules",
-    "generate-schema": "node ./scripts/generate-json-schema.js"
+    "clean": "npm run clean:lib && rm -rf node_modules",
+    "clean:lib": "rm -rf lib && rm -rf tsconfig.tsbuildinfo",
+    "generate:schema": "node ./scripts/generate-json-schema.js"
   },
   "publishConfig": {
     "access": "public",
     "directory": "lib"
   },
   "dependencies": {
-    "@mrapi/common": "workspace:*",
-    "@mrapi/types": "workspace:*"
+    "@mrapi/types": "workspace:*",
+    "@mrapi/common": "workspace:*"
   },
   "devDependencies": {
     "tslib": "^2.0.3",
