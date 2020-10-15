@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-beta.2](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2020-10-15)
+
+
+### Features
+
+* **dal:** add extensions fiels to graphql result ([3fd06d2](https://github.com/mrapi-js/mrapi/commit/3fd06d27e6f90d6f1702b8d3fda94da879462f13))
+* **db:** add options and middlewares config for prisma client ([43d8728](https://github.com/mrapi-js/mrapi/commit/43d87280f7fe2bcfdfae916f3efcfd309f48aa95))
+
+
+### Bug Fixes
+
+* **nexus:** fix type name error when schema is not following prisma's style guide ([9141512](https://github.com/mrapi-js/mrapi/commit/914151234e84edb60418636762dbeb98c18227b9))
+* **types:** add prismaOptions and prismaMiddlewares types ([333851d](https://github.com/mrapi-js/mrapi/commit/333851d271117370f7f86380c1659a65b51e7160))
+
 ## [2.0.0-beta.1](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.0...v2.0.0-beta.1) (2020-10-14)
 
 
