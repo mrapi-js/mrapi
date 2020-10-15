@@ -9,7 +9,9 @@
     "build": "rm -rf dist && npm run generate && tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
     "generate": "npx mrapi generate --services management blog music",
-    "migrate": "npx mrapi migrate --services management blog music",
+    "migrate": "npm run migrate:management && npm run migrate:services",
+    "migrate:management": "npx mrapi migrate --services management",
+    "migrate:services": "npx mrapi migrate --services blog music",
     "dmmf": "ts-node-dev --respawn --transpile-only ./scripts/dmmf.ts",
     "gen1-eqm": "npx mrapi generate --name one --eqm findOne,createOne --em Post"
   },

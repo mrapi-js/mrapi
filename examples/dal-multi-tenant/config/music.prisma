@@ -1,9 +1,9 @@
 model Album {
   id       Int     @id @default(autoincrement())
   title    String
-  artist   Artist  @relation(fields: [artistId], references: [id])
+  artist   Artist? @relation(fields: [artistId], references: [id])
   tracks   Track[]
-  artistId Int
+  artistId Int?
 }
 
 model Artist {

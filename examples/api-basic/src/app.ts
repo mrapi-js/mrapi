@@ -2,7 +2,7 @@ import Api from '@mrapi/api'
 
 const app = new Api({
   logger: {
-    level: 'debug',
+    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
   },
 })
 

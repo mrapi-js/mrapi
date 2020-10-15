@@ -2,7 +2,7 @@ import DAL from '@mrapi/dal'
 
 const app = new DAL({
   logger: {
-    level: 'info',
+    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
   },
 })
 
