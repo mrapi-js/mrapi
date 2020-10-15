@@ -10,6 +10,21 @@ import { meshSchema, generateSchemas } from './schema'
 export * from './types'
 export { getLogger } from '@mrapi/common'
 
+/**
+ * ## API
+ * create a GraphQL or OpenAPI service
+ *
+ * @example
+ * ```
+ * const app = new DAL()
+ *
+ * // start the API server
+ * app.start().catch((err: Error) => {
+ *   app.logger.error(err)
+ * })
+ * ```
+ *
+ */
 export default class API {
   server: Server
   logger: mrapi.Logger
