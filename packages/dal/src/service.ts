@@ -34,7 +34,8 @@ export default class Service {
   }
 
   async init() {
-    this.logger.debug(`initializing service "${this.name}"`)
+    console.log()
+    this.logger.debug(`initialize service "${this.name}"...`)
 
     const prismaClientPath = this.options?.paths?.outputPrismaClient
     if (!prismaClientPath || !fs.pathExistsSync(prismaClientPath)) {
@@ -61,7 +62,12 @@ export default class Service {
       ManagementClient = getPrismaClient(prismaManagementClientPath)
     }
 
-    await this.initDB(TenantClient, ManagementClient)
+    try {
+      await this.initDB(TenantClient, ManagementClient)
+    } catch (err) {
+      this.logger.error(err)
+      return
+    }
 
     if (this.options.graphql.enable) {
       delete this.options.graphql.enable
@@ -77,33 +83,31 @@ export default class Service {
     } else {
       delete this.options.openapi
     }
-    this.logger.debug(`initializd service "${this.name}"`)
+    this.logger.debug(`initialize service "${this.name}" done!`)
   }
 
   private async initDB(
     TenantClient: PrismaClient,
     ManagementClient: PrismaClient,
   ) {
-    this.db = new DB<PrismaClient>(
-      {
-        ...(typeof this.options.db === 'string'
-          ? { db: this.options.db }
-          : this.options.db),
-        TenantClient,
-        ManagementClient,
-        migrateFn: async ({ database, schema }: DBInitParams) => {
-          await migrateSave({
-            schema,
-            dbUrl: database,
-          })
-          await migrateUp({
-            schema,
-            dbUrl: database,
-          })
-        },
+    const dbOptions = {
+      ...(typeof this.options.db === 'string'
+        ? { db: this.options.db }
+        : this.options.db),
+      TenantClient,
+      ManagementClient,
+      migrateFn: async ({ database, schema }: DBInitParams) => {
+        await migrateSave({
+          schema,
+          dbUrl: database,
+        })
+        await migrateUp({
+          schema,
+          dbUrl: database,
+        })
       },
-      this.logger,
-    )
+    }
+    this.db = new DB<PrismaClient>(dbOptions, this.logger)
     await this.db.init()
   }
 
@@ -117,7 +121,7 @@ export default class Service {
       tenant = await this.db.get(tenantName)
     } catch {}
 
-    return tenant.client
+    return tenant?.client
   }
 
   /**

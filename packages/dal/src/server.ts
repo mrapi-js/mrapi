@@ -2,6 +2,7 @@ import type http from 'http'
 import type { mrapi } from './types'
 
 import { join } from 'path'
+import { GraphQLSchema } from 'graphql'
 import swaggerUi from 'swagger-ui-express'
 import express, { Express } from 'express'
 import { graphqlHTTP } from 'express-graphql'
@@ -167,22 +168,42 @@ export default class Server {
     }
 
     const endpoint = this.resolveServicePath(name, 'graphql')
+    const extensions = ({
+      document,
+      variables,
+      operationName,
+      result,
+      context,
+    }: any) => {
+      if (Array.isArray(result.errors)) {
+        result.errors.map((error: Error) => this.logger.error(error.stack))
+      }
+      return {
+        ...(context.startTime
+          ? { duation: Date.now() - context.startTime }
+          : {}),
+      }
+    }
 
     this.app.use(
       endpoint,
-      graphqlHTTP(async (req, _res, _params) => {
+      graphqlHTTP(async (req, res, params) => {
         const createContext = async () => {
-          const tenantName: any = await this.getTenantIdentity(
-            req,
-            _res,
-            _params,
-          )
-          return { prisma: await this.getPrisma(name, tenantName) }
+          const tenantName: any = await this.getTenantIdentity(req, res, params)
+          return {
+            startTime: Date.now(),
+            prisma: await this.getPrisma(name, tenantName),
+          }
         }
 
         return {
+          // set a default empty schema
+          schema: new GraphQLSchema({
+            query: null,
+          }),
           graphiql: { headerEditorEnabled: true },
           context: await createContext(),
+          extensions,
           ...graphqlOptions,
         }
       }),
@@ -221,7 +242,7 @@ export default class Server {
     const opts = {
       ...openapiOptions.docs,
       app: this.app,
-      logger: this.logger,
+      // logger: this.logger,
       validateApiDoc:
         typeof openapiOptions.validateApiDoc === 'undefined'
           ? true
@@ -272,6 +293,11 @@ export default class Server {
   }
 
   private async applyMiddlewares() {
+    this.app.use(function (err: any, req: any, res: any, next: any) {
+      console.error(err.stack)
+      res.status(500).send('Something broke!')
+    })
+
     for (const { fn, options } of this.options.middlewares) {
       const middleware = fn(options, this)
       this.app.use(middleware)

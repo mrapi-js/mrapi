@@ -1,6 +1,7 @@
 import type { mrapi } from '@mrapi/common'
-import type { PrismaClient } from '@prisma/client'
+import type { GraphQLSchema } from 'graphql'
 import type { OptionsData } from 'express-graphql'
+import type { PrismaClient } from '@prisma/client'
 import type { ExpressOpenAPIArgs } from 'express-openapi'
 
 declare module '@mrapi/types' {
@@ -9,7 +10,10 @@ declare module '@mrapi/types' {
       logger?: mrapi.LoggerOptions // from @mrapi/common
     }
 
-    interface GraphqlOptions extends OptionsData {}
+    interface GraphqlOptions extends OptionsData {
+      // make schema optional
+      schema?: GraphQLSchema
+    }
 
     interface OpenapiOptions {
       docs?: ExpressOpenAPIArgs & {

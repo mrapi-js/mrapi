@@ -10,6 +10,22 @@ export * from './types'
 
 export * from './helpers'
 
+/**
+ * ## DAL
+ * Data Access Layer Applacation
+ *
+ * @example
+ * ```
+ * const app = new DAL()
+ *
+ * // start the dal server
+ * app.start().catch((error: Error) => {
+ *   app.logger.error(error)
+ * })
+ * ```
+ *
+ *
+ */
 export default class DAL {
   public server: Server
   private readonly services: Map<string, Service> = new Map()
@@ -81,13 +97,17 @@ export default class DAL {
 
   async addServices(options?: mrapi.dal.ServiceOptions[]) {
     const opts = options || this.options.services
+    const services: Service[] = []
     if (!Array.isArray(opts)) {
-      return []
+      return services
     }
 
-    const promises = opts.map(async (opt) => await this.addService(opt))
+    for (const opt of opts) {
+      const service = await this.addService(opt)
+      services.push(service)
+    }
 
-    return Promise.all(promises)
+    return services
   }
 
   /**

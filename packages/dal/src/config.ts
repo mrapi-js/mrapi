@@ -145,8 +145,8 @@ export function resolveOptions(options?: mrapi.dal.Options): mrapi.dal.Options {
         // sync paths to db config
         serviceOptions.db = serviceOptions.db || {}
         serviceOptions.db.paths = {
-          ...(serviceOptions.db?.paths || {}),
           ...serviceOptions.paths,
+          ...(serviceOptions.db?.paths || {}),
         }
       }
 
