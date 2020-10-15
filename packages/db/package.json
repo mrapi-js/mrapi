@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/db",
-  "version": "2.0.0-beta.1",
+  "version": "2.0.0-beta.2",
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc -b .",
@@ -14,8 +14,8 @@
     "directory": "lib"
   },
   "dependencies": {
-    "@mrapi/types": "workspace:*",
-    "@mrapi/common": "workspace:*"
+    "@mrapi/common": "workspace:*",
+    "@mrapi/types": "workspace:*"
   },
   "devDependencies": {
     "tslib": "^2.0.3",
