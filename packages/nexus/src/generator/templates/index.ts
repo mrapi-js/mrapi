@@ -42,12 +42,14 @@ export function getCrud(
       ? `const ${content} = require('${path}')`
       : `import ${content} from '${path}'`
   }
+  const modelUpper = caplital(model)
   const modelLower = model.charAt(0).toLowerCase() + model.slice(1)
   const importString = getImport(
     `{ ${type === 'query' ? 'queryField' : 'mutationField'}, arg }`,
     '@nexus/schema',
   )
   return crud[key]
+    .replace(/#{UpperModel}/g, modelUpper)
     .replace(/#{Model}/g, model)
     .replace(/#{model}/g, modelLower)
     .replace(/#{import}/g, importString)

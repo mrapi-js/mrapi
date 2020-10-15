@@ -9,7 +9,7 @@ export default `
     where: '#{Model}WhereInput',
     orderBy: arg({ type: '#{Model}OrderByInput', list: true }),
     cursor: '#{Model}WhereUniqueInput',
-    distinct: '#{Model}DistinctFieldEnum',
+    distinct: '#{UpperModel}DistinctFieldEnum',
     skip: 'Int',
     take: 'Int',
   },
