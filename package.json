@@ -8,7 +8,8 @@
   ],
   "scripts": {
     "clean": "pnpm recursive run clean && rm -rf node_modules",
-    "build": "pnpm run build --filter @mrapi/common && pnpm run build --filter @mrapi/nexus && pnpm run build --filter @mrapi/oas && pnpm run build --filter @mrapi/cli && pnpm run build --filter @mrapi/db && pnpm run build --filter @mrapi/dal && pnpm run build --filter @mrapi/api",
+    "clean:lib": "pnpm recursive run clean:lib",
+    "build": "pnpm recursive run clean:lib && pnpm run build --filter @mrapi/common && pnpm run build --filter @mrapi/db && pnpm run build --filter @mrapi/nexus && pnpm run build --filter @mrapi/oas && pnpm run build --filter @mrapi/cli && pnpm run build --filter @mrapi/dal && pnpm run build --filter @mrapi/api",
     "watch": "pnpm run --parallel watch",
     "publish": "ts-node scripts/publish.ts",
     "publish:dry": "DRY_RUN=true ts-node scripts/publish.ts",
