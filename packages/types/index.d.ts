@@ -1,3 +1,6 @@
+// eslint-disable-next-line
+/// <reference types="node" />
+
 import type { IncomingMessage, ServerResponse } from 'http'
 
 // types for mrapi config
@@ -135,6 +138,10 @@ declare namespace mrapi {
       ManagementClient?: any
       paths?: PathObject
       migrateFn?: Function | AsyncFunction
+      // prisma client options
+      prismaOptions?: PrismaOptions
+      // prisma middlewares
+      prismaMiddlewares?: PrismaMiddlewares
     }
 
     interface PathObject {
@@ -150,6 +157,13 @@ declare namespace mrapi {
     }
 
     type TenantsOption = Array<{ options?: any } & PathObject>
+
+    interface PrismaOptions {
+      errorFormat?: 'pretty' | 'colorless' | 'minimal'
+      log?: any
+    }
+
+    type PrismaMiddlewares = AsyncFunction[]
   }
 
   // Configs for code generation
