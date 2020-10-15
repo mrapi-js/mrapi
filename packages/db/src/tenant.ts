@@ -7,6 +7,8 @@ export interface InternalTenantOptions {
   database: string
   schema: string
   options?: any
+  prismaOptions?: mrapi.db.PrismaOptions
+  prismaMiddlewares?: mrapi.db.PrismaMiddlewares
 }
 
 export default class Tenant<PrismaClient> {
@@ -25,7 +27,22 @@ export default class Tenant<PrismaClient> {
 
     // TODO: check
     if (TenantClient) {
-      this.client = createDBClientInstance(TenantClient, this.options.database)
+      this.client = createDBClientInstance(
+        TenantClient as PrismaClient,
+        this.options.database,
+        {
+          errorFormat: 'minimal', // 'pretty' | 'colorless' | 'minimal'
+          log: ['warn', 'error'], // ['query', 'info', 'warn', 'error']
+          ...(this.options.prismaOptions || {}),
+        },
+      )
+
+      // apply prisma middlewares
+      if (Array.isArray(this.options.prismaMiddlewares)) {
+        for (const middleware of this.options.prismaMiddlewares) {
+          this.client.$use(middleware)
+        }
+      }
     }
   }
 

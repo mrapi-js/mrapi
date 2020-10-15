@@ -2,16 +2,45 @@ import type { mrapi } from './types'
 
 import { getLogger } from '@mrapi/common'
 
-import { resolveOptions } from './config'
 import { createDBClientInstance } from './utils'
 import Tenant, { InternalTenantOptions } from './tenant'
+import { resolveOptions, tenantTableName } from './config'
 
 export * from './config'
 export { Tenant }
 
-// persistence version
-export default class Base<PrismaClient> {
+/**
+ * ## DB
+ * Agile DB service base on PrismaClient
+ *
+ * Usage:
+ * ```
+ * const db = new DB()
+ * await this.db.init()
+ * ```
+ *
+ * Note: prisma schema of management database should have these fields: name, service, database.
+ *
+ * For Example:
+ * ```
+ *  model Tenant {
+ *   id        Int      @id @default(autoincrement())
+ *   name      String
+ *   service   String
+ *   database  String
+ *
+ *   \@\@index([name, service])
+ * }
+ * ```
+ * @export
+ * @class DB
+ * @template PrismaClient
+ */
+export default class DB<PrismaClient> {
+  name: string
+  // key = [serviceName.tenantName]
   tenants: Map<string, Tenant<PrismaClient>> = new Map()
+
   // main client
   protected client: PrismaClient | any
   protected defaultTenantName = 'default'
@@ -31,25 +60,40 @@ export default class Base<PrismaClient> {
     this.TenantClient = options.TenantClient
 
     this.options = resolveOptions(options)
-    if (options.management && options.ManagementClient) {
-      this.client = createDBClientInstance(
-        options.ManagementClient,
+
+    if (!this.options.name) {
+      throw new Error('please set a name for DB service')
+    }
+
+    this.name = this.options.name
+
+    if (this.options.management && this.options.ManagementClient) {
+      const dbInstance = createDBClientInstance(
+        this.options.ManagementClient,
         this.options.management.database,
-      )?.tenant
+      )
+      if (!dbInstance) {
+        throw new Error('create management DB client error')
+      }
+      if (!dbInstance[tenantTableName]) {
+        throw new Error(
+          `cant resolve "${tenantTableName}" table in management database "${this.options.management.database}"`,
+        )
+      }
+
+      this.client = dbInstance[tenantTableName]
     }
   }
 
   async init() {
     // create all tenants
-    for (const { name, database, options: opts } of this.options.tenants as ({
+    for (const tenant of this.options.tenants as ({
       options: any
     } & mrapi.db.PathObject)[]) {
       await this.create({
-        name,
-        database,
+        ...tenant,
         schema: this.options.tenantSchema,
-        options: opts || {},
-      })
+      } as InternalTenantOptions)
     }
   }
 
@@ -61,7 +105,7 @@ export default class Base<PrismaClient> {
         count = await this.client.count({
           where: {
             name: options.name,
-            service: this.options.name,
+            service: this.name,
           },
         })
       } catch (err) {
@@ -74,34 +118,37 @@ export default class Base<PrismaClient> {
         throw err
       }
       if (count > 0) {
-        this.logger.warn(`tenant "${options.name}" already exist`)
+        this.logger.warn(
+          `tenant "${this.getTenantId(options.name)}" already exist`,
+        )
       } else {
         // create new record
         await this.client.create({
           data: {
             name: options.name,
-            url: options.database,
-            service: this.options.name,
+            database: options.database,
+            service: this.name,
           },
         })
-        this.logger.debug(`tenant "${options.name}" created`)
+        this.logger.debug(`tenant "${this.getTenantId(options.name)}" created`)
       }
     }
 
     if (this.hasTenant(options.name)) {
-      throw new Error(`tenant "${options.name}" already been created.`)
+      throw new Error(
+        `tenant "${this.getTenantId(options.name)}" already been created.`,
+      )
     }
 
     const tenant = this.createCache(options)
-
-    this.logger.debug(`tenant "${options.name}" cached`)
+    this.logger.debug(`tenant "${this.getTenantId(options.name)}" cached`)
 
     return tenant
   }
 
   async get(name?: string) {
-    const tenantName = this.getTenantName(name)
-    const tenant = this.tenants.get(tenantName)
+    const tenantid = this.getTenantId(name)
+    const tenant = this.tenants.get(tenantid)
 
     if (tenant) {
       return tenant
@@ -111,21 +158,21 @@ export default class Base<PrismaClient> {
   }
 
   async delete(name?: string) {
-    const tenantName = this.getTenantName(name)
+    const tenantId = this.getTenantId(name)
     if (this.client) {
       await this.client.delete({
-        where: { name: tenantName },
+        where: { name: tenantId },
       })
     }
-    this.tenants.delete(tenantName)
-    this.logger.debug(`deleted tenant "${tenantName}"`)
+    this.tenants.delete(tenantId)
+    this.logger.debug(`deleted tenant "${tenantId}"`)
   }
 
   async disconnect(name?: string) {
-    const tenantName = this.getTenantName(name)
-    const tenant = this.tenants.get(tenantName)
+    const tenantId = this.getTenantId(name)
+    const tenant = this.tenants.get(tenantId)
     if (!tenant) {
-      throw new Error(`tenant "${tenantName}" not conected.`)
+      throw new Error(`tenant "${tenantId}" not conected.`)
     }
     await tenant.client.$disconnect()
   }
@@ -136,29 +183,23 @@ export default class Base<PrismaClient> {
   }
 
   hasTenant(name: string) {
-    return this.tenants.has(name)
-  }
-
-  protected getTenantName(name?: string) {
-    if (!name?.trim() && !this.options.defaultTenant) {
-      throw new Error(
-        'name should be provided when is Multi-Tenants mode and defaultTenant not set.',
-      )
-    }
-    return name || this.options.defaultTenant || this.defaultTenantName
+    return this.tenants.has(this.getTenantId(name))
   }
 
   protected async getTenantOptions(name: string) {
+    const tenantId = this.getTenantId(name)
+
     if (name && this.client) {
-      return this.client.findOne({
-        where: { name },
+      return this.client.findFirst({
+        where: { name: tenantId, service: this.name },
       })
     }
 
-    const url = this.options.tenants[name || this.defaultTenantName]
+    const database = this.options.tenants[name || this.defaultTenantName]
     return {
-      name,
-      url,
+      name: tenantId,
+      service: this.name,
+      database,
     }
   }
 
@@ -169,8 +210,21 @@ export default class Base<PrismaClient> {
       this.TenantClient,
       this.logger,
     )
-    this.tenants.set(tenant.name, tenant)
+    this.tenants.set(this.getTenantId(tenant.name), tenant)
 
     return tenant
+  }
+
+  private getTenantId(tenantName?: string) {
+    if (!tenantName?.trim() && !this.options.defaultTenant) {
+      throw new Error(
+        'name should be provided when is Multi-Tenants mode and defaultTenant not set.',
+      )
+    }
+
+    const name =
+      tenantName || this.options.defaultTenant || this.defaultTenantName
+
+    return `${this.name}.${name}`
   }
 }

@@ -1,6 +1,7 @@
-export function createDBClientInstance(Client: any, url: string) {
+export function createDBClientInstance(Client: any, url: string, options = {}) {
   process.env.DATABASE_URL = url
   return new Client({
+    ...options,
     datasources: {
       db: {
         url,

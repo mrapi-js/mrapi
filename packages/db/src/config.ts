@@ -9,6 +9,8 @@ import {
 } from '@mrapi/common'
 
 export const defaultTenantName = 'default'
+// tenant table name in management database
+export const tenantTableName = 'tenant'
 
 export const defaultTenantConfig = {
   name: defaultTenantName,
@@ -35,7 +37,7 @@ export function resolveOptions(
   const config = resolveConfig()
 
   const tenants = resolveTenantsOptions(config?.db || options)
-  const dbOptions = {
+  const dbOptions: mrapi.db.Options = {
     ...defaultDBOptions,
     ...(config?.db || {}),
     ...(typeof options !== 'string' ? options : {}),
@@ -89,6 +91,8 @@ export function resolveOptions(
         dbOptions.paths.outputDatabase,
         tenant.name,
       ),
+      prismaMiddlewares: dbOptions.prismaMiddlewares,
+      prismaOptions: dbOptions.prismaOptions || {},
     }
   })
 
@@ -128,13 +132,13 @@ export function resolveTenantsOptions(
     tenants = [defaultTenantConfig]
   }
 
-  return tenants.map((tenant) => {
+  return (tenants.map((tenant) => {
     const name = tenant.name || defaultTenantName
     return {
       name,
       database: tenant.database,
     }
-  }) as mrapi.db.TenantsOption
+  }) as mrapi.db.TenantsOption).filter(Boolean)
 }
 
 function resolveDatabasePath(dbPath: string, output: string, name: string) {
