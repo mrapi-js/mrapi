@@ -9,23 +9,25 @@
     "prod": "cross-env NODE_ENV=production node dist/app",
     "build": "tsc",
     "clean": "rm -rf dist && rm -rf node_modules",
-    "generate": "npx mrapi generate --services blog",
-    "migrate": "npx mrapi migrate --services blog"
+    "generate": "npx mrapi generate --services management music",
+    "migrate": "npm run migrate:management && npm run migrate:services",
+    "migrate:management": "npx mrapi migrate --services management",
+    "migrate:services": "npx mrapi migrate --services blog music"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mrapi/api": "workspace:*",
+    "@mrapi/api": "workspace:*"
+  },
+  "devDependencies": {
+    "tslib": "^2.0.3",
+    "typescript": "^4.0.3",
+    "ts-node-dev": "1.0.0-pre.65",
     "@mrapi/dal": "workspace:*",
     "@mrapi/cli": "workspace:*",
     "@prisma/cli": "^2.9.0",
     "cross-env": "^7.0.2",
     "@nexus/schema": "^0.16.0"
-  },
-  "devDependencies": {
-    "tslib": "^2.0.3",
-    "typescript": "^4.0.3",
-    "ts-node-dev": "1.0.0-pre.63"
   },
   "prettier": {
     "semi": false,

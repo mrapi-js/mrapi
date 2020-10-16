@@ -1,6 +1,20 @@
 module.exports = {
-  sources: [],
-  serve: {
-    exampleQuery: './examples/users.graphql',
-  },
+  "sources": [
+    {
+      "name": "blog",
+      "handler": {
+        "graphql": {
+          "endpoint": "http://localhost:1358/graphql",
+          "operationHeaders": {
+            "mrapi-tenant-id": "{context.tenant}"
+          }
+        }
+      }
+    }
+  ],
+  "transforms": [],
+  "serve": {
+    "exampleQuery": "/Users/shaw/work/github/mrapi-js/mrapi/examples/api-combine/examples/users.graphql"
+  }
 }
+    

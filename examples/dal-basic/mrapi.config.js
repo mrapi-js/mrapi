@@ -38,6 +38,12 @@ module.exports = {
           prismaOptions,
           prismaMiddlewares,
         },
+        graphql: {
+          enable: true,
+        },
+        openapi: {
+          enable: true,
+        },
       },
     ],
   },

@@ -1,14 +1,15 @@
-import type { mrapi } from '@mrapi/dal'
-import DAL from '@mrapi/dal'
+import { mrapi, DAL } from '@mrapi/dal'
 
 const options: mrapi.dal.Options = {
-  logger: {
-    level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-  },
+  // logger: {
+  //   level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+  // },
 }
 
-const app = new DAL(options)
+const dal = new DAL(options)
 
-app.start().catch((error: Error) => {
-  app.logger.error(error)
+const { logger } = dal
+
+dal.start().catch((error: Error) => {
+  logger.error(error)
 })

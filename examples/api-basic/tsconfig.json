@@ -2,16 +2,11 @@
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "lib": [
-      "dom",
-      "es6",
-      "es2020",
-      "esnext.asynciterable"
-    ],
+    "lib": ["dom", "es6", "es2020", "esnext.asynciterable"],
     "sourceMap": true,
     "baseUrl": ".",
-    "rootDir": "./src",
-    "outDir": "./dist",
+    "rootDir": "src",
+    "outDir": "dist",
     "moduleResolution": "node",
     "declaration": true,
     "esModuleInterop": true,
@@ -31,10 +26,6 @@
     "skipLibCheck": true,
     "resolveJsonModule": true
   },
-  "exclude": [
-    "node_modules"
-  ],
-  "include": [
-    "src/**/*"
-  ]
+  "exclude": ["node_modules"],
+  "include": ["src/**/*"]
 }

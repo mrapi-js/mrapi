@@ -4,7 +4,7 @@ module.exports = {
       "name": "Blog",
       "handler": {
         "graphql": {
-          "endpoint": "http://localhost:1358/graphql/blog",
+          "endpoint": "http://localhost:1358/graphql",
           "operationHeaders": {
             "mrapi-tenant-id": "{context.tenant}"
           }
@@ -15,7 +15,7 @@ module.exports = {
           "resolversComposition": [
             {
               "resolver": "*.*",
-              "composer": "/Users/shaw/work/github/mrapi-js/mrapi/examples/api-basic/src/graphql/middlewares/openapi.ts"
+              "composer": "/Users/shaw/work/github/mrapi-js/mrapi/examples/api-basic/src/graphql/middlewares/openapi"
             }
           ]
         }

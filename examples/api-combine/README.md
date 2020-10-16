@@ -1,22 +1,36 @@
-# 说明
+# API combined Example
 
-## TODO LIST
+## DEV Steps
 
-...
+**First Run**
 
-## 验证方式
+```bash
+yarn generate # generate code for mrapi
 
-### 运行
+yarn migrate # migrate save & up to database
 
-- 数据库准备: mysql 创建两个库management/mrapi,根据prisma-multi-tenant和prisma/one.prisma分别初始化两个库
-- npm run dev
-- visite [playground](http://localhost:1358/playground)
-- graphql使用：${domain}/graphql/${schemaName}
-```graphql
-// http://localhost:1358/graphql/one
-query users{
-  users{
-    name
-  }
+yarn dev # start server
+```
+
+**Else**
+
+```bash
+yarn dev
+```
+
+**If prisma schema have been chenged**
+
+```bash
+yarn generate
+
+yarn migrate
+```
+
+## Set multi-tenant identity
+
+http headers:
+```json
+{
+  "mrapi-tenant-id": "tenant-name"
 }
 ```

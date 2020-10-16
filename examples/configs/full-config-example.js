@@ -43,6 +43,8 @@ module.exports = {
         // GraphQL service options
         graphql: {
           enable: true,
+          // Enable graphql introspection or not (default: true)
+          introspection: false,
           // docs: https://github.com/graphql/express-graphql#options
         },
         // OpenAPI service options

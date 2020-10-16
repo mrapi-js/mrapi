@@ -1,11 +1,18 @@
-import Api from '@mrapi/api'
+import { API } from '@mrapi/api'
 
-const app = new Api({
+const api = new API({
   logger: {
     level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
   },
 })
 
-app.start().catch((err: Error) => {
-  app.logger.error(err)
+const { app, logger } = api
+
+app.addHook('preHandler', (req, reply, done) => {
+  done()
 })
+
+api
+  .start()
+  .then(({ address }) => console.log(address))
+  .catch((err: Error) => logger.error(err))

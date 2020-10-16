@@ -1,15 +1,19 @@
-import Api from '@mrapi/api'
+import { API } from '@mrapi/api'
+import 'fastify-cookie'
 
-const app = new Api({
+const api = new API({
   logger: {
     level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
   },
 })
 
-app.server.app.addHook('preHandler', (req, reply, done) => {
+const { app, logger } = api
+
+app.addHook('preHandler', (req, reply, done) => {
+  reply.setCookie('bar', 'bar', {
+    path: '/',
+  })
   done()
 })
 
-app.start().catch((err: Error) => {
-  app.logger.error(err)
-})
+api.start().catch((err: Error) => logger.error(err))

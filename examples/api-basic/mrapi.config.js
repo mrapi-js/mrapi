@@ -5,7 +5,7 @@ const commonTransforms = [
     resolversComposition: [
       {
         resolver: '*.*',
-        composer: require.resolve(
+        composer: resolve(
           `./${
             process.env.NODE_ENV === 'production' ? 'dist' : 'src'
           }/graphql/middlewares/openapi`,
@@ -15,12 +15,22 @@ const commonTransforms = [
   },
 ]
 
+const fastifyPlugins = {
+  // pluginName: pluginOptions
+  'fastify-cookie': {
+    secret: 'my-secret', // for cookies signature
+    parseOptions: {}, // options for parsing cookies
+  },
+}
+
 module.exports = {
   api: {
     server: {
       port: 1359, // default
       type: 'standalone', // default
       options: {},
+      // plugins for fastify
+      plugins: fastifyPlugins,
     },
     graphql: {
       dir: '/src/graphql',
@@ -34,7 +44,7 @@ module.exports = {
           handler: {
             graphql: {
               // A url to your remote GraphQL endpoint
-              endpoint: 'http://localhost:1358/graphql/blog',
+              endpoint: 'http://localhost:1358/graphql',
               operationHeaders: {
                 'mrapi-tenant-id': '{context.tenant}',
               },
@@ -50,5 +60,6 @@ module.exports = {
         exampleQuery: resolve(__dirname, './examples/users.graphql'),
       },
     },
+    outputSchema: false, // output path string or boolean
   },
 }

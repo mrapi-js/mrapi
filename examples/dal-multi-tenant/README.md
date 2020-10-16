@@ -1,45 +1,36 @@
-# 说明
+# DAL multi-tenant Example
 
-## TODO LIST
+## DEV Steps
 
-...
+**First Run**
 
-## 验证方式
+```bash
+yarn generate # generate code for mrapi
 
-### 运行
+yarn migrate # migrate save & up to database
 
-```shell
-npm run generate
-
-npm run dev
+yarn dev # start server
 ```
 
-### 下面以访问 `one.prisma` 为例：
+**Else**
 
-访问 http://0.0.0.0:1358/graphql/one
-
-设置租户标识请求头参数 `{[config.tenantIdentity]: "name"}` 例如：`{"mrapi-pmt": "dev"}`
-
-```graphql
-query {
-  users {
-    id
-    name
-  }
-}
-
-mutation {
-  createOneUser(data: {email: "xxx", name: "xxx"}) {
-    id
-  }
-}
+```bash
+yarn dev
 ```
 
-### 验证 stop / addSchema / removeSchema
+**If prisma schema have been chenged**
 
-查看 app.js 代码...
+```bash
+yarn generate
 
+yarn migrate
+```
 
-## 注意事项！
+## Set multi-tenant identity
 
-如果数据库使用的是 `sqlite`，管理表中的路径为相对 /prisma 目录的相对路径
+http headers:
+```json
+{
+  "mrapi-tenant-id": "tenant-name"
+}
+```

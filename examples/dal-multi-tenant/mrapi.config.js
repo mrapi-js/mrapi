@@ -39,6 +39,9 @@ module.exports = {
         graphql: {
           enable: true,
         },
+        openapi: {
+          enable: true,
+        },
       },
       {
         name: 'music',
@@ -50,6 +53,9 @@ module.exports = {
           defaultTenant: 'a',
           prismaOptions,
           prismaMiddlewares,
+        },
+        graphql: {
+          enable: true,
         },
         openapi: {
           enable: false,
