@@ -7,7 +7,7 @@
     "examples/*"
   ],
   "scripts": {
-    "clean": "pnpm recursive run clean && rm -rf node_modules",
+    "clean": "pnpm recursive run clean && rm -rf node_modules && rm -rf pnpm-lock.yaml",
     "clean:lib": "pnpm recursive run clean:lib",
     "build": "pnpm recursive run clean:lib && pnpm run build --filter @mrapi/common && pnpm run build --filter @mrapi/db && pnpm run build --filter @mrapi/nexus && pnpm run build --filter @mrapi/oas && pnpm run build --filter @mrapi/cli && pnpm run build --filter @mrapi/dal && pnpm run build --filter @mrapi/api",
     "watch": "pnpm run --parallel watch",
@@ -24,7 +24,7 @@
     "prettier:packages": "prettier --write packages/**/*.ts",
     "prettier:scripts": "prettier --write scripts/**/*.ts",
     "prettier:docs": "prettier --write README.md",
-    "generate-schema": "pnpm recursive run generate-schema"
+    "generate:schema": "pnpm recursive run generate:schema"
   },
   "husky": {
     "hooks": {
