@@ -2,6 +2,21 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0-beta.3](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2020-10-16)
+
+
+### Features
+
+* **dal:** support configure introspection and playground for graphql server ([771e67a](https://github.com/mrapi-js/mrapi/commit/771e67a277cc645c07c65e34337a9e90af58615e))
+* **types:** add introspection option ([2e86b96](https://github.com/mrapi-js/mrapi/commit/2e86b96a0ca2939f16737d301f6039c0b088bbc1))
+
+
+### Bug Fixes
+
+* **api:** make 'outputSchema' optional;validate 'customSchemasPath';change 'addOpenapi' logic ([618c5fb](https://github.com/mrapi-js/mrapi/commit/618c5fb682e9d0bd8f255b2bab187f3fb699c59f))
+* **db:** rename public methods;add jsdocs ([190ca3c](https://github.com/mrapi-js/mrapi/commit/190ca3c81879039d27fd290140c9de1041726f7c))
+* **oas:** rename 'getPrisma' to 'getDBClient' ([ca135fb](https://github.com/mrapi-js/mrapi/commit/ca135fb499c7f1dc7cd28d45acc87a4c1d69e071))
+
 ## [2.0.0-beta.2](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2020-10-15)
 
 
