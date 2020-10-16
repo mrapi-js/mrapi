@@ -63,3 +63,10 @@ export const requireResolve = (path: string): string => {
 export const ensureAbsolutePath = (path: string, cwd = process.cwd()) => {
   return isAbsolute(path) ? path : join(cwd, path || '')
 }
+
+export const flatten = (arr: any[], depth = 1): any[] =>
+  arr.reduce(
+    (a, v) =>
+      a.concat(depth > 1 && Array.isArray(v) ? flatten(v, depth - 1) : v),
+    [],
+  )

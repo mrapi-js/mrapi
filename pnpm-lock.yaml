@@ -44,7 +44,7 @@ importers:
       cross-env: 7.0.2
       fastify-cookie: 4.1.0
       mercurius: 6.2.0
-      ts-node-dev: 1.0.0-pre.63_typescript@4.0.3
+      ts-node-dev: 1.0.0-pre.65_typescript@4.0.3
       tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
@@ -53,19 +53,19 @@ importers:
       cross-env: ^7.0.2
       fastify-cookie: 4.1.0
       mercurius: 6.2.0
-      ts-node-dev: 1.0.0-pre.63
+      ts-node-dev: 1.0.0-pre.65
       tslib: ^2.0.3
       typescript: ^4.0.3
   examples/api-combine:
     dependencies:
       '@mrapi/api': 'link:../../packages/api'
+    devDependencies:
       '@mrapi/cli': 'link:../../packages/cli'
       '@mrapi/dal': 'link:../../packages/dal'
       '@nexus/schema': 0.16.0
       '@prisma/cli': 2.9.0
       cross-env: 7.0.2
-    devDependencies:
-      ts-node-dev: 1.0.0-pre.63_typescript@4.0.3
+      ts-node-dev: 1.0.0-pre.65_typescript@4.0.3
       tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
@@ -75,7 +75,7 @@ importers:
       '@nexus/schema': ^0.16.0
       '@prisma/cli': ^2.9.0
       cross-env: ^7.0.2
-      ts-node-dev: 1.0.0-pre.63
+      ts-node-dev: 1.0.0-pre.65
       tslib: ^2.0.3
       typescript: ^4.0.3
   examples/dal-basic:
@@ -88,7 +88,7 @@ importers:
     devDependencies:
       fs-extra: 9.0.1
       prettier: 2.1.2
-      ts-node-dev: 1.0.0-pre.63_typescript@4.0.3
+      ts-node-dev: 1.0.0-pre.65_typescript@4.0.3
       tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
@@ -99,7 +99,7 @@ importers:
       cross-env: ^7.0.2
       fs-extra: ^9.0.1
       prettier: ^2.1.2
-      ts-node-dev: 1.0.0-pre.63
+      ts-node-dev: 1.0.0-pre.65
       tslib: ^2.0.3
       typescript: ^4.0.3
   examples/dal-multi-tenant:
@@ -112,7 +112,7 @@ importers:
     devDependencies:
       fs-extra: 9.0.1
       prettier: 2.1.2
-      ts-node-dev: 1.0.0-pre.63_typescript@4.0.3
+      ts-node-dev: 1.0.0-pre.65_typescript@4.0.3
       tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
@@ -123,7 +123,7 @@ importers:
       cross-env: ^7.0.2
       fs-extra: ^9.0.1
       prettier: ^2.1.2
-      ts-node-dev: 1.0.0-pre.63
+      ts-node-dev: 1.0.0-pre.65
       tslib: ^2.0.3
       typescript: ^4.0.3
   packages/api:
@@ -145,7 +145,7 @@ importers:
       '@graphql-tools/stitch': 6.2.4_graphql@15.3.0
       '@mrapi/common': 'link:../common'
       '@mrapi/types': 'link:../types'
-      '@nexus/schema': 0.16.0_graphql@15.3.0
+      '@nexus/schema': 0.16.0
       fastify: 3.6.0
       fastify-reply-from: 3.3.0
       graphql: 15.3.0
@@ -237,20 +237,25 @@ importers:
       '@mrapi/nexus': 'link:../nexus'
       '@mrapi/oas': 'link:../oas'
       '@mrapi/types': 'link:../types'
-      '@nexus/schema': 0.16.0_graphql@15.3.0
+      '@nexus/schema': 0.16.0
       '@prisma/cli': 2.9.0
       '@prisma/client': 2.9.0_@prisma+cli@2.9.0
       '@types/express': 4.17.8
       body-parser: 1.19.0
+      cookie-parser: 1.4.5
       cors: 2.8.5
       express: 4.17.1
-      express-graphql: 0.11.0_graphql@15.3.0
+      express-graphql: 0.11.0
       express-openapi: 7.0.2
       graphql: 15.3.0
+      graphql-playground-middleware-express: 1.7.21_express@4.17.1
+      graphql-upload: 11.0.0
       is-plain-object: 5.0.0
       swagger-ui-express: 4.1.4_express@4.17.1
     devDependencies:
+      '@types/cookie-parser': 1.4.2
       '@types/cors': 2.8.8
+      '@types/graphql-upload': 8.0.4
       '@types/node': 14.11.8
       '@types/swagger-ui-express': 4.1.2
       tslib: 2.0.3
@@ -265,17 +270,22 @@ importers:
       '@nexus/schema': 0.16.0
       '@prisma/cli': 2.9.0
       '@prisma/client': 2.9.0
+      '@types/cookie-parser': ^1.4.2
       '@types/cors': 2.8.8
       '@types/express': ^4.17.8
+      '@types/graphql-upload': ^8.0.4
       '@types/node': '*'
       '@types/swagger-ui-express': ^4.1.2
       body-parser: ^1.19.0
+      cookie-parser: ^1.4.5
       cors: ^2.8.5
       express: ^4.17.1
       express-graphql: ^0.11.0
       express-openapi: ^7.0.2
       graphql: ^15.3.0
-      is-plain-object: 5.0.0
+      graphql-playground-middleware-express: ^1.7.21
+      graphql-upload: ^11.0.0
+      is-plain-object: ^5.0.0
       swagger-ui-express: ^4.1.4
       tslib: ^2.0.3
       typescript: ^4.0.3
@@ -327,7 +337,7 @@ importers:
       tslib: 2.0.3
       typescript: 4.0.3
     specifiers:
-      '@types/node': 14.11.8
+      '@types/node': '*'
       tslib: ^2.0.3
       typescript: ^4.0.3
 lockfileVersion: 5.1
@@ -410,7 +420,7 @@ packages:
       integrity: sha512-EkN3YDB+SRDgiIUnNgcmiD361ti+AVbL3f3Henf6dqqUyr5dMsorno0lJWJuLhDhkI5sYEpgj6y9kB8AOU1I2A==
   /@babel/helper-member-expression-to-functions/7.12.0:
     dependencies:
-      '@babel/types': 7.12.0
+      '@babel/types': 7.12.1
     dev: true
     resolution:
       integrity: sha512-I0d/bgzgzgLsJMk7UZ0TN2KV3OGjC/t/9Saz8PKb9jrcEAXhgjGysOgp4PDKydIKjUv/gj2St4ae+ov8l+T9Xg==
@@ -436,7 +446,7 @@ packages:
       integrity: sha512-1ZTMoCiLSzTJLbq7mSaTHki4oIrBIf/dUbzdhwTrvtMU3ZNVKwQmGae3gSiqppo7G8HAgnXmc43rfEaD8yYLLQ==
   /@babel/helper-optimise-call-expression/7.10.4:
     dependencies:
-      '@babel/types': 7.12.0
+      '@babel/types': 7.12.1
     dev: true
     resolution:
       integrity: sha512-n3UGKY4VXwXThEiKrgRAoVPBMqeoPgHVqiHZOanAJCG9nQUL2pLRQirUzl0ioKclHGpGqRgIOkgcIJaIWLpygg==
@@ -620,6 +630,14 @@ packages:
     dev: true
     resolution:
       integrity: sha512-ggIyFmT2zMaYRheOfPDQ4gz7QqV3B+t2rjqjbttDJxMcb7/LukvWCmlIl1sWcOxrvwpTDd+z0OytzqsbGeb3/g==
+  /@babel/types/7.12.1:
+    dependencies:
+      '@babel/helper-validator-identifier': 7.10.4
+      lodash: 4.17.20
+      to-fast-properties: 2.0.0
+    dev: true
+    resolution:
+      integrity: sha512-BzSY3NJBKM4kyatSOWh3D/JJ2O3CVzBybHWxtgxnggaxEuaSTTDqeiSb/xk9lrkw2Tbqyivw5ZU4rT+EfznQsA==
   /@bcoe/v8-coverage/0.2.3:
     dev: true
     resolution:
@@ -1353,16 +1371,6 @@ packages:
       graphql: ^15.3.0
     resolution:
       integrity: sha512-H+JJDycjcilvsRtLySpwfVXp1gYiOqPPLQdq04R4Vp5S400PpdADQlKMV4EvpBJ/BCxwQ8XwP8+nrOKvDZLLUw==
-  /@nexus/schema/0.16.0_graphql@15.3.0:
-    dependencies:
-      graphql: 15.3.0
-      iterall: 1.3.0
-      tslib: 1.14.1
-    dev: false
-    peerDependencies:
-      graphql: ^15.3.0
-    resolution:
-      integrity: sha512-H+JJDycjcilvsRtLySpwfVXp1gYiOqPPLQdq04R4Vp5S400PpdADQlKMV4EvpBJ/BCxwQ8XwP8+nrOKvDZLLUw==
   /@nodelib/fs.scandir/2.1.3:
     dependencies:
       '@nodelib/fs.stat': 2.0.3
@@ -1385,7 +1393,6 @@ packages:
     resolution:
       integrity: sha512-1V9XOY4rDW0rehzbrcqAmHnz8e7SKvX27gh8Gt2WgB0+pdzdiLV83p72kZPU+jvMbS1qU5mauP2iOvO8rhmurQ==
   /@prisma/cli/2.9.0:
-    dev: false
     engines:
       node: '>=10'
     hasBin: true
@@ -1419,6 +1426,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-MZPUxrmFubI36XS1DI3qmI0YdN1gks62JtFZvxR67ljjSNCeK6U08Zx4msEWOXuofgqUt6zPHSi1H9fbjR/NRA==
+  /@types/accepts/1.3.5:
+    dependencies:
+      '@types/node': 14.11.8
+    dev: true
+    resolution:
+      integrity: sha512-jOdnI/3qTpHABjM5cx1Hc0sKsPoYCp+DP/GJRGtDlPd7fiV9oXGGIcjW/ZOxLIvjGz8MA+uMZI9metHlgqbgwQ==
   /@types/babel__core/7.1.10:
     dependencies:
       '@babel/parser': 7.12.0
@@ -1459,6 +1472,25 @@ packages:
       '@types/node': 14.11.8
     resolution:
       integrity: sha512-2+FrkXY4zllzTNfJth7jOqEHC+enpLeGslEhpnTAkg21GkRrWV4SsAtqchtT4YS9/nODBU2/ZfsBY2X4J/dX7A==
+  /@types/content-disposition/0.5.3:
+    dev: true
+    resolution:
+      integrity: sha512-P1bffQfhD3O4LW0ioENXUhZ9OIa0Zn+P7M+pWgkCKaT53wVLSq0mrKksCID/FGHpFhRSxRGhgrQmfhRuzwtKdg==
+  /@types/cookie-parser/1.4.2:
+    dependencies:
+      '@types/express': 4.17.8
+    dev: true
+    resolution:
+      integrity: sha512-uwcY8m6SDQqciHsqcKDGbo10GdasYsPCYkH3hVegj9qAah6pX5HivOnOuI3WYmyQMnOATV39zv/Ybs0bC/6iVg==
+  /@types/cookies/0.7.4:
+    dependencies:
+      '@types/connect': 3.4.33
+      '@types/express': 4.17.8
+      '@types/keygrip': 1.0.2
+      '@types/node': 14.11.8
+    dev: true
+    resolution:
+      integrity: sha512-oTGtMzZZAVuEjTwCjIh8T8FrC8n/uwy+PG0yTvQcdZ7etoel7C7/3MSd7qrukENTgQtotG7gvBlBojuVs7X5rw==
   /@types/cors/2.8.8:
     dependencies:
       '@types/express': 4.17.8
@@ -1480,6 +1512,12 @@ packages:
       '@types/serve-static': 1.13.5
     resolution:
       integrity: sha512-wLhcKh3PMlyA2cNAB9sjM1BntnhPMiM0JOBwPBqttjHev2428MLEB4AYVN+d8s2iyCVZac+o41Pflm/ZH5vLXQ==
+  /@types/fs-capacitor/2.0.0:
+    dependencies:
+      '@types/node': 14.11.8
+    dev: true
+    resolution:
+      integrity: sha512-FKVPOCFbhCvZxpVAMhdBdTfVfXUpsh15wFHgqOKxh9N9vzWZVuWCSijZ5T4U34XYNnuj2oduh6xcs1i+LPI+BQ==
   /@types/fs-extra/9.0.2:
     dependencies:
       '@types/node': 14.11.8
@@ -1499,6 +1537,23 @@ packages:
     dev: true
     resolution:
       integrity: sha512-AiHRaEB50LQg0pZmm659vNBb9f4SJ0qrAnteuzhSeAUcJKxoYgEnprg/83kppCnc2zvtCKbdZry1a5pVY3lOTQ==
+  /@types/graphql-upload/8.0.4:
+    dependencies:
+      '@types/express': 4.17.8
+      '@types/fs-capacitor': 2.0.0
+      '@types/koa': 2.11.5
+      graphql: 15.3.0
+    dev: true
+    resolution:
+      integrity: sha512-0TRyJD2o8vbkmJF8InppFcPVcXKk+Rvlg/xvpHBIndSJYpmDWfmtx/ZAtl4f3jR2vfarpTqYgj8MZuJssSoU7Q==
+  /@types/http-assert/1.5.1:
+    dev: true
+    resolution:
+      integrity: sha512-PGAK759pxyfXE78NbKxyfRcWYA/KwW17X290cNev/qAsn9eQIxkH4shoNBafH37wewhDG/0p1cHPbK6+SzZjWQ==
+  /@types/http-errors/1.8.0:
+    dev: true
+    resolution:
+      integrity: sha512-2aoSC4UUbHDj2uCsCxcG/vRMXey/m17bC7UwitVm5hn22nI8O8Y9iDpA76Orc+DWkQ4zZrOKEshCqR/jSuXAHA==
   /@types/istanbul-lib-coverage/2.0.3:
     dev: true
     resolution:
@@ -1523,6 +1578,29 @@ packages:
     dev: true
     resolution:
       integrity: sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
+  /@types/keygrip/1.0.2:
+    dev: true
+    resolution:
+      integrity: sha512-GJhpTepz2udxGexqos8wgaBx4I/zWIDPh/KOGEwAqtuGDkOUJu5eFvwmdBX4AmB8Odsr+9pHCQqiAqDL/yKMKw==
+  /@types/koa-compose/3.2.5:
+    dependencies:
+      '@types/koa': 2.11.5
+    dev: true
+    resolution:
+      integrity: sha512-B8nG/OoE1ORZqCkBVsup/AKcvjdgoHnfi4pZMn5UwAPCbhk/96xyv284eBYW8JlQbQ7zDmnpFr68I/40mFoIBQ==
+  /@types/koa/2.11.5:
+    dependencies:
+      '@types/accepts': 1.3.5
+      '@types/content-disposition': 0.5.3
+      '@types/cookies': 0.7.4
+      '@types/http-assert': 1.5.1
+      '@types/http-errors': 1.8.0
+      '@types/keygrip': 1.0.2
+      '@types/koa-compose': 3.2.5
+      '@types/node': 14.11.8
+    dev: true
+    resolution:
+      integrity: sha512-egP+ceD3+v9PnFW+DLTFO8mt6wa5sDqfGOBIwOAZ61Wzsq4bGZc5kMpJgcCwq7ARGIBfHBY+KkK/1RsMftV/qQ==
   /@types/lru-cache/5.1.0:
     dev: false
     resolution:
@@ -2234,6 +2312,14 @@ packages:
     requiresBuild: true
     resolution:
       integrity: sha512-xowrxvpxojqkagPcWRQVXZl0YXhRhAtBEIq3VoER1NH5Mw1n1o0ojdspp+GS2J//2gCVyrzQDApQ4unGF+QOoA==
+  /busboy/0.3.1:
+    dependencies:
+      dicer: 0.3.0
+    dev: false
+    engines:
+      node: '>=4.5.0'
+    resolution:
+      integrity: sha512-y7tTxhGKXcyBxRKAni+awqx8uqaJKrSFSNFSeRG5CsWNdmy2BIK+6VGWEW7TZnIO/533mtMEA4rOevQV815YJw==
   /bytes/3.1.0:
     dev: false
     engines:
@@ -2452,6 +2538,10 @@ packages:
       node: '>= 0.8'
     resolution:
       integrity: sha512-FQN4MRfuJeHf7cBbBMJFXhKSDq+2kAArBlmRBvcvFE5BB1HZKXtSFASDhdlz9zOYwxh8lDdnvmMOe/+5cdoEdg==
+  /commander/2.20.3:
+    dev: false
+    resolution:
+      integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==
   /commander/6.1.0:
     dev: false
     engines:
@@ -2503,6 +2593,15 @@ packages:
     dev: true
     resolution:
       integrity: sha512-4FJkXzKXEDB1snCFZlLP4gpC3JILicCpGbzG9f9G7tGqGCzETQ2hWPrcinA9oU4wtf2biUaEH5065UnMeR33oA==
+  /cookie-parser/1.4.5:
+    dependencies:
+      cookie: 0.4.0
+      cookie-signature: 1.0.6
+    dev: false
+    engines:
+      node: '>= 0.8.0'
+    resolution:
+      integrity: sha512-f13bPUj/gG/5mDr+xLmSxxDsB9DQiTIfhJS/sqjrmfAWiAN+x2O4i/XguTL9yDZ+/IFDanJ+5x7hC4CXT9Tdzw==
   /cookie-signature/1.0.6:
     dev: false
     resolution:
@@ -2603,6 +2702,10 @@ packages:
       node: '>= 8'
     resolution:
       integrity: sha512-iRDPJKUPVEND7dHPO8rkbOnPpyDygcDFtWjpeWNCgy8WP2rXcxXL8TskReQl6OrB2G7+UJrags1q15Fudc7G6w==
+  /cssfilter/0.0.10:
+    dev: false
+    resolution:
+      integrity: sha1-xtJnJjKi5cg+AT5oZKQs6N79IK4=
   /cssom/0.3.8:
     dev: true
     resolution:
@@ -2791,6 +2894,14 @@ packages:
       node: '>=8'
     resolution:
       integrity: sha512-TLz+x/vEXm/Y7P7wn1EJFNLxYpUD4TgMosxY6fAVJUnJMbupHBOncxyWUG9OpTaH9EBD7uFI5LfEgmMOc54DsA==
+  /dicer/0.3.0:
+    dependencies:
+      streamsearch: 0.1.2
+    dev: false
+    engines:
+      node: '>=4.5.0'
+    resolution:
+      integrity: sha512-MdceRRWqltEG2dZqO769g27N/3PXfcKl04VhYnBlo2YhH7zPi88VebsjTKclaOyiuMaGU72hTfw3VkUitGcVCA==
   /diff-sequences/26.5.0:
     dev: true
     engines:
@@ -3371,11 +3482,10 @@ packages:
       node: '>= 10.14.2'
     resolution:
       integrity: sha512-kkpOhGRWGOr+TEFUnYAjfGvv35bfP+OlPtqPIJpOCR9DVtv8QV+p8zG0Edqafh80fsjeE+7RBcVUq1xApnYglw==
-  /express-graphql/0.11.0_graphql@15.3.0:
+  /express-graphql/0.11.0:
     dependencies:
       accepts: 1.3.7
       content-type: 1.0.4
-      graphql: 15.3.0
       http-errors: 1.8.0
       raw-body: 2.4.1
     dev: false
@@ -3820,6 +3930,12 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-PYyt2Q2XZWn6g1qx+OSyOhBWBac=
+  /fs-capacitor/6.2.0:
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-nKcE1UduoSKX27NSZlg879LdQc94OtbOsEmKMN2MBNudXREvijRKx2GEBsTMTfws+BrbkJoEuynbGSVRSpauvw==
   /fs-extra/9.0.1:
     dependencies:
       at-least-node: 1.0.0
@@ -4004,6 +4120,21 @@ packages:
       graphql: '>=14'
     resolution:
       integrity: sha512-eM3W6pC04RhdtFte6/HE9+LBiO57b6cYV72Jkb3cAOJux46mfgR16UwI53QJJbUen0aHoy6oqkah15sDDx95Ug==
+  /graphql-playground-html/1.6.28:
+    dependencies:
+      xss: 1.0.8
+    dev: false
+    resolution:
+      integrity: sha512-22uwTEGjZg0h9rYcM7WspcMPVsixAE8m56tNzwjGr2Y3pNY7OctbsMkJ3EPtPcL6ZdUpzsa4rMgYR54BGmTrpQ==
+  /graphql-playground-middleware-express/1.7.21_express@4.17.1:
+    dependencies:
+      express: 4.17.1
+      graphql-playground-html: 1.6.28
+    dev: false
+    peerDependencies:
+      express: ^4.16.2
+    resolution:
+      integrity: sha512-CjPHDZqJ8ifS6v+JCyEZOEGrR8eKHWaUIUawggfUlW1xFFHCNcBhG4/S7EnSUspaUldSnL/cFcBp4yLhYkG53A==
   /graphql-scalars/1.3.0_graphql@15.3.0:
     dependencies:
       graphql: 15.3.0
@@ -4041,6 +4172,20 @@ packages:
       graphql: ^14.5.7
     resolution:
       integrity: sha512-mpTfWKLBJXr/b6OmwWEa4M5vA6OdNGFszEZMHUwgd0eD0/khDQK+aaks0Ufl/bRd01K1h9N+n1pf8DQcXXPjGg==
+  /graphql-upload/11.0.0:
+    dependencies:
+      busboy: 0.3.1
+      fs-capacitor: 6.2.0
+      http-errors: 1.8.0
+      isobject: 4.0.0
+      object-path: 0.11.5
+    dev: false
+    engines:
+      node: ^10.13.0 || ^12.0.0 || >= 13.7.0
+    peerDependencies:
+      graphql: 0.13.1 - 15
+    resolution:
+      integrity: sha512-zsrDtu5gCbQFDWsNa5bMB4nf1LpKX9KDgh+f8oL1288ijV4RxeckhVozAjqjXAfRpxOHD1xOESsh6zq8SjdgjA==
   /graphql/15.3.0:
     engines:
       node: '>= 10.x'
@@ -4639,6 +4784,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
+  /isobject/4.0.0:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha512-S/2fF5wH8SJA/kmwr6HYhK/RI/OkhD84k8ntalo0iJjZikgq1XFvR5M8NPT1x5F7fBwCG3qHfnzeP/Vh/ZxCUA==
   /isstream/0.1.2:
     dev: true
     resolution:
@@ -5863,6 +6014,12 @@ packages:
       node: '>= 0.4'
     resolution:
       integrity: sha512-NuAESUOUMrlIXOfHKzD6bpPu3tYt3xvjNdRIQ+FeT0lNb4K8WR70CaDxhuNguS2XG+GjkyMwOzsN5ZktImfhLA==
+  /object-path/0.11.5:
+    dev: false
+    engines:
+      node: '>= 10.12.0'
+    resolution:
+      integrity: sha512-jgSbThcoR/s+XumvGMTMf81QVBmah+/Q7K7YduKeKVWL7N111unR2d6pZZarSk6kY/caeNxUDyxOvMWyzoU2eg==
   /object-visit/1.0.1:
     dependencies:
       isobject: 3.0.1
@@ -7200,6 +7357,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha1-NbCYdbT/SfJqd35QmzCQoyJr8ks=
+  /streamsearch/0.1.2:
+    dev: false
+    engines:
+      node: '>=0.8.0'
+    resolution:
+      integrity: sha1-gIudDlb8Jz2Am6VzOOkpkZoanxo=
   /string-length/4.0.1:
     dependencies:
       char-regex: 1.0.2
@@ -7531,7 +7694,7 @@ packages:
     dev: false
     resolution:
       integrity: sha512-XvB+OdKSJ708Dmf9ore4Uf/q62AYDTzFcAdxc8KNML1mmAWywRFVt/dn1KYJH8Agt5UJNujfM3znU5PxgAzA2w==
-  /ts-node-dev/1.0.0-pre.63_typescript@4.0.3:
+  /ts-node-dev/1.0.0-pre.65_typescript@4.0.3:
     dependencies:
       chokidar: 3.4.3
       dateformat: 1.0.12
@@ -7556,7 +7719,7 @@ packages:
       node-notifier:
         optional: true
     resolution:
-      integrity: sha512-KURricXsXtiB4R+NCgiKgE01wyTe/GlXTdAPIhliDhF3kCn00kzyepAc1H8kbUJCmz0oYQq/GQ6CMtiWovs9qg==
+      integrity: sha512-OHzPbq0M08pxj4pW/OZFWVQUJs2ea41uwAcN8nIhmIW3dTqs4qNd9XDRHD+wDpcRkeL0GHjX0OnioxoH/YyU1A==
   /ts-node/8.10.2_typescript@4.0.3:
     dependencies:
       arg: 4.1.3
@@ -8050,6 +8213,16 @@ packages:
     dev: true
     resolution:
       integrity: sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
+  /xss/1.0.8:
+    dependencies:
+      commander: 2.20.3
+      cssfilter: 0.0.10
+    dev: false
+    engines:
+      node: '>= 0.10.0'
+    hasBin: true
+    resolution:
+      integrity: sha512-3MgPdaXV8rfQ/pNn16Eio6VXYPTkqwa0vc7GkiymmY/DqR1SE/7VPAAVZz1GJsJFrllMYO3RHfEaiUGjab6TNw==
   /xtend/4.0.2:
     engines:
       node: '>=0.4'
