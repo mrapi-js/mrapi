@@ -1,8 +1,8 @@
 import { findManyFilter } from '../utils/filters'
 
-export const dependenciesPlugins = ({ getPrisma }: any) => {
-  if (!getPrisma) {
-    throw new Error('Initialization parameter "getPrisma" was not found.')
+export const dependenciesPlugins = ({ getDBClient }: any) => {
+  if (!getDBClient) {
+    throw new Error('Initialization parameter "getDBClient" was not found.')
   }
 
   return {
@@ -14,11 +14,11 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       { modelName }: { modelName: string },
     ) => {
       try {
-        const prisma = await getPrisma(req)
+        const db = await getDBClient(req)
         const params = findManyFilter.getParams(req.query)
         const [list, total] = await Promise.all([
-          prisma[modelName].findMany(params),
-          prisma[modelName].count({
+          db[modelName].findMany(params),
+          db[modelName].count({
             where: params.where,
           }),
         ])
@@ -45,12 +45,12 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       { modelName }: { modelName: string },
     ) => {
       try {
-        const prisma = await getPrisma(req)
+        const db = await getDBClient(req)
         const params = {
           data: req.body,
           // ...createFilter.getParams(req.query),
         }
-        const data = await prisma[modelName].create(params)
+        const data = await db[modelName].create(params)
 
         return {
           code: 0,
@@ -72,10 +72,10 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
     //   { modelName }: { modelName: string },
     // ) => {
     //   try {
-    //     const prisma = await getPrisma(req)
+    //     const db = await getDBClient(req)
     //     const where = {}
     //     // req.body.forEach((item) => {})
-    //     const data = await prisma[modelName].deleteMany({
+    //     const data = await db[modelName].deleteMany({
     //       where,
     //     })
     //     return {
@@ -98,11 +98,11 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       { modelName }: { modelName: string },
     ) => {
       try {
-        const prisma = await getPrisma(req)
+        const db = await getDBClient(req)
         const params = {
           where: req.params,
         }
-        const data = await prisma[modelName].findOne(params)
+        const data = await db[modelName].findOne(params)
         return {
           code: 0,
           data,
@@ -123,12 +123,12 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       { modelName }: { modelName: string },
     ) => {
       try {
-        const prisma = await getPrisma(req)
+        const db = await getDBClient(req)
         const params = {
           where: req.params,
           data: req.body,
         }
-        const data = await prisma[modelName].update(params)
+        const data = await db[modelName].update(params)
         return {
           code: 0,
           data,
@@ -149,11 +149,11 @@ export const dependenciesPlugins = ({ getPrisma }: any) => {
       { modelName }: { modelName: string },
     ) => {
       try {
-        const prisma = await getPrisma(req)
+        const db = await getDBClient(req)
         const params = {
           where: req.params,
         }
-        const data = await prisma[modelName].delete(params)
+        const data = await db[modelName].delete(params)
         return {
           code: 0,
           data,
