@@ -61,6 +61,11 @@ declare namespace mrapi {
 
     interface GraphqlOptions {
       enable?: boolean
+
+      /**
+       * Enable graphql introspection or not (default: true)
+       */
+      introspection?: boolean
     }
 
     interface OpenapiOptions {
@@ -91,6 +96,7 @@ declare namespace mrapi {
       tenantIdentity?: string
       schemaIdentity?: string
       schemaNames?: string[]
+      outputSchema?: string | boolean
     }
 
     interface ServerOptions {
@@ -119,8 +125,7 @@ declare namespace mrapi {
     interface OpenapiOptions {
       dir?: string
       prefix?: string
-      // TODO: rename
-      dalBaseUrl?: string
+      url?: string
     }
 
     // TODO: 'mesh' | 'with-dal' | 'gateway'
