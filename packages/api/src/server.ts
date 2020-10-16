@@ -1,19 +1,26 @@
 import type { MercuriusOptions } from 'mercurius'
 import type { mrapi, GraphQLSchema, ExecuteMeshFn } from './types'
 
-import path from 'path'
+import { join } from 'path'
 import fastify from 'fastify'
-import { getLogger } from '@mrapi/common'
+import mercurius from 'mercurius'
+import { flatten, getLogger, requireResolve } from '@mrapi/common'
 
 export default class Server {
+  /**
+   * FastifyInstance
+   *
+   * @type {mrapi.api.App}
+   * @memberof Server
+   */
   app: mrapi.api.App
-  baseDir: string
-  prismaPaths: Map<string, string>
+  cwd = process.cwd()
 
   constructor(public options: mrapi.api.Options, public logger: mrapi.Logger) {
-    this.baseDir = process.cwd()
-    this.prismaPaths = new Map()
-    this.logger = getLogger(logger, options.logger)
+    this.logger = getLogger(logger, {
+      ...(options?.logger || {}),
+      name: 'mrapi-api-server',
+    })
     this.app = fastify(
       Object.assign({}, this.options.server.options, { logger: this.logger }),
     )
@@ -22,12 +29,14 @@ export default class Server {
   /**
    * decription: add sign route to app
    *
+   * @private
    * @param {Object} route route option
    * @param {Object} dal dal instance
    *
    * @returns {Void}
    */
-  addRoute(route: any, dal?: any) {
+  private addRoute(route: any, dal?: any) {
+    // TODO: review
     this.app.route({
       ...route,
       url: `${this.options.openapi.prefix}${route.url}`,
@@ -35,27 +44,24 @@ export default class Server {
         request: mrapi.api.Request,
         reply: mrapi.api.Response,
       ) => {
-        let prisma: any
-        const ret = {
+        const context = {
           request,
           reply,
-          prisma,
         }
-        // TODO: openapi
-        // 访问的租户
-        const tenant = request.headers[this.options.tenantIdentity]
-        // 访问的DB
-        const name = request.headers[this.options.schemaIdentity]
+
+        const tenantName = request.headers[this.options.tenantIdentity]
+        const serviceName = request.headers[this.options.schemaIdentity]
         this.logger.debug(
-          `[Route] DB: ${JSON.stringify(name)}, Tenant: ${JSON.stringify(
-            tenant,
-          )}`,
+          `[Route] serviceName: ${serviceName}, tenantName: ${tenantName}`,
         )
-        if (!dal) return route.handler(ret)
-        return dal.getPrisma(name, tenant).then((prisma: any) => {
-          ret.prisma = prisma
-          return route.handler(ret)
-        })
+
+        if (!dal) {
+          return route.handler(context)
+        }
+
+        return dal
+          .getDBClient(serviceName, tenantName)
+          .then((prisma: any) => route.handler({ ...context, prisma }))
       },
     })
   }
@@ -72,7 +78,14 @@ export default class Server {
     }
 
     for (const [name, options] of Object.entries(this.options.server.plugins)) {
-      this.app.register(require(name), options || {})
+      const pluginPath = requireResolve(name)
+      if (!pluginPath) {
+        this.logger.error(
+          `Cannot find plugin '${name}', please install it manually.`,
+        )
+      } else {
+        this.app.register(require(pluginPath), options || {})
+      }
     }
   }
 
@@ -84,36 +97,58 @@ export default class Server {
    * @returns {Void}
    */
   async loadOpenapi(dal?: any) {
-    const { options, app, baseDir } = this
+    const { options, cwd } = this
     if (!options.openapi) {
       return
     }
 
-    // load custom openapi
-    if (options.openapi.dir) {
-      const customRoutes = require(path.join(baseDir, options.openapi.dir))
-      Object.keys(customRoutes).forEach((key) => {
-        customRoutes[key].forEach((route: any) => {
-          this.addRoute(route, dal)
-        })
-      })
-    }
-
     // type equal standalone, forward request to dalServer
     if (options.server.type === 'standalone') {
-      await app.register(require('fastify-reply-from'), {
-        base: options.openapi.dalBaseUrl,
+      await this.app.register(require('fastify-reply-from'), {
+        base: options.openapi.url,
       })
-      app.route({
+      this.app.route({
         method: ['DELETE', 'GET', 'HEAD', 'PATCH', 'POST', 'PUT', 'OPTIONS'],
         url: '/*',
         handler: (request, reply: any) => {
           reply.from(request.raw.url)
         },
       })
+
+      return
     }
 
-    this.logger.info('[Start] load openapi done')
+    // load custom openapi
+    const dir =
+      options.openapi.dir && requireResolve(join(cwd, options.openapi.dir))
+
+    if (!dir) {
+      return
+    }
+
+    const custom = require(dir)
+    const content = custom.default || custom
+    const routes = Array.isArray(content)
+      ? content
+      : typeof content === 'object'
+      ? flatten([...Object.values(content)])
+      : typeof content === 'function'
+      ? await content(this)
+      : null
+
+    if (!routes) {
+      return
+    }
+
+    for (const route of routes) {
+      try {
+        this.addRoute(route, dal)
+      } catch (err) {
+        this.logger.error(`addRoute Error: ${err.message}`)
+      }
+    }
+
+    this.logger.debug('[Start] load openapi done')
   }
 
   /**
@@ -145,34 +180,35 @@ export default class Server {
           execute,
         }
 
-        // 访问的租户
-        const tenant = request.headers[this.options.tenantIdentity]
-        // 访问的DB
-        const dbName: any = (request.params as object & { name: () => any })
-          .name
+        const tenantName = request.headers[this.options.tenantIdentity]
+        const serviceName: any = (request.params as object & {
+          name: () => any
+        }).name
 
         this.logger.debug(
-          `[Route] DB: ${dbName}, Tenant: ${JSON.stringify(tenant)}`,
+          `[Route] serviceName: ${serviceName}, tenantName: ${tenantName}`,
         )
 
-        if (!dbName || !dal) {
-          return { ...ctx, tenant }
+        if (!dal || !serviceName) {
+          return { ...ctx, tenantName }
         }
+        // this should invoke after dal.getSchemas()
+        const prisma = await dal.getDBClient(serviceName, tenantName)
 
         return {
           ...ctx,
-          tenant,
-          dbName,
-          prisma: await dal.getDBClient(dbName, tenant),
+          prisma,
+          tenantName,
+          serviceName,
         }
       },
       ...this.options.graphql,
+      // TODO: use a default endpoint name
       path: `${this.options.graphql.path}/:name`,
       schema,
     }
-    await this.app.register(require('mercurius'), mercuriusOptions)
-
-    this.logger.info('[Start] load graphql done')
+    await this.app.register(mercurius, mercuriusOptions)
+    this.logger.debug('[Start] load graphql done')
   }
 
   /**
@@ -181,11 +217,12 @@ export default class Server {
    *
    * @returns {Promise} listen address
    */
-  async start(): Promise<string> {
+  async start() {
     this.loadPlugins()
     const { host, port } = this.options.server
-    const addr = await this.app.listen(port, host)
+    const address = await this.app.listen(port, host)
+
     this.logger.info(`Routes Tree\n${this.app.printRoutes()}`)
-    return addr
+    return { address }
   }
 }

@@ -52,6 +52,8 @@ export const defaultApiOptions: Partial<mrapi.api.Options> = {
   server: defaultServerOptions,
 }
 
+export const defaultOutputSchemaPath = 'schema.graphql'
+
 function optionsVerify(config: mrapi.api.Options) {
   const { openapi, graphql, server, schemaNames } = config
   const errorStr = '[Config Error] @mrapi/api '
@@ -63,8 +65,8 @@ function optionsVerify(config: mrapi.api.Options) {
       )
       if (openapi) {
         assert(
-          openapi && !openapi.dalBaseUrl,
-          `${errorStr}standlone type need openapi.dalBaseUrl`,
+          openapi && !openapi.url,
+          `${errorStr}standlone type need openapi.url`,
         )
       }
       break
@@ -131,7 +133,7 @@ export function resolveOptions(
     `,
   )
   logger.debug(`[Start] gen config file ${apiOptions.meshConfigOuputPath} done`)
-  logger.debug('apiConfig: ' + JSON.stringify(apiOptions, null, 2))
+  logger.debug('apiConfig: ' + JSON.stringify(apiOptions, null, 0))
 
   return apiOptions
 }

@@ -17,9 +17,9 @@
     "generate:schema": "node ./scripts/generate-json-schema.js"
   },
   "dependencies": {
-    "@graphql-mesh/config": "0.10.11",
+    "@graphql-mesh/config": "0.10.12",
     "@graphql-mesh/graphql": "0.7.5",
-    "@graphql-mesh/openapi": "0.9.1",
+    "@graphql-mesh/openapi": "0.10.0",
     "@graphql-mesh/runtime": "0.7.11",
     "@graphql-mesh/transform-cache": "0.7.9",
     "@graphql-mesh/transform-federation": "0.4.17",
@@ -38,9 +38,10 @@
     "fastify": "^3.6.0",
     "fastify-reply-from": "^3.3.0",
     "graphql": "^15.3.0",
-    "mercurius": "^6.1.1"
+    "mercurius": "^6.2.0"
   },
   "devDependencies": {
+    "@mrapi/dal": "workspace:*",
     "@types/node": "*",
     "tslib": "^2.0.3",
     "typescript": "^4.0.3",

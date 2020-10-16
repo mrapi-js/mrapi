@@ -1,19 +1,28 @@
-const { resolve, join } = require('path')
+const { resolve } = require('path')
 const { fs } = require('@mrapi/common')
 const TJS = require('typescript-json-schema')
 
 async function generate (id) {
   const settings = {
-    id,
-    ref: true,
+    // ref: false,
     aliasRef: true,
     topRef: true,
-    titles: 'dal',
+    // titles: 'dal',
+    // defaultProps: true,
     noExtraProps: true,
+    // propOrder: true,
+    typeOfKeyword: true,
     required: true,
+    // strictNullChecks: true,
     ignoreErrors: true,
-    rejectDateType: true,
-    defaultNumberType: 'number',
+    // out: '',
+    // validationKeywords: [],
+    // include: [],
+    excludePrivate: true,
+    // uniqueNames: true,
+    // rejectDateType: true,
+    // id: '',
+    // defaultNumberType: 'number',
   }
 
   // optionally pass ts compiler options

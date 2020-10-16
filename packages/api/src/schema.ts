@@ -1,12 +1,12 @@
 import type { mrapi, GraphQLSchema, ExecuteMeshFn } from './types'
 
 import { join, dirname } from 'path'
-import { runShell } from '@mrapi/common'
 import { getMesh } from '@graphql-mesh/runtime'
 import { stitchSchemas } from '@graphql-tools/stitch'
+import { requireResolve, runShell } from '@mrapi/common'
 import { findAndParseConfig } from '@graphql-mesh/config'
 
-export async function meshSchema(
+export async function meshSchemas(
   options: mrapi.api.Options,
   schemas: GraphQLSchema[] = [],
   logger: mrapi.Logger,
@@ -25,7 +25,7 @@ export async function meshSchema(
       configName: 'mesh',
       dir: join(rootDir, dirname(options.meshConfigOuputPath)),
     })
-    logger.info(`meshConfig: ${JSON.stringify(meshConfig, null, 2)}`)
+    logger.debug(`meshConfig: ${JSON.stringify(meshConfig, null, 0)}`)
   } catch (err) {
     throw new Error(`findAndParse mesh config error => ${err}`)
   }
@@ -37,12 +37,17 @@ export async function meshSchema(
     logger.error(err)
   }
 
-  // load custom graphql schema
+  // load custom graphql schemas
   if (options?.graphql?.dir) {
-    const customSchemas = require(join(rootDir, options.graphql.dir))
-    Object.keys(customSchemas).forEach((key) => {
-      subschemas.push({ schema: customSchemas[key] })
-    })
+    const customSchemasPath = requireResolve(join(rootDir, options.graphql.dir))
+    if (customSchemasPath) {
+      const customSchemas = require(customSchemasPath)
+      Object.keys(customSchemas).forEach((key) => {
+        subschemas.push({ schema: customSchemas[key] })
+      })
+    } else {
+      logger.debug('No custom schemas')
+    }
   }
 
   const schema = stitchSchemas({ subschemas })
