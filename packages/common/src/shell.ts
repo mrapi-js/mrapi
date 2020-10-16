@@ -35,7 +35,7 @@ export const runShell = async (
             log.error(stderr.toString())
           }
           if (stdout) {
-            log.info(stdout.toString())
+            log.debug(stdout.toString())
           }
         }
         if (error) reject(error)
