@@ -9,7 +9,7 @@ export function loggingMiddleware(options: any, server: Server) {
     next: NextFunction,
   ) => {
     if (req.url.startsWith(`/${server.options.endpoint.graphql}`)) {
-      server.logger.info(`=> ${req.url}`)
+      server.logger.debug(`=> ${req.url}`)
     }
     next()
   }

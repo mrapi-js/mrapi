@@ -2,14 +2,18 @@ import type { mrapi } from './types'
 
 import cors from 'cors'
 import bodyParser from 'body-parser'
+import cookieParser from 'cookie-parser'
 import { join, resolve } from 'path'
 import { resolveOptions as resolveDbOptions } from '@mrapi/db'
+import { specifiedRules, NoSchemaIntrospectionCustomRule } from 'graphql'
 import {
   validateConfig,
   resolveConfig,
   ensureAbsolutePath,
   merge,
 } from '@mrapi/common'
+
+const isProd = process.env.NODE_ENV === 'production'
 
 export const defaults = {
   graphql: 'graphql',
@@ -44,11 +48,33 @@ const defaultServerOptions: Partial<mrapi.dal.ServerOptions> = {
       options: {},
       wrap: false,
     },
+    {
+      fn: cookieParser,
+      options: {},
+      wrap: false,
+    },
   ],
 }
 
 const defaultGraphqlOptions: Partial<mrapi.dal.GraphqlOptions> = {
   enable: true,
+  introspection: true,
+  ...(isProd
+    ? {
+        // disable playground in production by default
+        playground: false,
+      }
+    : {
+        // enables playground
+        playground: '/playground',
+        // get more information from errors during development
+        customFormatErrorFn: (error) => ({
+          message: error.message,
+          locations: error.locations,
+          stack: error.stack ? error.stack.split('\n') : [],
+          path: error.path,
+        }),
+      }),
 }
 
 const defaultOpenapiOptions: Partial<mrapi.dal.OpenapiOptions> = {
@@ -67,7 +93,6 @@ const defaultDalOptions: Partial<mrapi.dal.Options> = {
     input: 'config',
     output: 'node_modules/.mrapi',
   },
-  // In the event of a multi-tenant exception, whether or not an error is thrown.
 }
 
 export const defaultDatabaseTypes: mrapi.dal.DatabaseType[] = [
@@ -76,6 +101,13 @@ export const defaultDatabaseTypes: mrapi.dal.DatabaseType[] = [
   'postgresql',
 ]
 
+/**
+ * Resolve DAL options
+ *
+ * @export
+ * @param {mrapi.dal.Options} [options]
+ * @returns {mrapi.dal.Options}
+ */
 export function resolveOptions(options?: mrapi.dal.Options): mrapi.dal.Options {
   const config = resolveConfig()
 
@@ -150,28 +182,54 @@ export function resolveOptions(options?: mrapi.dal.Options): mrapi.dal.Options {
         }
       }
 
-      const dbOptions = resolveDbOptions(serviceOptions.db)
-      dbOptions.name = serviceOptions.name
-      dbOptions['management'] = dbOptions.management || dalOptions.management
-      dbOptions['tenantSchema'] = serviceOptions.paths.outputSchema
+      const db = resolveDbOptions(serviceOptions.db)
+      db.name = serviceOptions.name
+      db['management'] = db.management || dalOptions.management
+      db['tenantSchema'] = serviceOptions.paths.outputSchema
+
+      const graphql = merge(defaultGraphqlOptions, serviceOptions.graphql || {})
+
+      // disable introspection when graphql.introspection is false
+      if (graphql.introspection === false) {
+        graphql.validationRules = [
+          ...specifiedRules,
+          NoSchemaIntrospectionCustomRule,
+        ].concat(graphql.validationRules || [])
+      }
+
+      const openapi = merge(defaultOpenapiOptions, serviceOptions.openapi || {})
 
       return {
         ...defaultServiceOptions,
         ...serviceOptions,
-        db: dbOptions,
-        graphql: {
-          ...defaultGraphqlOptions,
-          ...(serviceOptions.graphql || {}),
-        } as mrapi.dal.GraphqlOptions,
-        openapi: {
-          ...defaultOpenapiOptions,
-          ...(serviceOptions.openapi || {}),
-        },
+        db,
+        graphql,
+        openapi,
       }
     },
   )
 
   return dalOptions
+}
+
+/**
+ * Add extensions field to GraphQL response
+ *
+ * @export
+ * @param {mrapi.Logger} logger
+ * @returns
+ */
+export function makeGraphqlExtensions(logger: mrapi.Logger) {
+  return ({ document, variables, operationName, result, context }: any) => {
+    if (Array.isArray(result.errors)) {
+      result.errors.map((error: Error) =>
+        (logger || console).error(error.stack),
+      )
+    }
+    return {
+      ...(context.startTime ? { duation: Date.now() - context.startTime } : {}),
+    }
+  }
 }
 
 function resolvePaths(obj: any, paths: any, name?: string) {

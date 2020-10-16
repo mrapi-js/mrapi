@@ -1,6 +1,6 @@
 import type { mrapi } from '../../types'
 
-import DAL from '../..'
+import { DAL } from '../..'
 
 import { join, dirname } from 'path'
 import { fs, runPrisma, getLogger } from '@mrapi/common'

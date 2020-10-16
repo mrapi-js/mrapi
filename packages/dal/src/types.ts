@@ -1,8 +1,8 @@
 import type { mrapi } from '@mrapi/common'
-import type { GraphQLSchema } from 'graphql'
 import type { OptionsData } from 'express-graphql'
 import type { PrismaClient } from '@prisma/client'
 import type { ExpressOpenAPIArgs } from 'express-openapi'
+import type { GraphQLSchema, ASTVisitor, ValidationContext } from 'graphql'
 
 declare module '@mrapi/types' {
   namespace dal {
@@ -13,6 +13,8 @@ declare module '@mrapi/types' {
     interface GraphqlOptions extends OptionsData {
       // make schema optional
       schema?: GraphQLSchema
+      // make rules writable
+      validationRules?: Array<(ctx: ValidationContext) => ASTVisitor>
     }
 
     interface OpenapiOptions {
@@ -20,6 +22,11 @@ declare module '@mrapi/types' {
         app?: any
       }
     }
+
+    type GetDBClientFn = (
+      serviceName: string,
+      tenantName?: string,
+    ) => Promise<any>
   }
 
   namespace db {

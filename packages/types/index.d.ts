@@ -66,6 +66,10 @@ declare namespace mrapi {
        * Enable graphql introspection or not (default: true)
        */
       introspection?: boolean
+      /**
+       * Enable graphql playground or not (default: false in production, else '/playground')
+       */
+      playground?: boolean | string
     }
 
     interface OpenapiOptions {

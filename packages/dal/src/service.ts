@@ -1,7 +1,7 @@
 import type { mrapi } from './types'
 import type { GraphQLSchema } from 'graphql'
 
-import DB from '@mrapi/db'
+import { DB } from '@mrapi/db'
 import { join } from 'path'
 import { paljsPlugin } from '@mrapi/nexus'
 import { makeSchema } from '@nexus/schema'
@@ -18,9 +18,44 @@ interface DBInitParams {
   Client: PrismaClient
 }
 
+interface ServiceAddressItem {
+  path: string
+  docs?: string
+}
+
+export interface ServiceAddress {
+  graphql?: ServiceAddressItem
+  openapi?: ServiceAddressItem
+}
+
+/**
+ * DAL service
+ *
+ * @export
+ * @class Service
+ */
 export default class Service {
+  /**
+   * service name
+   *
+   * @type {string}
+   * @memberof Service
+   */
   name: string
+  /**
+   * DB instance
+   *
+   * @type {DB<PrismaClient>}
+   * @memberof Service
+   */
   db: DB<PrismaClient>
+  /**
+   * service addresses
+   *
+   * @type {ServiceAddress}
+   * @memberof Service
+   */
+  address?: ServiceAddress
 
   constructor(
     public options: mrapi.dal.ServiceOptions,
@@ -33,6 +68,11 @@ export default class Service {
     this.name = this.options.name
   }
 
+  /**
+   * Initialze the service
+   *
+   * @memberof Service
+   */
   async init() {
     console.log()
     this.logger.debug(`initialize service "${this.name}"...`)
@@ -86,6 +126,41 @@ export default class Service {
     this.logger.debug(`initialize service "${this.name}" done!`)
   }
 
+  /**
+   * Release service DB connections
+   *
+   * @memberof Service
+   */
+  async release() {
+    await this.db.disconnect()
+    this.logger.debug(`Service ${this.name} released successfully`)
+  }
+
+  /**
+   * Get DB client of tenant by name
+   *
+   * @param {string} [tenantName]
+   * @returns
+   * @memberof Service
+   */
+  async getTenantClient(tenantName?: string) {
+    this.logger.debug(`[getTenantClient] ${this.name}.${tenantName} ...`)
+
+    let tenant
+
+    try {
+      tenant = await this.db.getTenant(tenantName)
+      this.logger.debug(
+        `[getTenantClient] ${this.name}.${tenant.name}, from database: ${tenant.database}`,
+      )
+    } catch (err) {
+      this.logger.error(err)
+      throw new Error(`Cannot get tenant instance.`)
+    }
+
+    return tenant?.client
+  }
+
   private async initDB(
     TenantClient: PrismaClient,
     ManagementClient: PrismaClient,
@@ -107,28 +182,10 @@ export default class Service {
         })
       },
     }
-    this.db = new DB<PrismaClient>(dbOptions, this.logger)
+    this.db = new DB<PrismaClient>(dbOptions, null, true)
     await this.db.init()
   }
 
-  release() {
-    return this.db.disconnect()
-  }
-
-  async getTenantClient(tenantName?: string) {
-    let tenant
-    try {
-      tenant = await this.db.get(tenantName)
-    } catch {}
-
-    return tenant?.client
-  }
-
-  /**
-   * Generate graphql schema
-   *
-   * @private
-   */
   private generateSchema(schema?: GraphQLSchema) {
     let types: any
     try {

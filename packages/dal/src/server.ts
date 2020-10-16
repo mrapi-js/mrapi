@@ -1,31 +1,46 @@
 import type http from 'http'
 import type { mrapi } from './types'
+import type { Express } from 'express'
 
 import { join } from 'path'
+import express from 'express'
 import { GraphQLSchema } from 'graphql'
 import swaggerUi from 'swagger-ui-express'
-import express, { Express } from 'express'
 import { graphqlHTTP } from 'express-graphql'
 import { dependenciesPlugins } from '@mrapi/oas'
-import { fs, requireResolve } from '@mrapi/common'
+import { graphqlUploadExpress } from 'graphql-upload'
+import { fs, merge, requireResolve } from '@mrapi/common'
 import { initialize as initializeOpenAPI } from 'express-openapi'
 
-import { defaults } from './config'
 import { loggingMiddleware } from './middleware/logging'
+import { defaults, makeGraphqlExtensions } from './config'
 
-type GetPrismaType = (
-  name: string,
-  dbName: string,
-) => any | Promise<(name: string, dbName: string) => any>
-
+/**
+ * Server of DAL
+ *
+ * @export
+ * @class Server
+ */
 export default class Server {
-  public app: Express
-  public server: http.Server
+  /**
+   * Express instance
+   *
+   * @type {Express}
+   * @memberof Server
+   */
+  app: Express
+  /**
+   * Http server instance
+   *
+   * @type {http.Server}
+   * @memberof Server
+   */
+  server: http.Server
   private readonly routes: Set<string> = new Set()
 
   constructor(
     public options: mrapi.dal.ServerOptions,
-    public getPrisma: GetPrismaType,
+    public getDBClient: mrapi.dal.GetDBClientFn,
     public logger: mrapi.Logger,
   ) {
     this.app = express()
@@ -35,6 +50,13 @@ export default class Server {
     this.applyMiddlewares()
   }
 
+  /**
+   * Start the server
+   *
+   * @param {mrapi.dal.ServerOptions} options
+   * @returns
+   * @memberof Server
+   */
   start(options: mrapi.dal.ServerOptions) {
     if (options?.host) {
       this.options.host = options.host
@@ -46,11 +68,16 @@ export default class Server {
     const { port, host } = this.options
     this.server = this.app.listen(port, host)
 
-    this.logger.info(`🚀 Server ready at: ${this.getUri()}`)
+    this.logger.info(`🚀 Server listening at ${this.getUri()}`)
 
     return this.app
   }
 
+  /**
+   * Stop the server
+   *
+   * @memberof Server
+   */
   stop() {
     if (!this.server) {
       throw new Error('Server not started')
@@ -58,9 +85,22 @@ export default class Server {
 
     this.server.close()
 
-    this.logger.info(`\n🚫 Server closed. ${this.getUri()}\n`)
+    this.logger.warn(`\n🚫 Server closed. ${this.getUri()}\n`)
   }
 
+  /**
+   * Add routes to express app
+   *
+   * @param {(mrapi.dal.ServerOptions & mrapi.dal.ServiceOptions)} {
+   *     name,
+   *     graphql,
+   *     openapi,
+   *     paths,
+   *     enableRouteRepeat,
+   *   }
+   * @returns
+   * @memberof Server
+   */
   addRoute({
     name,
     graphql,
@@ -74,10 +114,24 @@ export default class Server {
     }
 
     this.routes.add(name)
-    this.addGraphql(name, graphql)
-    this.addOpenapi(name, openapi, paths)
+    const addressGraphql = this.addGraphql(name, graphql)
+    const addressOpenapi = this.addOpenapi(name, openapi, paths)
+
+    return addressGraphql || addressOpenapi
+      ? {
+          ...(addressGraphql ? { graphql: addressGraphql } : {}),
+          ...(addressOpenapi ? { openapi: addressOpenapi } : {}),
+        }
+      : null
   }
 
+  /**
+   * Remove route from express app
+   *
+   * @param {string} name
+   * @returns {boolean}
+   * @memberof Server
+   */
   removeRoute(name: string): boolean {
     const routes = this.app._router.stack
     const endpointGraphql = this.options.endpoint.graphql
@@ -101,7 +155,7 @@ export default class Server {
         routes.splice(index, 1)
 
         removeNum[endpointGraphql] === 0 &&
-          this.logger.info(
+          this.logger.warn(
             `🚫 [${name}] Termination a GraphQL API of route at: ${graphqlPath}`,
           )
         removeNum[endpointGraphql]++
@@ -127,7 +181,7 @@ export default class Server {
         routes.splice(index, 1)
 
         removeNum[endpointOpenapi] === 0 &&
-          this.logger.info(
+          this.logger.warn(
             `🚫 [${name}] Terminated: ${openAPIPath}; ${openAPIPath}/swagger`,
           )
         removeNum[endpointOpenapi]++
@@ -162,37 +216,25 @@ export default class Server {
       : req.headers[tenantIdentity]
   }
 
-  private addGraphql(name: string, graphqlOptions: mrapi.dal.GraphqlOptions) {
+  private addGraphql(
+    serviceName: string,
+    graphqlOptions: mrapi.dal.GraphqlOptions,
+  ) {
     if (typeof graphqlOptions !== 'object') {
-      return
+      return null
     }
 
-    const endpoint = this.resolveServicePath(name, 'graphql')
-    const extensions = ({
-      document,
-      variables,
-      operationName,
-      result,
-      context,
-    }: any) => {
-      if (Array.isArray(result.errors)) {
-        result.errors.map((error: Error) => this.logger.error(error.stack))
-      }
-      return {
-        ...(context.startTime
-          ? { duation: Date.now() - context.startTime }
-          : {}),
-      }
-    }
+    const endpoint = this.resolveServicePath(serviceName, 'graphql')
 
-    this.app.use(
+    this.app.post(
       endpoint,
+      graphqlUploadExpress({ maxFileSize: 10000000, maxFiles: 10 }),
       graphqlHTTP(async (req, res, params) => {
         const createContext = async () => {
           const tenantName: any = await this.getTenantIdentity(req, res, params)
           return {
             startTime: Date.now(),
-            prisma: await this.getPrisma(name, tenantName),
+            prisma: await this.getDBClient(serviceName, tenantName),
           }
         }
 
@@ -201,48 +243,69 @@ export default class Server {
           schema: new GraphQLSchema({
             query: null,
           }),
-          graphiql: { headerEditorEnabled: true },
           context: await createContext(),
-          extensions,
+          extensions: makeGraphqlExtensions(this.logger),
           ...graphqlOptions,
+          graphiql: false,
         }
       }),
     )
 
     this.logger.info(
-      `⭐️ [${name}] GraphQL service:  ${this.getUri()}${endpoint}`,
+      `⭐️ [${serviceName}] GraphQL service:     ${this.getUri()}${endpoint}`,
     )
+
+    if (graphqlOptions.playground) {
+      // apply playground middleware
+      const expressPlayground = require('graphql-playground-middleware-express')
+        .default
+      const path =
+        typeof graphqlOptions.playground === 'string' &&
+        graphqlOptions.playground.trim()
+          ? graphqlOptions.playground.trim()
+          : '/playground'
+      this.app.get(path, expressPlayground({ endpoint }))
+
+      this.logger.info(
+        `⭐️ [${serviceName}] GraphQL playground:  ${this.getUri()}${path}`,
+      )
+    }
+
+    return {
+      path: endpoint,
+    }
   }
 
   private addOpenapi(
-    name: string,
+    serviceName: string,
     openapiOptions: mrapi.dal.OpenapiOptions,
     paths: mrapi.dal.ServicePaths,
   ) {
     if (typeof openapiOptions !== 'object') {
-      return
+      return null
     }
     const output = paths.outputOpenapi
+    const outputPaths = join(output, 'paths')
+    const outputDefinitions = join(output, 'definitions')
+    const definitionsPath = requireResolve(outputDefinitions)
 
-    const definitionsPath = requireResolve(join(output, 'definitions'))
     if (!definitionsPath) {
       this.logger.error(
-        `OpenAPI definitions for service "${name}" not found. Please run "mrapi generate" first.`,
+        `OpenAPI definitions for service "${serviceName}" not found. Please run "mrapi generate" first.`,
       )
-      process.exit(1)
+      process.exit()
     }
 
-    const endpoint = this.resolveServicePath(name, 'openapi')
+    const endpoint = this.resolveServicePath(serviceName, 'openapi')
     const definitions = require(definitionsPath) || {}
-    const getPrisma = async (req: any) => {
+    const getDBClient = async (req: any) => {
       // TODO: more params
       const tenantName: any = await this.getTenantIdentity(req)
-      return this.getPrisma(name, tenantName)
+      return this.getDBClient(serviceName, tenantName)
     }
-    const opts = {
+    const opts = merge(openapiOptions.docs, {
       ...openapiOptions.docs,
       app: this.app,
-      // logger: this.logger,
       validateApiDoc:
         typeof openapiOptions.validateApiDoc === 'undefined'
           ? true
@@ -251,7 +314,7 @@ export default class Server {
         swagger: '2.0',
         basePath: endpoint,
         info: {
-          title: `[${name}] Started openAPI.`,
+          title: `[${serviceName}] Started openAPI.`,
           version: '1.0.0',
         },
         paths: {},
@@ -259,14 +322,14 @@ export default class Server {
       },
       dependencies: {
         ...(openapiOptions.dependencies || {}),
-        getPrisma,
+        getDBClient,
         mrapiFn: dependenciesPlugins({
-          getPrisma,
+          getDBClient,
         }),
       },
-      paths: join(output, 'paths'),
+      paths: outputPaths,
       pathsIgnore: new RegExp('.(spec|test)$'),
-    }
+    })
     const openAPIInstance = initializeOpenAPI(opts)
     const apiDoc = openAPIInstance.apiDoc
 
@@ -279,10 +342,10 @@ export default class Server {
     )
 
     this.logger.info(
-      `⭐️ [${name}] OpenAPI service:  ${this.getUri()}${endpoint}`,
+      `⭐️ [${serviceName}] OpenAPI service:     ${this.getUri()}${endpoint}`,
     )
     this.logger.info(
-      `⭐️ [${name}] OpenAPI document: ${this.getUri()}${endpoint}/swagger`,
+      `⭐️ [${serviceName}] OpenAPI document:    ${this.getUri()}${endpoint}/swagger`,
     )
 
     // generate openapi/docs.json
@@ -290,6 +353,11 @@ export default class Server {
       join(output, 'docs.json'),
       JSON.stringify(apiDoc, null, 2),
     )
+
+    return {
+      path: endpoint,
+      docs: `${endpoint}/swagger`,
+    }
   }
 
   private async applyMiddlewares() {

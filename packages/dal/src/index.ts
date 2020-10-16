@@ -1,10 +1,11 @@
 import type { mrapi } from './types'
+import type { Express } from 'express'
 
 import { merge, getLogger } from '@mrapi/common'
 
 import Server from './server'
 import Service from './service'
-import { resolveOptions } from './config'
+import { defaults, resolveOptions } from './config'
 
 export * from './types'
 
@@ -26,8 +27,21 @@ export * from './helpers'
  *
  *
  */
-export default class DAL {
-  public server: Server
+export class DAL {
+  /**
+   * Equals to server's app, only available after dal.start()
+   *
+   * @type {Express}
+   * @memberof DAL
+   */
+  app: Express
+  /**
+   * DAL server
+   *
+   * @type {Server}
+   * @memberof DAL
+   */
+  server: Server
   private readonly services: Map<string, Service> = new Map()
 
   constructor(
@@ -35,8 +49,8 @@ export default class DAL {
     public logger?: mrapi.Logger,
   ) {
     this.logger = getLogger(logger, {
-      name: 'mrapi-dal',
       ...(options?.logger || {}),
+      name: 'mrapi-dal',
     })
     this.options = resolveOptions(options)
   }
@@ -57,7 +71,7 @@ export default class DAL {
     await service.init()
 
     if (this.server) {
-      this.server.addRoute({
+      service.address = this.server.addRoute({
         ...service.options,
         ...this.options.server,
       })
@@ -114,17 +128,20 @@ export default class DAL {
    * Get DB client
    *
    */
-  getDBClient = async (serviceName: string, tenantName?: string) => {
-    this.logger.debug(
-      `getDBClient => serviceName: ${serviceName}, tenantName: ${tenantName}`,
-    )
-    const service = this.services.get(serviceName)
+  getDBClient: mrapi.dal.GetDBClientFn = async (
+    serviceName: string,
+    tenantName?: string,
+  ) => {
+    const name = serviceName || defaults.serviceName
+    const service = this.services.get(name)
     if (!service) {
-      throw new Error(`service "${serviceName}" not found`)
+      throw new Error(`service "${name}" not found`)
     }
     return service.getTenantClient(tenantName).catch((err: Error) => {
       this.logger.error(err)
-      const message = `Check to see if a multi-tenant identity  has been added to the "Request Headers".`
+      const message =
+        err.message +
+        ` Please check if the multi-tenant identity "${this.options.server.tenantIdentity}" has been set in the request headers.`
       this.logger.error(`Tips: ${message}`)
       throw new Error(message)
     })
@@ -149,6 +166,7 @@ export default class DAL {
         this.getDBClient,
         this.logger,
       )
+      this.app = this.server.app
     }
     this.server.start(options)
     await this.addServices()

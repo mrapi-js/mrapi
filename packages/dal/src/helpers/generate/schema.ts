@@ -12,6 +12,11 @@ export default async function generateSchema({
   provider: string
   logger?: mrapi.Logger
 }) {
+  if (!(await fs.pathExists(paths.inputSchema))) {
+    logger.error(`input schema not found: ${paths.inputSchema}`)
+    return
+  }
+
   const inputSchemaFileContent = await fs.readFile(paths.inputSchema, 'utf8')
   /// Get file content without comments
   const pureSchemaFile = getNoCommentContent(inputSchemaFileContent)

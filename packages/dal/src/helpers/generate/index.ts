@@ -9,7 +9,7 @@ import {
   getLogger,
 } from '@mrapi/common'
 
-import DAL from '../..'
+import { DAL } from '../..'
 import generateSchema from './schema'
 import generatePrisma from './prisma'
 import generateGraphql from './graphql'
