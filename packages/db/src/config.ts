@@ -2,19 +2,19 @@ import type { mrapi } from './types'
 
 import { resolve } from 'path'
 import {
-  validateConfig,
-  resolveConfig,
-  ensureAbsolutePath,
   merge,
+  resolveConfig,
+  validateConfig,
+  ensureAbsolutePath,
 } from '@mrapi/common'
 
-export const defaultTenantName = 'default'
-// tenant table name in management database
-export const tenantTableName = 'tenant'
+const defaultTenantName = 'default'
 
-export const defaultTenantConfig = {
+export const defaultTenantOptions = {
   name: defaultTenantName,
   database: `file:./${defaultTenantName}.db`,
+  // tenant table name in management database
+  tableName: 'tenant',
 }
 
 const defaultManagementOptions: Partial<mrapi.db.PathObject> = {
@@ -29,18 +29,29 @@ const defaultDBOptions: Partial<mrapi.db.Options> = {
     outputSchema: 'prisma/schema.prisma',
     outputDatabase: 'db',
   },
+  prismaOptions: {
+    errorFormat: 'minimal', // 'pretty' | 'colorless' | 'minimal'
+    log: ['warn', 'error'], // ['query', 'info', 'warn', 'error']
+  },
 }
 
+/**
+ * Resolve DB options
+ *
+ * @export
+ * @param {(mrapi.db.Options | string)} [options]
+ * @returns {mrapi.db.Options}
+ */
 export function resolveOptions(
   options?: mrapi.db.Options | string,
 ): mrapi.db.Options {
   const config = resolveConfig()
-
   const tenants = resolveTenantsOptions(config?.db || options)
   const dbOptions: mrapi.db.Options = {
-    ...defaultDBOptions,
-    ...(config?.db || {}),
-    ...(typeof options !== 'string' ? options : {}),
+    ...merge(defaultDBOptions, {
+      ...(config?.db || {}),
+      ...(typeof options !== 'string' ? options : {}),
+    }),
     tenants,
   }
 
@@ -99,13 +110,20 @@ export function resolveOptions(
   return dbOptions
 }
 
+/**
+ * Resolve tenants options
+ *
+ * @export
+ * @param {(null | string | mrapi.db.Options)} db
+ * @returns {mrapi.db.TenantsOption}
+ */
 export function resolveTenantsOptions(
   db: null | string | mrapi.db.Options,
 ): mrapi.db.TenantsOption {
   let tenants: mrapi.db.TenantsOption
 
   if (!db) {
-    tenants = [defaultTenantConfig]
+    tenants = [defaultTenantOptions]
   }
 
   if (typeof db === 'string') {
@@ -129,7 +147,7 @@ export function resolveTenantsOptions(
       throw new Error('DB tenants config invalid.')
     }
   } else {
-    tenants = [defaultTenantConfig]
+    tenants = [defaultTenantOptions]
   }
 
   return (tenants.map((tenant) => {
