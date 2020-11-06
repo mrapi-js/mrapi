@@ -1,0 +1,20 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = env("CLIENT_OUTPUT")
+}
+
+datasource db {
+  provider = ["sqlite", "mysql", "postgresql"]
+  url      = env("DATABASE_URL")
+}
+
+model Tenant {
+  id        Int      @id @default(autoincrement())
+  name      String
+  service   String
+  database  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name, service])
+}

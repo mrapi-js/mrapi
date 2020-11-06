@@ -1,0 +1,11 @@
+{
+  "trouter": {
+    "short static": 3579364,
+    "static with same radix": 3677874,
+    "dynamic route": 3679417,
+    "mixed static dynamic": 3532348,
+    "long static": 3519732,
+    "wildcard": 3635470,
+    "all together": 605292
+  }
+}

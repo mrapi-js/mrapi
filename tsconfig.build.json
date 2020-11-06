@@ -1,0 +1,14 @@
+{
+  "files": [],
+  "references": [
+    { "path": "packages/types" },
+    { "path": "packages/common" },
+    { "path": "packages/router" },
+    { "path": "packages/app" },
+    { "path": "packages/db" },
+    { "path": "packages/cli" },
+    { "path": "packages/graphql" },
+    { "path": "packages/service" },
+    { "path": "packages/gateway" },
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "@mrapi/gateway",
+  "version": "2.0.0",
+  "description": "mrapi",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput -w",
+    "test": "tape -r esm test/*.js | tap-spec"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/types": "workspace:*",
+    "@mrapi/common": "workspace:*",
+    "@mrapi/app": "workspace:*",
+    "@mrapi/router": "workspace:*",
+    "fast-proxy": "^1"
+  },
+  "devDependencies": {}
+}

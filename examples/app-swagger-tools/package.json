@@ -1,0 +1,30 @@
+{
+  "name": "swagger-tools",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/app": "*",
+    "express-openapi": "^7.0.2",
+    "swagger-tools": "^0.10.4"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "@types/swagger-tools": "^0.10.6",
+    "ts-node-dev": "^1",
+    "typescript": "^4"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

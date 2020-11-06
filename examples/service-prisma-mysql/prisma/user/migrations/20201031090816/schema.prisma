@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = env("CLIENT_OUTPUT")
+}
+
+datasource db {
+  provider = ["sqlite", "mysql", "postgresql"]
+  url = "***"
+}
+
+/// This is user description
+model User {
+  id    Int     @id @default(autoincrement())
+  /// email description
+  email String  @unique
+  /// name description
+  name  String?
+  /// posts description
+  posts Post[]
+}
+
+/// This is post description
+model Post {
+  id        Int     @id @default(autoincrement())
+  /// title description
+  title     String
+  /// content description
+  content   String?
+  /// published description
+  published Boolean @default(false)
+  /// author description
+  author    User?   @relation(fields: [authorId], references: [id])
+  authorId  Int?
+}

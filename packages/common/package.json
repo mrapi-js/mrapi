@@ -1,52 +1,26 @@
 {
   "name": "@mrapi/common",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0",
+  "description": "mrapi",
   "main": "lib/index.js",
-  "scripts": {
-    "build": "tsc -b .",
-    "watch": "tsc --preserveWatchOutput --watch",
-    "clean": "npm run clean:lib && rm -rf node_modules",
-    "clean:lib": "rm -rf lib && rm -rf tsconfig.tsbuildinfo"
-  },
-  "publishConfig": {
-    "access": "public",
-    "directory": "lib"
-  },
-  "dependencies": {
-    "@mrapi/types": "workspace:*",
-    "ajv": "7.0.0-beta.0",
-    "deepmerge": "^4.2.2",
-    "find-node-modules": "^2.1.0",
-    "fs-extra": "^9.0.1",
-    "pino": "^6.7.0",
-    "pino-pretty": "^4.3.0",
-    "prettier": "^2.1.2",
-    "tslib": "^2.0.3"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^9.0.2",
-    "@types/glob": "^7.1.3",
-    "@types/pino": "^6.3.2",
-    "typescript": "^4.0.3"
-  },
-  "author": "neikvon",
-  "contributors": [
-    {
-      "name": "kring",
-      "url": "https://github.com/364734461"
-    }
-  ],
-  "license": "MIT",
+  "typings": "lib/index.d.ts",
   "files": [
     "lib",
-    "schemas"
+    "src"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  "engines": {
+    "node": ">=10"
   },
-  "bugs": {
-    "url": "https://github.com/mrapi-js/mrapi/issues"
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput -w"
   },
-  "homepage": "https://github.com/mrapi-js/mrapi#readme"
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/types": "workspace:*",
+    "deepmerge": "^4"
+  },
+  "devDependencies": {}
 }
