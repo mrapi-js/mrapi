@@ -1,11 +1,27 @@
-import type { mrapi } from '@mrapi/common'
+import type { ServiceOptions as BaseServiceOptions } from '@mrapi/types'
 
-declare module '@mrapi/types' {
-  namespace db {
-    interface Options {
-      logger?: mrapi.LoggerOptions
-    }
-  }
+export { TenantOptions } from '@mrapi/types'
+
+export interface ManagementOptions {
+  database: string
+  clientPath: string
+  tenantModelName?: string
 }
 
-export { mrapi }
+export interface ServiceOptions
+  extends Pick<
+    BaseServiceOptions,
+    'name' | 'database' | 'tenants' | 'defaultTenant'
+  > {
+  clientPath: string
+}
+
+export enum ProviderName {
+  prisma = 'prisma',
+}
+
+export interface DBOptions {
+  provider: ProviderName
+  services: Array<ServiceOptions>
+  management?: ManagementOptions
+}

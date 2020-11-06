@@ -1,58 +1,28 @@
-import { join, isAbsolute } from 'path'
+import { isAbsolute, join } from 'path'
 
-let nodeModules: string
-export const getNodeModules = (fresh = false): string => {
-  if (nodeModules && !fresh) return nodeModules
-
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  const findNodeModules = require('find-node-modules')
-  nodeModules = findNodeModules({ cwd: process.cwd(), relative: false })[0]
-
-  return nodeModules
-}
-
-enum DBProvider {
-  postgresql = 'postgresql',
-  mysql = 'mysql',
-  sqlite = 'sqlite',
-}
-
-export const getUrlAndProvider = (url: string) => {
-  const _url = url.trim()
-  if (!_url) {
-    throw new Error('database url can not be empty')
-  }
-  const str = _url.split(':')[0]
-  if (!str) {
-    throw new Error(
-      `unable to detect database database provider, received empty '${str}'`,
-    )
+export function tryRequire(name?: string, message = '', resolveDefault = true) {
+  if (!name) {
+    return null
   }
 
-  let provider = ''
-  switch (str) {
-    case DBProvider.mysql:
-      provider = DBProvider.mysql
-      break
-    case DBProvider.postgresql:
-      provider = DBProvider.postgresql
-      break
-    case 'file':
-      provider = DBProvider.sqlite
-      break
-    default:
-      throw new Error(
-        `Unrecognized '${str}' provider. Known providers: ${DBProvider.mysql}, ${DBProvider.postgresql}, ${DBProvider.sqlite}`,
-      )
-  }
-
-  return {
-    url: _url,
-    provider,
+  try {
+    const mod = require(name)
+    return resolveDefault ? mod?.default || mod : mod
+  } catch (err) {
+    if (message) {
+      if (err.code === 'MODULE_NOT_FOUND') {
+        console.error(`${message}. Please run \`npm install ${name}\``)
+        process.exit(1)
+      } else {
+        console.error(message)
+        throw err
+      }
+    }
+    return null
   }
 }
 
-export const requireResolve = (path: string): string => {
+export const resolveFile = (path: string): string => {
   let result = ''
   try {
     result = require.resolve(path)
@@ -60,13 +30,70 @@ export const requireResolve = (path: string): string => {
   return result
 }
 
-export const ensureAbsolutePath = (path: string, cwd = process.cwd()) => {
-  return isAbsolute(path) ? path : join(cwd, path || '')
+export const ensureEndSlash = (path: string) => {
+  return path.endsWith('/') ? path : `${path}/`
 }
 
-export const flatten = (arr: any[], depth = 1): any[] =>
-  arr.reduce(
-    (a, v) =>
-      a.concat(depth > 1 && Array.isArray(v) ? flatten(v, depth - 1) : v),
-    [],
-  )
+export function ensureDepIsInstalled(depName: string) {
+  try {
+    require(depName)
+  } catch (err) {
+    if (err.code === 'MODULE_NOT_FOUND') {
+      console.error(`Please run \`npm install ${depName}\``)
+      process.exit(1)
+    } else {
+      throw err
+    }
+  }
+}
+
+const prefixZero = (value: number): string => ('0' + value).slice(-2)
+
+export function now(): string {
+  const now = new Date()
+  return `${now.getFullYear()}${prefixZero(now.getMonth() + 1)}${prefixZero(
+    now.getDate(),
+  )}${prefixZero(now.getHours())}${prefixZero(now.getMinutes())}${prefixZero(
+    now.getSeconds(),
+  )}`
+}
+
+/**
+ * Converts Windows-style paths to Posix-style
+ * C:\Users\Bob\dev\Redwood -> /c/Users/Bob/dev/Redwood
+ *
+ * The conversion only happens on Windows systems, and only for paths that are
+ * not already Posix-style
+ *
+ * @param path Filesystem path
+ */
+export const ensurePosixPath = (path: string) => {
+  let posixPath = path
+
+  if (process.platform === 'win32') {
+    if (/^[A-Z]:\\/.test(path)) {
+      const drive = path[0].toLowerCase()
+      posixPath = `/${drive}/${path.substring(3)}`
+    }
+
+    posixPath = posixPath.replace(/\\/g, '/')
+  }
+
+  return posixPath
+}
+
+export const ensureArray = <T>(x: unknown): Array<T> =>
+  Array.isArray(x) ? x : [x].filter(Boolean)
+
+export const ensureAbsolutePath = (path: string, cwd = process.cwd()) => {
+  return isAbsolute(path) ? path : join(cwd, path)
+}
+
+export const getWorkspaceDirs = (cwd = process.cwd()) => {
+  const tsconfigPath = join(cwd, 'tsconfig.json')
+  const tsconifg = tryRequire(tsconfigPath)
+  return {
+    src: tsconifg?.compilerOptions?.rootDir || 'src',
+    dst: tsconifg?.compilerOptions?.outDir || 'lib',
+  }
+}

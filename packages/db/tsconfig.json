@@ -3,8 +3,8 @@
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "lib",
-    "allowJs": true,
-    "tsBuildInfoFile": "tsconfig.tsbuildinfo"
+    "composite": true
   },
-  "include": ["typings.d.ts", "src/**/*"]
+  "include": ["src/**/*.ts", "typings.d.ts"],
+  "exclude": ["node_modules", "tests"]
 }

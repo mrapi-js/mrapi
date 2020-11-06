@@ -8,9 +8,9 @@
   ],
   "scripts": {
     "clean": "pnpm recursive run clean && rm -rf node_modules && rm -rf pnpm-lock.yaml",
-    "clean:lib": "pnpm recursive run clean:lib",
-    "build": "pnpm recursive run clean:lib && pnpm run build --filter @mrapi/common && pnpm run build --filter @mrapi/db && pnpm run build --filter @mrapi/nexus && pnpm run build --filter @mrapi/oas && pnpm run build --filter @mrapi/cli && pnpm run build --filter @mrapi/dal && pnpm run build --filter @mrapi/api",
-    "watch": "pnpm run --parallel watch",
+    "build": "tsc -b tsconfig.build.json",
+    "build2": "pnpm run build --filter @mrapi/types && pnpm run build --filter @mrapi/common && pnpm run build --filter @mrapi/router && pnpm run build --filter @mrapi/app && pnpm run build --filter @mrapi/graphql && pnpm run build --filter @mrapi/db && pnpm run build --filter @mrapi/service && pnpm run build --filter @mrapi/gateway && pnpm run build --filter @mrapi/cli",
+    "dev": "pnpm run --parallel watch",
     "publish": "ts-node scripts/publish.ts",
     "publish:dry": "DRY_RUN=true ts-node scripts/publish.ts",
     "publish:next": "TAG=next ts-node scripts/publish.ts",
@@ -32,23 +32,16 @@
     }
   },
   "devDependencies": {
-    "chalk": "^4.1.0",
-    "execa": "^4.0.3",
-    "jest": "^26.4.2",
-    "semver": "^7.3.2",
-    "ts-node": "^9.0.0",
-    "typescript": "^4.0.2",
-    "@typescript-eslint/eslint-plugin": "^4.1.1",
-    "eslint-config-standard-with-typescript": "19.0.1",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-import": "2.22.0",
-    "eslint-plugin-promise": "4.2.1",
-    "eslint-plugin-standard": "4.0.1",
-    "eslint-config-prettier": "6.11.0",
-    "eslint-plugin-jest": "24.0.1",
-    "eslint": "7.9.0",
-    "prettier": "^2.1.1",
-    "husky": "^4.3.0"
+    "@types/jest": "^26",
+    "@types/node": "*",
+    "httpie": "^1",
+    "jest": "^26",
+    "jest-serializer-path": "^0.1.15",
+    "jest-watch-typeahead": "^0",
+    "lerna": "^3.22.1",
+    "rimraf": "^3.0.2",
+    "ts-jest": "^26",
+    "typescript": "^4"
   },
   "resolutions": {
     "graphql": "15.3.0"

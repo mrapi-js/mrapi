@@ -1,39 +1,28 @@
 {
   "name": "@mrapi/db",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0",
+  "description": "mrapi",
   "main": "lib/index.js",
-  "scripts": {
-    "build": "tsc -b .",
-    "watch": "tsc --preserveWatchOutput --watch",
-    "clean": "npm run clean:lib && rm -rf node_modules",
-    "clean:lib": "rm -rf lib && rm -rf tsconfig.tsbuildinfo",
-    "generate:schema": "node ./scripts/generate-json-schema.js"
-  },
-  "publishConfig": {
-    "access": "public",
-    "directory": "lib"
-  },
-  "dependencies": {
-    "@mrapi/common": "workspace:*",
-    "@mrapi/types": "workspace:*"
-  },
-  "devDependencies": {
-    "tslib": "^2.0.3",
-    "typescript": "^4.0.3",
-    "typescript-json-schema": "0.43.0"
-  },
-  "author": "neikvon",
-  "license": "MIT",
+  "typings": "lib/index.d.ts",
   "files": [
     "lib",
-    "schemas"
+    "src"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  "engines": {
+    "node": ">=10"
   },
-  "bugs": {
-    "url": "https://github.com/mrapi-js/mrapi/issues"
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput -w"
   },
-  "homepage": "https://github.com/mrapi-js/mrapi#readme"
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/types": "workspace:*",
+    "@mrapi/common": "workspace:*"
+  },
+  "devDependencies": {
+    "@prisma/client": "^2"
+  }
 }

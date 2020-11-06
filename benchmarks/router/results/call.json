@@ -1,0 +1,11 @@
+{
+  "call": {
+    "short static": 4237147,
+    "static with same radix": 3962833,
+    "dynamic route": 728289,
+    "mixed static dynamic": 744441,
+    "long static": 4802898,
+    "wildcard": 792385,
+    "all together": 192037
+  }
+}

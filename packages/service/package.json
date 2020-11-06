@@ -1,0 +1,37 @@
+{
+  "name": "@mrapi/service",
+  "version": "2.0.0",
+  "description": "mrapi",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput -w"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/types": "workspace:*",
+    "@mrapi/common": "workspace:*",
+    "@mrapi/app": "workspace:*",
+    "@mrapi/graphql": "workspace:*",
+    "body-parser": "^1.19"
+  },
+  "devDependencies": {
+    "@mrapi/db": "workspace:*",
+    "@nexus/schema": "^0",
+    "express-graphql": "^0",
+    "graphql-playground-middleware-express": "^1",
+    "nexus-plugin-prisma": "^0",
+    "express-openapi":"^7",
+    "swagger-tools":"^0"
+  }
+}

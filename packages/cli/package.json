@@ -1,58 +1,37 @@
 {
   "name": "@mrapi/cli",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0",
+  "description": "mrapi",
   "main": "lib/index.js",
-  "bin": {
-    "mrapi": "./bin/run"
-  },
+  "typings": "lib/index.d.ts",
   "files": [
     "lib",
     "bin"
   ],
-  "engines": {
-    "node": ">=10.12"
+  "bin": {
+    "mrapi": "./bin/run"
   },
-  "author": "neikvon",
-  "contributors": [
-    {
-      "name": "kring",
-      "url": "https://github.com/364734461"
-    }
-  ],
-  "license": "MIT",
+  "engines": {
+    "node": ">=10"
+  },
   "scripts": {
     "build": "tsc -b .",
-    "watch": "tsc --preserveWatchOutput --watch",
-    "clean": "npm run clean:lib && rm -rf node_modules",
-    "clean:lib": "rm -rf lib && rm -rf tsconfig.tsbuildinfo"
+    "watch": "tsc --preserveWatchOutput -w"
   },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
   "dependencies": {
+    "@mrapi/types": "workspace:*",
     "@mrapi/common": "workspace:*",
-    "commander": "^6.1.0",
-    "dotenv": "^8.2.0"
+    "execa": "^4",
+    "chalk": "^4",
+    "prettier":"^2"
   },
   "devDependencies": {
-    "@mrapi/dal": "workspace:*",
-    "tslib": "^2.0.3",
-    "typescript": "^4.0.3"
-  },
-  "prettier": {
-    "semi": false,
-    "tabWidth": 2,
-    "singleQuote": true,
-    "trailingComma": "all"
-  },
-  "publishConfig": {
-    "access": "public",
-    "directory": "lib"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/mrapi-js/mrapi.git"
-  },
-  "bugs": {
-    "url": "https://github.com/mrapi-js/mrapi/issues"
-  },
-  "homepage": "https://github.com/mrapi-js/mrapi#readme",
-  "gitHead": "38fd5b78bfd78e63f3f8d0d394a6f7d53eb234b1"
+    "@prisma/cli": "^2",
+    "@prisma/debug": "^2",
+    "@paljs/schema": "^2",
+    "@paljs/generator": "^2"
+  }
 }

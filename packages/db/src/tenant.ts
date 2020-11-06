@@ -1,94 +1,51 @@
-import type { mrapi } from './types'
+import type { ProviderName, TenantOptions } from './types'
 
-import { getDBClientInstance, checkFunction } from './utils'
+import { defaults, tryRequire } from '@mrapi/common'
 
-export interface InternalTenantOptions {
-  name: string
-  database: string
-  schema: string
-  options?: any
-  prismaOptions?: mrapi.db.PrismaOptions
-  prismaMiddlewares?: mrapi.db.PrismaMiddlewares
-}
-
-/**
- * DB tenant
- *
- * @export
- * @class Tenant
- */
 export class Tenant {
-  /**
-   * Tenant name (default: "default")
-   *
-   * @type {string}
-   * @memberof Tenant
-   */
-  name: string = 'default'
-  /**
-   * PrismaClient of management
-   *
-   * @type {PrismaClient}
-   * @memberof Tenant
-   */
+  name: string
   client: any
-  /**
-   * Database url of tenant
-   *
-   * @type {string}
-   * @memberof Tenant
-   */
-  database: string
+  provider: any
 
   constructor(
-    private options: InternalTenantOptions,
-    private migrateFn: Function,
-    protected TenantClient: any,
-    protected logger?: mrapi.Logger,
+    protected options: TenantOptions,
+    protected providerName: ProviderName,
   ) {
-    if (options.name) {
-      this.name = options.name
-    }
-    this.database = this.options.database
-
-    // TODO: check
-    if (TenantClient) {
-      this.client = getDBClientInstance(
-        TenantClient,
-        this.options.database,
-        this.options.prismaOptions,
-      )
-
-      // apply prisma middlewares
-      if (Array.isArray(this.options.prismaMiddlewares)) {
-        for (const middleware of this.options.prismaMiddlewares) {
-          this.client.$use(middleware)
-        }
-      }
-    }
+    this.name = options.name
+    this.options.clientPath = options.clientPath || defaults.clientPath
   }
 
-  /**
-   * Execute migrate of database
-   *
-   * @memberof Tenant
-   */
-  async migrate() {
-    if (!checkFunction(this.migrateFn, 'migrateFn')) {
-      return
+  async getClient(options = {}) {
+    if (this.client) {
+      return this.client
     }
 
-    await this.migrateFn(this.options)
-    this.logger.debug(`tenant "${this.name}" migrated`)
+    const Provider = tryRequire(`./provider/${this.providerName}`)
+    this.provider = new Provider(
+      {
+        database: this.options.database,
+        clientPath: this.options.clientPath,
+      },
+      options,
+    )
+
+    this.client = this.provider.get()
+    return this.client
   }
 
-  /**
-   * Disconnect database connection of tenant
-   *
-   * @returns
-   * @memberof Tenant
-   */
+  connect() {
+    this.checkclient()
+    return this.client.$connect()
+  }
+
   disconnect() {
-    return this.client.disconnect()
+    this.checkclient()
+    return this.client.$disconnect()
+  }
+
+  private checkclient() {
+    if (!this.client) {
+      throw new Error(`Management database client hasn't been initialized yet.`)
+    }
   }
 }

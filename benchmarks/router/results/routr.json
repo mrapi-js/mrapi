@@ -1,0 +1,11 @@
+{
+  "routr": {
+    "short static": 4429314,
+    "static with same radix": 2417440,
+    "dynamic route": 889230,
+    "mixed static dynamic": 658539,
+    "long static": 658402,
+    "wildcard": 437193,
+    "all together": 133823
+  }
+}

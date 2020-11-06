@@ -1,0 +1,11 @@
+{
+  "trek-router": {
+    "short static": 14957978,
+    "static with same radix": 7035574,
+    "dynamic route": 3477194,
+    "mixed static dynamic": 3820197,
+    "long static": 8066865,
+    "wildcard": 5281509,
+    "all together": 979582
+  }
+}

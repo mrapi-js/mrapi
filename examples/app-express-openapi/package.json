@@ -1,0 +1,30 @@
+{
+  "name": "app-express-openapi",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/app": "file:../../packages/app",
+    "express-openapi": "^7",
+    "swagger-ui-express": "^4"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "@types/swagger-ui-express": "^4",
+    "ts-node-dev": "^1",
+    "typescript": "^4"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

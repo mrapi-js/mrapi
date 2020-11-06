@@ -1,0 +1,35 @@
+{
+  "name": "@mrapi/app",
+  "version": "2.0.0",
+  "description": "mrapi",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "src"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput -w"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express":"^4",
+    "@types/express-serve-static-core":"^4",
+    "@mrapi/router": "workspace:*",
+    "@polka/url": "1.0.0-next.11",
+    "lru-cache": "^6",
+    "pino": "^6"
+  },
+  "devDependencies": {
+    "@types/pino": "^6",
+    "@types/lru-cache": "^5",
+    "body-parser":"^1.19.0",
+    "cookie-parser":"^1.4.5"
+  }
+}

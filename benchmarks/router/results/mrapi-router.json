@@ -1,0 +1,11 @@
+{
+  "@mrapi/router": {
+    "short static": 3323934,
+    "static with same radix": 3597858,
+    "dynamic route": 3668102,
+    "mixed static dynamic": 3459876,
+    "long static": 3541751,
+    "wildcard": 3485573,
+    "all together": 572401
+  }
+}
