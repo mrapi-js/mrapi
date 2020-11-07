@@ -12,10 +12,13 @@ export async function makeOpenapi(
   options: any = {},
   prefix: string,
 ) {
-  const swagger: typeof import('swagger-tools') = tryRequire('swagger-tools', 'swagger-tools is required')
+  const swagger: typeof import('swagger-tools') = tryRequire(
+    'swagger-tools',
+    'Please install it manually.',
+  )
   const { initialize }: typeof import('express-openapi') = tryRequire(
     'express-openapi',
-    'express-openapi is required',
+    'Please install it manually.',
   )
 
   const instance = initialize({
@@ -56,17 +59,23 @@ export async function makeOpenapi(
 export function makeOpenapiOptions(
   service: mrapi.ServiceOptions,
   getTenantIdentity: Function,
-  prisma?: DB,
+  db?: DB,
 ) {
   const openapiOutput = (typeof service.openapi !== 'boolean' &&
     service.openapi?.output) as string
+
+  const definitions = tryRequire(join(openapiOutput, 'definitions'))
+
+  if (!definitions) {
+    return null
+  }
 
   return {
     paths: join(openapiOutput, 'paths'),
     dependencies: {
       db: dependenciesPlugins(async (req: any, res: any) => {
         const tenantId: any = await getTenantIdentity(req, res, service)
-        return prisma?.getServiceClient(service.name!, tenantId)
+        return db?.getServiceClient(service.name!, tenantId)
       }),
     },
     apiDoc: {
@@ -76,7 +85,7 @@ export function makeOpenapiOptions(
         version: '1.0.0',
       },
       paths: {},
-      definitions: tryRequire(join(openapiOutput, 'definitions')),
+      definitions,
     },
   }
 }

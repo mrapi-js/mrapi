@@ -3,13 +3,9 @@
 # Dev
 
 ```bash
-yarn
-
-npm link ../../packages/cli --legacy-peer-deps
-
 npx mrapi setup
 
-yarn dev
+npm run dev
 ```
 
 ## Notes

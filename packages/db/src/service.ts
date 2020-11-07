@@ -95,7 +95,7 @@ export class Service {
       const record = await this.management.getTenant(this.name, name)
 
       if (!record?.database) {
-        // TODO
+        return null
       }
 
       // set cache

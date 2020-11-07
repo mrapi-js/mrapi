@@ -1,6 +1,7 @@
 import type mrapi from '@mrapi/types'
 import type { ManagementOptions } from './types'
 
+import { join } from 'path'
 import { ProviderName } from './types'
 import { defaults, tryRequire } from '@mrapi/common'
 
@@ -21,7 +22,13 @@ export class Management {
       return this.client
     }
 
-    const Provider = tryRequire(`./provider/${this.providerName}`)
+    const Provider = tryRequire(
+      join(__dirname, `provider/${this.providerName}`),
+    )
+    if (!Provider) {
+      throw new Error(`DB provider '${this.providerName}' not found`)
+    }
+
     this.provider = new Provider(
       {
         database: this.options.database,
@@ -35,7 +42,7 @@ export class Management {
     return this.client
   }
 
-  getTenant(serviceName: string, tenantName?: string) {
+  getTenant(serviceName: string, tenantName: string = defaults.tenantName) {
     return this.getTenantModel()?.findFirst({
       where: {
         service: serviceName,
@@ -76,12 +83,12 @@ export class Management {
 
   async connect() {
     this.checkClient()
-    return this.client.$connect()
+    return this.client.connect()
   }
 
   async disconnect() {
     this.checkClient()
-    return this.client.$disconnect()
+    return this.client.disconnect()
   }
 
   private getTenantModel() {

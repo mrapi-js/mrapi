@@ -31,7 +31,6 @@ describe('Service', () => {
       expect(typeof (service as any)[k]).toBe('function')
     })
     ;['services', 'endpoints'].forEach((k) => {
-      console.log(k, (service as any)[k])
       expect(Array.isArray((service as any)[k])).toBeTruthy()
     })
   })

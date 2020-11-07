@@ -1,7 +1,6 @@
 interface Options {
   database: string
   clientPath: string
-  tenantModelName: string
 }
 
 export default class PrismaProvider {
@@ -41,5 +40,17 @@ export default class PrismaProvider {
     }
 
     return this.instance[name.trim()]
+  }
+
+  connect() {
+    if (!this.instance) {
+      this.get()
+    }
+
+    return this.instance.$connect()
+  }
+
+  disconnect() {
+    return this.instance && this.instance.$disconnect()
   }
 }

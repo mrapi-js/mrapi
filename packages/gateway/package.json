@@ -20,10 +20,10 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/types": "workspace:*",
-    "@mrapi/common": "workspace:*",
-    "@mrapi/app": "workspace:*",
-    "@mrapi/router": "workspace:*",
+    "@mrapi/types": "*",
+    "@mrapi/common": "*",
+    "@mrapi/app": "*",
+    "@mrapi/router": "*",
     "fast-proxy": "^1"
   },
   "devDependencies": {}

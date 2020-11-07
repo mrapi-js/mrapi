@@ -16,7 +16,6 @@ module.exports = {
         },
       ],
       defaultTenant: 'one',
-      graphql: {},
     },
     {
       name: 'post',

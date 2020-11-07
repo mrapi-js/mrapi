@@ -1,6 +1,7 @@
 {
   "name": "service-basic",
   "version": "1.0.0",
+  "private": "true",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -12,8 +13,12 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/service": "workspace:*",
+    "@mrapi/graphql": "*",
+    "@mrapi/service": "*",
     "@nexus/schema": "^0.17.0",
+    "express-openapi": "^7.1.0",
+    "graphql": "^15.4.0",
+    "graphql-playground-middleware-express": "^1.7.22",
     "pino-pretty": "^4.3.0"
   },
   "devDependencies": {

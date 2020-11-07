@@ -16,7 +16,7 @@
     "graphql-jit": "^0"
   },
   "devDependencies": {
-    "@mrapi/app": "workspace:*",
+    "@mrapi/app": "*",
     "graphql": "^15.4"
   },
   "peerDependencies": {

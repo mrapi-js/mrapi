@@ -109,11 +109,9 @@ export const graphqlMiddleware = ({
       lru.set(query, cached)
     }
 
-    const result = await cached.jit.query(
-      {},
-      context ? await context({ req, res }) : {},
-      req.body.variables,
-    )
+    const contextObj =
+      typeof context === 'function' ? await context({ req, res }) : context
+    const result = await cached.jit.query({}, contextObj, req.body.variables)
 
     if (result.errors && formatError) {
       result.errors = result.errors.map((error) =>

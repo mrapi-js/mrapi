@@ -1,5 +1,6 @@
 import type { ProviderName, TenantOptions } from './types'
 
+import { join } from 'path'
 import { defaults, tryRequire } from '@mrapi/common'
 
 export class Tenant {
@@ -20,7 +21,14 @@ export class Tenant {
       return this.client
     }
 
-    const Provider = tryRequire(`./provider/${this.providerName}`)
+    const Provider = tryRequire(
+      join(__dirname, `provider/${this.providerName}`),
+    )
+
+    if (!Provider) {
+      throw new Error(`DB provider '${this.providerName}' not found`)
+    }
+
     this.provider = new Provider(
       {
         database: this.options.database,
@@ -35,12 +43,12 @@ export class Tenant {
 
   connect() {
     this.checkclient()
-    return this.client.$connect()
+    return this.client.connect()
   }
 
   disconnect() {
     this.checkclient()
-    return this.client.$disconnect()
+    return this.client.disconnect()
   }
 
   private checkclient() {

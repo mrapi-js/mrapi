@@ -1,18 +1,26 @@
 {
-  "name": "app-nested",
+  "name": "service-multiple",
   "version": "1.0.0",
   "private": "true",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts"
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
+    "debug": "wtfnode ts-node-dev --respawn --transpile-only ./src/app.ts"
   },
   "keywords": [],
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/app": "*"
+    "@mrapi/graphql": "*",
+    "@mrapi/service": "*",
+    "@nexus/schema": "^0.17.0",
+    "@graphql-tools/mock": "^7.0.0",
+    "express-openapi": "^7.1.0",
+    "graphql": "^15.4.0",
+    "graphql-playground-middleware-express": "^1.7.22",
+    "pino-pretty": "^4.3.0"
   },
   "devDependencies": {
     "@types/node": "*",

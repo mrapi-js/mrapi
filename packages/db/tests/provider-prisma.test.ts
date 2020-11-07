@@ -12,7 +12,6 @@ describe('Management', () => {
       {
         database: 'file:./dev.db',
         clientPath: '.prisma/management-client',
-        tenantModelName: 'tenant',
       },
       'prisma' as any,
     )

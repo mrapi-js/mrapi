@@ -19,8 +19,8 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/types": "workspace:*",
-    "@mrapi/common": "workspace:*"
+    "@mrapi/types": "*",
+    "@mrapi/common": "*"
   },
   "devDependencies": {
     "@prisma/client": "^2"
