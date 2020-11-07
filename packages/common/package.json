@@ -19,7 +19,7 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/types": "workspace:*",
+    "@mrapi/types": "*",
     "deepmerge": "^4"
   },
   "devDependencies": {}

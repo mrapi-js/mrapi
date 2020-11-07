@@ -8,7 +8,7 @@ import { createSchema } from './utils'
 
 export function makeGraphql({
   app,
-  prisma,
+  db,
   service,
   middleware,
   config,
@@ -16,7 +16,7 @@ export function makeGraphql({
   nexus,
 }: {
   app: Service
-  prisma?: DB
+  db?: DB
   middleware: any
   config: mrapi.ServiceConfig
   service: mrapi.ServiceOptions
@@ -36,7 +36,7 @@ export function makeGraphql({
         return makeConetxt({
           req,
           res,
-          prisma,
+          db,
           service,
           getTenantIdentity,
         })
@@ -76,21 +76,26 @@ export function makeGraphqlPlayground(
 async function makeConetxt({
   req,
   res,
-  prisma,
+  db,
   service,
   getTenantIdentity,
 }: {
   req: Request
   res: Response
-  prisma?: DB
+  db?: DB
   service: mrapi.ServiceOptions
   getTenantIdentity: Function
 }) {
-  let prismaClient
-  if (prisma) {
+  let dbClient
+  if (db) {
     const tenantId = await getTenantIdentity(req, res, service)
-    prismaClient = await prisma.getServiceClient(service.name!, tenantId)
-    if (!prismaClient) {
+    dbClient = await (service.management
+      ? db.getManagementClient()
+      : db.getServiceClient(
+          service.name!,
+          service.__isMultiTenant ? tenantId : null,
+        ))
+    if (!dbClient) {
       throw new Error(
         `Please check if the multi-tenant identity${
           typeof service.tenantIdentity === 'string'
@@ -103,7 +108,8 @@ async function makeConetxt({
 
   return {
     startTime: Date.now(),
-    ...(prismaClient ? { prisma: prismaClient } : {}),
+    // keep `prisma` here, because paljs generation needs it
+    ...(dbClient ? { prisma: dbClient } : {}),
   }
 }
 

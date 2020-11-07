@@ -22,8 +22,8 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/types": "workspace:*",
-    "@mrapi/common": "workspace:*",
+    "@mrapi/types": "*",
+    "@mrapi/common": "*",
     "execa": "^4",
     "chalk": "^4",
     "prettier":"^2"

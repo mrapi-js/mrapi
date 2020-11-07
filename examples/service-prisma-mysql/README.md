@@ -3,7 +3,11 @@
 # Dev
 
 ```bash
-npm link ../../packages/cli
+npm link ../../packages/cli --legacy-peer-deps
+
+npx mrapi setup
+
+npm run dev
 
 # single-tenant
 npx mrapi prisma generate --service=post

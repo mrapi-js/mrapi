@@ -8,4 +8,4 @@ const service = new Service({
   },
 })
 
-service.start()
+service.start().catch((err) => service.logger.error(err))

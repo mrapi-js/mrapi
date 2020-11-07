@@ -1,6 +1,7 @@
 {
   "name": "service-prisma-advanced",
   "version": "1.0.0",
+  "private": "true",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -13,7 +14,7 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/service": "file:../../packages/service",
+    "@mrapi/service": "*",
     "@nexus/schema": "^0",
     "@prisma/client": "^2",
     "express-graphql": "^0",
@@ -21,7 +22,7 @@
     "pino-pretty": "^4.3.0"
   },
   "devDependencies": {
-    "@mrapi/cli": "file:../../packages/cli",
+    "@mrapi/cli": "*",
     "@paljs/generator": "^2.5",
     "@prisma/cli": "^2",
     "@types/node": "*",

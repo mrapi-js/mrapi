@@ -36,11 +36,6 @@ module.exports = {
   //     tenants: [],
   //   },
   // ],
-  management: {
-    schema: '',
-    output: '',
-    tenantTableName: '',
-  },
   gateway: {
     services: [
       {

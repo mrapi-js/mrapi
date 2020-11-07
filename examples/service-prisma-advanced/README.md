@@ -3,7 +3,9 @@
 # Dev
 
 ```bash
-npm link ../../packages/cli
+npx mrapi setup
+
+npm run dev
 
 # single-tenant
 npx mrapi prisma generate --service=post
@@ -35,6 +37,7 @@ npx mrapi prisma db push --ignore-migrations --preview-feature --service=user --
 ## Queries
 
 ```graphql
+# Tab `user`
 {
   users {
     id
@@ -51,6 +54,14 @@ npx mrapi prisma db push --ignore-migrations --preview-feature --service=user --
   }
 }
 
+# multi-tenant headers
+{
+  "mrapi-tenant-id": "two" # or "one"
+}
+```
+
+```graphql
+# Tab `post`
 {
   posts {
     id
@@ -62,6 +73,23 @@ npx mrapi prisma db push --ignore-migrations --preview-feature --service=user --
   draft(where: { title: { contains: "x" } }) {
     id
     title
+  }
+}
+
+# multi-tenant headers
+{
+  "mrapi-tenant-id": "two" # or "one"
+}
+```
+
+```graphql
+# Tab `management`
+{
+  tenants {
+    id
+    name
+    service
+    database
   }
 }
 ```

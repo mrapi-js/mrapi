@@ -1,6 +1,10 @@
 import { isAbsolute, join } from 'path'
 
-export function tryRequire(name?: string, message = '', resolveDefault = true) {
+export function tryRequire(
+  name?: string,
+  message?: string,
+  resolveDefault = true,
+) {
   if (!name) {
     return null
   }
@@ -9,12 +13,12 @@ export function tryRequire(name?: string, message = '', resolveDefault = true) {
     const mod = require(name)
     return resolveDefault ? mod?.default || mod : mod
   } catch (err) {
-    if (message) {
-      if (err.code === 'MODULE_NOT_FOUND') {
-        console.error(`${message}. Please run \`npm install ${name}\``)
+    if (message !== undefined) {
+      const prefix = err.code === 'MODULE_NOT_FOUND'?`Cannot find module '${name}'.`:''
+      if (message) {
+        console.error(`Error: ${prefix} ${message}`)
         process.exit(1)
       } else {
-        console.error(message)
         throw err
       }
     }

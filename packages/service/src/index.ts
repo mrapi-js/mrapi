@@ -24,7 +24,7 @@ function setDefaultOption(config: any) {
 }
 
 export class Service extends App {
-  prisma: DB | undefined
+  db: DB | undefined
   endpoints: Array<mrapi.Endpoint> = []
   services: Array<
     mrapi.ServiceOptions & {
@@ -55,15 +55,15 @@ export class Service extends App {
   private async applyGraphql() {
     const { graphqlMiddleware }: typeof import('@mrapi/graphql') = tryRequire(
       '@mrapi/graphql',
-      '@mrapi/graphql is required',
+      'Please install it manually.',
     )
     const playgroundMiddleware: typeof import('graphql-playground-middleware-express') = tryRequire(
       'graphql-playground-middleware-express',
-      'graphql-playground-middleware-express is required',
+      'Please install it manually.',
     )
     const nexus: typeof import('@nexus/schema') = tryRequire(
       '@nexus/schema',
-      '@nexus/schema is required',
+      'Please install it manually.',
     )
 
     const playgroundTabs = []
@@ -76,16 +76,16 @@ export class Service extends App {
       service.endpoints = service.endpoints || []
       const usingPrisma = !!service.prisma
       if (usingPrisma) {
-        await this.initPrisma()
+        await this.initDbClient()
       }
 
       const { endpoint } = makeGraphql({
-        prisma: this.prisma,
+        db: this.db,
         app: this,
         service,
         config: this.config,
         middleware: graphqlMiddleware,
-        getTenantIdentity: this.getTenantIdentity,
+        getTenantIdentity: this.getTenantIdentity.bind(this),
         nexus,
       })
 
@@ -121,41 +121,49 @@ export class Service extends App {
       const usingPrisma = !!service.prisma
 
       if (usingPrisma) {
-        await this.initPrisma()
+        await this.initDbClient()
       }
 
       const opts = makeOpenapiOptions(
         service,
         this.getTenantIdentity,
-        usingPrisma ? this.prisma : undefined,
+        usingPrisma ? this.db : undefined,
       )
 
-      const { endpoints } = await makeOpenapi(this, opts, '/api')
+      if (!opts) {
+        continue
+      }
+
+      const { endpoints } = await makeOpenapi(
+        this,
+        opts,
+        `/api${this.config.__isMultiService ? `/${service.name}` : ''}`,
+      )
       service.endpoints = service.endpoints.concat([
         {
           type: 'OpenAPI',
           path: endpoints.api,
         },
         {
-          type: 'OpenAPI Swagger',
+          type: 'Swagger UI',
           path: endpoints.swaggerUi,
         },
         {
-          type: 'OpenAPI Swagger JSON',
+          type: 'Swagger JSON',
           path: endpoints.apiDocs,
         },
       ])
     }
   }
 
-  protected async initPrisma() {
-    if (this.prisma) {
+  protected async initDbClient() {
+    if (this.db) {
       return
     }
 
     const { DB }: typeof import('@mrapi/db') = tryRequire(
       '@mrapi/db',
-      '@mrapi/db is required',
+      'Please install it manually.',
       false,
     )
 
@@ -182,8 +190,8 @@ export class Service extends App {
       checkDBClient(managementOptions)
     }
 
-    this.prisma = new DB(dbOptions)
-    await this.prisma?.init()
+    this.db = new DB(dbOptions)
+    await this.db?.init()
   }
 
   protected async getTenantIdentity(
@@ -215,8 +223,9 @@ export class Service extends App {
 
     this.logger.info('Endpoints:')
     for (const endpoint of this.endpoints) {
-      this.logger.info(`${endpoint.type}: ${host}${endpoint.path}`)
+      this.logger.info(`${endpoint.type.padEnd(19)}: ${host}${endpoint.path}`)
     }
+    console.log()
 
     for (const service of this.services) {
       if (!Array.isArray(service.endpoints)) {
@@ -225,7 +234,9 @@ export class Service extends App {
 
       for (const endpoint of service.endpoints) {
         this.logger.info(
-          `[${service.name}] ${endpoint.type}: ${host}${endpoint.path}`,
+          `[${service.name}] ${endpoint.type.padEnd(13)}: ${host}${
+            endpoint.path
+          }`,
         )
       }
       console.log()
@@ -244,7 +255,7 @@ export class Service extends App {
           reject(err)
         } else {
           this.endpoints.push({
-            type: 'Main Server',
+            type: 'Root',
             path: '/',
           })
 

@@ -83,8 +83,6 @@ export interface Context {
     outputs: false,
     ...(usingPrisma
       ? {
-          // TODO: multi-service types conflict, prisma[model]
-
           typegenAutoConfig: {
             headers: [FILE_HEADER],
             backingTypeMap: {
@@ -115,6 +113,15 @@ export interface Context {
       : {}),
   })
 
+  if (service.mock) {
+    const { addMocksToSchema } = tryRequire(
+      '@graphql-tools/mock',
+      'You are using graphql mock, please install it manually.',
+    )
+    const mocks = typeof service.mock === 'object' ? service.mock : {}
+    return addMocksToSchema({ schema, mocks })
+  }
+
   return schema
 }
 
@@ -125,7 +132,7 @@ function getPrismaRsources(
 ) {
   const { nexusPrisma }: typeof import('nexus-plugin-prisma') = tryRequire(
     'nexus-plugin-prisma',
-    'nexus-plugin-prisma is required',
+    'Please install it manually.',
   )
   const { dbClientPath, textRunGraphql } = checkDBClient(
     service,
@@ -233,30 +240,18 @@ export function checkDBClient(
   const serviceName =
     service.name ||
     (service.management ? 'management' : isMultiService ? service.name : '')
-  const textRunPrisma = `\`npx ${serviceName ? 'mrapi ' : ''}prisma generate${
-    serviceName ? ` --service=${serviceName}` : ''
-  }\``
+
   const textRunGraphql = service.graphql
     ? `\`npx mrapi graphql${serviceName ? ` --service=${serviceName}` : ''}\``
     : ''
 
   if (!dbClient || !dbClient.prismaVersion) {
     throw new Error(
-      `You most likely forgot to initialize the Prisma Client.
-Please run ${textRunPrisma} and${
-        textRunGraphql ? ` ${textRunGraphql}, then` : ''
-      } try to run it again.${
-        isMultiService
-          ? `
-You also can run \`npx mrapi prisma generate --service=.\` to generate all services's Prisma Client.`
-          : ''
-      }
-  `,
+      `You most likely forgot to initialize the Prisma Client. Please run \`npx mrapi setup\`, then try to run it again.`,
     )
   }
 
   return {
-    textRunPrisma,
     textRunGraphql,
     dbClientPath,
   }

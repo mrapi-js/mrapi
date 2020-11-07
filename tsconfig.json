@@ -22,5 +22,5 @@
     "forceConsistentCasingInFileNames": true
   },
   "include": ["packages", "scripts", "typings/**/*.ts"],
-  "exclude": ["node_modules", "tests", "benchmarks", "lib"]
+  "exclude": ["node_modules", "./**/*/tests/**/", "benchmarks", "./**/*/lib/"]
 }

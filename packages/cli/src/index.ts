@@ -273,7 +273,7 @@ Examples:
         env: {
           CLIENT_OUTPUT:
             service.schema && service.prisma?.output
-              ? relative(dirname(service.schema), service.prisma?.output || '')
+              ? service.prisma?.output
               : '',
           DATABASE_URL: databaseUrl,
           // https://github.com/sindresorhus/execa/issues/69#issuecomment-278693026

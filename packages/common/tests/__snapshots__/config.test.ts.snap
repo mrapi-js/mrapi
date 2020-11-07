@@ -99,6 +99,7 @@ Object {
     Object {
       "__isMultiTenant": false,
       "database": "file:./dev.db",
+      "defaultTenant": "",
       "graphql": false,
       "management": true,
       "managementTenantModelName": "tenant",
@@ -109,6 +110,8 @@ Object {
         "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/management/schema.prisma",
       },
       "schema": "prisma/management/schema.prisma",
+      "studio": true,
+      "tenantIdentity": "mrapi-tenant-id",
     },
   ],
 }
@@ -187,6 +190,7 @@ Object {
     Object {
       "__isMultiTenant": false,
       "database": "file:./dev.db",
+      "defaultTenant": "",
       "graphql": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/graphql/management",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/management/graphql",
@@ -204,6 +208,8 @@ Object {
         "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/management/schema.prisma",
       },
       "schema": "prisma/management/schema.prisma",
+      "studio": true,
+      "tenantIdentity": "mrapi-tenant-id",
     },
   ],
 }

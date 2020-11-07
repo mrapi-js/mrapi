@@ -47,6 +47,7 @@ declare namespace mrapi {
     tenants?: Array<TenantOptions>
     defaultTenant?: string
     tenantIdentity?: string | TenantIdenityFn
+    mock?: boolean
     management?: boolean
     managementTenantModelName?: string
     __isMultiTenant?: boolean

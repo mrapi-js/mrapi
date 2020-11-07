@@ -4,7 +4,5 @@
     "rootDir": "src",
     "outDir": "lib",
     "composite": true
-  },
-  "include": ["src/**/*.ts", "tests/**/*d.ts", "typings.d.ts"],
-  "exclude": ["node_modules", "tests"]
+  }
 }

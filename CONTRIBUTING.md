@@ -2,35 +2,38 @@
 
 ## Development
 
+- node.js v15+
+- npm v7.0.8+
+
 1. Setup
 
    ```bash
    git clone https://github.com/mrapi-js/mrapi.git
+
    cd mrapi
-   npm i -g pnpm
-   pnpm i
+
+   npm i --legacy-peer-deps
    ```
 
 1. Start development
 
    ```bash
-   pnpm run watch
+   npm run build
+   npm run dev
    ```
 
 ## Run example
 
 ```bash
-cd examples/basic # or examples/multi-tenant
-pnpm i
-
-pnpm run dev
+cd examples/service-basic
+npm run dev
 ```
 
 ## Git Commit
 
 1. Add commit plugin
 
-   docs: https://github.com/fbi-templates/fbi-task-commit#usage
+   docs: https://github.com/fbi-js/factory-commands/blob/main/src/commands/commit/README.md
 
    ```bash
    # install fbi

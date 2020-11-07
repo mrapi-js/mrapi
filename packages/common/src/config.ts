@@ -32,6 +32,7 @@ const defaultServiceConfig: Partial<mrapi.ServiceOptions> = {
 
 // management is a special service which has no 'apiOutput'
 const defaultManagementConfig: Partial<mrapi.ServiceOptions> = {
+  ...defaultServiceConfig,
   managementTenantModelName: 'tenant',
 }
 
