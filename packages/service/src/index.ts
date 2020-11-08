@@ -6,7 +6,7 @@ import type { Request, Response } from '@mrapi/app'
 import { App } from '@mrapi/app'
 import { json } from 'body-parser'
 import { checkDBClient } from './graphql/utils'
-import { makeGraphql, makeGraphqlPlayground } from './graphql/'
+import { makeGraphqlServices, makeGraphqlPlayground } from './graphql/'
 import { makeOpenapi, makeOpenapiOptions } from './openapi/'
 import { tryRequire, resolveConfig, defaults, ensureArray } from '@mrapi/common'
 
@@ -22,6 +22,14 @@ function setDefaultOption(config: any) {
     config?.openapi !== undefined ? config.openapi : defaultOptions.openapi
   return config
 }
+
+const groupBy = (arr: any[], fn: any): Record<string, any[]> =>
+  arr
+    .map(typeof fn === 'function' ? fn : (val) => val[fn])
+    .reduce((acc: Record<string, any>, val: any, i) => {
+      acc[val || ''] = (acc[val] || []).concat(arr[i])
+      return acc
+    }, {})
 
 export class Service extends App {
   db: DB | undefined
@@ -66,38 +74,19 @@ export class Service extends App {
       'Please install it manually.',
     )
 
-    const playgroundTabs = []
+    const endpoints = makeGraphqlServices({
+      app: this,
+      db: this.db,
+      config: this.config,
+      services: this.services,
+      middleware: graphqlMiddleware,
+      getTenantIdentity: this.getTenantIdentity.bind(this),
+      nexus,
+    })
 
-    for (const service of this.services) {
-      if (!service.graphql) {
-        continue
-      }
+    this.endpoints = this.endpoints.concat(endpoints)
 
-      service.endpoints = service.endpoints || []
-      const usingPrisma = !!service.prisma
-      if (usingPrisma) {
-        await this.initDbClient()
-      }
-
-      const { endpoint } = makeGraphql({
-        db: this.db,
-        app: this,
-        service,
-        config: this.config,
-        middleware: graphqlMiddleware,
-        getTenantIdentity: this.getTenantIdentity.bind(this),
-        nexus,
-      })
-
-      service.endpoints.push({
-        type: 'GraphQL',
-        path: endpoint,
-      })
-
-      if (this.config.__isMultiService) {
-        playgroundTabs.push({ endpoint, name: service.name })
-      }
-    }
+    const playgroundTabs: any[] = endpoints.length > 0 ? [] : []
 
     const { endpoint: playgroundEndpoint } = makeGraphqlPlayground(
       this,
@@ -106,6 +95,7 @@ export class Service extends App {
     )
 
     this.endpoints.push({
+      name: 'united',
       type: 'GraphQL Playground',
       path: playgroundEndpoint,
     })
@@ -139,16 +129,19 @@ export class Service extends App {
         opts,
         `/api${this.config.__isMultiService ? `/${service.name}` : ''}`,
       )
-      service.endpoints = service.endpoints.concat([
+      this.endpoints = this.endpoints.concat([
         {
+          name: service.name,
           type: 'OpenAPI',
           path: endpoints.api,
         },
         {
+          name: service.name,
           type: 'Swagger UI',
           path: endpoints.swaggerUi,
         },
         {
+          name: service.name,
           type: 'Swagger JSON',
           path: endpoints.apiDocs,
         },
@@ -204,7 +197,8 @@ export class Service extends App {
       return Array.isArray(service.tenants) ? service.tenants[0].name : ''
     }
 
-    const { tenantIdentity } = service
+    const tenantIdentity =
+      service?.tenantIdentity || defaults.config.service.tenantIdentity
     if (!tenantIdentity) {
       this.logger.error(
         `"tenantIdentity" should be a string or funtion. Received: ${tenantIdentity}`,
@@ -220,22 +214,13 @@ export class Service extends App {
   logEndpoints() {
     const { address, port } = this.server?.address() as AddressInfo
     const host = `http://${address === '::' ? 'localhost' : address}:${port}`
+    const grouped = groupBy(this.endpoints, 'name')
 
-    this.logger.info('Endpoints:')
-    for (const endpoint of this.endpoints) {
-      this.logger.info(`${endpoint.type.padEnd(19)}: ${host}${endpoint.path}`)
-    }
-    console.log()
-
-    for (const service of this.services) {
-      if (!Array.isArray(service.endpoints)) {
-        continue
-      }
-
-      for (const endpoint of service.endpoints) {
+    for (const [name, val] of Object.entries(grouped)) {
+      for (const item of val) {
         this.logger.info(
-          `[${service.name}] ${endpoint.type.padEnd(13)}: ${host}${
-            endpoint.path
+          `${name ? `[${name}] ` : ''}${item.type.padEnd(19)}: ${host}${
+            item.path
           }`,
         )
       }
@@ -247,6 +232,7 @@ export class Service extends App {
     this.services = ensureArray(this.config.service)
     const needGraphql = Boolean(this.services.some((s) => !!s.graphql))
     const needOpenapi = Boolean(this.services.some((s) => !!s.openapi))
+    const needDb = Boolean(this.services.some((s) => !!s.prisma))
 
     // start the server
     return new Promise((resolve, reject) => {
@@ -260,6 +246,9 @@ export class Service extends App {
           })
 
           try {
+            if (needDb) {
+              await this.initDbClient()
+            }
             if (needGraphql) {
               await this.applyGraphql()
             }

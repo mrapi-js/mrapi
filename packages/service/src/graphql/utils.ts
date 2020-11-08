@@ -12,7 +12,7 @@ const FILE_HEADER = `/**
 
 export function createSchema(
   service: mrapi.ServiceOptions,
-  config: mrapi.ServiceConfig,
+  isMultiService: boolean = false,
   { makeSchema }: typeof import('@nexus/schema'),
 ) {
   const customPath = (service.graphql as mrapi.GraphqlOptions).custom!
@@ -28,11 +28,7 @@ export function createSchema(
 
   let prismaClientModuleName: string
   if (usingPrisma) {
-    const sources = getPrismaRsources(
-      service,
-      !!config.__isMultiService,
-      generateTo,
-    )
+    const sources = getPrismaRsources(service, isMultiService, generateTo)
     types = types.concat(sources.types)
     plugins = plugins.concat(sources.plugins)
     prismaClientModuleName = (service.prisma as mrapi.PrismaOptions)?.output!.split(
@@ -114,7 +110,9 @@ export interface Context {
   })
 
   if (service.mock) {
-    const { addMocksToSchema } = tryRequire(
+    const {
+      addMocksToSchema,
+    }: typeof import('@graphql-tools/mock') = tryRequire(
       '@graphql-tools/mock',
       'You are using graphql mock, please install it manually.',
     )

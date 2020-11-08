@@ -2,10 +2,13 @@ module.exports = {
   service: [
     {
       name: 'user',
-      mock: true
+      mock: true,
     },
     {
       name: 'post',
     },
   ],
+  graphql: {
+    stitching: false,
+  },
 }
