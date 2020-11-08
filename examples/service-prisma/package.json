@@ -20,7 +20,6 @@
     "@mrapi/service": "*",
     "@nexus/schema": "^0.17.0",
     "@prisma/client": "^2.10.2",
-    "express-graphql": "^0.11.0",
     "nexus-plugin-prisma": "^0.23.1",
     "pino-pretty": "^4.3.0"
   },

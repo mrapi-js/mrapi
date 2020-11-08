@@ -14,10 +14,11 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
+    "@mrapi/db": "*",
     "@mrapi/service": "*",
+    "@mrapi/graphql": "*",
     "@nexus/schema": "^0",
     "@prisma/client": "^2",
-    "express-graphql": "^0",
     "nexus-plugin-prisma": "^0",
     "pino-pretty": "^4.3.0"
   },

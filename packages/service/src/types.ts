@@ -7,12 +7,16 @@ declare module '@mrapi/types' {
   }
 
   interface Endpoint {
+    name?: string
     type: string
     path: string
   }
 
   interface ServiceConfig extends mrapi.Config {
     logEndpoints: boolean
+    graphql?: {
+      stitching?: boolean | string[]
+    }
   }
 }
 

@@ -5,11 +5,18 @@ import type { Request, Response } from '@mrapi/app'
 import type { Context, ErrorContext } from '@mrapi/graphql'
 
 import { createSchema } from './utils'
+import { tryRequire } from '@mrapi/common'
 
-export function makeGraphql({
+interface GraphqlConfig {
+  service?: mrapi.ServiceOptions
+  schema: any
+  endpoint: string
+}
+
+export function makeGraphqlServices({
   app,
   db,
-  service,
+  services,
   middleware,
   config,
   getTenantIdentity,
@@ -19,35 +26,124 @@ export function makeGraphql({
   db?: DB
   middleware: any
   config: mrapi.ServiceConfig
-  service: mrapi.ServiceOptions
+  services: Array<mrapi.ServiceOptions>
   getTenantIdentity: Function
   nexus: typeof import('@nexus/schema')
-}) {
-  const schema = createSchema(service, config, nexus)
-  const endpoint = config.__isMultiService
-    ? `/graphql/${service.name}`
-    : `/graphql`
+}): Array<mrapi.Endpoint> {
+  const configs = services
+    .filter((service) => !!service.graphql)
+    .map((service) => ({
+      service,
+      schema: createSchema(service, config.__isMultiService, nexus),
+      endpoint: config.__isMultiService
+        ? `/graphql/${service.name}`
+        : `/graphql`,
+    }))
 
-  app.post(
-    endpoint,
-    middleware({
-      schema,
-      context: async ({ req, res }: Context) => {
-        return makeConetxt({
-          req,
-          res,
-          db,
-          service,
-          getTenantIdentity,
-        })
-      },
-      formatError: ({ error }: ErrorContext) => error,
-    }),
-  )
+  let stitchingConfigs: Array<GraphqlConfig> = []
+  let normalConfigs: Array<GraphqlConfig> = []
 
-  return {
-    endpoint,
+  if (!!config.graphql?.stitching) {
+    if (typeof config.graphql.stitching === 'boolean') {
+      stitchingConfigs = configs
+    } else if (Array.isArray(config.graphql.stitching)) {
+      for (const c of configs) {
+        if (
+          c.service.name &&
+          config.graphql.stitching.includes(c.service.name)
+        ) {
+          stitchingConfigs.push(c)
+        } else {
+          normalConfigs.push(c)
+        }
+      }
+    }
+  } else {
+    normalConfigs = configs
   }
+
+  let servicesToApply: Array<GraphqlConfig> = []
+
+  if (stitchingConfigs.length > 0) {
+    const {
+      stitchSchemas,
+    }: typeof import('@graphql-tools/stitch') = tryRequire(
+      '@graphql-tools/stitch',
+      'Please install it manually.',
+    )
+
+    const {
+      delegateToSchema,
+    }: typeof import('@graphql-tools/delegate') = tryRequire(
+      '@graphql-tools/delegate',
+      'Please install it manually.',
+    )
+
+    const unifiedSchema = stitchSchemas({
+      subschemas: stitchingConfigs.map(({ service, schema }) => ({
+        schema,
+        ...(!!service?.prisma
+          ? {
+              createProxyingResolver: ({
+                subschemaConfig,
+                operation,
+                transformedSchema,
+              }) => async (_parent, _args, { req, res }: Context, info) => {
+                const context = await makeConetxt({
+                  req,
+                  res,
+                  db,
+                  service,
+                  getTenantIdentity,
+                })
+                return delegateToSchema({
+                  schema: subschemaConfig,
+                  operation,
+                  context,
+                  info,
+                  transformedSchema,
+                })
+              },
+            }
+          : {}),
+      })),
+    })
+
+    servicesToApply.push({
+      schema: unifiedSchema,
+      endpoint: '/graphql',
+    })
+  }
+
+  servicesToApply = servicesToApply.concat(normalConfigs)
+
+  for (const { service, schema, endpoint } of servicesToApply) {
+    app.post(
+      endpoint,
+      middleware({
+        schema,
+        context: !!service
+          ? // handle the request directly
+            ({ req, res }: Context) =>
+              makeConetxt({
+                req,
+                res,
+                db,
+                service,
+                getTenantIdentity,
+              })
+          : // pass to `createProxyingResolver`
+            ({ req, res }: Context) => ({ req, res }),
+        formatError: ({ error }: ErrorContext) => error,
+      }),
+    )
+  }
+
+  return servicesToApply.map(({ service, endpoint }) => ({
+    name: service?.name || 'united',
+    type: 'GraphQL',
+    path: endpoint,
+  }))
 }
 
 export function makeGraphqlPlayground(
@@ -83,22 +179,22 @@ async function makeConetxt({
   req: Request
   res: Response
   db?: DB
-  service: mrapi.ServiceOptions
+  service?: mrapi.ServiceOptions
   getTenantIdentity: Function
 }) {
   let dbClient
   if (db) {
     const tenantId = await getTenantIdentity(req, res, service)
-    dbClient = await (service.management
+    dbClient = await (service?.management
       ? db.getManagementClient()
       : db.getServiceClient(
-          service.name!,
-          service.__isMultiTenant ? tenantId : null,
+          service?.name!,
+          service?.__isMultiTenant ? tenantId : null,
         ))
     if (!dbClient) {
       throw new Error(
         `Please check if the multi-tenant identity${
-          typeof service.tenantIdentity === 'string'
+          typeof service?.tenantIdentity === 'string'
             ? ` '${service.tenantIdentity}'`
             : ''
         } has been set correctly. Received: ${tenantId}`,

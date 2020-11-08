@@ -31,4 +31,7 @@ module.exports = {
       management: true,
     },
   ],
+  graphql: {
+    stitching: ['user', 'post'],
+  },
 }
