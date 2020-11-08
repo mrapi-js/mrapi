@@ -9,6 +9,6 @@ module.exports = {
     },
   ],
   graphql: {
-    stitching: false,
+    stitching: true,
   },
 }

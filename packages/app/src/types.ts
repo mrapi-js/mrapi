@@ -7,7 +7,6 @@ import type {
   Request as ExpressRequest,
   Response as ExpressResponse,
 } from 'express'
-// import type { IncomingMessage, ServerResponse } from 'http'
 import type { Params, ParamsDictionary } from 'express-serve-static-core'
 import type { App } from '.'
 
@@ -28,15 +27,7 @@ declare namespace mrapi {
 
   type Next = (err?: string | Error) => void
 
-  interface Request extends ExpressRequest {
-    path: string
-    originalUrl: string
-    params: {
-      [key: string]: string
-    }
-    search: string | null
-    query: Query
-  }
+  interface Request extends ExpressRequest {}
 
   interface Response extends ExpressResponse {}
 

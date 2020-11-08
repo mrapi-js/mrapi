@@ -10,9 +10,15 @@ Object {
     Object {
       "__isMultiTenant": false,
       "database": "file:./dev.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/schema.prisma",
+      },
       "defaultTenant": "",
       "graphql": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/graphql",
+        "generator": "nexus",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/graphql",
         "playground": true,
       },
@@ -20,10 +26,6 @@ Object {
       "openapi": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/openapi",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/openapi",
-      },
-      "prisma": Object {
-        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/client",
-        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/schema.prisma",
       },
       "schema": "prisma/schema.prisma",
       "studio": true,
@@ -42,16 +44,17 @@ Object {
   "service": Array [
     Object {
       "__isMultiTenant": true,
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/user-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/user/schema.prisma",
+      },
       "defaultTenant": "one",
       "graphql": false,
       "name": "user",
       "openapi": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/openapi/user",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/user/openapi",
-      },
-      "prisma": Object {
-        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/user-client",
-        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/user/schema.prisma",
       },
       "schema": "prisma/user/schema.prisma",
       "studio": true,
@@ -70,18 +73,20 @@ Object {
     Object {
       "__isMultiTenant": true,
       "database": "file:./post.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/post-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/post/schema.prisma",
+      },
       "defaultTenant": "one",
       "graphql": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/graphql/post",
+        "generator": "nexus",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/post/graphql",
         "playground": true,
       },
       "name": "post",
       "openapi": false,
-      "prisma": Object {
-        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/post-client",
-        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/post/schema.prisma",
-      },
       "schema": "prisma/post/schema.prisma",
       "studio": true,
       "tenantIdentity": "mrapi-tenant-id",
@@ -99,16 +104,17 @@ Object {
     Object {
       "__isMultiTenant": false,
       "database": "file:./dev.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/management-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/management/schema.prisma",
+      },
       "defaultTenant": "",
       "graphql": false,
       "management": true,
       "managementTenantModelName": "tenant",
       "name": "management",
       "openapi": false,
-      "prisma": Object {
-        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/management-client",
-        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/management/schema.prisma",
-      },
       "schema": "prisma/management/schema.prisma",
       "studio": true,
       "tenantIdentity": "mrapi-tenant-id",
@@ -126,9 +132,15 @@ Object {
   "service": Array [
     Object {
       "__isMultiTenant": true,
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/user-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/user/schema.prisma",
+      },
       "defaultTenant": "one",
       "graphql": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/graphql/user",
+        "generator": "nexus",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/user/graphql",
         "playground": true,
       },
@@ -136,10 +148,6 @@ Object {
       "openapi": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/openapi/user",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/user/openapi",
-      },
-      "prisma": Object {
-        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/user-client",
-        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/user/schema.prisma",
       },
       "schema": "prisma/user/schema.prisma",
       "studio": true,
@@ -158,9 +166,15 @@ Object {
     Object {
       "__isMultiTenant": true,
       "database": "file:./post.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/post-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/post/schema.prisma",
+      },
       "defaultTenant": "one",
       "graphql": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/graphql/post",
+        "generator": "nexus",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/post/graphql",
         "playground": true,
       },
@@ -168,10 +182,6 @@ Object {
       "openapi": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/openapi/post",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/post/openapi",
-      },
-      "prisma": Object {
-        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/post-client",
-        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/post/schema.prisma",
       },
       "schema": "prisma/post/schema.prisma",
       "studio": true,
@@ -190,9 +200,15 @@ Object {
     Object {
       "__isMultiTenant": false,
       "database": "file:./dev.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/management-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/management/schema.prisma",
+      },
       "defaultTenant": "",
       "graphql": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/graphql/management",
+        "generator": "nexus",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/management/graphql",
         "playground": true,
       },
@@ -202,10 +218,6 @@ Object {
       "openapi": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/openapi/management",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/management/openapi",
-      },
-      "prisma": Object {
-        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/management-client",
-        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/management/schema.prisma",
       },
       "schema": "prisma/management/schema.prisma",
       "studio": true,
@@ -225,9 +237,15 @@ Object {
     Object {
       "__isMultiTenant": true,
       "database": "file:./dev.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/schema.prisma",
+      },
       "defaultTenant": "",
       "graphql": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/graphql",
+        "generator": "nexus",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/graphql",
         "playground": true,
       },
@@ -235,10 +253,6 @@ Object {
       "openapi": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/src/openapi",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/openapi",
-      },
-      "prisma": Object {
-        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/client",
-        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/schema.prisma",
       },
       "schema": "prisma/schema.prisma",
       "studio": true,
@@ -270,6 +284,7 @@ Object {
       "defaultTenant": "",
       "graphql": Object {
         "custom": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/no-config/src/graphql",
+        "generator": "nexus",
         "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/no-config/node_modules/.mrapi/graphql",
         "playground": true,
       },

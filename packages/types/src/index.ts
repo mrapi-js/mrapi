@@ -30,7 +30,7 @@ declare namespace mrapi {
     output?: string
   }
 
-  enum SchemaProvider {
+  enum GraphqlGenerator {
     nexus = 'nexus',
     typeGraphql = 'type-graphql',
   }
@@ -39,7 +39,7 @@ declare namespace mrapi {
     output?: string
     custom?: string
     playground?: boolean
-    schemaProvider?: SchemaProvider
+    generator?: GraphqlGenerator
   }
 
   interface OpenapiOptions {

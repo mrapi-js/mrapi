@@ -1,7 +1,7 @@
 module.exports = {
   service: {
     graphql: {
-      schemaProvider: 'type-graphql',
+      generator: 'type-graphql',
     },
     mock: true,
   },
