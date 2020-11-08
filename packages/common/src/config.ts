@@ -48,6 +48,7 @@ export const defaults = {
   port: 1358,
   graphql: {
     playground: !isProd,
+    schemaProvider: 'nexus' as mrapi.SchemaProvider,
   },
   openapi: {},
 }
@@ -111,9 +112,9 @@ function normalizeServiceConfig(
 
   service.__isMultiTenant = Array.isArray(service.tenants)
 
-  // Prisma paths
-  const usingPrisma = service.prisma || service.schema
-  if (usingPrisma) {
+  // datasource paths
+  const usingDatasource = service.datasource || service.schema
+  if (usingDatasource) {
     const hasDatabase = service.__isMultiTenant
       ? service.tenants?.every((t) => !!t.database)
       : !!service.database
@@ -128,14 +129,18 @@ function normalizeServiceConfig(
       }`,
     )
 
-    service.prisma = {
-      ...service.prisma,
+    service.datasource = {
+      ...service.datasource,
+      provider:
+        service.datasource?.provider || ('prisma' as mrapi.DatasourceProvider),
       schema: ensureAbsolutePath(
-        service.prisma?.schema || service.schema || defaultPrismaOptions.schema,
+        service.datasource?.schema ||
+          service.schema ||
+          defaultPrismaOptions.schema,
         __cwd,
       ),
       output: ensureAbsolutePath(
-        service.prisma?.output ||
+        service.datasource?.output ||
           join(
             defaultPrismaOutput,
             `${__isMultiService ? service.name + '-' : ''}client`,
@@ -144,7 +149,7 @@ function normalizeServiceConfig(
       ),
     }
   } else {
-    delete service.prisma
+    delete service.datasource
   }
 
   // APIs paths

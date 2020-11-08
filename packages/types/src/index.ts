@@ -20,15 +20,25 @@ declare namespace mrapi {
     clientPath?: string
   }
 
-  interface PrismaOptions {
+  enum DatasourceProvider {
+    prisma = 'prisma',
+  }
+
+  interface DatasourceOptions {
+    provider?: DatasourceProvider
     schema?: string
     output?: string
+  }
+
+  enum SchemaProvider {
+    nexus = 'nexus',
   }
 
   interface GraphqlOptions {
     output?: string
     custom?: string
     playground?: boolean
+    schemaProvider?: SchemaProvider
   }
 
   interface OpenapiOptions {
@@ -40,7 +50,7 @@ declare namespace mrapi {
     name?: string
     schema?: string
     database?: string
-    prisma?: PrismaOptions
+    datasource?: DatasourceOptions
     graphql?: boolean | GraphqlOptions
     openapi?: boolean | OpenapiOptions
     studio?: boolean | number

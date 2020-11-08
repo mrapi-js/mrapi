@@ -4,8 +4,8 @@ import type { Datasource } from '@mrapi/datasource'
 import type { Request, Response } from '@mrapi/app'
 import type { Context, ErrorContext } from '@mrapi/graphql'
 
-import { createSchema } from './utils'
 import { tryRequire } from '@mrapi/common'
+import { dirname, join } from 'path'
 
 interface GraphqlConfig {
   service?: mrapi.ServiceOptions
@@ -20,7 +20,6 @@ export function makeGraphqlServices({
   middleware,
   config,
   getTenantIdentity,
-  nexus,
 }: {
   app: Service
   datasource?: Datasource
@@ -28,17 +27,43 @@ export function makeGraphqlServices({
   config: mrapi.ServiceConfig
   services: Array<mrapi.ServiceOptions>
   getTenantIdentity: Function
-  nexus: typeof import('@nexus/schema')
 }): Array<mrapi.Endpoint> {
   const configs = services
     .filter((service) => !!service.graphql)
-    .map((service) => ({
-      service,
-      schema: createSchema(service, config.__isMultiService, nexus),
-      endpoint: config.__isMultiService
-        ? `/graphql/${service.name}`
-        : `/graphql`,
-    }))
+    .map((service) => {
+      const opts = service.graphql as mrapi.GraphqlOptions
+      let getSchemaFn: mrapi.GetSchemaFn
+      switch (opts.schemaProvider) {
+        case 'nexus': {
+          const tmp = tryRequire(
+            join(__dirname, `./schema/${opts.schemaProvider}`),
+          )
+          getSchemaFn = tmp.getSchema || tmp
+          break
+        }
+        default:
+          throw new Error(`Unknow SchemaProvider '${opts.schemaProvider}'`)
+      }
+      const plugins = []
+      if (service.datasource?.provider === 'prisma') {
+        plugins.push('nexus-plugin-prisma')
+      }
+
+      return {
+        service,
+        schema: getSchemaFn({
+          customPath: opts.custom!,
+          generatedPath: opts.output!,
+          datasourcePath: service.datasource?.output!,
+          contextDir: join(dirname(opts.output!), 'context'),
+          plugins,
+          mock: service.mock,
+        }),
+        endpoint: config.__isMultiService
+          ? `/graphql/${service.name}`
+          : `/graphql`,
+      }
+    })
 
   let stitchingConfigs: Array<GraphqlConfig> = []
   let normalConfigs: Array<GraphqlConfig> = []
@@ -82,7 +107,7 @@ export function makeGraphqlServices({
     const unifiedSchema = stitchSchemas({
       subschemas: stitchingConfigs.map(({ service, schema }) => ({
         schema,
-        ...(!!service?.prisma
+        ...(!!service?.datasource
           ? {
               createProxyingResolver: ({
                 subschemaConfig,
@@ -208,28 +233,3 @@ async function makeConetxt({
     ...(dbClient ? { prisma: dbClient } : {}),
   }
 }
-
-// TODO
-// const startStudio =
-//   typeof service.studio === 'boolean' ||
-//   typeof service.studio === 'number'
-
-// if (startStudio) {
-//   const { run } = tryRequire('@mrapi/cli', `@mrapi/cli is required`)
-
-//   const tenants = Array.isArray(service.tenants)
-//     ? service.tenants
-//     : service.tenants
-//     ? [service.tenants]
-//     : null
-
-//   if (tenants) {
-//     for (const tenant of tenants) {
-//       run(
-//         `prisma studio --browser=none --service=${service.name} --tenant=${tenant.name}`,
-//       )
-//     }
-//   } else {
-//     run(`prisma studio --browser=none --service=${service.name}`)
-//   }
-// }
