@@ -160,11 +160,9 @@ function normalizeServiceConfig(
       continue
     }
 
-    const tmp = (typeof service[item] === 'boolean'
-      ? {}
-      : service[item]) as PathsObject
+    const tmp = (service[item] || {}) as PathsObject
 
-    service[item] = merge(tmp, defaults[item])
+    service[item] = merge(defaults[item], tmp)
 
     service[item] = {
       ...((service[item] as PathsObject) || {}),
