@@ -14,7 +14,7 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/db": "*",
+    "@mrapi/datasource": "*",
     "@mrapi/service": "*",
     "@mrapi/graphql": "*",
     "@nexus/schema": "^0",

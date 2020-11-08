@@ -1,5 +1,5 @@
 {
-  "name": "@mrapi/db",
+  "name": "@mrapi/datasource",
   "version": "2.0.0",
   "description": "mrapi",
   "main": "lib/index.js",

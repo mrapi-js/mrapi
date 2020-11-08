@@ -20,7 +20,7 @@ export enum ProviderName {
   prisma = 'prisma',
 }
 
-export interface DBOptions {
+export interface DatasourceOptions {
   provider: ProviderName
   services: Array<ServiceOptions>
   management?: ManagementOptions

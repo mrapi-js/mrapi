@@ -1,14 +1,14 @@
-import { DB } from '..'
+import { Datasource } from '..'
 
-describe('db', () => {
+describe('datasource', () => {
   beforeEach(() => {})
 
   afterEach(() => {})
 
   test('types', () => {
-    expect(typeof DB).toBe('function')
+    expect(typeof Datasource).toBe('function')
 
-    const instance = new DB({
+    const instance = new Datasource({
       provider: 'prisma' as any,
       management: {
         database: 'file:./dev.db',
@@ -28,7 +28,7 @@ describe('db', () => {
       ],
     })
     expect(typeof instance).toBe('object')
-    expect(instance).toBeInstanceOf(DB)
+    expect(instance).toBeInstanceOf(Datasource)
     ;['init', 'getManagementClient', 'getServiceClient', 'disconnect'].forEach(
       (k) => {
         expect(typeof (instance as any)[k]).toBe('function')

@@ -1,4 +1,4 @@
-import type { DBOptions, ServiceOptions } from './types'
+import type { DatasourceOptions, ServiceOptions } from './types'
 
 import { Service } from './service'
 import { Management } from './management'
@@ -6,11 +6,11 @@ import { ensureArray } from '@mrapi/common'
 
 export * from './types'
 
-export class DB {
+export class Datasource {
   management?: Management
   services: Map<string, Service> = new Map()
 
-  constructor(public config: DBOptions) {}
+  constructor(public config: DatasourceOptions) {}
 
   async init() {
     if (!!this.config.management) {

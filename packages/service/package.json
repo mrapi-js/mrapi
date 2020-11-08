@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/swagger-tools": "^0",
-    "@mrapi/db": "*",
+    "@mrapi/datasource": "*",
     "@nexus/schema": "^0",
     "@graphql-tools/mock": "^7",
     "@graphql-tools/stitch": "^7",

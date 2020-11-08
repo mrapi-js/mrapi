@@ -26,7 +26,7 @@ export class Tenant {
     )
 
     if (!Provider) {
-      throw new Error(`DB provider '${this.providerName}' not found`)
+      throw new Error(`Datasource provider '${this.providerName}' not found`)
     }
 
     this.provider = new Provider(
