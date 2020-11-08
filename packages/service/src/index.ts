@@ -5,7 +5,7 @@ import type { Request, Response } from '@mrapi/app'
 
 import { App } from '@mrapi/app'
 import { json } from 'body-parser'
-import { makeGraphqlServices, makeGraphqlPlayground } from './graphql/'
+import { makeGraphqlServices } from './graphql/'
 import { makeOpenapi, makeOpenapiOptions } from './openapi/'
 import { tryRequire, resolveConfig, defaults, ensureArray } from '@mrapi/common'
 
@@ -14,7 +14,7 @@ const defaultOptions = {
   openapi: true,
 }
 
-function setDefaultOption(config: any) {
+function setDefaultOption(config: Partial<mrapi.ServiceOptions>) {
   config['graphql'] =
     config?.graphql !== undefined ? config.graphql : defaultOptions.graphql
   config['openapi'] =
@@ -54,45 +54,21 @@ export class Service extends App {
       ? this.config.service.map((item: mrapi.ServiceOptions) =>
           setDefaultOption(item),
         )
-      : setDefaultOption(this.config.service)
+      : setDefaultOption(this.config.service || {})
 
     this.use(json())
   }
 
   private async applyGraphql() {
-    const { graphqlMiddleware }: typeof import('@mrapi/graphql') = tryRequire(
-      '@mrapi/graphql',
-      'Please install it manually.',
-    )
-    const playgroundMiddleware: typeof import('graphql-playground-middleware-express') = tryRequire(
-      'graphql-playground-middleware-express',
-      'Please install it manually.',
-    )
-
     const endpoints = await makeGraphqlServices({
       app: this,
       config: this.config,
       services: this.services,
       datasource: this.datasource,
-      middleware: graphqlMiddleware,
       getTenantIdentity: this.getTenantIdentity.bind(this),
     })
 
     this.endpoints = this.endpoints.concat(endpoints)
-
-    const playgroundTabs: any[] = endpoints.length > 0 ? [] : []
-
-    const { endpoint: playgroundEndpoint } = makeGraphqlPlayground(
-      this,
-      playgroundMiddleware,
-      playgroundTabs,
-    )
-
-    this.endpoints.push({
-      name: 'united',
-      type: 'GraphQL Playground',
-      path: playgroundEndpoint,
-    })
   }
 
   private async applyOpenapi() {

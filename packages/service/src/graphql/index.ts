@@ -10,41 +10,47 @@ import { dirname, join } from 'path'
 interface GraphqlConfig {
   service?: mrapi.ServiceOptions
   schema: any
-  endpoint: string
+  playground?: boolean
 }
 
 export async function makeGraphqlServices({
   app,
   datasource,
   services,
-  middleware,
   config,
   getTenantIdentity,
 }: {
   app: Service
   datasource?: Datasource
-  middleware: any
   config: mrapi.ServiceConfig
   services: Array<mrapi.ServiceOptions>
   getTenantIdentity: Function
 }): Promise<mrapi.Endpoint[]> {
   const validServices = services.filter((service) => !!service.graphql)
+
+  if (validServices.length < 1) {
+    return []
+  }
+
+  const { graphqlMiddleware }: typeof import('@mrapi/graphql') = tryRequire(
+    '@mrapi/graphql',
+    'Please install it manually.',
+  )
+
   const configs: GraphqlConfig[] = []
 
   for (const service of validServices) {
     const opts = service.graphql as mrapi.GraphqlOptions
     let getSchemaFn: mrapi.GetSchemaFn
-    switch (opts.schemaProvider as string) {
+    switch (opts.generator as string) {
       case 'nexus':
       case 'type-graphql': {
-        const tmp = tryRequire(
-          join(__dirname, `./schema/${opts.schemaProvider}`),
-        )
+        const tmp = tryRequire(join(__dirname, `./schema/${opts.generator}`))
         getSchemaFn = tmp.getSchema || tmp
         break
       }
       default:
-        throw new Error(`Unknow SchemaProvider '${opts.schemaProvider}'`)
+        throw new Error(`Unknow graphql generator '${opts.generator}'`)
     }
     const plugins = []
     if (service.datasource?.provider === 'prisma') {
@@ -61,9 +67,6 @@ export async function makeGraphqlServices({
         plugins,
         mock: service.mock,
       }),
-      endpoint: config.__isMultiService
-        ? `/graphql/${service.name}`
-        : `/graphql`,
     })
   }
 
@@ -115,22 +118,20 @@ export async function makeGraphqlServices({
                 subschemaConfig,
                 operation,
                 transformedSchema,
-              }) => async (_parent, _args, { req, res }: Context, info) => {
-                const context = await makeConetxt({
-                  req,
-                  res,
-                  service,
-                  datasource,
-                  getTenantIdentity,
-                })
-                return delegateToSchema({
+              }) => async (_parent, _args, { req, res }: Context, info) =>
+                delegateToSchema({
                   schema: subschemaConfig,
                   operation,
-                  context,
+                  context: await makeConetxt({
+                    req,
+                    res,
+                    service,
+                    datasource,
+                    getTenantIdentity,
+                  }),
                   info,
                   transformedSchema,
-                })
-              },
+                }),
             }
           : {}),
       })),
@@ -138,16 +139,26 @@ export async function makeGraphqlServices({
 
     servicesToApply.push({
       schema: unifiedSchema,
-      endpoint: '/graphql',
+      playground: stitchingConfigs.some(
+        (s) => !!(s.service?.graphql as mrapi.GraphqlOptions)?.playground,
+      ),
     })
   }
 
   servicesToApply = servicesToApply.concat(normalConfigs)
 
-  for (const { service, schema, endpoint } of servicesToApply) {
+  const palygroundTabs = []
+  const endpoints = []
+
+  for (const { service, schema, playground } of servicesToApply) {
+    const endpoint =
+      config.__isMultiService && service
+        ? `/graphql/${service.name}`
+        : `/graphql`
+
     app.post(
       endpoint,
-      middleware({
+      graphqlMiddleware({
         schema,
         context: !!service
           ? // handle the request directly
@@ -159,41 +170,56 @@ export async function makeGraphqlServices({
                 datasource,
                 getTenantIdentity,
               })
-          : // pass to `createProxyingResolver`
+          : // pass to `createProxyingResolver` (stitched schema has no service, because it stitched from multiple services)
             ({ req, res }: Context) => ({ req, res }),
         formatError: ({ error }: ErrorContext) => error,
       }),
     )
+
+    if (playground || (service?.graphql as mrapi.GraphqlOptions)?.playground) {
+      palygroundTabs.push({
+        name: service?.name || '',
+        endpoint: endpoint,
+      })
+    }
+
+    endpoints.push({
+      name: service?.name || '',
+      type: 'GraphQL',
+      path: endpoint,
+    })
   }
 
-  return servicesToApply.map(({ service, endpoint }) => ({
-    name: service?.name || 'united',
-    type: 'GraphQL',
-    path: endpoint,
-  }))
+  if (palygroundTabs.length > 0) {
+    const playgroundEndpoint = '/playground'
+    makeGraphqlPlayground(app, palygroundTabs, playgroundEndpoint)
+
+    endpoints.push({
+      name: '',
+      type: 'GraphQL Playground',
+      path: playgroundEndpoint,
+    })
+  }
+
+  return endpoints
 }
 
-export function makeGraphqlPlayground(
-  app: Service,
-  middleware: any,
-  tabs: any[],
-) {
-  const endpoint = '/playground'
-
-  app.get(
-    endpoint,
-    middleware({
-      ...(Array.isArray(tabs) && tabs.length > 0
-        ? { tabs }
-        : {
-            endpoint: '/graphql',
-          }),
-    }),
+function makeGraphqlPlayground(app: Service, tabs: any[], endpoint: string) {
+  const playgroundMiddleware: typeof import('graphql-playground-middleware-express').default = tryRequire(
+    'graphql-playground-middleware-express',
+    'Please install it manually.',
   )
 
-  return {
-    endpoint,
-  }
+  const opts =
+    tabs.length === 1
+      ? {
+          endpoint: tabs[0].endpoint,
+        }
+      : {
+          tabs,
+        }
+
+  app.get(endpoint, playgroundMiddleware(opts))
 }
 
 async function makeConetxt({
@@ -210,21 +236,26 @@ async function makeConetxt({
   getTenantIdentity: Function
 }) {
   let dbClient
+
+  const tenantId = service?.__isMultiTenant
+    ? await getTenantIdentity(req, res, service)
+    : null
+
   if (datasource) {
-    const tenantId = await getTenantIdentity(req, res, service)
     dbClient = await (service?.management
       ? datasource.getManagementClient()
-      : datasource.getServiceClient(
-          service?.name!,
-          service?.__isMultiTenant ? tenantId : null,
-        ))
+      : datasource.getServiceClient(service?.name!, tenantId))
     if (!dbClient) {
       throw new Error(
-        `Please check if the multi-tenant identity${
-          typeof service?.tenantIdentity === 'string'
-            ? ` '${service.tenantIdentity}'`
+        `Cannot get datasource client for service '${service?.name}'. ${
+          service?.__isMultiTenant
+            ? `Please check if the multi-tenant identity${
+                typeof service?.tenantIdentity === 'string'
+                  ? ` '${service.tenantIdentity}'`
+                  : ''
+              } has been set correctly. Received: ${tenantId}`
             : ''
-        } has been set correctly. Received: ${tenantId}`,
+        } `,
       )
     }
   }
@@ -233,5 +264,6 @@ async function makeConetxt({
     startTime: Date.now(),
     // keep `prisma` here, because paljs generation needs it
     ...(dbClient ? { prisma: dbClient } : {}),
+    ...(tenantId ? { tenantId } : {}),
   }
 }

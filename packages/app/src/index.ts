@@ -109,7 +109,7 @@ export class App extends Router<Middleware> {
     req.params = Object.assign(req.params || {}, match.params)
     req.originalUrl = req.originalUrl || req.url
     req.query = info.query || {}
-    req.search = info.search
+    // req.search = info.search
 
     const middlewares = match.handlers
 

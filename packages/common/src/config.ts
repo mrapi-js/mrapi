@@ -48,7 +48,7 @@ export const defaults = {
   port: 1358,
   graphql: {
     playground: !isProd,
-    schemaProvider: 'nexus' as mrapi.SchemaProvider,
+    generator: 'nexus' as mrapi.GraphqlGenerator,
   },
   openapi: {},
 }

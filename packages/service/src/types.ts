@@ -11,6 +11,7 @@ declare module '@mrapi/types' {
     name?: string
     type: string
     path: string
+    playground?: boolean
   }
 
   interface ServiceConfig extends mrapi.Config {
