@@ -32,6 +32,7 @@ declare namespace mrapi {
 
   enum SchemaProvider {
     nexus = 'nexus',
+    typeGraphql = 'type-graphql',
   }
 
   interface GraphqlOptions {

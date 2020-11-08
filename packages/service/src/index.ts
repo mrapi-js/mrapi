@@ -69,7 +69,7 @@ export class Service extends App {
       'Please install it manually.',
     )
 
-    const endpoints = makeGraphqlServices({
+    const endpoints = await makeGraphqlServices({
       app: this,
       config: this.config,
       services: this.services,

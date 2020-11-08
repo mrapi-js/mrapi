@@ -34,6 +34,7 @@
     "graphql-playground-middleware-express": "^1",
     "nexus-plugin-prisma": "^0",
     "express-openapi": "^7",
-    "swagger-tools": "^0.10"
+    "swagger-tools": "^0.10",
+    "type-graphql": "^1"
   }
 }
