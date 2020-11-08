@@ -249,9 +249,9 @@ Examples:
     service: mrapi.ServiceOptions,
     database?: string,
   ) {
-    if (!service.prisma) {
+    if (!service.datasource || service.datasource.provider !== 'prisma') {
       this.exitWithError(
-        `There is no prisma schema found. You cann't run prisma commands.`,
+        `You are not using prisma datasource. You cann't run prisma commands.`,
       )
     }
 
@@ -272,8 +272,8 @@ Examples:
         stdio: cmd.includes('studio') ? 'inherit' : 'pipe',
         env: {
           CLIENT_OUTPUT:
-            service.schema && service.prisma?.output
-              ? service.prisma?.output
+            service.schema && service.datasource?.output
+              ? service.datasource?.output
               : '',
           DATABASE_URL: databaseUrl,
           // https://github.com/sindresorhus/execa/issues/69#issuecomment-278693026
@@ -293,11 +293,11 @@ Examples:
     }
 
     let pkg
-    if (service.prisma?.output) {
+    if (service.datasource?.output) {
       // change package name
-      const pkgPath = join(service.prisma?.output, 'package.json')
+      const pkgPath = join(service.datasource?.output, 'package.json')
       pkg = require(pkgPath)
-      pkg.name = `.prisma/${basename(service.prisma?.output!)}`
+      pkg.name = `.prisma/${basename(service.datasource?.output!)}`
       writeFileSync(pkgPath, JSON.stringify(pkg, null, 2))
     }
 
@@ -332,11 +332,11 @@ Examples:
       Generator,
     }: typeof import('@paljs/generator') = require(generatorPath)
     const graphqlOptions = service.graphql as mrapi.GraphqlOptions
-    const schemaPath = service.prisma?.schema
+    const schemaPath = service.datasource?.schema
 
     process.env.CLIENT_OUTPUT =
-      schemaPath && service.prisma?.output
-        ? relative(dirname(schemaPath), service.prisma?.output ?? '')
+      schemaPath && service.datasource?.output
+        ? relative(dirname(schemaPath), service.datasource?.output ?? '')
         : ''
     process.env.DATABASE_URL = service.database || tenant?.database
 
@@ -371,7 +371,7 @@ Examples:
 
     options['output'] = (typeof service.openapi !== 'boolean' &&
       service.openapi?.output) as string
-    const { dmmf } = await import(service.prisma!.output!)
+    const { dmmf } = await import(service.datasource!.output!)
 
     if (!dmmf) {
       this.exitWithError('Please generate PrismaClient first')

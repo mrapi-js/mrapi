@@ -1,3 +1,4 @@
+import type { GraphQLSchema } from 'graphql'
 import type mrapi from '@mrapi/types'
 import type { Options } from '@mrapi/app'
 
@@ -17,6 +18,19 @@ declare module '@mrapi/types' {
     graphql?: {
       stitching?: boolean | string[]
     }
+  }
+
+  interface GetSchemaParams {
+    customPath: string
+    generatedPath: string
+    datasourcePath: string
+    contextDir: string
+    plugins: string[]
+    mock: any
+  }
+
+  interface GetSchemaFn {
+    (args: GetSchemaParams): GraphQLSchema
   }
 }
 
