@@ -1,6 +1,6 @@
 import type { AddressInfo } from 'net'
 import type { mrapi } from './types'
-import type { DB } from '@mrapi/db'
+import type { Datasource } from '@mrapi/datasource'
 import type { Request, Response } from '@mrapi/app'
 
 import { App } from '@mrapi/app'
@@ -32,7 +32,7 @@ const groupBy = (arr: any[], fn: any): Record<string, any[]> =>
     }, {})
 
 export class Service extends App {
-  db: DB | undefined
+  datasource: Datasource | undefined
   endpoints: Array<mrapi.Endpoint> = []
   services: Array<
     mrapi.ServiceOptions & {
@@ -76,9 +76,9 @@ export class Service extends App {
 
     const endpoints = makeGraphqlServices({
       app: this,
-      db: this.db,
       config: this.config,
       services: this.services,
+      datasource: this.datasource,
       middleware: graphqlMiddleware,
       getTenantIdentity: this.getTenantIdentity.bind(this),
       nexus,
@@ -111,13 +111,13 @@ export class Service extends App {
       const usingPrisma = !!service.prisma
 
       if (usingPrisma) {
-        await this.initDbClient()
+        await this.initDatasource()
       }
 
       const opts = makeOpenapiOptions(
         service,
         this.getTenantIdentity,
-        usingPrisma ? this.db : undefined,
+        usingPrisma ? this.datasource : undefined,
       )
 
       if (!opts) {
@@ -149,19 +149,19 @@ export class Service extends App {
     }
   }
 
-  protected async initDbClient() {
-    if (this.db) {
+  protected async initDatasource() {
+    if (this.datasource) {
       return
     }
 
-    const { DB }: typeof import('@mrapi/db') = tryRequire(
-      '@mrapi/db',
+    const { Datasource }: typeof import('@mrapi/datasource') = tryRequire(
+      '@mrapi/datasource',
       'Please install it manually.',
       false,
     )
 
     const managementOptions = this.services.find((s) => !!s.management)
-    const dbOptions: import('@mrapi/db').DBOptions = {
+    const datasourceOptions: import('@mrapi/datasource').DatasourceOptions = {
       services: this.services
         .filter((s) => !s.management)
         .map((s) => ({
@@ -175,7 +175,7 @@ export class Service extends App {
     }
 
     if (managementOptions) {
-      dbOptions.management = {
+      datasourceOptions.management = {
         database: managementOptions.database!,
         tenantModelName: managementOptions.managementTenantModelName!,
         clientPath: managementOptions.prisma!.output!,
@@ -183,8 +183,8 @@ export class Service extends App {
       checkDBClient(managementOptions)
     }
 
-    this.db = new DB(dbOptions)
-    await this.db?.init()
+    this.datasource = new Datasource(datasourceOptions)
+    await this.datasource?.init()
   }
 
   protected async getTenantIdentity(
@@ -232,7 +232,7 @@ export class Service extends App {
     this.services = ensureArray(this.config.service)
     const needGraphql = Boolean(this.services.some((s) => !!s.graphql))
     const needOpenapi = Boolean(this.services.some((s) => !!s.openapi))
-    const needDb = Boolean(this.services.some((s) => !!s.prisma))
+    const needDatasource = Boolean(this.services.some((s) => !!s.prisma))
 
     // start the server
     return new Promise((resolve, reject) => {
@@ -246,8 +246,8 @@ export class Service extends App {
           })
 
           try {
-            if (needDb) {
-              await this.initDbClient()
+            if (needDatasource) {
+              await this.initDatasource()
             }
             if (needGraphql) {
               await this.applyGraphql()

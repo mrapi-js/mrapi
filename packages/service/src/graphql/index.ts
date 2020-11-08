@@ -1,6 +1,6 @@
 import type { Service } from '../'
 import type { mrapi } from '../types'
-import type { DB } from '@mrapi/db'
+import type { Datasource } from '@mrapi/datasource'
 import type { Request, Response } from '@mrapi/app'
 import type { Context, ErrorContext } from '@mrapi/graphql'
 
@@ -15,7 +15,7 @@ interface GraphqlConfig {
 
 export function makeGraphqlServices({
   app,
-  db,
+  datasource,
   services,
   middleware,
   config,
@@ -23,7 +23,7 @@ export function makeGraphqlServices({
   nexus,
 }: {
   app: Service
-  db?: DB
+  datasource?: Datasource
   middleware: any
   config: mrapi.ServiceConfig
   services: Array<mrapi.ServiceOptions>
@@ -92,8 +92,8 @@ export function makeGraphqlServices({
                 const context = await makeConetxt({
                   req,
                   res,
-                  db,
                   service,
+                  datasource,
                   getTenantIdentity,
                 })
                 return delegateToSchema({
@@ -128,8 +128,8 @@ export function makeGraphqlServices({
               makeConetxt({
                 req,
                 res,
-                db,
                 service,
+                datasource,
                 getTenantIdentity,
               })
           : // pass to `createProxyingResolver`
@@ -172,22 +172,22 @@ export function makeGraphqlPlayground(
 async function makeConetxt({
   req,
   res,
-  db,
+  datasource,
   service,
   getTenantIdentity,
 }: {
   req: Request
   res: Response
-  db?: DB
+  datasource?: Datasource
   service?: mrapi.ServiceOptions
   getTenantIdentity: Function
 }) {
   let dbClient
-  if (db) {
+  if (datasource) {
     const tenantId = await getTenantIdentity(req, res, service)
     dbClient = await (service?.management
-      ? db.getManagementClient()
-      : db.getServiceClient(
+      ? datasource.getManagementClient()
+      : datasource.getServiceClient(
           service?.name!,
           service?.__isMultiTenant ? tenantId : null,
         ))

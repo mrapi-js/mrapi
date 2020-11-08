@@ -1,6 +1,6 @@
 import type { Service } from '../'
 import type { mrapi } from '../types'
-import type { DB } from '@mrapi/db'
+import type { Datasource } from '@mrapi/datasource'
 import type { Middleware20 } from 'swagger-tools'
 
 import { join } from 'path'
@@ -59,7 +59,7 @@ export async function makeOpenapi(
 export function makeOpenapiOptions(
   service: mrapi.ServiceOptions,
   getTenantIdentity: Function,
-  db?: DB,
+  datasource?: Datasource,
 ) {
   const openapiOutput = (typeof service.openapi !== 'boolean' &&
     service.openapi?.output) as string
@@ -75,7 +75,7 @@ export function makeOpenapiOptions(
     dependencies: {
       db: dependenciesPlugins(async (req: any, res: any) => {
         const tenantId: any = await getTenantIdentity(req, res, service)
-        return db?.getServiceClient(service.name!, tenantId)
+        return datasource?.getServiceClient(service.name!, tenantId)
       }),
     },
     apiDoc: {
