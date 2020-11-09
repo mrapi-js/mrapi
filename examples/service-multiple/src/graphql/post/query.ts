@@ -1,4 +1,5 @@
 import { extendType, objectType } from '@nexus/schema'
+import { Context } from './context'
 
 const Post = objectType({
   name: 'Post',
@@ -13,7 +14,8 @@ const postQuery = extendType({
   definition(t) {
     t.field('post', {
       type: Post,
-      async resolve(_, _args, _ctx) {
+      async resolve(_, _args, ctx: Context) {
+        console.log('post', ctx.req.headers)
         return {
           id: 1,
           title: '1st post',

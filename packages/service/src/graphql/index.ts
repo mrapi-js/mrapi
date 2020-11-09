@@ -4,8 +4,8 @@ import type { Datasource } from '@mrapi/datasource'
 import type { Request, Response } from '@mrapi/app'
 import type { Context, ErrorContext } from '@mrapi/graphql'
 
+import { join } from 'path'
 import { tryRequire } from '@mrapi/common'
-import { dirname, join } from 'path'
 
 interface GraphqlConfig {
   service?: mrapi.ServiceOptions
@@ -63,7 +63,7 @@ export async function makeGraphqlServices({
         customPath: opts.custom!,
         generatedPath: opts.output!,
         datasourcePath: service.datasource?.output!,
-        contextDir: join(dirname(opts.output!), 'context'),
+        contextFile: join(opts.custom!, 'context.ts'),
         plugins,
         mock: service.mock,
       }),
@@ -109,6 +109,7 @@ export async function makeGraphqlServices({
       'Please install it manually.',
     )
 
+    // TODO: keep `context`
     const unifiedSchema = stitchSchemas({
       subschemas: stitchingConfigs.map(({ service, schema }) => ({
         schema,
@@ -261,9 +262,9 @@ async function makeConetxt({
   }
 
   return {
-    startTime: Date.now(),
+    req,
+    res,
     // keep `prisma` here, because paljs generation needs it
     ...(dbClient ? { prisma: dbClient } : {}),
-    ...(tenantId ? { tenantId } : {}),
   }
 }

@@ -2,7 +2,10 @@ module.exports = {
   service: [
     {
       name: 'user',
-      schema: 'prisma/user/schema.prisma',
+      datasource: {
+        provider: 'prisma',
+        schema: 'prisma/user/schema.prisma',
+      },
       tenants: [
         {
           name: 'one',

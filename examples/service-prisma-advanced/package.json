@@ -8,22 +8,22 @@
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
     "debug": "wtfnode ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "generate": "npx mrapi prisma generate --service=. && npx mrapi graphql generate --service=."
+    "setup": "npx mrapi setup"
   },
   "keywords": [],
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/datasource": "*",
-    "@mrapi/service": "*",
-    "@mrapi/graphql": "*",
+    "@mrapi/datasource": "file:../../packages/datasource",
+    "@mrapi/graphql": "file:../../packages/graphql",
+    "@mrapi/service": "file:../../packages/service",
     "@nexus/schema": "^0",
     "@prisma/client": "^2",
     "nexus-plugin-prisma": "^0",
     "pino-pretty": "^4.3.0"
   },
   "devDependencies": {
-    "@mrapi/cli": "*",
+    "@mrapi/cli": "file:../../packages/cli",
     "@paljs/generator": "^2.5",
     "@prisma/cli": "^2",
     "@types/node": "*",

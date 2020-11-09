@@ -1,6 +1,6 @@
 import type { GraphQLSchema } from 'graphql'
 
-import { join } from 'path'
+import { dirname, join } from 'path'
 import { mkdirSync, writeFileSync } from 'fs'
 import { defaults, tryRequire, FILE_HEADER } from '@mrapi/common'
 
@@ -8,14 +8,14 @@ export default function getSchema({
   customPath,
   generatedPath,
   datasourcePath,
-  contextDir,
+  contextFile,
   plugins,
   mock,
 }: {
   customPath: string
   generatedPath: string
   datasourcePath: string
-  contextDir: string
+  contextFile: string
   plugins: string[]
   mock: any
 }): GraphQLSchema {
@@ -48,22 +48,23 @@ export default function getSchema({
     trailingComma: 'all',
   }
 
-  // create `Context` file
-  mkdirSync(contextDir, { recursive: true })
-  writeFileSync(
-    join(contextDir, 'index.d.ts'),
-    !!datasourceModuleName!
-      ? `${FILE_HEADER}
+//   // create `Context` file
+//   mkdirSync(dirname(contextFile), { recursive: true })
+//   writeFileSync(
+//     contextFile,
+//     `import type { Request, Response } from '@mrapi/app'
+// import type { PrismaClient } from '.prisma/user-client'
 
-import { PrismaClient } from '${datasourceModuleName!}'
-
-export interface Context {
-  prisma: PrismaClient
-}`
-      : `export interface Context {
-}
-`,
-  )
+// export interface Context {
+//   req: Request
+//   res: Response${
+//     !!datasourceModuleName!
+//       ? `
+//   prisma: PrismaClient`
+//       : ''
+//   }
+// }`,
+//   )
 
   const schema = makeSchema({
     types,
@@ -94,7 +95,7 @@ export interface Context {
             sources: [
               {
                 alias: 'ctx',
-                source: contextDir,
+                source: contextFile,
               },
               {
                 alias: 'prisma',

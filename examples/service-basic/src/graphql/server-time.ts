@@ -1,4 +1,5 @@
 import { extendType, stringArg, objectType } from '@nexus/schema'
+import { Context } from './context'
 
 const ServerTime = objectType({
   name: 'ServerTime',
@@ -14,7 +15,8 @@ const timeQuery = extendType({
       description: 'Get current timestamp on server',
       type: ServerTime,
       args: { type: stringArg() },
-      async resolve(_, _args, _ctx) {
+      async resolve(_, _args, ctx: Context) {
+        console.log(ctx.req.headers)
         return { time: String(Date.now()) }
       },
     })

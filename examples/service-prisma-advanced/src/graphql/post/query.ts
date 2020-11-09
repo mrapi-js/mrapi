@@ -1,5 +1,5 @@
 import { arg, extendType } from '@nexus/schema'
-import { Context } from '.mrapi/post/context'
+import { Context } from './context'
 
 const customQuery = extendType({
   type: 'Query',
@@ -16,6 +16,7 @@ const customQuery = extendType({
         take: 'Int',
       },
       resolve: (_root, args, ctx: Context) => {
+        console.log('draft', ctx.req.headers)
         return ctx.prisma.post.findFirst(args)
       },
     })

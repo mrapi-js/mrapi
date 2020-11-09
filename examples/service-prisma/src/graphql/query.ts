@@ -1,5 +1,5 @@
 import { extendType, stringArg, objectType, arg } from '@nexus/schema'
-import { Context } from '.mrapi/context'
+import { Context } from './context'
 
 const ServerTime = objectType({
   name: 'ServerTime',

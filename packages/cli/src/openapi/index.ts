@@ -1,7 +1,24 @@
-import { dirname, join } from 'path'
+import type mrapi from '@mrapi/types'
+
+import { dirname, join, relative } from 'path'
 import { writeFileSync, mkdirSync, existsSync } from 'fs'
 import { format, Options as PrettierOptions } from 'prettier'
 import { modelTmpFn, modelsTmpFn, getCrud } from './templates'
+import chalk from 'chalk'
+
+interface IObjType {
+  type: string
+  properties: {
+    [name: string]: {
+      description: string
+      type?: string
+      schema?: any
+      $ref?: any
+      items?: any
+    }
+  }
+  required?: string[]
+}
 
 // Reference URL: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#dataTypeFormat
 function getFieldType(type: string) {
@@ -53,12 +70,6 @@ function smallModel(name: string) {
   return name.charAt(0).toLowerCase() + name.slice(1)
 }
 
-export function outputFile(content: string, outputPath: string) {
-  const dir = dirname(outputPath)
-  !existsSync(dir) && mkdirSync(dir, { recursive: true })
-  writeFileSync(outputPath, formation(content))
-}
-
 function formation(
   text: string,
   parser: PrettierOptions['parser'] = 'babel-ts', //'babel',
@@ -74,6 +85,12 @@ function formation(
     tabWidth: 2,
     parser,
   })
+}
+
+export function outputFile(content: string, outputPath: string) {
+  const dir = dirname(outputPath)
+  !existsSync(dir) && mkdirSync(dir, { recursive: true })
+  writeFileSync(outputPath, formation(content))
 }
 
 export function genPaths(
@@ -125,5 +142,172 @@ description: '${pathId.name}',
 },`,
     ),
     join(options.output, `paths/${mapping.plural}/{${pathId.name}}.js`),
+  )
+}
+
+export function generateOpenapiSpecsFromPrisma(
+  dmmf: any,
+  opts: mrapi.GeneratorOptions,
+) {
+  const timeStart = Date.now()
+
+  const {
+    datamodel,
+    mappings,
+    schema: { inputTypes, outputTypes },
+  } = dmmf
+
+  // Get the filtered models
+  const models = outputTypes.filter(
+    (model: any) =>
+      !['Query', 'Mutation'].includes(model.name) &&
+      !model.name.includes('Aggregate') &&
+      model.name !== 'BatchPayload' &&
+      (!opts.includeModels || opts.includeModels.includes(model.name as never)),
+  )
+  const allModelsObj: Record<string, any> = {}
+  Array.isArray(datamodel.models) &&
+    datamodel.models.forEach((model: any) => {
+      allModelsObj[model.name] = model
+
+      for (const field of model.fields) {
+        if (field.isId) {
+          allModelsObj[model.name].primaryField = field
+          break
+        }
+      }
+    })
+  const modelDefinitions: any = {
+    Error: {
+      type: 'object',
+      properties: {
+        code: {
+          description: 'Error code.',
+          type: 'integer',
+        },
+        message: {
+          description: 'Error message.',
+          type: 'string',
+        },
+      },
+    },
+  }
+
+  function dealModelDefinitions(inputType: any, hasObj: boolean = false) {
+    const inputObj: IObjType = {
+      type: 'object',
+      properties: {},
+      required: [],
+    }
+
+    inputType?.fields.forEach((field: any) => {
+      const fieldInputType = Array.isArray(field.inputTypes)
+        ? field.inputTypes.length >= 2
+          ? field.inputTypes[1]
+          : field.inputTypes[0]
+        : field.inputTypes
+      if (fieldInputType.kind === 'scalar') {
+        const type = getFieldType(fieldInputType?.type)
+        inputObj.properties[field.name] = {
+          description: field.name,
+          type,
+        }
+        fieldInputType?.isRequired && inputObj.required?.push(field.name)
+      } else if (hasObj && fieldInputType.kind === 'object') {
+        if (['AND', 'OR', 'NOT'].includes(field.name)) {
+          inputObj.properties[field.name] = {
+            type: 'array',
+            description: `${fieldInputType.type} list.`,
+            items: {
+              type: 'object',
+              description: fieldInputType.type,
+              $ref: `#/definitions/${fieldInputType.type}`,
+            },
+          }
+        } else {
+          inputObj.properties[field.name] = {
+            type: 'object',
+            description: fieldInputType.type,
+            $ref: `#/definitions/${fieldInputType.type}`,
+          }
+        }
+
+        fieldInputType?.isRequired && inputObj.required?.push(field.name)
+      }
+    })
+
+    if (inputObj.required && inputObj.required.length <= 0) {
+      delete inputObj.required
+    }
+
+    modelDefinitions[inputType.name] = inputObj
+  }
+
+  // inputTypes
+  // There's no filtering going on here
+  inputTypes.forEach((inputType: any) => {
+    if (/CreateInput$/.test(inputType.name)) {
+      dealModelDefinitions(inputType)
+    } else if (/WhereInput$/.test(inputType.name)) {
+      dealModelDefinitions(inputType, true)
+    } else if (/Filter$/.test(inputType.name)) {
+      dealModelDefinitions(inputType)
+    }
+  })
+
+  // outputTypes
+  models.forEach((model: any) => {
+    const obj: IObjType = {
+      type: 'object',
+      properties: {},
+      required: [],
+    }
+    const fieldsToExclude = (opts.excludeFields || []).concat(
+      opts.excludeFieldsByModel ? opts.excludeFieldsByModel[model] : [],
+    )
+
+    model.fields.forEach((field: any) => {
+      if (!fieldsToExclude.includes(field.name)) {
+        if (field.outputType.kind === 'scalar') {
+          const type = getFieldType(field.outputType?.type)
+          obj.properties[field.name] = {
+            description: field.name,
+            type,
+          }
+          field.outputType?.isRequired && obj.required?.push(field.name)
+        }
+        // else if (field.outputType.kind === 'object') {
+        //   obj.properties[field.name] = {
+        //     type: 'object',
+        //     description: field.name,
+        //     $ref: `#/definitions/${field.name}`,
+        //   }
+        //   field.outputType?.isRequired && obj.required.push(field.name)
+        // }
+      }
+    })
+
+    if (obj.required && obj.required.length <= 0) {
+      delete obj.required
+    }
+
+    modelDefinitions[model.name] = obj
+
+    const mapping = mappings.modelOperations.find(
+      (m: any) => m.model === model.name,
+    )
+    genPaths(opts, model, mapping, allModelsObj[model.name])
+  })
+
+  outputFile(
+    `module.exports = ${JSON.stringify(modelDefinitions)}`,
+    join(opts.output, 'definitions.js'),
+  )
+
+  console.log(
+    chalk`✔ Generated {bold OpenAPI} {dim to ${relative(
+      process.cwd(),
+      opts.output,
+    )}} in ${Date.now() - timeStart}ms\n`,
   )
 }

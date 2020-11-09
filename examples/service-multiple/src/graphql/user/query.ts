@@ -1,4 +1,5 @@
 import { extendType, stringArg, objectType } from '@nexus/schema'
+import { Context } from './context'
 
 const User = objectType({
   name: 'User',
@@ -14,7 +15,8 @@ const userQuery = extendType({
     t.field('user', {
       type: User,
       args: { name: stringArg() },
-      async resolve(_, { name }, _ctx) {
+      async resolve(_, { name }, ctx: Context) {
+        console.log('user', ctx.req.headers)
         return {
           id: 1,
           name: name || 'x',
