@@ -14,6 +14,7 @@ export function generateContextFile(
   const contextFilePath = join(targetDir, 'context.ts')
 
   // create only if not exist
+  const relativePath = relative(process.cwd(), contextFilePath)
   if (!existsSync(contextFilePath)) {
     writeFileSync(
       contextFilePath,
@@ -36,10 +37,13 @@ export interface Context {
     )
 
     console.log(
-      chalk`✔ Generated {bold Context} {dim to ${relative(
-        process.cwd(),
-        targetDir,
-      )}} in ${Date.now() - timeStart}ms\n`,
+      chalk`✔ Generated {bold Context} {dim to ${relativePath}} in ${
+        Date.now() - timeStart
+      }ms\n`,
+    )
+  } else {
+    console.log(
+      chalk.dim`{bold Context} file '${relativePath}' already exist. skip.\n`,
     )
   }
 }

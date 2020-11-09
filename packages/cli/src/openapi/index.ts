@@ -87,18 +87,13 @@ function formation(
   })
 }
 
-export function outputFile(content: string, outputPath: string) {
+function outputFile(content: string, outputPath: string) {
   const dir = dirname(outputPath)
   !existsSync(dir) && mkdirSync(dir, { recursive: true })
   writeFileSync(outputPath, formation(content))
 }
 
-export function genPaths(
-  options: any,
-  model: any,
-  mapping: any,
-  modelObj: any,
-) {
+function genPaths(options: any, model: any, mapping: any, modelObj: any) {
   const modelName = smallModel(model.name)
 
   const exclude = excludedOperations(options, model.name)
@@ -147,6 +142,7 @@ description: '${pathId.name}',
 
 export function generateOpenapiSpecsFromPrisma(
   dmmf: any,
+  output: string,
   opts: mrapi.GeneratorOptions,
 ) {
   const timeStart = Date.now()
@@ -296,18 +292,18 @@ export function generateOpenapiSpecsFromPrisma(
     const mapping = mappings.modelOperations.find(
       (m: any) => m.model === model.name,
     )
-    genPaths(opts, model, mapping, allModelsObj[model.name])
+    genPaths({ ...opts, output }, model, mapping, allModelsObj[model.name])
   })
 
   outputFile(
     `module.exports = ${JSON.stringify(modelDefinitions)}`,
-    join(opts.output, 'definitions.js'),
+    join(output, 'definitions.js'),
   )
 
   console.log(
     chalk`✔ Generated {bold OpenAPI} {dim to ${relative(
       process.cwd(),
-      opts.output,
+      output,
     )}} in ${Date.now() - timeStart}ms\n`,
   )
 }

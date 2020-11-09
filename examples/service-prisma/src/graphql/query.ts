@@ -32,13 +32,14 @@ const customQuery = extendType({
       },
       nullable: true,
       async resolve(_root, args, ctx: Context, _info) {
+        console.log('me', ctx.req.headers)
         return ctx.prisma.user.findFirst(args)
       },
     })
 
     t.field('draft', {
       type: 'Post',
-      description: 'Get current timestamp on server',
+      description: 'Get a draft',
       nullable: true,
       args: {
         where: arg({ type: 'PostWhereInput', required: true }),
@@ -48,6 +49,7 @@ const customQuery = extendType({
         take: 'Int',
       },
       resolve: (_root, args, ctx: Context) => {
+        console.log('draft', ctx.req.headers)
         return ctx.prisma.post.findFirst(args)
       },
     })

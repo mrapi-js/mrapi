@@ -3,11 +3,11 @@ import type mrapi from '@mrapi/types'
 import execa from 'execa'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
-import { join, basename, relative, dirname } from 'path'
 import { resolveConfig, now } from '@mrapi/common'
-import { generateOpenapiSpecsFromPrisma } from './openapi'
 import { generateContextFile } from './graphql/context'
+import { join, basename, relative, dirname } from 'path'
 import { generateGraphqlSchema } from './graphql/schema'
+import { generateOpenapiSpecsFromPrisma } from './openapi'
 
 const { version } = require('../package.json')
 const SYMBOL_ALL = '.'
@@ -101,46 +101,18 @@ Examples:
           })
         }
 
-        const services = this.getServiceConfig()
-
-        for (const service of services) {
-          const tenants = this.getTenantConfig(service)
-          for (const tenant of tenants) {
-            await this.runPrismaCommand(this.#cmd, service, tenant.database)
-          }
-        }
+        await this.setup('prisma')
 
         break
       }
       case 'graphql': {
-        const services = this.getServiceConfig()
+        await this.setup('graphql')
 
-        for (const service of services) {
-          if (service.graphql) {
-            const tenants = this.getTenantConfig(service)
-            await this.runGraphqlGenerate(service, tenants[0])
-          }
-        }
         break
       }
       case 'openapi': {
-        const services = this.getServiceConfig()
+        await this.setup('openapi')
 
-        for (const service of services) {
-          // management don't need graphql api generattion
-          if (service.openapi) {
-            await this.runOpenapiGenerate(
-              {
-                excludeFields: [],
-                excludeModels: [],
-                excludeFieldsByModel: {},
-                excludeQueriesAndMutations: [],
-                excludeQueriesAndMutationsByModel: {},
-              },
-              service,
-            )
-          }
-        }
         break
       }
       default:
@@ -149,65 +121,62 @@ Examples:
     }
   }
 
-  async setup() {
+  async setup(type?: string) {
     const services = this.getServiceConfig({
       service: '.',
       tenant: '.',
     })
 
     for (const service of services) {
-      this.log(
-        chalk`{cyan Setting up{yellow ${`${
-          service.name ? ' ' + service.name : ''
-        } service`}}...}`,
-      )
+      const name = service.name ? ' ' + service.name : ''
+      this.log(chalk`{cyan Setting up{yellow ${name}} service...}`)
 
       const tenants = this.getTenantConfig(service)
 
-      // generate PrismaClient for each service
-      await this.runPrismaCommand(
-        'prisma generate',
-        service,
-        tenants[0]?.database,
-      )
-
-      // generate APIs for each service
-      if ((service.graphql as mrapi.GraphqlOptions)?.output) {
-        await this.runGraphqlGenerate(service, tenants[0])
-      }
-      if ((service.openapi as mrapi.OpenapiOptions)?.output) {
-        await this.runOpenapiGenerate(
-          {
-            excludeFields: [],
-            excludeModels: [],
-            excludeFieldsByModel: {},
-            excludeQueriesAndMutations: [],
-            excludeQueriesAndMutationsByModel: {},
-          },
+      if (!type || type === 'prisma') {
+        // generate PrismaClient for each service
+        await this.runPrismaCommand(
+          'prisma generate',
           service,
+          tenants[0]?.database,
         )
       }
 
-      // migrate database for each tenant
-      const databases = tenants.map((t) => t.database).filter(Boolean)
+      // generate APIs for each service
+      if (!type || type === 'graphql') {
+        if ((service.graphql as mrapi.GraphqlOptions)?.output) {
+          await this.runGraphqlGenerate(service, tenants[0])
+        }
+      }
 
-      for (const database of databases) {
-        try {
+      if (!type || type === 'openapi') {
+        if ((service.openapi as mrapi.OpenapiOptions)?.output) {
+          await this.runOpenapiGenerate(service)
+        }
+      }
+
+      if (!type || type === 'prisma') {
+        // migrate database for each tenant
+        const databases = tenants.map((t) => t.database).filter(Boolean)
+
+        for (const database of databases) {
+          try {
+            await this.runPrismaCommand(
+              'prisma migrate save --experimental --create-db --name=""',
+              service,
+              database,
+            )
+          } catch (err) {
+            console.log(err)
+            console.log(chalk.dim`migrate up canceled`)
+            continue
+          }
           await this.runPrismaCommand(
-            'prisma migrate save --experimental --create-db --name=""',
+            'prisma migrate up --experimental --create-db',
             service,
             database,
           )
-        } catch (err) {
-          console.log(err)
-          console.log(chalk.dim`migrate up canceled`)
-          continue
         }
-        await this.runPrismaCommand(
-          'prisma migrate up --experimental --create-db',
-          service,
-          database,
-        )
       }
     }
   }
@@ -222,6 +191,12 @@ Examples:
     }
 
     const databaseUrl = database || service.database
+    const schemaPath = service.datasource?.schema
+    const clientOutput =
+      schemaPath && service.datasource?.output
+        ? relative(dirname(schemaPath), service.datasource?.output ?? '')
+        : ''
+
     this.log(
       `Running \`${cmdStr}\` ${
         this.isPrismaStudioCommand ? `on database \`${databaseUrl}\` ` : ''
@@ -237,10 +212,7 @@ Examples:
         // prisma studio
         stdio: cmd.includes('studio') ? 'inherit' : 'pipe',
         env: {
-          CLIENT_OUTPUT:
-            service.schema && service.datasource?.output
-              ? service.datasource?.output
-              : '',
+          CLIENT_OUTPUT: clientOutput,
           DATABASE_URL: databaseUrl,
           // https://github.com/sindresorhus/execa/issues/69#issuecomment-278693026
           FORCE_COLOR: 'true',
@@ -315,17 +287,20 @@ Examples:
     )
   }
 
-  async runOpenapiGenerate(options: any, service: mrapi.ServiceOptions) {
-    if (!service.datasource) {
+  async runOpenapiGenerate(service: mrapi.ServiceOptions) {
+    if (!service.datasource || !service.datasource?.output) {
+      return
+    }
+
+    const openapiOptions = service.openapi as mrapi.OpenapiOptions
+
+    if (!openapiOptions.output) {
       return
     }
 
     this.log(`Running \`mrapi openapi\` ...`)
 
-    options['output'] = (typeof service.openapi !== 'boolean' &&
-      service.openapi?.output) as string
-
-    const { dmmf } = await import(service.datasource!.output!)
+    const { dmmf } = await import(service.datasource.output)
 
     if (!dmmf) {
       this.exitWithError('Please generate PrismaClient first')
@@ -333,7 +308,17 @@ Examples:
 
     console.log(chalk.dim`\nPrisma schema loaded from ${service.schema}\n`)
 
-    generateOpenapiSpecsFromPrisma(dmmf, options)
+    generateOpenapiSpecsFromPrisma(
+      dmmf,
+      openapiOptions.output,
+      openapiOptions.generatorOptions || {
+        excludeFields: [],
+        excludeModels: [],
+        excludeFieldsByModel: {},
+        excludeQueriesAndMutations: [],
+        excludeQueriesAndMutationsByModel: {},
+      },
+    )
   }
 
   private getServiceConfig(args = this.#args) {
