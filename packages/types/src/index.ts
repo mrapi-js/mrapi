@@ -37,7 +37,6 @@ declare namespace mrapi {
 
   interface GeneratorOptions {
     models?: string[]
-    output: string
     javaScript?: boolean
     includeModels?: string[]
     excludeFields: string[]

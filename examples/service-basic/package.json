@@ -7,7 +7,8 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "debug": "wtfnode ts-node-dev --respawn --transpile-only ./src/app.ts"
+    "debug": "wtfnode ts-node-dev --respawn --transpile-only ./src/app.ts",
+    "setup": "npx mrapi setup"
   },
   "keywords": [],
   "author": "neikvon",
