@@ -7,8 +7,7 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "debug": "wtfnode ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "generate": "npx mrapi prisma generate --service=. && npx mrapi graphql generate --service=."
+    "debug": "wtfnode ts-node-dev --respawn --transpile-only ./src/app.ts"
   },
   "keywords": [],
   "author": "neikvon",

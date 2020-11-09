@@ -25,7 +25,7 @@ declare module '@mrapi/types' {
     customPath: string
     generatedPath: string
     datasourcePath: string
-    contextDir: string
+    contextFile: string
     plugins: string[]
     mock: any
   }

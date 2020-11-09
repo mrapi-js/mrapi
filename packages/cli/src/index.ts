@@ -4,45 +4,13 @@ import execa from 'execa'
 import chalk from 'chalk'
 import { writeFileSync } from 'fs'
 import { join, basename, relative, dirname } from 'path'
-import { resolveFile, resolveConfig, now } from '@mrapi/common'
-import { genPaths, outputFile } from './openapi'
+import { resolveConfig, now } from '@mrapi/common'
+import { generateOpenapiSpecsFromPrisma } from './openapi'
+import { generateContextFile } from './graphql/context'
+import { generateGraphqlSchema } from './graphql/schema'
 
 const { version } = require('../package.json')
 const SYMBOL_ALL = '.'
-interface IObjType {
-  type: string
-  properties: {
-    [name: string]: {
-      description: string
-      type?: string
-      schema?: any
-      $ref?: any
-      items?: any
-    }
-  }
-  required?: string[]
-}
-// Reference URL: https://github.com/OAI/OpenAPI-Specification/blob/master/versions/2.0.md#dataTypeFormat
-function getFieldType(type: string) {
-  const lowercaseType = type.toLowerCase()
-  switch (lowercaseType) {
-    case 'int':
-      return 'integer'
-    case 'string':
-      return 'string'
-    case 'boolean':
-      return 'boolean'
-    case 'datetime':
-      return 'string'
-    case 'float':
-      return 'number'
-    case 'null':
-      return 'string'
-    case 'json':
-      return 'string'
-  }
-  throw new Error('Unknown field type. type: ' + type)
-}
 
 export class Cli {
   #helpText = `
@@ -250,9 +218,7 @@ Examples:
     database?: string,
   ) {
     if (!service.datasource || service.datasource.provider !== 'prisma') {
-      this.exitWithError(
-        `You are not using prisma datasource. You cann't run prisma commands.`,
-      )
+      return
     }
 
     const databaseUrl = database || service.database
@@ -261,7 +227,7 @@ Examples:
         this.isPrismaStudioCommand ? `on database \`${databaseUrl}\` ` : ''
       }...`,
     )
-    const cmd = cmdStr + ` --schema=${service.schema}`
+    const cmd = cmdStr + ` --schema=${service.datasource?.schema}`
     let stdout = ''
 
     try {
@@ -320,222 +286,54 @@ Examples:
     service: mrapi.ServiceOptions,
     tenant?: mrapi.TenantOptions,
   ) {
-    this.log(`Running \`mrapi graphql\` ...`)
-
-    const generatorPath = resolveFile('@paljs/generator')
-    if (!generatorPath) {
-      this.exitWithError(`Please run 'npm i -D @paljs/generator' first.`)
-    }
-
-    const timeStart = Date.now()
-    const {
-      Generator,
-    }: typeof import('@paljs/generator') = require(generatorPath)
-    const graphqlOptions = service.graphql as mrapi.GraphqlOptions
+    const databaseUrl = service.database || tenant?.database
     const schemaPath = service.datasource?.schema
-
-    process.env.CLIENT_OUTPUT =
+    const graphqlOptions = service.graphql as mrapi.GraphqlOptions
+    const clientOutput =
       schemaPath && service.datasource?.output
         ? relative(dirname(schemaPath), service.datasource?.output ?? '')
         : ''
-    process.env.DATABASE_URL = service.database || tenant?.database
 
-    console.log(chalk.dim`\nPrisma schema loaded from ${schemaPath}\n`)
-    new Generator(
-      { name: 'nexus-plugin-prisma', schemaPath: schemaPath! },
-      {
-        output: graphqlOptions.output,
-        javaScript: true,
-        disableQueries: false,
-        disableMutations: false,
-      },
-    ).run()
+    if (databaseUrl && schemaPath) {
+      this.log(`Running \`mrapi graphql\` ...`)
 
-    console.log(
-      chalk`✔ Generated {bold GraphQL} {dim to ${relative(
-        process.cwd(),
-        graphqlOptions.output!,
-      )}} in ${Date.now() - timeStart}ms\n`,
+      generateGraphqlSchema({
+        schemaPath,
+        clientOutput,
+        databaseUrl,
+        graphqlOptions,
+        exitWithError: this.exitWithError,
+      })
+    }
+
+    // write context.ts file
+    generateContextFile(
+      graphqlOptions.custom,
+      service.datasource?.output
+        ? service.datasource.output.split('node_modules/')[1]
+        : '',
     )
   }
 
-  async runOpenapiGenerate(
-    options: any,
-    service: mrapi.ServiceOptions,
-    includeModels?: string[],
-    excludeFields?: string[],
-    excludeFieldsByModel?: { [modelName: string]: string[] },
-  ) {
+  async runOpenapiGenerate(options: any, service: mrapi.ServiceOptions) {
+    if (!service.datasource) {
+      return
+    }
+
     this.log(`Running \`mrapi openapi\` ...`)
-    const timeStart = Date.now()
 
     options['output'] = (typeof service.openapi !== 'boolean' &&
       service.openapi?.output) as string
+
     const { dmmf } = await import(service.datasource!.output!)
 
     if (!dmmf) {
       this.exitWithError('Please generate PrismaClient first')
     }
+
     console.log(chalk.dim`\nPrisma schema loaded from ${service.schema}\n`)
 
-    const {
-      datamodel,
-      mappings,
-      schema: { inputTypes, outputTypes },
-    } = dmmf
-
-    // Get the filtered models
-    const models = outputTypes.filter(
-      (model: any) =>
-        !['Query', 'Mutation'].includes(model.name) &&
-        !model.name.includes('Aggregate') &&
-        model.name !== 'BatchPayload' &&
-        (!includeModels || includeModels.includes(model.name as never)),
-    )
-    const allModelsObj: Record<string, any> = {}
-    Array.isArray(datamodel.models) &&
-      datamodel.models.forEach((model: any) => {
-        allModelsObj[model.name] = model
-
-        for (const field of model.fields) {
-          if (field.isId) {
-            allModelsObj[model.name].primaryField = field
-            break
-          }
-        }
-      })
-    const modelDefinitions: any = {
-      Error: {
-        type: 'object',
-        properties: {
-          code: {
-            description: 'Error code.',
-            type: 'integer',
-          },
-          message: {
-            description: 'Error message.',
-            type: 'string',
-          },
-        },
-      },
-    }
-    function dealModelDefinitions(inputType: any, hasObj: boolean = false) {
-      const inputObj: IObjType = {
-        type: 'object',
-        properties: {},
-        required: [],
-      }
-
-      inputType?.fields.forEach((field: any) => {
-        const fieldInputType = Array.isArray(field.inputTypes)
-          ? field.inputTypes.length >= 2
-            ? field.inputTypes[1]
-            : field.inputTypes[0]
-          : field.inputTypes
-        if (fieldInputType.kind === 'scalar') {
-          const type = getFieldType(fieldInputType?.type)
-          inputObj.properties[field.name] = {
-            description: field.name,
-            type,
-          }
-          fieldInputType?.isRequired && inputObj.required?.push(field.name)
-        } else if (hasObj && fieldInputType.kind === 'object') {
-          if (['AND', 'OR', 'NOT'].includes(field.name)) {
-            inputObj.properties[field.name] = {
-              type: 'array',
-              description: `${fieldInputType.type} list.`,
-              items: {
-                type: 'object',
-                description: fieldInputType.type,
-                $ref: `#/definitions/${fieldInputType.type}`,
-              },
-            }
-          } else {
-            inputObj.properties[field.name] = {
-              type: 'object',
-              description: fieldInputType.type,
-              $ref: `#/definitions/${fieldInputType.type}`,
-            }
-          }
-
-          fieldInputType?.isRequired && inputObj.required?.push(field.name)
-        }
-      })
-
-      if (inputObj.required && inputObj.required.length <= 0) {
-        delete inputObj.required
-      }
-
-      modelDefinitions[inputType.name] = inputObj
-    }
-
-    // inputTypes
-    // There's no filtering going on here
-    inputTypes.forEach((inputType: any) => {
-      if (/CreateInput$/.test(inputType.name)) {
-        dealModelDefinitions(inputType)
-      } else if (/WhereInput$/.test(inputType.name)) {
-        dealModelDefinitions(inputType, true)
-      } else if (/Filter$/.test(inputType.name)) {
-        dealModelDefinitions(inputType)
-      }
-    })
-
-    // outputTypes
-    models.forEach((model: any) => {
-      const obj: IObjType = {
-        type: 'object',
-        properties: {},
-        required: [],
-      }
-      const fieldsToExclude = (excludeFields || []).concat(
-        excludeFieldsByModel ? excludeFieldsByModel[model] : [],
-      )
-
-      model.fields.forEach((field: any) => {
-        if (!fieldsToExclude.includes(field.name)) {
-          if (field.outputType.kind === 'scalar') {
-            const type = getFieldType(field.outputType?.type)
-            obj.properties[field.name] = {
-              description: field.name,
-              type,
-            }
-            field.outputType?.isRequired && obj.required?.push(field.name)
-          }
-          // else if (field.outputType.kind === 'object') {
-          //   obj.properties[field.name] = {
-          //     type: 'object',
-          //     description: field.name,
-          //     $ref: `#/definitions/${field.name}`,
-          //   }
-          //   field.outputType?.isRequired && obj.required.push(field.name)
-          // }
-        }
-      })
-
-      if (obj.required && obj.required.length <= 0) {
-        delete obj.required
-      }
-
-      modelDefinitions[model.name] = obj
-
-      const mapping = mappings.modelOperations.find(
-        (m: any) => m.model === model.name,
-      )
-      genPaths(options, model, mapping, allModelsObj[model.name])
-    })
-
-    outputFile(
-      `module.exports = ${JSON.stringify(modelDefinitions)}`,
-      join(options.output, 'definitions.js'),
-    )
-
-    console.log(
-      chalk`✔ Generated {bold OpenAPI} {dim to ${relative(
-        process.cwd(),
-        options.output,
-      )}} in ${Date.now() - timeStart}ms\n`,
-    )
+    generateOpenapiSpecsFromPrisma(dmmf, options)
   }
 
   private getServiceConfig(args = this.#args) {

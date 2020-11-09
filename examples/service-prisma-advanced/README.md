@@ -3,6 +3,8 @@
 # Dev
 
 ```bash
+npm i --legacy-peer-deps
+
 npx mrapi setup
 
 npm run dev

@@ -9,7 +9,7 @@ export async function getSchema({
   customPath: string
   generatedPath: string
   datasourcePath: string
-  contextDir: string
+  contextFile: string
   plugins: string[]
   mock: any
 }): Promise<GraphQLSchema> {
