@@ -1,16 +1,9 @@
 import { Service } from '@mrapi/service'
 
-const service = new Service({
-  app: {
-    logger: {
-      prettyPrint: true,
-    },
-  },
+const service = new Service()
+
+service.app.get('/', (_req, res) => {
+  res.end('HW')
 })
 
-service
-  .get('/', (_req, res) => {
-    res.end('HW')
-  })
-  .start()
-  .catch((err) => service.logger.error(err))
+service.start().catch((err) => service.logger.error(err))

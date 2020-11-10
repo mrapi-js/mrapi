@@ -1,15 +1,14 @@
-import type { mrapi } from './types'
-import type { HTTPVersion } from '@mrapi/app'
+import type { mrapi, GatewayServiceOptions } from './types'
 
 import Proxy from 'fast-proxy'
 import { App } from '@mrapi/app'
-import { resolveConfig, defaults } from '@mrapi/common'
 import { AddressInfo } from 'net'
+import { resolveConfig, defaults } from '@mrapi/common'
 
-export class Gateway<V extends HTTPVersion = HTTPVersion.V1> extends App {
-  services: Map<string, mrapi.GatewayServiceOptions> = new Map()
+export class Gateway extends App {
+  services: Map<string, GatewayServiceOptions> = new Map()
 
-  constructor(public config: mrapi.GatewayOptions<V>) {
+  constructor(public config: mrapi.GatewayOptions) {
     super(config.app)
     const { gateway } = resolveConfig({
       gateway: config,
@@ -101,6 +100,5 @@ export class Gateway<V extends HTTPVersion = HTTPVersion.V1> extends App {
   }
 }
 
-export default <V extends HTTPVersion = HTTPVersion.V1>(
-  gatewayOptions: mrapi.GatewayOptions<V>,
-) => new Gateway(gatewayOptions)
+export default (gatewayOptions: mrapi.GatewayOptions) =>
+  new Gateway(gatewayOptions)

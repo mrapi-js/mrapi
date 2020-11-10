@@ -1,5 +1,5 @@
 import { extendType, stringArg, objectType, arg } from '@nexus/schema'
-import { Context } from './context'
+import { Context } from '../context'
 
 const ServerTime = objectType({
   name: 'ServerTime',
@@ -8,7 +8,7 @@ const ServerTime = objectType({
   },
 })
 
-const customQuery = extendType({
+export const customQuery = extendType({
   type: 'Query',
   definition(t) {
     t.field('serverTime', {
@@ -32,7 +32,7 @@ const customQuery = extendType({
       },
       nullable: true,
       async resolve(_root, args, ctx: Context, _info) {
-        console.log('me', ctx.req.headers)
+        console.log('me', ctx.req.headers, ctx.userId)
         return ctx.prisma.user.findFirst(args)
       },
     })
@@ -55,5 +55,3 @@ const customQuery = extendType({
     })
   },
 })
-
-export { customQuery }

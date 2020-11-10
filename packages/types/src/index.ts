@@ -10,7 +10,7 @@ declare namespace mrapi {
     url: string
   }
 
-  interface GatewayOptions<V = any> {
+  interface GatewayOptions {
     services: GatewayServiceConfig[]
   }
 
@@ -67,43 +67,61 @@ declare namespace mrapi {
   type QueriesAndMutations = Query | Mutation
 
   interface GraphqlOptions {
-    output?: string
-    custom?: string
-    playground?: boolean
+    output: string
+    custom: string
+    playground: boolean
     generator?: GraphqlGenerator
     generatorOptions?: GeneratorOptions
   }
 
   interface OpenapiOptions {
-    output?: string
-    custom?: string
+    output: string
+    custom: string
     generatorOptions?: GeneratorOptions
   }
 
   interface ServiceOptions {
-    name?: string
-    schema?: string
-    database?: string
+    name: string
+    schema: string
+    database: string
     datasource?: DatasourceOptions
-    graphql?: boolean | GraphqlOptions
-    openapi?: boolean | OpenapiOptions
-    studio?: boolean | number
-    tenants?: Array<TenantOptions>
-    defaultTenant?: string
-    tenantIdentity?: string | TenantIdenityFn
+    graphql?: GraphqlOptions
+    openapi?: OpenapiOptions
+    customDir: string
+    studio: boolean | number
+    tenants: Array<TenantOptions>
+    defaultTenant: string
+    tenantIdentity: string | TenantIdenityFn
     mock?: boolean
     management?: boolean
     managementTenantModelName?: string
-    __isMultiTenant?: boolean
+    isMultiTenant: boolean
+    contextFile: string
+  }
+
+  interface ServiceOptionsInput
+    extends Partial<
+      Omit<
+        ServiceOptions,
+        'graphql' | 'openapi' | 'isMultiTenant' | 'contextFile'
+      >
+    > {
+    graphql?: boolean | Partial<GraphqlOptions>
+    openapi?: boolean | Partial<OpenapiOptions>
   }
 
   interface Config {
-    service?: ServiceOptions | Array<ServiceOptions>
+    cwd: string
+    parsed: boolean | undefined
+    service: Array<ServiceOptions>
+    isMultiService: boolean
     gateway?: GatewayOptions
     autoGenerate?: boolean
-    __cwd: string
-    __parsed?: boolean
-    __isMultiService?: boolean
+  }
+
+  interface ConfigInput
+    extends Partial<Omit<Config, 'service' | 'cwd' | 'isMultiService'>> {
+    service?: ServiceOptionsInput | Array<ServiceOptionsInput>
   }
 }
 

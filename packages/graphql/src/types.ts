@@ -1,19 +1,19 @@
-import type { Request, Response } from '@mrapi/app'
+import type { app } from '@mrapi/app'
 import type { CompiledQuery } from 'graphql-jit'
 import type { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql'
 
-export interface Context {
-  req: Request
-  res: Response
+export interface ContextParams {
+  req: app.Request
+  res: app.Response
 }
 
-export interface ErrorContext extends Context {
+export interface ErrorContext extends ContextParams {
   error: GraphQLError
 }
 
 export interface Options {
   schema: GraphQLSchema
-  context?: (x: Context) => any
+  context?: (x: ContextParams) => any
   formatError?: (x: ErrorContext) => GraphQLError
 }
 

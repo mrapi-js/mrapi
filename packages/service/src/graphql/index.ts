@@ -1,34 +1,28 @@
 import type { Service } from '../'
 import type { mrapi } from '../types'
+import type { app } from '@mrapi/app'
+import type { graphql } from '@mrapi/graphql'
 import type { Datasource } from '@mrapi/datasource'
-import type { Request, Response } from '@mrapi/app'
-import type { Context, ErrorContext } from '@mrapi/graphql'
 
 import { join } from 'path'
 import { tryRequire } from '@mrapi/common'
 
 interface GraphqlConfig {
-  service?: mrapi.ServiceOptions
+  options?: mrapi.ServiceOptions
   schema: any
-  playground?: boolean
+  playground: boolean
 }
 
-export async function makeGraphqlServices({
-  app,
-  datasource,
-  services,
-  config,
-  getTenantIdentity,
-}: {
-  app: Service
-  datasource?: Datasource
-  config: mrapi.ServiceConfig
-  services: Array<mrapi.ServiceOptions>
-  getTenantIdentity: Function
-}): Promise<mrapi.Endpoint[]> {
-  const validServices = services.filter((service) => !!service.graphql)
+export async function makeGraphqlServices(
+  serviceInstance: Service,
+  getTenantIdentity: Function,
+): Promise<mrapi.Endpoint[]> {
+  const { config, datasource } = serviceInstance
+  const { service: services } = config
 
-  if (validServices.length < 1) {
+  const validServicesOptions = services.filter((s) => !!s.graphql)
+
+  if (validServicesOptions.length < 1) {
     return []
   }
 
@@ -39,8 +33,12 @@ export async function makeGraphqlServices({
 
   const configs: GraphqlConfig[] = []
 
-  for (const service of validServices) {
-    const opts = service.graphql as mrapi.GraphqlOptions
+  for (const opt of validServicesOptions) {
+    const opts = opt.graphql
+    if (!opts) {
+      continue
+    }
+
     let getSchemaFn: mrapi.GetSchemaFn
     switch (opts.generator as string) {
       case 'nexus':
@@ -53,20 +51,21 @@ export async function makeGraphqlServices({
         throw new Error(`Unknow graphql generator '${opts.generator}'`)
     }
     const plugins = []
-    if (service.datasource?.provider === 'prisma') {
+    if (opt.datasource?.provider === 'prisma') {
       plugins.push('nexus-plugin-prisma')
     }
 
     configs.push({
-      service,
+      options: opt,
       schema: await getSchemaFn({
-        customPath: opts.custom!,
+        customPath: opts.custom,
         generatedPath: opts.output!,
-        datasourcePath: service.datasource?.output!,
-        contextFile: join(opts.custom!, 'context.ts'),
+        datasourcePath: opt.datasource?.output!,
+        contextFile: opt.contextFile,
         plugins,
-        mock: service.mock,
+        mock: opt.mock,
       }),
+      playground: !!opt.graphql?.playground,
     })
   }
 
@@ -79,8 +78,8 @@ export async function makeGraphqlServices({
     } else if (Array.isArray(config.graphql.stitching)) {
       for (const c of configs) {
         if (
-          c.service?.name &&
-          config.graphql.stitching.includes(c.service.name)
+          c.options?.name &&
+          config.graphql.stitching.includes(c.options.name)
         ) {
           stitchingConfigs.push(c)
         } else {
@@ -111,22 +110,28 @@ export async function makeGraphqlServices({
 
     // TODO: keep `context`
     const unifiedSchema = stitchSchemas({
-      subschemas: stitchingConfigs.map(({ service, schema }) => ({
+      subschemas: stitchingConfigs.map(({ options, schema }) => ({
         schema,
-        ...(!!service?.datasource
+        ...(!!options?.datasource
           ? {
               createProxyingResolver: ({
                 subschemaConfig,
                 operation,
                 transformedSchema,
-              }) => async (_parent, _args, { req, res }: Context, info) =>
+              }) => async (
+                _parent,
+                _args,
+                { req, res }: graphql.ContextParams,
+                info,
+              ) =>
                 delegateToSchema({
                   schema: subschemaConfig,
                   operation,
                   context: await makeConetxt({
+                    service: serviceInstance,
                     req,
                     res,
-                    service,
+                    options,
                     datasource,
                     getTenantIdentity,
                   }),
@@ -141,7 +146,7 @@ export async function makeGraphqlServices({
     servicesToApply.push({
       schema: unifiedSchema,
       playground: stitchingConfigs.some(
-        (s) => !!(s.service?.graphql as mrapi.GraphqlOptions)?.playground,
+        (s) => !!s.options?.graphql?.playground,
       ),
     })
   }
@@ -151,41 +156,40 @@ export async function makeGraphqlServices({
   const palygroundTabs = []
   const endpoints = []
 
-  for (const { service, schema, playground } of servicesToApply) {
+  for (const { options, schema, playground } of servicesToApply) {
     const endpoint =
-      config.__isMultiService && service
-        ? `/graphql/${service.name}`
-        : `/graphql`
+      config.isMultiService && options ? `/graphql/${options.name}` : `/graphql`
 
-    app.post(
+    serviceInstance.app.post(
       endpoint,
       graphqlMiddleware({
         schema,
-        context: !!service
+        context: !!options
           ? // handle the request directly
-            ({ req, res }: Context) =>
+            ({ req, res }: graphql.ContextParams) =>
               makeConetxt({
+                service: serviceInstance,
                 req,
                 res,
-                service,
+                options,
                 datasource,
                 getTenantIdentity,
               })
           : // pass to `createProxyingResolver` (stitched schema has no service, because it stitched from multiple services)
-            ({ req, res }: Context) => ({ req, res }),
-        formatError: ({ error }: ErrorContext) => error,
+            ({ req, res }: graphql.ContextParams) => ({ req, res }),
+        formatError: ({ error }: graphql.ErrorContext) => error,
       }),
     )
 
-    if (playground || (service?.graphql as mrapi.GraphqlOptions)?.playground) {
+    if (playground || options?.graphql?.playground) {
       palygroundTabs.push({
-        name: service?.name || '',
+        name: options?.name || '',
         endpoint: endpoint,
       })
     }
 
     endpoints.push({
-      name: service?.name || '',
+      name: options?.name || '',
       type: 'GraphQL',
       path: endpoint,
     })
@@ -193,7 +197,7 @@ export async function makeGraphqlServices({
 
   if (palygroundTabs.length > 0) {
     const playgroundEndpoint = '/playground'
-    makeGraphqlPlayground(app, palygroundTabs, playgroundEndpoint)
+    makeGraphqlPlayground(serviceInstance, palygroundTabs, playgroundEndpoint)
 
     endpoints.push({
       name: '',
@@ -205,7 +209,11 @@ export async function makeGraphqlServices({
   return endpoints
 }
 
-function makeGraphqlPlayground(app: Service, tabs: any[], endpoint: string) {
+function makeGraphqlPlayground(
+  serviceInstance: Service,
+  tabs: any[],
+  endpoint: string,
+) {
   const playgroundMiddleware: typeof import('graphql-playground-middleware-express').default = tryRequire(
     'graphql-playground-middleware-express',
     'Please install it manually.',
@@ -220,39 +228,41 @@ function makeGraphqlPlayground(app: Service, tabs: any[], endpoint: string) {
           tabs,
         }
 
-  app.get(endpoint, playgroundMiddleware(opts))
+  serviceInstance.app.get(endpoint, playgroundMiddleware(opts))
 }
 
 async function makeConetxt({
+  service,
   req,
   res,
   datasource,
-  service,
+  options,
   getTenantIdentity,
 }: {
-  req: Request
-  res: Response
+  service: Service
+  req: app.Request
+  res: app.Response
   datasource?: Datasource
-  service?: mrapi.ServiceOptions
+  options?: mrapi.ServiceOptions
   getTenantIdentity: Function
 }) {
-  let dbClient
+  let datasourceClient
 
-  const tenantId = service?.__isMultiTenant
-    ? await getTenantIdentity(req, res, service)
+  const tenantId = options?.isMultiTenant
+    ? await getTenantIdentity(req, res, options)
     : null
 
   if (datasource) {
-    dbClient = await (service?.management
+    datasourceClient = await (options?.management
       ? datasource.getManagementClient()
-      : datasource.getServiceClient(service?.name!, tenantId))
-    if (!dbClient) {
+      : datasource.getServiceClient(options?.name!, tenantId))
+    if (!datasourceClient) {
       throw new Error(
-        `Cannot get datasource client for service '${service?.name}'. ${
-          service?.__isMultiTenant
+        `Cannot get datasource client for service '${options?.name}'. ${
+          options?.isMultiTenant
             ? `Please check if the multi-tenant identity${
-                typeof service?.tenantIdentity === 'string'
-                  ? ` '${service.tenantIdentity}'`
+                typeof options?.tenantIdentity === 'string'
+                  ? ` '${options.tenantIdentity}'`
                   : ''
               } has been set correctly. Received: ${tenantId}`
             : ''
@@ -261,10 +271,29 @@ async function makeConetxt({
     }
   }
 
+  // get custom context
+  let customContext = {}
+  if (options?.contextFile) {
+    const ctx = tryRequire(options.contextFile)
+    if (ctx) {
+      if (typeof ctx.createContext === 'function') {
+        const params: mrapi.CreateContextParams = {
+          req,
+          res,
+          service,
+        }
+        customContext = await ctx.createContext(params)
+      } else if (typeof ctx.createContext === 'object') {
+        customContext = ctx.createContext
+      }
+    }
+  }
+
   return {
     req,
     res,
     // keep `prisma` here, because paljs generation needs it
-    ...(dbClient ? { prisma: dbClient } : {}),
+    ...(datasourceClient ? { prisma: datasourceClient } : {}),
+    ...customContext,
   }
 }
