@@ -2,8 +2,9 @@ import type mrapi from '@mrapi/types'
 
 import assert from 'assert'
 import merge from 'deepmerge'
-import { join, dirname } from 'path'
-
+import { existsSync } from 'fs'
+import { compileTSFile } from './ts'
+import { join, dirname, relative } from 'path'
 import { ensureAbsolutePath, tryRequire, getWorkspaceDirs } from './utils'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'
@@ -38,8 +39,10 @@ const defaultManagementConfig: Partial<mrapi.ServiceOptions> = {
 
 export const defaults = {
   config: {
+    cwd: process.cwd(),
     service: defaultServiceConfig,
     autoGenerate: true,
+    isMultiService: false,
   },
   clientPath: join(process.cwd(), 'node_modules/@prisma/client'),
   configFileName: 'mrapi.config',
@@ -50,57 +53,98 @@ export const defaults = {
     playground: !isProd,
     generator: 'nexus' as mrapi.GraphqlGenerator,
   },
-  openapi: {},
+  openapi: false,
 }
 
 export function resolveConfig(
-  options?: Partial<mrapi.Config>,
+  input?: mrapi.ConfigInput | mrapi.Config,
   cwd = process.cwd(),
   configFileName = defaults.configFileName,
 ): mrapi.Config {
-  if (options?.__parsed) {
-    return options as mrapi.Config
+  if (input?.parsed) {
+    return input as mrapi.Config
   }
 
-  const configPath =
+  const maybeConfigPath =
     process.env.MRAPI_CONFIG_PATH ||
     join(cwd, configFileName || defaults.configFileName)
+  const configPath = resolveConfigFilePath(maybeConfigPath)
+
+  if (!configPath) {
+    throw new Error(
+      `Can not resolve config file from path: ${relative(
+        cwd,
+        maybeConfigPath,
+      )}`,
+    )
+  }
+
   const tmp = tryRequire(configPath)
-  const config: mrapi.Config = merge(tmp || defaults.config, options || {})
-  config.__cwd = dirname(configPath)
-  config.__isMultiService = Array.isArray(config.service)
-  const services: Array<mrapi.ServiceOptions> = config.service
+  const config: mrapi.ConfigInput = merge(
+    {
+      ...defaults.config,
+      ...(tmp || {}),
+    },
+    (input || {}) as mrapi.Config,
+  )
+  const ServiceCwd = dirname(maybeConfigPath)
+  const isMultiService = Array.isArray(config.service)
+  const services: Array<mrapi.ServiceOptionsInput> = config.service
     ? Array.isArray(config.service)
       ? config.service
       : [config.service]
     : []
 
-  if (config.__isMultiService) {
-    const hasName = services.every((val: mrapi.ServiceOptions) => !!val.name)
+  if (isMultiService) {
+    const hasName = services.every(
+      (val: mrapi.ServiceOptionsInput) => !!val.name,
+    )
     assert(
       hasName,
       `[Config Error] Multiple services should have 'name' fields on each.`,
     )
   }
 
-  config.service = services.map((service: mrapi.ServiceOptions) =>
-    normalizeServiceConfig(service, config),
+  const service = services.map((s: mrapi.ServiceOptionsInput) =>
+    normalizeServiceConfig(s, { isMultiService, cwd: ServiceCwd }),
   )
 
   return {
     ...config,
+    service,
+    cwd: ServiceCwd,
+    isMultiService,
     autoGenerate:
       config.autoGenerate !== undefined
         ? config.autoGenerate
         : defaults.config.autoGenerate,
-    __parsed: true,
+    parsed: true,
   }
 }
 
+function resolveConfigFilePath(configPath: string): string {
+  const tsFile = configPath + '.ts'
+  if (existsSync(tsFile)) {
+    const destFile = compileTSFile(
+      tsFile,
+      ensureAbsolutePath(join(defaultApiOutput, 'config.js')),
+    )
+
+    return destFile
+  }
+
+  const jsFile = configPath + '.js'
+  if (existsSync(jsFile)) {
+    return jsFile
+  }
+
+  return ''
+}
+
 function normalizeServiceConfig(
-  service: Partial<mrapi.ServiceOptions>,
-  { __isMultiService, __cwd }: mrapi.Config,
-) {
+  service: mrapi.ServiceOptionsInput,
+  { isMultiService, cwd }: { isMultiService: boolean; cwd: string },
+): mrapi.ServiceOptions {
   service.name = service.name || defaults.serviceName
 
   if (service.tenants) {
@@ -110,12 +154,12 @@ function normalizeServiceConfig(
     )
   }
 
-  service.__isMultiTenant = Array.isArray(service.tenants)
+  const isMultiTenant = Array.isArray(service.tenants)
 
   // datasource paths
   const usingDatasource = service.datasource || service.schema
   if (usingDatasource) {
-    const hasDatabase = service.__isMultiTenant
+    const hasDatabase = isMultiTenant
       ? service.tenants?.every((t) => !!t.database)
       : !!service.database
     assert(
@@ -123,7 +167,7 @@ function normalizeServiceConfig(
       `[Config Error] Service '${
         service.name
       }' using prisma, but no 'database' field configured.${
-        service.__isMultiTenant
+        isMultiTenant
           ? `Each tenant should configure 'database' field when using multi-tenant`
           : ''
       }`,
@@ -137,49 +181,28 @@ function normalizeServiceConfig(
         service.datasource?.schema ||
           service.schema ||
           defaultPrismaOptions.schema,
-        __cwd,
+        cwd,
       ),
       output: ensureAbsolutePath(
         service.datasource?.output ||
           join(
             defaultPrismaOutput,
-            `${__isMultiService ? service.name + '-' : ''}client`,
+            `${isMultiService ? service.name + '-' : ''}client`,
           ),
-        __cwd,
+        cwd,
       ),
     }
   } else {
     delete service.datasource
   }
 
-  // APIs paths
-  const items: Array<'graphql' | 'openapi'> = ['graphql', 'openapi']
+  // custom source path
+  service.customDir = ensureAbsolutePath(
+    service.customDir || `${src}${isMultiService ? `/${service.name}` : ''}`,
+  )
+  const contextFile = join(service.customDir, 'context')
 
-  for (const item of items) {
-    if (service[item] === false) {
-      continue
-    }
-
-    const tmp = (service[item] || {}) as PathsObject
-
-    service[item] = merge(defaults[item], tmp)
-
-    service[item] = {
-      ...((service[item] as PathsObject) || {}),
-      output: ensureAbsolutePath(
-        tmp?.output ||
-          join(defaultApiOutput, __isMultiService ? service.name : '', item),
-        __cwd,
-      ),
-      custom: ensureAbsolutePath(
-        tmp?.custom ||
-          `${src}/${item}${__isMultiService ? `/${service.name}` : ''}`,
-        __cwd,
-      ),
-    }
-  }
-
-  if (service.__isMultiTenant) {
+  if (isMultiTenant) {
     service.tenants = service.tenants?.map((t) => ({
       ...t,
       name: t.name || defaults.tenantName,
@@ -194,5 +217,62 @@ function normalizeServiceConfig(
     ),
   )
 
-  return merge(defaultConfig, service || {})
+  return merge(defaultConfig, {
+    ...(service || {}),
+    graphql: normalizeGraphqlConfig(service, {
+      isMultiService,
+      cwd,
+    }),
+    openapi: normalizeOpenapiConfig(service, {
+      isMultiService,
+      cwd,
+    }),
+    isMultiTenant,
+    contextFile,
+  })
+}
+
+function normalizeGraphqlConfig(
+  service: mrapi.ServiceOptionsInput,
+  { isMultiService, cwd }: { isMultiService: boolean; cwd: string },
+): mrapi.GraphqlOptions | undefined {
+  if (service.graphql === false) {
+    return undefined
+  }
+
+  const tmp = (service.graphql || {}) as PathsObject
+  const options = merge(defaults.graphql, tmp)
+
+  return {
+    ...options,
+    output: ensureAbsolutePath(
+      tmp?.output ||
+        join(defaultApiOutput, isMultiService ? service.name! : '', 'graphql'),
+      cwd,
+    ),
+    custom: ensureAbsolutePath(join(service.customDir!, 'graphql'), cwd),
+    playground: !!options.playground,
+  }
+}
+
+function normalizeOpenapiConfig(
+  service: mrapi.ServiceOptionsInput,
+  { isMultiService, cwd }: { isMultiService: boolean; cwd: string },
+): mrapi.OpenapiOptions | undefined {
+  if (!service.openapi) {
+    return undefined
+  }
+
+  const tmp = (service.openapi || {}) as PathsObject
+  const options = merge(defaults.openapi, tmp)
+
+  return {
+    ...options,
+    output: ensureAbsolutePath(
+      tmp?.output ||
+        join(defaultApiOutput, isMultiService ? service.name! : '', 'openapi'),
+      cwd,
+    ),
+    custom: ensureAbsolutePath(join(service.customDir!, 'openapi'), cwd),
+  }
 }

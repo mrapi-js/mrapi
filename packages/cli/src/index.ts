@@ -280,7 +280,7 @@ Examples:
 
     // write context.ts file
     generateContextFile(
-      graphqlOptions.custom,
+      service.contextFile,
       service.datasource?.output
         ? service.datasource.output.split('node_modules/')[1]
         : '',
@@ -324,7 +324,7 @@ Examples:
   private getServiceConfig(args = this.#args) {
     const config = resolveConfig()
 
-    if (config.__isMultiService && !args.service) {
+    if (config.isMultiService && !args.service) {
       this.exitWithError(
         `You are using multi-service mode, please provide '--service=<service name>'`,
       )

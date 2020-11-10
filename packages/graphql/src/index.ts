@@ -1,4 +1,4 @@
-import type { Request, Response } from '@mrapi/app'
+import type { app } from '@mrapi/app'
 import type { CacheValue, ErrorCacheValue, Options } from './types'
 
 import LRU from 'tiny-lru'
@@ -8,8 +8,7 @@ import { parse, validate, validateSchema } from 'graphql'
 // function isEnumerableObject(value: any) {
 //   return typeof value === 'object' && value !== null && !Array.isArray(value)
 // }
-
-export * from './types'
+export * as graphql from './types'
 
 export const graphqlMiddleware = ({
   schema,
@@ -24,7 +23,7 @@ export const graphqlMiddleware = ({
     throw schemaValidationErrors
   }
 
-  return async (req: Request, res: Response) => {
+  return async (req: app.Request, res: app.Response) => {
     // GraphQL HTTP only supports GET and POST methods.
     if (!['GET', 'POST'].includes(req.method)) {
       return res

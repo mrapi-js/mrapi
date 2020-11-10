@@ -1,24 +1,26 @@
 import chalk from 'chalk'
 import { existsSync, writeFileSync } from 'fs'
-import { join, relative } from 'path'
+import { dirname, extname, relative } from 'path'
 
 export function generateContextFile(
-  targetDir?: string,
+  contextFile?: string,
   datasourceModuleName?: string,
 ) {
-  if (!targetDir || !existsSync(targetDir)) {
+  if (!contextFile || !existsSync(dirname(contextFile))) {
     return
   }
 
+  const contextFilePath =
+    extname(contextFile) === '' ? contextFile + '.ts' : contextFile
+
   const timeStart = Date.now()
-  const contextFilePath = join(targetDir, 'context.ts')
 
   // create only if not exist
   const relativePath = relative(process.cwd(), contextFilePath)
   if (!existsSync(contextFilePath)) {
     writeFileSync(
       contextFilePath,
-      `import type { Request, Response } from '@mrapi/app'${
+      `import type { mrapi } from '@mrapi/service'${
         !!datasourceModuleName
           ? `
 import type { PrismaClient } from '${datasourceModuleName}'`
@@ -26,14 +28,28 @@ import type { PrismaClient } from '${datasourceModuleName}'`
       }
 
 export interface Context {
-  req: Request
-  res: Response${
+  req: mrapi.Request
+  res: mrapi.Response${
     !!datasourceModuleName
       ? `
   prisma: PrismaClient`
       : ''
   }
-}`,
+}
+
+/**
+ * Create custom context function
+ * You can extend or overwrite default values: {req, res, prisma}
+ * @export
+ * @param {mrapi.CreateContextParams} _params
+ * @returns {Partial<Context>}
+ */
+export function createContext(
+  _params: mrapi.CreateContextParams,
+): Partial<Context> {
+  return {}
+}
+`,
     )
 
     console.log(

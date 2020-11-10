@@ -2,10 +2,8 @@ import type {
   Server,
   Request,
   Response,
-  Next,
   Options,
   Middleware,
-  HTTPVersion,
   ErrorHandler,
   DefaultRoute,
   ParsedURL,
@@ -22,23 +20,12 @@ import { send, status } from './res'
 import { Server as Http1Server, createServer } from 'http'
 import { defaultRoute, errorHandler, next } from './helper'
 
-export {
-  Server,
-  Request,
-  Response,
-  Middleware,
-  Next,
-  Options,
-  HTTPVersion,
-  ErrorHandler,
-  DefaultRoute,
-  ParsedURL,
-}
+export * as app from './types'
 
 export class App extends Router<Middleware> {
   id: string
   readonly errorHandler: ErrorHandler
-  readonly defaultRoute: any
+  readonly defaultRoute: DefaultRoute
   server?: Server
   parse: (req: Request, toDecode: boolean) => ParsedURL | void
   cache?: LRU<string, any>

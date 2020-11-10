@@ -1,3 +1,1 @@
-export default {
-  ...require('./query'),
-}
+export * from './query'

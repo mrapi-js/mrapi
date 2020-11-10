@@ -47,24 +47,6 @@ export default function getSchema({
     trailingComma: 'all',
   }
 
-  //   // create `Context` file
-  //   mkdirSync(dirname(contextFile), { recursive: true })
-  //   writeFileSync(
-  //     contextFile,
-  //     `import type { Request, Response } from '@mrapi/app'
-  // import type { PrismaClient } from '.prisma/user-client'
-
-  // export interface Context {
-  //   req: Request
-  //   res: Response${
-  //     !!datasourceModuleName!
-  //       ? `
-  //   prisma: PrismaClient`
-  //       : ''
-  //   }
-  // }`,
-  //   )
-
   const schema = makeSchema({
     types,
     prettierConfig,

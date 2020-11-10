@@ -1,11 +1,22 @@
-import type { GraphQLSchema } from 'graphql'
+import type { Service } from '.'
 import type mrapi from '@mrapi/types'
-import type { Options } from '@mrapi/app'
+import type { app, App } from '@mrapi/app'
+import type { GraphQLSchema } from 'graphql'
+import type { graphql } from '@mrapi/graphql'
+
+interface ServiceConfig {
+  app: App
+  logEndpoints: boolean
+  graphql: {
+    stitching?: boolean | string[]
+  }
+  logger: app.LoggerOptions
+}
 
 declare module '@mrapi/types' {
-  interface Config {
-    app?: Options
-  }
+  interface Request extends app.Request {}
+
+  interface Response extends app.Response {}
 
   interface Endpoint {
     name?: string
@@ -14,12 +25,11 @@ declare module '@mrapi/types' {
     playground?: boolean
   }
 
-  interface ServiceConfig extends mrapi.Config {
-    logEndpoints: boolean
-    graphql?: {
-      stitching?: boolean | string[]
-    }
-  }
+  interface Config extends ServiceConfig {}
+
+  interface ConfigInput extends Partial<ServiceConfig> {}
+
+  interface ServiceConfigInput extends Partial<mrapi.Config> {}
 
   interface GetSchemaParams {
     customPath: string
@@ -28,6 +38,10 @@ declare module '@mrapi/types' {
     contextFile: string
     plugins: string[]
     mock: any
+  }
+
+  interface CreateContextParams extends graphql.ContextParams {
+    service: Service
   }
 
   interface GetSchemaFn {

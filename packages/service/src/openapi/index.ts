@@ -1,4 +1,4 @@
-import type { Service } from '../'
+import type { App } from '@mrapi/app'
 import type { mrapi } from '../types'
 import type { Datasource } from '@mrapi/datasource'
 import type { Middleware20 } from 'swagger-tools'
@@ -7,11 +7,7 @@ import { join } from 'path'
 import { tryRequire } from '@mrapi/common'
 import { dependenciesPlugins } from './dependencies'
 
-export async function makeOpenapi(
-  app: Service,
-  options: any = {},
-  prefix: string,
-) {
+export async function makeOpenapi(app: App, options: any = {}, prefix: string) {
   const swagger: typeof import('swagger-tools') = tryRequire(
     'swagger-tools',
     'Please install it manually.',

@@ -1,8 +1,7 @@
-import type { Middleware } from '.'
-import type { ErrorHandler, Request, Response } from './types'
+import type { ErrorHandler, Request, Response, Middleware } from './types'
 
-import { STATUS_CODES } from 'http'
 import { App } from '.'
+import { STATUS_CODES } from 'http'
 
 export function errorHandler(err: any, _req: Request, res: Response) {
   if (typeof err === 'string' || Buffer.isBuffer(err)) {
