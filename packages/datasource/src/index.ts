@@ -17,7 +17,7 @@ export class Datasource {
       await this.initManagement()
     }
 
-    if (this.config.services) {
+    if (!!this.config.services) {
       await this.initServices()
     }
   }

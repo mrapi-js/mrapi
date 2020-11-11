@@ -2,10 +2,9 @@ import type mrapi from '@mrapi/types'
 
 import execa from 'execa'
 import chalk from 'chalk'
-import { writeFileSync } from 'fs'
+import { basename, relative, dirname } from 'path'
 import { resolveConfig, now } from '@mrapi/common'
 import { generateContextFile } from './graphql/context'
-import { join, basename, relative, dirname } from 'path'
 import { generateGraphqlSchema } from './graphql/schema'
 import { generateOpenapiSpecsFromPrisma } from './openapi'
 
@@ -230,21 +229,18 @@ Examples:
       throw err.stderr || err.message
     }
 
-    let pkg
-    if (service.datasource?.output) {
-      // change package name
-      const pkgPath = join(service.datasource?.output, 'package.json')
-      pkg = require(pkgPath)
-      pkg.name = `.prisma/${basename(service.datasource?.output!)}`
-      writeFileSync(pkgPath, JSON.stringify(pkg, null, 2))
-    }
+    const pkgName = `.prisma/${
+      service.datasource?.output
+        ? basename(service.datasource.output)
+        : 'client'
+    }`
 
     // console
     if (stdout) {
       let message = ''
       for (const txt of stdout.split('\n')) {
-        if (pkg && txt.includes('You can now start using')) {
-          message += `${txt} import { PrismaClient } from '${pkg.name}'\n`
+        if (txt.includes('You can now start using')) {
+          message += `${txt} import { PrismaClient } from '${pkgName}'\n`
           break
         } else {
           message += `${txt}\n`

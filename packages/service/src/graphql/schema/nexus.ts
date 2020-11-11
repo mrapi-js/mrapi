@@ -174,6 +174,6 @@ function resolvePrismaPlugin(datasourcePath: string) {
 
 function checkDatasource(datasourcePath?: string, provider = 'prisma') {
   const path = datasourcePath || defaults.clientPath
-  const client = path ? tryRequire(path, '', false) : null
+  const client = path ? tryRequire(path, undefined, false) : null
   return !!client && (provider === 'prisma' ? client.prismaVersion : true)
 }

@@ -4,20 +4,26 @@ import { Context } from '../context'
 export const customQuery = extendType({
   type: 'Query',
   definition(t) {
-    t.field('draft', {
+    t.list.field('drafts', {
       type: 'Post',
-      description: 'Get current timestamp on server',
-      nullable: true,
+      description: 'Get unpublished posts',
       args: {
-        where: arg({ type: 'PostWhereInput', required: true }),
+        where: arg({ type: 'PostWhereInput' }),
         orderBy: arg({ type: 'PostOrderByInput', list: true }),
         cursor: 'PostWhereUniqueInput',
         skip: 'Int',
         take: 'Int',
       },
-      resolve: (_root, args, ctx: Context) => {
-        console.log('draft', ctx.req.headers)
-        return ctx.prisma.post.findFirst(args)
+      resolve(_root, args, ctx: Context) {
+        return ctx.prisma.post.findMany({
+          ...args,
+          where: {
+            ...args.where,
+            published: {
+              equals: false,
+            },
+          },
+        })
       },
     })
   },

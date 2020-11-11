@@ -27,7 +27,7 @@ declare module '@mrapi/types' {
 
   interface Config extends ServiceConfig {}
 
-  interface ConfigInput extends Partial<ServiceConfig> {}
+  interface PartialConfig extends Partial<ServiceConfig> {}
 
   interface ServiceConfigInput extends Partial<mrapi.Config> {}
 

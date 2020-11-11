@@ -1,6 +1,6 @@
 import { mrapi } from '@mrapi/service'
 
-const config: mrapi.ConfigInput = {
+const config: mrapi.PartialConfig = {
   service: {
     graphql: {
       generator: 'type-graphql',

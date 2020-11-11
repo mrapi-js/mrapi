@@ -5,7 +5,7 @@ export interface Context {
   req: mrapi.Request
   res: mrapi.Response
   prisma: PrismaClient
-  userId: string
+  userId: number
 }
 
 /**
@@ -19,6 +19,6 @@ export function createContext(
   _params: mrapi.CreateContextParams,
 ): Partial<Context> {
   return {
-    userId: 'xxxx',
+    userId: 1,
   }
 }
