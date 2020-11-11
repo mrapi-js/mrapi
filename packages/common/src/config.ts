@@ -4,7 +4,7 @@ import assert from 'assert'
 import merge from 'deepmerge'
 import { existsSync } from 'fs'
 import { compileTSFile } from './ts'
-import { join, dirname, relative } from 'path'
+import { join, dirname } from 'path'
 import { ensureAbsolutePath, tryRequire, getWorkspaceDirs } from './utils'
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development'

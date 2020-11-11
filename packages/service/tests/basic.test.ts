@@ -10,9 +10,10 @@ describe('Service', () => {
     expect(typeof Service).toBe('function')
 
     const service = new Service()
+    const { app } = service
     expect(typeof service).toBe('object')
-    expect(service).toBeInstanceOf(App)
     expect(service).toBeInstanceOf(Service)
+    expect(app).toBeInstanceOf(App)
     ;[
       // App
       'parse',
@@ -24,20 +25,25 @@ describe('Service', () => {
       'on',
       'off',
       'find',
+    ].forEach((k) => {
+      expect(typeof (app as any)[k]).toBe('function')
+    })
+    ;[
       // Service
       'start',
       'logEndpoints',
     ].forEach((k) => {
       expect(typeof (service as any)[k]).toBe('function')
     })
-    ;['services', 'endpoints'].forEach((k) => {
+    ;['endpoints'].forEach((k) => {
       expect(Array.isArray((service as any)[k])).toBeTruthy()
     })
   })
 
   test('middleware', () => {
     const service = new Service()
-    service
+    const { app } = service
+    app
       .use(async (_req, _res, next) => {
         await next()
       })
@@ -53,9 +59,9 @@ describe('Service', () => {
       .listen(3000)
 
     // 'body-parser' middleware id added by default
-    expect(service.find('GET', '/users/1').handlers.length).toBe(5)
-    expect(service.find('GET', '/users/2').handlers.length).toBe(4)
+    expect(app.find('GET', '/users/1').handlers.length).toBe(5)
+    expect(app.find('GET', '/users/2').handlers.length).toBe(4)
 
-    service.close()
+    app.close()
   })
 })

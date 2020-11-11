@@ -1,3 +1,4 @@
+import { ServiceOptions } from '../lib/types'
 import { Service } from '../lib/service'
 
 describe('Service', () => {
@@ -13,7 +14,7 @@ describe('Service', () => {
         name: 'a',
         database: 'file:./dev.db',
         clientPath: '.prisma/a-client',
-      },
+      } as ServiceOptions,
       'prisma' as any,
     )
     expect(typeof instance).toBe('object')
