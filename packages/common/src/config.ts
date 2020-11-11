@@ -57,7 +57,7 @@ export const defaults = {
 }
 
 export function resolveConfig(
-  input?: mrapi.ConfigInput | mrapi.Config,
+  input?: mrapi.PartialConfig | mrapi.Config,
   cwd = process.cwd(),
   configFileName = defaults.configFileName,
 ): mrapi.Config {
@@ -69,18 +69,8 @@ export function resolveConfig(
     process.env.MRAPI_CONFIG_PATH ||
     join(cwd, configFileName || defaults.configFileName)
   const configPath = resolveConfigFilePath(maybeConfigPath)
-
-  if (!configPath) {
-    throw new Error(
-      `Can not resolve config file from path: ${relative(
-        cwd,
-        maybeConfigPath,
-      )}`,
-    )
-  }
-
-  const tmp = tryRequire(configPath)
-  const config: mrapi.ConfigInput = merge(
+  const tmp = configPath ? tryRequire(configPath) : {}
+  const config: mrapi.PartialConfig = merge(
     {
       ...defaults.config,
       ...(tmp || {}),
@@ -89,7 +79,7 @@ export function resolveConfig(
   )
   const ServiceCwd = dirname(maybeConfigPath)
   const isMultiService = Array.isArray(config.service)
-  const services: Array<mrapi.ServiceOptionsInput> = config.service
+  const services: Array<mrapi.PartialServiceOptions> = config.service
     ? Array.isArray(config.service)
       ? config.service
       : [config.service]
@@ -97,7 +87,7 @@ export function resolveConfig(
 
   if (isMultiService) {
     const hasName = services.every(
-      (val: mrapi.ServiceOptionsInput) => !!val.name,
+      (val: mrapi.PartialServiceOptions) => !!val.name,
     )
     assert(
       hasName,
@@ -105,7 +95,7 @@ export function resolveConfig(
     )
   }
 
-  const service = services.map((s: mrapi.ServiceOptionsInput) =>
+  const service = services.map((s: mrapi.PartialServiceOptions) =>
     normalizeServiceConfig(s, { isMultiService, cwd: ServiceCwd }),
   )
 
@@ -142,7 +132,7 @@ function resolveConfigFilePath(configPath: string): string {
 }
 
 function normalizeServiceConfig(
-  service: mrapi.ServiceOptionsInput,
+  service: mrapi.PartialServiceOptions,
   { isMultiService, cwd }: { isMultiService: boolean; cwd: string },
 ): mrapi.ServiceOptions {
   service.name = service.name || defaults.serviceName
@@ -233,7 +223,7 @@ function normalizeServiceConfig(
 }
 
 function normalizeGraphqlConfig(
-  service: mrapi.ServiceOptionsInput,
+  service: mrapi.PartialServiceOptions,
   { isMultiService, cwd }: { isMultiService: boolean; cwd: string },
 ): mrapi.GraphqlOptions | undefined {
   if (service.graphql === false) {
@@ -256,7 +246,7 @@ function normalizeGraphqlConfig(
 }
 
 function normalizeOpenapiConfig(
-  service: mrapi.ServiceOptionsInput,
+  service: mrapi.PartialServiceOptions,
   { isMultiService, cwd }: { isMultiService: boolean; cwd: string },
 ): mrapi.OpenapiOptions | undefined {
   if (!service.openapi) {

@@ -1,4 +1,4 @@
-import { arg, extendType } from '@nexus/schema'
+import { extendType } from '@nexus/schema'
 import { Context } from '../context'
 
 export const customQuery = extendType({
@@ -6,18 +6,15 @@ export const customQuery = extendType({
   definition(t) {
     t.field('me', {
       type: 'User',
-      description: 'Get current timestamp on server',
+      description: 'Get current user info',
       nullable: true,
-      args: {
-        where: arg({ type: 'UserWhereInput', required: true }),
-        orderBy: arg({ type: 'UserOrderByInput', list: true }),
-        cursor: 'UserWhereUniqueInput',
-        skip: 'Int',
-        take: 'Int',
-      },
-      resolve: (_root, args, ctx: Context) => {
-        console.log('me', ctx.req.headers)
-        return ctx.prisma.user.findFirst(args)
+      async resolve(_root, _args, ctx: Context, _info) {
+        console.log('me', ctx.req.headers, ctx.userId)
+        return ctx.prisma.user.findOne({
+          where: {
+            id: ctx.userId,
+          },
+        })
       },
     })
   },

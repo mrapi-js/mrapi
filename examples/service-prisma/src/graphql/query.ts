@@ -23,34 +23,37 @@ export const customQuery = extendType({
     t.field('me', {
       type: 'User',
       description: 'Get current user info',
-      args: {
-        where: arg({ type: 'UserWhereInput', required: true }),
-        orderBy: arg({ type: 'UserOrderByInput', list: true }),
-        cursor: 'UserWhereUniqueInput',
-        skip: 'Int',
-        take: 'Int',
-      },
       nullable: true,
-      async resolve(_root, args, ctx: Context, _info) {
+      async resolve(_root, _args, ctx: Context, _info) {
         console.log('me', ctx.req.headers, ctx.userId)
-        return ctx.prisma.user.findFirst(args)
+        return ctx.prisma.user.findOne({
+          where: {
+            id: ctx.userId,
+          },
+        })
       },
     })
 
-    t.field('draft', {
+    t.list.field('drafts', {
       type: 'Post',
-      description: 'Get a draft',
-      nullable: true,
+      description: 'Get unpublished posts',
       args: {
-        where: arg({ type: 'PostWhereInput', required: true }),
+        where: arg({ type: 'PostWhereInput' }),
         orderBy: arg({ type: 'PostOrderByInput', list: true }),
         cursor: 'PostWhereUniqueInput',
         skip: 'Int',
         take: 'Int',
       },
-      resolve: (_root, args, ctx: Context) => {
-        console.log('draft', ctx.req.headers)
-        return ctx.prisma.post.findFirst(args)
+      resolve(_root, args, ctx: Context) {
+        return ctx.prisma.post.findMany({
+          ...args,
+          where: {
+            ...args.where,
+            published: {
+              equals: false,
+            },
+          },
+        })
       },
     })
   },

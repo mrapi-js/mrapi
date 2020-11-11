@@ -23,7 +23,7 @@ export class Service {
   endpoints: Array<mrapi.Endpoint> = []
   config: mrapi.Config
 
-  constructor(config?: mrapi.ConfigInput) {
+  constructor(config?: mrapi.PartialConfig) {
     this.config = resolveConfig(config)
     this.app =
       config?.app ||

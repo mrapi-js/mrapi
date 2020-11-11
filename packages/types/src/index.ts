@@ -99,7 +99,7 @@ declare namespace mrapi {
     contextFile: string
   }
 
-  interface ServiceOptionsInput
+  interface PartialServiceOptions
     extends Partial<
       Omit<
         ServiceOptions,
@@ -119,9 +119,9 @@ declare namespace mrapi {
     autoGenerate?: boolean
   }
 
-  interface ConfigInput
+  interface PartialConfig
     extends Partial<Omit<Config, 'service' | 'cwd' | 'isMultiService'>> {
-    service?: ServiceOptionsInput | Array<ServiceOptionsInput>
+    service?: PartialServiceOptions | Array<PartialServiceOptions>
   }
 }
 
