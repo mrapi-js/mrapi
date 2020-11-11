@@ -1,4 +1,4 @@
-import { Datasource } from '..'
+import { Datasource, DatasourceOptions } from '..'
 
 describe('datasource', () => {
   beforeEach(() => {})
@@ -26,7 +26,7 @@ describe('datasource', () => {
           clientPath: '.prisma/b-client',
         },
       ],
-    })
+    } as DatasourceOptions)
     expect(typeof instance).toBe('object')
     expect(instance).toBeInstanceOf(Datasource)
     ;['init', 'getManagementClient', 'getServiceClient', 'disconnect'].forEach(
