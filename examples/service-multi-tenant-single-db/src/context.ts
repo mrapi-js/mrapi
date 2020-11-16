@@ -18,15 +18,15 @@ export interface Context {
 export function createContext(
   params: mrapi.CreateContextParams,
 ): Partial<Context> {
-  console.log(
-    '-->1',
-    params.req.body.operationName,
-    (params as any).prisma._middlewares,
-  )
-  if (params.req.body.operationName !== 'IntrospectionQuery') {
-    const tenantId = params.req.headers['mrapi-tenant-id'] as string
-    applyPrismaTenantMiddleware((params as any).prisma, tenantId)
-  }
+  // console.log(
+  //   '-->1',
+  //   params.req.body.operationName,
+  //   (params as any).prisma._middlewares,
+  // )
+  // if (params.req.body.operationName !== 'IntrospectionQuery') {
+  //   const tenantId = params.req.headers['mrapi-tenant-id'] as string
+  //   applyPrismaTenantMiddleware((params as any).prisma, tenantId)
+  // }
   return {
     userId: 1,
   }

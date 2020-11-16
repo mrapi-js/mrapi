@@ -13,7 +13,9 @@ module.exports = {
           database: 'file:./user-two.db',
         },
       ],
-      defaultTenant: 'one',
+      multiTenant: {
+        default: 'one',
+      },
       graphql: false,
     },
     {
@@ -30,7 +32,9 @@ module.exports = {
           database: 'file:./post-two.db',
         },
       ],
-      defaultTenant: 'one',
+      multiTenant: {
+        default: 'one',
+      },
       openapi: false,
     },
     {

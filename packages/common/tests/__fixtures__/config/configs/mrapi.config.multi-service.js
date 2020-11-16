@@ -13,7 +13,9 @@ module.exports = {
           database: 'file:./user-two.db',
         },
       ],
-      defaultTenant: 'one',
+      multiTenant: {
+        default: 'one',
+      },
     },
     {
       name: 'post',
@@ -29,7 +31,9 @@ module.exports = {
           database: 'file:./post-two.db',
         },
       ],
-      defaultTenant: 'one',
+      multiTenant: {
+        default: 'one',
+      },
     },
     {
       name: 'management',

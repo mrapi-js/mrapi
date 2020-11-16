@@ -6,10 +6,14 @@ const config: mrapi.PartialConfig = {
       name: 'user',
       // mock: true,
     },
+    {
+      name: 'post',
+      // mock: true,
+    },
   ],
-  graphql: {
-    stitching: true,
-  },
+  // graphql: {
+  //   stitching: true,
+  // },
   logger: {
     prettyPrint: true,
   },

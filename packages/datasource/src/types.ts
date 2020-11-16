@@ -11,7 +11,7 @@ export interface ManagementOptions {
 export interface ServiceOptions
   extends Pick<
     BaseServiceOptions,
-    'name' | 'database' | 'tenants' | 'defaultTenant'
+    'name' | 'database' | 'tenants' | 'multiTenant'
   > {
   clientPath: string
 }
