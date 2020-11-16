@@ -113,6 +113,7 @@ export class Service {
           defaultTenant: s.defaultTenant,
         })),
       provider: 'prisma' as any,
+      // tenantMode: this.config.service.
     }
 
     if (managementOptions) {

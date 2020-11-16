@@ -53,4 +53,88 @@ export default class PrismaProvider {
   disconnect() {
     return this.instance && this.instance.$disconnect()
   }
+
+  // only for multi-tenant in one DB
+  applyPrismaTenantMiddleware(
+    prisma: any,
+    tenantId: string,
+    tenantFieldName: string,
+    excludeModels?: string[],
+  ) {
+    prisma.$use(async (params: any, next: any) => {
+      let result
+
+      if (
+        !params.model ||
+        (excludeModels && excludeModels.includes(params.model)) ||
+        params.action === 'delete'
+      ) {
+        result = await next(params)
+      }
+
+      if (!result && ['create', 'update'].includes(params.action)) {
+        params.args.data = {
+          ...params?.args?.data,
+          [tenantFieldName]: tenantId,
+        }
+
+        result = await next(params)
+      }
+
+      if (!result) {
+        if (!params?.args) {
+          params = { ...params, args: {} }
+        }
+
+        if (!params?.args?.where) {
+          params = { ...params, args: { ...params.args, where: {} } }
+        }
+
+        if (params.action === 'findOne') {
+          params.action = 'findFirst'
+
+          params.args.where = Object.keys(params.args.where).reduce(
+            (prev, next) => {
+              return { ...prev, [next]: { equals: params.args.where[next] } }
+            },
+            {},
+          )
+        }
+
+        if (params?.args?.where?.AND) {
+          params.args.where = {
+            AND: [
+              { [tenantFieldName]: { equals: tenantId } },
+              ...params.args.where.AND,
+            ],
+          }
+        } else {
+          if (
+            params?.args?.where &&
+            Object.keys(params?.args?.where).length > 0
+          ) {
+            params.args.where = {
+              AND: [
+                { [tenantFieldName]: { equals: tenantId } },
+                ...Object.keys(params.args.where).map((key) => ({
+                  [key]: params.args.where[key],
+                })),
+              ],
+            }
+          } else {
+            params.args.where = {
+              [tenantFieldName]: { equals: tenantId },
+            }
+          }
+        }
+
+        result = await next(params)
+      }
+
+      prisma._middlewares.pop()
+
+      console.log('<--', prisma._middlewares)
+      return result
+    })
+  }
 }
