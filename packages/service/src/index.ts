@@ -110,7 +110,7 @@ export class Service {
           database: s.database,
           clientPath: s.datasource!.output!,
           tenants: s.tenants,
-          defaultTenant: s.defaultTenant,
+          multiTenant: s.multiTenant,
         })),
       provider: 'prisma' as any,
       // tenantMode: this.config.service.
@@ -132,14 +132,13 @@ export class Service {
     req: app.Request,
     res: app.Response,
     service: mrapi.ServiceOptions,
-    isIntrospectionQuery = false,
   ): Promise<string> {
-    if (isIntrospectionQuery) {
+    if (req.body.operationName === 'IntrospectionQuery') {
       return Array.isArray(service.tenants) ? service.tenants[0].name : ''
     }
 
     const tenantIdentity =
-      service?.tenantIdentity || defaults.config.service.tenantIdentity
+      service?.multiTenant?.identity || defaults.multiTenant.identity
     if (!tenantIdentity) {
       this.logger.error(
         `"tenantIdentity" should be a string or funtion. Received: ${tenantIdentity}`,

@@ -7,7 +7,6 @@ import { Management } from './management'
 export class Service {
   name: string
   tenants: Map<string, Tenant> = new Map()
-  isMultiTenant: boolean = false
   defaultTenantName = defaults.tenantName
   provider: any
 
@@ -25,17 +24,19 @@ export class Service {
   }
 
   async init() {
-    if (Array.isArray(this.options.tenants)) {
-      this.isMultiTenant = true
-      this.defaultTenantName = this.options.defaultTenant ?? ''
+    if (this.options?.multiTenant) {
+      this.defaultTenantName = this.options?.multiTenant?.default ?? ''
       for (let tenant of this.options.tenants) {
-        const instance = await this.createTenant(tenant)
+        const options = {
+          database: this.options.database,
+          ...tenant,
+        }
+        const instance = await this.createTenant(options)
         if (instance) {
           this.tenants.set(instance.name, instance)
         }
       }
     } else if (this.options.database) {
-      this.isMultiTenant = false
       const instance = await this.createTenant({
         name: defaults.tenantName,
         database: this.options.database,

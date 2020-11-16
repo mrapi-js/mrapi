@@ -32,7 +32,6 @@ describe('Service', () => {
     })
     expect(typeof instance.name).toBe('string')
     expect(typeof instance.tenants).toBe('object')
-    expect(typeof instance.isMultiTenant).toBe('boolean')
     expect(typeof instance.defaultTenantName).toBe('string')
   })
 })

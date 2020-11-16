@@ -20,7 +20,10 @@ const config: mrapi.PartialConfig = {
           database: 'file:./user-two.db',
         },
       ],
-      defaultTenant: 'one',
+      multiTenant: {
+        mode: 'seprate-db',
+        default: 'one',
+      },
       openapi: true,
     },
     {

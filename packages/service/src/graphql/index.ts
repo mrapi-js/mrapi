@@ -2,7 +2,6 @@ import type { Service } from '../'
 import type { mrapi } from '../types'
 import type { app } from '@mrapi/app'
 import type { graphql } from '@mrapi/graphql'
-import type { Datasource } from '@mrapi/datasource'
 
 import { join } from 'path'
 import { tryRequire } from '@mrapi/common'
@@ -17,7 +16,7 @@ export async function makeGraphqlServices(
   serviceInstance: Service,
   getTenantIdentity: Function,
 ): Promise<mrapi.Endpoint[]> {
-  const { config, datasource } = serviceInstance
+  const { config } = serviceInstance
   const { service: services } = config
 
   const validServicesOptions = services.filter((s) => !!s.graphql)
@@ -132,7 +131,6 @@ export async function makeGraphqlServices(
                     req,
                     res,
                     options,
-                    datasource,
                     getTenantIdentity,
                   }),
                   info,
@@ -172,7 +170,6 @@ export async function makeGraphqlServices(
                 req,
                 res,
                 options,
-                datasource,
                 getTenantIdentity,
               })
           : // pass to `createProxyingResolver` (stitched schema has no service, because it stitched from multiple services)
@@ -235,34 +232,32 @@ async function makeConetxt({
   service,
   req,
   res,
-  datasource,
   options,
   getTenantIdentity,
 }: {
   service: Service
   req: app.Request
   res: app.Response
-  datasource?: Datasource
   options?: mrapi.ServiceOptions
   getTenantIdentity: Function
 }) {
   let datasourceClient
 
-  const tenantId = options?.isMultiTenant
+  const tenantId = options?.multiTenant
     ? await getTenantIdentity(req, res, options)
     : null
 
-  if (datasource) {
+  if (service.datasource) {
     datasourceClient = await (options?.management
-      ? datasource.getManagementClient()
-      : datasource.getServiceClient(options?.name!, tenantId))
+      ? service.datasource.getManagementClient()
+      : service.datasource.getServiceClient(options?.name!, tenantId))
     if (!datasourceClient) {
       throw new Error(
         `Cannot get datasource client for service '${options?.name}'. ${
-          options?.isMultiTenant
+          options?.multiTenant
             ? `Please check if the multi-tenant identity${
-                typeof options?.tenantIdentity === 'string'
-                  ? ` '${options.tenantIdentity}'`
+                typeof options?.multiTenant?.identity === 'string'
+                  ? ` '${options.multiTenant.identity}'`
                   : ''
               } has been set correctly. Received: ${tenantId}`
             : ''
@@ -271,8 +266,18 @@ async function makeConetxt({
     }
 
     // multi-tenant in one DB
-    // if(datasource.config.provider){}
-
+    if (
+      service.datasource.config.provider === 'prisma' &&
+      options?.multiTenant?.mode === 'single-db'
+    ) {
+      const target = service.datasource.services.get(options.name)
+      if (target) {
+        const tenant = await target.getTenant(tenantId)
+        if (tenant && tenant.provider) {
+          tenant.provider.applyPrismaTenantMiddleware(tenantId)
+        }
+      }
+    }
   }
 
   // get custom context

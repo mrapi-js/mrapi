@@ -100,7 +100,15 @@ Examples:
           })
         }
 
-        await this.setup('prisma')
+        // await this.setup('prisma')
+        const services = this.getServiceConfig()
+
+        for (const service of services) {
+          const tenants = this.getTenantConfig(service)
+          for (const tenant of tenants) {
+            await this.runPrismaCommand(this.#cmd, service, tenant.database)
+          }
+        }
 
         break
       }

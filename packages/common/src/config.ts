@@ -26,8 +26,6 @@ const defaultApiOutput = 'node_modules/.mrapi/'
 const defaultPrismaOutput = 'node_modules/.prisma/'
 
 const defaultServiceConfig: Partial<mrapi.ServiceOptions> = {
-  defaultTenant: '',
-  tenantIdentity: 'mrapi-tenant-id',
   studio: !isProd,
 }
 
@@ -54,6 +52,10 @@ export const defaults = {
     generator: 'nexus' as mrapi.GraphqlGenerator,
   },
   openapi: false,
+  multiTenant: {
+    mode: 'seprate-db' as mrapi.MultiTenantMode,
+    identity: 'mrapi-tenant-id',
+  },
 }
 
 export function resolveConfig(
@@ -149,16 +151,17 @@ function normalizeServiceConfig(
   // datasource paths
   const usingDatasource = service.datasource || service.schema
   if (usingDatasource) {
-    const hasDatabase = isMultiTenant
-      ? service.tenants?.every((t) => !!t.database)
-      : !!service.database
+    const hasDatabase =
+      !isMultiTenant || service.multiTenant?.mode === 'single-db'
+        ? !!service.database
+        : service.tenants?.every((t) => !!t.database)
     assert(
       hasDatabase,
       `[Config Error] Service '${
         service.name
-      }' using prisma, but no 'database' field configured.${
-        isMultiTenant
-          ? `Each tenant should configure 'database' field when using multi-tenant`
+      }' using prisma, but no 'database' field configured. ${
+        isMultiTenant && service.multiTenant?.mode === 'seprate-db'
+          ? `Each tenant should configure 'database' field when using multi-tenant 'seprate-db' mode`
           : ''
       }`,
     )
@@ -209,6 +212,14 @@ function normalizeServiceConfig(
 
   return merge(defaultConfig, {
     ...(service || {}),
+    ...(isMultiTenant
+      ? {
+          multiTenant: {
+            ...defaults.multiTenant,
+            ...service.multiTenant,
+          },
+        }
+      : {}),
     graphql: normalizeGraphqlConfig(service, {
       isMultiService,
       cwd,
@@ -217,7 +228,6 @@ function normalizeServiceConfig(
       isMultiService,
       cwd,
     }),
-    isMultiTenant,
     contextFile,
   })
 }

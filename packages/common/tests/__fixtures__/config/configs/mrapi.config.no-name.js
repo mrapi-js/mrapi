@@ -12,7 +12,9 @@ module.exports = {
           database: 'file:./user-two.db',
         },
       ],
-      defaultTenant: 'one',
+      multiTenant: {
+        default: 'one',
+      },
     },
     {
       name: 'post',

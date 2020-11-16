@@ -56,12 +56,11 @@ export default class PrismaProvider {
 
   // only for multi-tenant in one DB
   applyPrismaTenantMiddleware(
-    prisma: any,
     tenantId: string,
-    tenantFieldName: string,
+    tenantFieldName: string = 'tenantId',
     excludeModels?: string[],
   ) {
-    prisma.$use(async (params: any, next: any) => {
+    this.instance.$use(async (params: any, next: any) => {
       let result
 
       if (
@@ -131,9 +130,8 @@ export default class PrismaProvider {
         result = await next(params)
       }
 
-      prisma._middlewares.pop()
+      this.instance._middlewares.pop()
 
-      console.log('<--', prisma._middlewares)
       return result
     })
   }
