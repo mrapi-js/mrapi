@@ -1,0 +1,39 @@
+{
+  "name": "service-multi-tenant-single-db",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
+    "debug": "wtfnode ts-node-dev --respawn --transpile-only ./src/app.ts",
+    "setup": "npx mrapi setup"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/datasource": "file:../../packages/datasource",
+    "@mrapi/graphql": "file:../../packages/graphql",
+    "@mrapi/service": "file:../../packages/service",
+    "@nexus/schema": "^0",
+    "@prisma/client": "^2",
+    "nexus-plugin-prisma": "^0",
+    "pino-pretty": "^4.3.0"
+  },
+  "devDependencies": {
+    "@mrapi/cli": "file:../../packages/cli",
+    "@paljs/generator": "^2.5",
+    "@prisma/cli": "^2",
+    "@types/node": "*",
+    "ts-node-dev": "^1",
+    "typescript": "^4"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

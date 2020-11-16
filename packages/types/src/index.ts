@@ -20,17 +20,19 @@ declare namespace mrapi {
     clientPath?: string
   }
 
+  type MultiTenantMode = 'single-db' | 'seprate-db'
+
+  interface MultiTenantOptions {
+    mode: MultiTenantMode
+    default: string
+  }
+
   type DatasourceProvider = 'prisma'
-  // Single Database for Single Tenant
-  // Separate Schema for Each Tenant
-  // Shared Schema for Tenants
-  type TenantMode = ''
 
   interface DatasourceOptions {
     provider?: DatasourceProvider
     schema?: string
     output?: string
-    tenantMode?: string
   }
 
   type GraphqlGenerator = 'nexus' | 'type-graphql'
@@ -97,6 +99,7 @@ declare namespace mrapi {
     managementTenantModelName?: string
     isMultiTenant: boolean
     contextFile: string
+    multiTenant?: MultiTenantOptions
   }
 
   interface PartialServiceOptions

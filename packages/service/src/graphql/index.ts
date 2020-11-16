@@ -269,6 +269,10 @@ async function makeConetxt({
         } `,
       )
     }
+
+    // multi-tenant in one DB
+    // if(datasource.config.provider){}
+
   }
 
   // get custom context
@@ -281,7 +285,8 @@ async function makeConetxt({
           req,
           res,
           service,
-        }
+          prisma: datasourceClient,
+        } as mrapi.CreateContextParams
         customContext = await ctx.createContext(params)
       } else if (typeof ctx.createContext === 'object') {
         customContext = ctx.createContext

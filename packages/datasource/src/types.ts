@@ -24,4 +24,5 @@ export interface DatasourceOptions {
   provider: ProviderName
   services: Array<ServiceOptions>
   management?: ManagementOptions
+  tenantMode?: string
 }
