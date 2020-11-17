@@ -1,19 +1,21 @@
 import type { app } from '@mrapi/app'
+import type { ExecutionResult } from 'graphql'
+import type { CompiledQuery } from 'graphql-jit'
 import type { CacheValue, ErrorCacheValue, Options } from './types'
 
 import LRU from 'tiny-lru'
-import { CompiledQuery, compileQuery } from 'graphql-jit'
+import { compileQuery } from 'graphql-jit'
+import { getRequestParams } from './param'
+import { defaultErrorFormatter } from './error'
 import { parse, validate, validateSchema } from 'graphql'
 
-// function isEnumerableObject(value: any) {
-//   return typeof value === 'object' && value !== null && !Array.isArray(value)
-// }
 export * as graphql from './types'
 
 export const graphqlMiddleware = ({
   schema,
   context,
-  formatError,
+  errorFormatter,
+  extensions,
 }: Options) => {
   const lru = LRU<CacheValue>(1024)
   const lruErrors = LRU<ErrorCacheValue>(1024)
@@ -23,6 +25,11 @@ export const graphqlMiddleware = ({
     throw schemaValidationErrors
   }
 
+  const errorFormatterFn =
+    typeof errorFormatter === 'function'
+      ? errorFormatter
+      : defaultErrorFormatter
+
   return async (req: app.Request, res: app.Response) => {
     // GraphQL HTTP only supports GET and POST methods.
     if (!['GET', 'POST'].includes(req.method)) {
@@ -31,39 +38,7 @@ export const graphqlMiddleware = ({
         .send('GraphQL only supports GET and POST requests.')
     }
 
-    // // adapted from https://github.com/jaydenseric/graphql-api-koa/blob/master/lib/execute.js#L105
-    // if (typeof req.body === 'undefined') {
-    //   return res.status(400).send('Request body missing.')
-    // }
-
-    // if (!isEnumerableObject(req.body)) {
-    //   return res.status(400).send('Request body must be a JSON object.')
-    // }
-
-    // if (!('query' in req.body)) {
-    //   return res.status(400).send('GraphQL operation field `query` missing.')
-    // }
-
-    // if ('variables' in req.body && !isEnumerableObject(req.body.variables)) {
-    //   return res
-    //     .status(400)
-    //     .send('Request body JSON `variables` field must be an object.')
-    // }
-
-    // if (
-    //   typeof req.body.operationName !== 'string' &&
-    //   typeof req.body.operationName !== 'undefined' &&
-    //   req.body.operationName !== null
-    // ) {
-    //   return res
-    //     .status(400)
-    //     .send(
-    //       'Request body JSON `operationName` field must be an string/null/undefined.',
-    //     )
-    // }
-    const query = req.body.query || req.query.query
-
-    // const { query } = req.body
+    const { query, variables, operationName } = getRequestParams(req)
 
     // adapted from https://github.com/mcollina/fastify-gql/blob/master/index.js#L206
     let cached = lru.get(query)
@@ -98,24 +73,42 @@ export const graphqlMiddleware = ({
       cached = {
         document,
         validationErrors,
-        jit: compileQuery(
-          schema,
-          document,
-          req.body.operationName,
-        ) as CompiledQuery,
+        jit: compileQuery(schema, document, operationName) as CompiledQuery,
       }
 
       lru.set(query, cached)
     }
 
-    const contextObj =
-      typeof context === 'function' ? await context({ req, res }) : context
-    const result = await cached.jit.query({}, contextObj, req.body.variables)
+    let result: ExecutionResult = {}
+    let contextObj = {}
 
-    if (result.errors && formatError) {
-      result.errors = result.errors.map((error) =>
-        formatError({ req, res, error }),
-      )
+    try {
+      contextObj =
+        typeof context === 'function' ? await context({ req, res }) : context
+
+      result = await cached.jit.query({}, contextObj, variables)
+
+      if (result?.errors) {
+        result.errors = result.errors.map((error) =>
+          errorFormatterFn({ req, res, error }),
+        )
+      }
+    } catch (error) {
+      result.errors = [errorFormatterFn({ req, res, error })]
+    }
+
+    if (typeof extensions === 'function') {
+      const extensionsObject = await extensions({
+        req,
+        query,
+        operationName,
+        variables,
+        result,
+        context: contextObj,
+      })
+      if (extensionsObject != null) {
+        result = { ...result, extensions: extensionsObject }
+      }
     }
 
     return res.json(result)
