@@ -1,6 +1,11 @@
 import type { app } from '@mrapi/app'
 import type { CompiledQuery } from 'graphql-jit'
-import type { DocumentNode, GraphQLError, GraphQLSchema } from 'graphql'
+import type {
+  DocumentNode,
+  ExecutionResult,
+  GraphQLError,
+  GraphQLSchema,
+} from 'graphql'
 
 export interface ContextParams {
   req: app.Request
@@ -8,13 +13,25 @@ export interface ContextParams {
 }
 
 export interface ErrorContext extends ContextParams {
-  error: GraphQLError
+  error: any
+}
+
+export interface ExtensionsParams {
+  req: app.Request
+  query: string
+  operationName: string
+  variables: { [key: string]: unknown }
+  result: ExecutionResult
+  context: { [key: string]: any }
 }
 
 export interface Options {
   schema: GraphQLSchema
   context?: (x: ContextParams) => any
-  formatError?: (x: ErrorContext) => GraphQLError
+  errorFormatter?: (x: ErrorContext) => GraphQLError
+  extensions?: (
+    params: ExtensionsParams,
+  ) => Promise<{ [key: string]: unknown }> | { [key: string]: unknown }
 }
 
 export interface ErrorCacheValue {

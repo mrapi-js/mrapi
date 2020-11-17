@@ -107,7 +107,6 @@ export async function makeGraphqlServices(
       'Please install it manually.',
     )
 
-    // TODO: keep `context`
     const unifiedSchema = stitchSchemas({
       subschemas: stitchingConfigs.map(({ options, schema }) => ({
         schema,
@@ -174,7 +173,14 @@ export async function makeGraphqlServices(
               })
           : // pass to `createProxyingResolver` (stitched schema has no service, because it stitched from multiple services)
             ({ req, res }: graphql.ContextParams) => ({ req, res }),
-        formatError: ({ error }: graphql.ErrorContext) => error,
+        extensions: ({ context }) => {
+          return {
+            ...(context.startTime
+              ? { time: Date.now() - context.startTime }
+              : {}),
+            ...(context.tenantId ? { tenantId: context.tenantId } : {}),
+          }
+        },
       }),
     )
 
@@ -206,6 +212,13 @@ export async function makeGraphqlServices(
   return endpoints
 }
 
+/**
+ * Only supprt `POST` method
+ *
+ * @param {Service} serviceInstance
+ * @param {any[]} tabs
+ * @param {string} endpoint
+ */
 function makeGraphqlPlayground(
   serviceInstance: Service,
   tabs: any[],
@@ -302,6 +315,8 @@ async function makeConetxt({
   return {
     req,
     res,
+    tenantId,
+    startTime: Date.now(),
     // keep `prisma` here, because paljs generation needs it
     ...(datasourceClient ? { prisma: datasourceClient } : {}),
     ...customContext,
