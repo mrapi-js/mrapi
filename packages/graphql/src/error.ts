@@ -8,7 +8,7 @@ export const defaultErrorFormatter = ({
   return error instanceof GraphQLError ? error : toGraphQLError(error)
 }
 
-function toGraphQLError(err: any) {
+export function toGraphQLError(err: any) {
   return Object.create(GraphQLError, {
     name: {
       value: err.name,

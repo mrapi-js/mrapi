@@ -8,6 +8,7 @@ import { compileQuery } from 'graphql-jit'
 import { getRequestParams } from './param'
 import { defaultErrorFormatter } from './error'
 import { parse, validate, validateSchema } from 'graphql'
+import queryDepthFn from './query-depth'
 
 export * as graphql from './types'
 
@@ -16,6 +17,7 @@ export const graphqlMiddleware = ({
   context,
   errorFormatter,
   extensions,
+  queryDepth,
 }: Options) => {
   const lru = LRU<CacheValue>(1024)
   const lruErrors = LRU<ErrorCacheValue>(1024)
@@ -50,7 +52,11 @@ export const graphqlMiddleware = ({
       const cachedError = lruErrors.get(query)
 
       if (cachedError) {
-        return res.status(400).send(cachedError.validationErrors)
+        return res.status(400).json({
+          errors: (cachedError.validationErrors || []).concat(
+            cachedError.queryDepthErrors || [],
+          ),
+        })
       }
 
       try {
@@ -65,18 +71,33 @@ export const graphqlMiddleware = ({
 
       if (validationErrors.length > 0) {
         lruErrors.set(query, { document, validationErrors })
-        return res.status(400).send({
+        return res.status(400).json({
           errors: validationErrors,
         })
+      }
+
+      let queryDepthErrors = []
+      if (typeof queryDepth === 'number') {
+        queryDepthErrors = queryDepthFn(document.definitions, queryDepth)
+
+        if (queryDepthErrors.length > 0) {
+          lruErrors.set(query, { document, queryDepthErrors })
+          return res.status(400).send({
+            errors: queryDepthErrors,
+          })
+        }
       }
 
       cached = {
         document,
         validationErrors,
+        queryDepthErrors,
         jit: compileQuery(schema, document, operationName) as CompiledQuery,
       }
 
-      lru.set(query, cached)
+      if (lru) {
+        lru.set(query, cached)
+      }
     }
 
     let result: ExecutionResult = {}

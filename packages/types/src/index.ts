@@ -104,6 +104,7 @@ declare namespace mrapi {
     playground: boolean
     generator?: GraphqlGenerator
     generatorOptions?: GeneratorOptions
+    queryDepth?: number
   }
 
   interface OpenapiOptions {

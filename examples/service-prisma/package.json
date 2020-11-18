@@ -9,8 +9,7 @@
     "build": "tsc -b",
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
     "setup": "npx mrapi setup",
-    "start": "NODE_ENV=production node lib/app.js",
-    "a": "ts-node ./src/a.ts"
+    "start": "NODE_ENV=production node lib/app.js"
   },
   "keywords": [],
   "author": "neikvon",

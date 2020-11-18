@@ -6,10 +6,13 @@ const config: mrapi.PartialConfig = {
     schema: 'prisma/schema.prisma',
     // required if using prisma
     database: 'file:./dev.db',
+    graphql: {
+      queryDepth: 3,
+    },
   },
   logger: {
     prettyPrint: true,
-  }
+  },
 }
 
 export default config
