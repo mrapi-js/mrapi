@@ -32,11 +32,13 @@ export interface Options {
   extensions?: (
     params: ExtensionsParams,
   ) => Promise<{ [key: string]: unknown }> | { [key: string]: unknown }
+  queryDepth?: number
 }
 
 export interface ErrorCacheValue {
   document: DocumentNode
-  validationErrors: readonly GraphQLError[]
+  validationErrors?: readonly GraphQLError[]
+  queryDepthErrors?: readonly GraphQLError[]
 }
 
 export interface CacheValue extends ErrorCacheValue {

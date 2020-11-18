@@ -160,6 +160,15 @@ export async function makeGraphqlServices(
     serviceInstance.app.post(
       endpoint,
       graphqlMiddleware({
+        extensions: ({ context }) => {
+          return {
+            ...(context.startTime
+              ? { time: Date.now() - context.startTime }
+              : {}),
+            ...(context.tenantId ? { tenantId: context.tenantId } : {}),
+          }
+        },
+        ...(options?.graphql || {}),
         schema,
         context: !!options
           ? // handle the request directly
@@ -173,14 +182,6 @@ export async function makeGraphqlServices(
               })
           : // pass to `createProxyingResolver` (stitched schema has no service, because it stitched from multiple services)
             ({ req, res }: graphql.ContextParams) => ({ req, res }),
-        extensions: ({ context }) => {
-          return {
-            ...(context.startTime
-              ? { time: Date.now() - context.startTime }
-              : {}),
-            ...(context.tenantId ? { tenantId: context.tenantId } : {}),
-          }
-        },
       }),
     )
 
