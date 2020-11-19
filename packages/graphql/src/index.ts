@@ -1,14 +1,14 @@
 import type { app } from '@mrapi/app'
-import type { ExecutionResult } from 'graphql'
+import type { DocumentNode, ExecutionResult } from 'graphql'
 import type { CompiledQuery } from 'graphql-jit'
 import type { CacheValue, ErrorCacheValue, Options } from './types'
 
 import LRU from 'tiny-lru'
-import { compileQuery } from 'graphql-jit'
+import { validateQuery } from './validate'
 import { getRequestParams } from './param'
+import { compileQuery } from 'graphql-jit'
 import { defaultErrorFormatter } from './error'
-import { parse, validate, validateSchema } from 'graphql'
-import queryDepthFn from './query-depth'
+import { parse, validateSchema } from 'graphql'
 
 export * as graphql from './types'
 
@@ -18,6 +18,7 @@ export const graphqlMiddleware = ({
   errorFormatter,
   extensions,
   queryDepth,
+  introspection,
 }: Options) => {
   const lru = LRU<CacheValue>(1024)
   const lruErrors = LRU<ErrorCacheValue>(1024)
@@ -42,9 +43,13 @@ export const graphqlMiddleware = ({
 
     const { query, variables, operationName } = getRequestParams(req)
 
+    if (!query) {
+      return res.status(400).send(`Invalid GraphQL query`)
+    }
+
     // adapted from https://github.com/mcollina/fastify-gql/blob/master/index.js#L206
     let cached = lru.get(query)
-    let document = null
+    let document: DocumentNode
 
     if (!cached) {
       // We use two caches to avoid errors bust the good
@@ -53,9 +58,7 @@ export const graphqlMiddleware = ({
 
       if (cachedError) {
         return res.status(400).json({
-          errors: (cachedError.validationErrors || []).concat(
-            cachedError.queryDepthErrors || [],
-          ),
+          errors: cachedError.errors,
         })
       }
 
@@ -67,31 +70,24 @@ export const graphqlMiddleware = ({
           .send(`GraphQL query syntax error: ${error.message}`)
       }
 
-      const validationErrors = validate(schema, document)
+      const errors = validateQuery({
+        schema,
+        document,
+        introspection,
+        queryDepth,
+      })
 
-      if (validationErrors.length > 0) {
-        lruErrors.set(query, { document, validationErrors })
+      if (Array.isArray(errors) && errors.length > 0) {
+        lruErrors.set(query, { document, errors })
+
         return res.status(400).json({
-          errors: validationErrors,
+          errors,
         })
-      }
-
-      let queryDepthErrors = []
-      if (typeof queryDepth === 'number') {
-        queryDepthErrors = queryDepthFn(document.definitions, queryDepth)
-
-        if (queryDepthErrors.length > 0) {
-          lruErrors.set(query, { document, queryDepthErrors })
-          return res.status(400).send({
-            errors: queryDepthErrors,
-          })
-        }
       }
 
       cached = {
         document,
-        validationErrors,
-        queryDepthErrors,
+        errors,
         jit: compileQuery(schema, document, operationName) as CompiledQuery,
       }
 

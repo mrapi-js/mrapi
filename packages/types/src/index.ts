@@ -19,6 +19,7 @@ declare namespace mrapi {
   interface GatewayServiceConfig {
     name: string
     url: string
+    type?: 'graphql' | 'openapi'
   }
 
   interface GatewayOptions {
