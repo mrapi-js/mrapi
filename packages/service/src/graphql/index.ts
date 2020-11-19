@@ -156,34 +156,32 @@ export async function makeGraphqlServices(
   for (const { options, schema, playground } of servicesToApply) {
     const endpoint =
       config.isMultiService && options ? `/graphql/${options.name}` : `/graphql`
+    const middlewareOptions: graphql.Options = {
+      extensions: ({ context }) => {
+        return {
+          ...(context.startTime
+            ? { time: Date.now() - context.startTime }
+            : {}),
+          ...(context.tenantId ? { tenantId: context.tenantId } : {}),
+        }
+      },
+      ...(options?.graphql || {}),
+      schema,
+      context: !!options
+        ? // handle the request directly
+          ({ req, res }: graphql.ContextParams) =>
+            makeConetxt({
+              service: serviceInstance,
+              req,
+              res,
+              options,
+              getTenantIdentity,
+            })
+        : // pass to `createProxyingResolver` (stitched schema has no service, because it stitched from multiple services)
+          ({ req, res }: graphql.ContextParams) => ({ req, res }),
+    }
 
-    serviceInstance.app.post(
-      endpoint,
-      graphqlMiddleware({
-        extensions: ({ context }) => {
-          return {
-            ...(context.startTime
-              ? { time: Date.now() - context.startTime }
-              : {}),
-            ...(context.tenantId ? { tenantId: context.tenantId } : {}),
-          }
-        },
-        ...(options?.graphql || {}),
-        schema,
-        context: !!options
-          ? // handle the request directly
-            ({ req, res }: graphql.ContextParams) =>
-              makeConetxt({
-                service: serviceInstance,
-                req,
-                res,
-                options,
-                getTenantIdentity,
-              })
-          : // pass to `createProxyingResolver` (stitched schema has no service, because it stitched from multiple services)
-            ({ req, res }: graphql.ContextParams) => ({ req, res }),
-      }),
-    )
+    serviceInstance.app.post(endpoint, graphqlMiddleware(middlewareOptions))
 
     if (playground || options?.graphql?.playground) {
       palygroundTabs.push({

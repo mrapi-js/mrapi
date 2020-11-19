@@ -1,6 +1,7 @@
 import type { app } from '@mrapi/app'
 import type { CompiledQuery } from 'graphql-jit'
 import type {
+  DefinitionNode,
   DocumentNode,
   ExecutionResult,
   GraphQLError,
@@ -33,14 +34,24 @@ export interface Options {
     params: ExtensionsParams,
   ) => Promise<{ [key: string]: unknown }> | { [key: string]: unknown }
   queryDepth?: number
+  introspection?: boolean
 }
 
 export interface ErrorCacheValue {
   document: DocumentNode
-  validationErrors?: readonly GraphQLError[]
-  queryDepthErrors?: readonly GraphQLError[]
+  errors?: readonly GraphQLError[]
 }
 
 export interface CacheValue extends ErrorCacheValue {
   jit: CompiledQuery
+}
+
+export interface ValidateQueryParams
+  extends Pick<Options, 'queryDepth' | 'introspection'> {
+  schema: GraphQLSchema
+  document: DocumentNode
+}
+
+export interface OperationsMap {
+  [key: string]: DefinitionNode
 }

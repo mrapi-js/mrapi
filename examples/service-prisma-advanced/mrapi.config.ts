@@ -38,6 +38,9 @@ const config: mrapi.PartialConfig = {
       // relative to schema
       database: 'file:./dev.db',
       management: true,
+      graphql: {
+        introspection: process.env.NODE_ENV !== 'production',
+      },
     },
   ],
   graphql: {
