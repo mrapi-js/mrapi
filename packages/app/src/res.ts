@@ -56,7 +56,6 @@ export function status(res: Response, code: number) {
  * For express compatibility
  *
  * links()
- * json()
  * jsonp()
  * sendStatus()
  * sendFile()

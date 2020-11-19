@@ -105,6 +105,7 @@ declare namespace mrapi {
     generator?: GraphqlGenerator
     generatorOptions?: GeneratorOptions
     queryDepth?: number
+    introspection?: boolean
   }
 
   interface OpenapiOptions {
@@ -163,7 +164,6 @@ declare namespace mrapi {
      * @memberof ServiceOptions
      */
     customDir: string
-    studio: boolean | number
     /**
      * Tenants config
      *
@@ -266,7 +266,6 @@ declare namespace mrapi {
      * @memberof Config
      */
     gateway?: GatewayOptions
-    autoGenerate?: boolean
   }
 
   interface PartialConfig

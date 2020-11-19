@@ -25,9 +25,7 @@ const defaultPrismaOptions = {
 const defaultApiOutput = 'node_modules/.mrapi/'
 const defaultPrismaOutput = 'node_modules/.prisma/'
 
-const defaultServiceConfig: Partial<mrapi.ServiceOptions> = {
-  studio: !isProd,
-}
+const defaultServiceConfig: Partial<mrapi.ServiceOptions> = {}
 
 // management is a special service which has no 'apiOutput'
 const defaultManagementConfig: Partial<mrapi.ServiceOptions> = {
@@ -39,7 +37,6 @@ export const defaults = {
   config: {
     cwd: process.cwd(),
     service: defaultServiceConfig,
-    autoGenerate: true,
     isMultiService: false,
   },
   clientPath: join(process.cwd(), 'node_modules/@prisma/client'),
@@ -104,12 +101,8 @@ export function resolveConfig(
   return {
     ...config,
     service,
-    cwd: ServiceCwd,
     isMultiService,
-    autoGenerate:
-      config.autoGenerate !== undefined
-        ? config.autoGenerate
-        : defaults.config.autoGenerate,
+    cwd: ServiceCwd,
     parsed: true,
   }
 }
