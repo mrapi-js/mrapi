@@ -19,21 +19,23 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/types": "*",
-    "@mrapi/common": "*",
     "@mrapi/app": "*",
+    "@mrapi/common": "*",
     "@mrapi/graphql": "*",
-    "body-parser": "^1.19"
+    "@mrapi/types": "*",
+    "body-parser": "^1.19",
+    "graphql-middleware": "^4.0.2",
+    "graphql-shield": "^7.4.2"
   },
   "devDependencies": {
-    "@types/swagger-tools": "^0",
-    "@mrapi/datasource": "*",
-    "@nexus/schema": "^0",
     "@graphql-tools/mock": "^7",
     "@graphql-tools/stitch": "^7",
+    "@mrapi/datasource": "*",
+    "@nexus/schema": "^0",
+    "@types/swagger-tools": "^0",
+    "express-openapi": "^7",
     "graphql-playground-middleware-express": "^1",
     "nexus-plugin-prisma": "^0",
-    "express-openapi": "^7",
     "swagger-tools": "^0.10",
     "type-graphql": "^1"
   }
