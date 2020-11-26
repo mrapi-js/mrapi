@@ -5,7 +5,7 @@ import type { graphql } from '@mrapi/graphql'
 
 import { join } from 'path'
 import { tryRequire } from '@mrapi/common'
-
+import { applyMiddleware } from 'graphql-middleware'
 interface GraphqlConfig {
   options?: mrapi.ServiceOptions
   schema: any
@@ -37,7 +37,6 @@ export async function makeGraphqlServices(
     if (!opts) {
       continue
     }
-
     let getSchemaFn: mrapi.GetSchemaFn
     switch (opts.generator as string) {
       case 'nexus':
@@ -53,7 +52,6 @@ export async function makeGraphqlServices(
     if (opt.datasource?.provider === 'prisma') {
       plugins.push('nexus-plugin-prisma')
     }
-
     configs.push({
       options: opt,
       schema: await getSchemaFn({
@@ -154,6 +152,7 @@ export async function makeGraphqlServices(
   const endpoints = []
 
   for (const { options, schema, playground } of servicesToApply) {
+    const _schema = registerMiddlewares(options,schema)
     const endpoint =
       config.isMultiService && options ? `/graphql/${options.name}` : `/graphql`
     const middlewareOptions: graphql.Options = {
@@ -166,7 +165,7 @@ export async function makeGraphqlServices(
         }
       },
       ...(options?.graphql || {}),
-      schema,
+      schema: _schema,
       context: !!options
         ? // handle the request directly
           ({ req, res }: graphql.ContextParams) =>
@@ -321,3 +320,22 @@ async function makeConetxt({
     ...customContext,
   }
 }
+
+function registerMiddlewares(options:mrapi.ServiceOptions|undefined,schema:any){
+    try{
+       const temp = tryRequire(`${options?.customDir}/middlewares`)
+       if(temp){
+         let middlewares: any[] = []
+         middlewares = middlewares.concat(Array.isArray(temp) ? temp : [temp])
+         if(middlewares.length>0){
+           for (const ware of middlewares) {
+              schema=applyMiddleware(schema, ware)
+           }
+         }
+       }
+      return schema
+    }catch(error){
+      throw new Error("register middlerwares failed")
+    }
+}
+
