@@ -43,7 +43,8 @@ export interface ErrorCacheValue {
 }
 
 export interface CacheValue extends ErrorCacheValue {
-  jit: CompiledQuery
+
+  jit: CompiledQuery|false
 }
 
 export interface ValidateQueryParams
