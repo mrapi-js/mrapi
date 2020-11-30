@@ -328,9 +328,7 @@ function registerMiddlewares(options:mrapi.ServiceOptions|undefined,schema:any){
          let middlewares: any[] = []
          middlewares = middlewares.concat(Array.isArray(temp) ? temp : [temp])
          if(middlewares.length>0){
-           for (const ware of middlewares) {
-              schema=applyMiddleware(schema, ware)
-           }
+            schema=applyMiddleware(schema, ...middlewares)
          }
        }
       return schema

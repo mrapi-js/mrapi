@@ -6,9 +6,9 @@ import type { CacheValue, ErrorCacheValue, Options } from './types'
 import LRU from 'tiny-lru'
 import { validateQuery } from './validate'
 import { getRequestParams } from './param'
-import { compileQuery } from 'graphql-jit'
+import { compileQuery,isCompiledQuery } from 'graphql-jit'
 import { defaultErrorFormatter } from './error'
-import { parse, validateSchema } from 'graphql'
+import { parse, validateSchema,execute } from 'graphql'
 
 export * as graphql from './types'
 
@@ -84,16 +84,24 @@ export const graphqlMiddleware = ({
           errors,
         })
       }
+      const compiledQuery = compileQuery(schema, document);
+      // check if the compilation is successful
+      if (isCompiledQuery(compiledQuery)) {
+        cached = {
+          document,
+          errors,
+          jit: compiledQuery as CompiledQuery,
+        }
 
-      cached = {
-        document,
-        errors,
-        jit: compileQuery(schema, document, operationName) as CompiledQuery,
+        if (lru) {
+          lru.set(query, cached)
+        }
+      }else{
+        // 否则不可用 compiledQuery.query
+        lru.set(query, {document,errors,jit:false})
       }
-
-      if (lru) {
-        lru.set(query, cached)
-      }
+    
+    
     }
 
     let result: ExecutionResult = {}
@@ -102,9 +110,18 @@ export const graphqlMiddleware = ({
     try {
       contextObj =
         typeof context === 'function' ? await context({ req, res }) : context
-
-      result = await cached.jit.query({}, contextObj, variables)
-
+      if(cached?.jit){
+        result = await cached.jit.query({}, contextObj, variables)
+      }else{
+        result = await execute(
+          schema,
+          parse(query),
+          {},
+          contextObj,
+          variables,
+          operationName
+        )
+      }
       if (result?.errors) {
         result.errors = result.errors.map((error) =>
           errorFormatterFn({ req, res, error }),
