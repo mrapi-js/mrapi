@@ -152,7 +152,7 @@ export async function makeGraphqlServices(
   const endpoints = []
 
   for (const { options, schema, playground } of servicesToApply) {
-    const _schema = registerMiddlewares(options,schema)
+    const _schema = registerMiddlewares(options, schema)
     const endpoint =
       config.isMultiService && options ? `/graphql/${options.name}` : `/graphql`
     const middlewareOptions: graphql.Options = {
@@ -321,19 +321,21 @@ async function makeConetxt({
   }
 }
 
-function registerMiddlewares(options:mrapi.ServiceOptions|undefined,schema:any){
-    try{
-       const temp = tryRequire(`${options?.customDir}/middlewares`)
-       if(temp){
-         let middlewares: any[] = []
-         middlewares = middlewares.concat(Array.isArray(temp) ? temp : [temp])
-         if(middlewares.length>0){
-            schema=applyMiddleware(schema, ...middlewares)
-         }
-       }
-      return schema
-    }catch(error){
-      throw new Error("register middlerwares failed")
+function registerMiddlewares(
+  options: mrapi.ServiceOptions | undefined,
+  schema: any,
+) {
+  try {
+    const temp = tryRequire(`${options?.customDir}/middlewares`)
+    if (temp) {
+      let middlewares: any[] = []
+      middlewares = middlewares.concat(Array.isArray(temp) ? temp : [temp])
+      if (middlewares.length > 0) {
+        schema = applyMiddleware(schema, ...middlewares)
+      }
     }
+    return schema
+  } catch (error) {
+    throw new Error('register middlerwares failed')
+  }
 }
-
