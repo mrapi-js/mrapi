@@ -4,8 +4,8 @@ import { Context } from '../context'
 const Post = objectType({
   name: 'Post',
   definition(t) {
-    t.int('id', { nullable: false, description: 'id' })
-    t.string('title', { nullable: false, description: 'post title' })
+    t.nonNull.int('id', { description: 'id' })
+    t.nonNull.string('title', { description: 'post title' })
   },
 })
 

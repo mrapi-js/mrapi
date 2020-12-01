@@ -4,7 +4,7 @@ import { Context } from '../context'
 const ServerTime = objectType({
   name: 'ServerTime',
   definition(t) {
-    t.string('time', { nullable: false, description: 'current server time' })
+    t.nonNull.string('time', { description: 'current server time' })
   },
 })
 
