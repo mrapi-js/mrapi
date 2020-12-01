@@ -31,7 +31,7 @@
   "devDependencies": {
     "@prisma/cli": "^2",
     "@prisma/debug": "^2",
-    "@paljs/schema": "^2",
-    "@paljs/generator": "^2"
+    "@paljs/schema": "^2.8",
+    "@paljs/generator": "^2.8"
   }
 }

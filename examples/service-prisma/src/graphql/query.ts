@@ -1,10 +1,10 @@
-import { extendType, stringArg, objectType, arg } from '@nexus/schema'
+import { extendType, stringArg, objectType, arg, list } from '@nexus/schema'
 import { Context } from '../context'
 
 const ServerTime = objectType({
   name: 'ServerTime',
   definition(t) {
-    t.string('time', { nullable: false, description: 'current server time' })
+    t.nonNull.string('time', { description: 'current server time' })
   },
 })
 
@@ -20,13 +20,12 @@ export const customQuery = extendType({
       },
     })
 
-    t.field('me', {
+    t.nullable.field('me', {
       type: 'User',
       description: 'Get current user info',
-      nullable: true,
       async resolve(_root, _args, ctx: Context, _info) {
         console.log('me', ctx.req.headers, ctx.userId)
-        return ctx.prisma.user.findOne({
+        return ctx.prisma.user.findUnique({
           where: {
             id: ctx.userId,
           },
@@ -39,7 +38,7 @@ export const customQuery = extendType({
       description: 'Get unpublished posts',
       args: {
         where: arg({ type: 'PostWhereInput' }),
-        orderBy: arg({ type: 'PostOrderByInput', list: true }),
+        orderBy: arg({ type: list('PostOrderByInput') }),
         cursor: 'PostWhereUniqueInput',
         skip: 'Int',
         take: 'Int',

@@ -4,7 +4,7 @@ export const modelTmpFn = {
     data: any,
     parameterId: string,
   ) => `async function GET (req, res, next) {
-    const data = await db.findOne(req, res, next, {
+    const data = await db.findUnique(req, res, next, {
       modelName: '${data.modelName}'
     });
     if (data.code === 0) {
