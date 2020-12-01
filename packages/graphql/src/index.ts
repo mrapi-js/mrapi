@@ -1,5 +1,5 @@
 import type { app } from '@mrapi/app'
-import type { DocumentNode, ExecutionResult } from 'graphql'
+import { DocumentNode, ExecutionResult, GraphQLSchema, __Field } from 'graphql'
 import type { CompiledQuery } from 'graphql-jit'
 import type { CacheValue, ErrorCacheValue, Options } from './types'
 
@@ -8,7 +8,7 @@ import { validateQuery } from './validate'
 import { getRequestParams } from './param'
 import { compileQuery,isCompiledQuery } from 'graphql-jit'
 import { defaultErrorFormatter } from './error'
-import { parse, validateSchema,execute } from 'graphql'
+import { parse, validateSchema,execute ,typeFromAST, OperationDefinitionNode} from 'graphql'
 
 export * as graphql from './types'
 
@@ -50,7 +50,7 @@ export const graphqlMiddleware = ({
     // adapted from https://github.com/mcollina/fastify-gql/blob/master/index.js#L206
     let cached = lru.get(query)
     let document: DocumentNode
-
+  
     if (!cached) {
       // We use two caches to avoid errors bust the good
       // cache. This is a protection against DoS attacks
@@ -84,24 +84,27 @@ export const graphqlMiddleware = ({
           errors,
         })
       }
-      const compiledQuery = compileQuery(schema, document);
-      // check if the compilation is successful
-      if (isCompiledQuery(compiledQuery)) {
-        cached = {
-          document,
-          errors,
-          jit: compiledQuery as CompiledQuery,
-        }
-
-        if (lru) {
-          lru.set(query, cached)
-        }
+      if(checkCircularDependencies(schema,parse(query),operationName)){
+        //这里加是否循环依赖判断，如果是循环依赖直接使用 execute
+         lru.set(query, {document,errors,jit:false})
       }else{
-        // 否则不可用 compiledQuery.query
-        lru.set(query, {document,errors,jit:false})
+        const compiledQuery = compileQuery(schema, document);
+        // check if the compilation is successful
+        if (isCompiledQuery(compiledQuery)) {
+          cached = {
+            document,
+            errors,
+            jit: compiledQuery as CompiledQuery,
+          }
+
+          if (lru) {
+            lru.set(query, cached)
+          }
+        }else{
+          // 否则不可用 compiledQuery.query
+          lru.set(query, {document,errors,jit:false})
+        }
       }
-    
-    
     }
 
     let result: ExecutionResult = {}
@@ -147,4 +150,44 @@ export const graphqlMiddleware = ({
 
     return res.json(result)
   }
+}
+//循环依赖检查
+function checkCircularDependencies( schema:GraphQLSchema,document:DocumentNode,operationName:String){
+  let operation: OperationDefinitionNode ;
+  for (const definition of document.definitions) {
+      switch (definition.kind) {
+          case "OperationDefinition":
+              if (!operationName ||
+                  (definition.name && definition.name.value === operationName)) {
+                  operation = definition;
+              }
+              break;
+      }
+    }
+    let dependencies:Boolean=false
+    //@ts-ignore
+   for(const variableDefinition of  operation.variableDefinitions){
+        const varType =typeFromAST(schema, variableDefinition.type as any) ;
+         if(varType?.constructor.name=="GraphQLInputObjectType"){
+           //@ts-ignore
+           dependencies =  isDependencies(varType?.name,varType?.getFields())
+           if(dependencies){
+             return true
+           }
+         }
+   }
+   return false
+}
+function isDependencies(name:String|undefined,varType:any,subname:String|undefined):Boolean{
+  if(subname&&name==subname){
+    return true
+  }
+  for(var temp of Object.values(varType)){
+       //@ts-ignore
+    if(temp?.type?.ofType){
+      //@ts-ignore
+      return  isDependencies(name,temp?.type?.ofType?.ofType.getFields(),temp?.type?.ofType?.ofType.name)
+    }
+  }
+  return false
 }
