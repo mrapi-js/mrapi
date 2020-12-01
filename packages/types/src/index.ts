@@ -98,6 +98,7 @@ declare namespace mrapi {
     | 'updateMany'
     | 'deleteMany'
   type QueriesAndMutations = Query | Mutation
+  type MeshSource = 'openapi' | 'graphql'
 
   interface GraphqlOptions {
     output: string
@@ -115,7 +116,35 @@ declare namespace mrapi {
     generatorOptions?: GeneratorOptions
   }
 
+  interface MeshCompostion {
+    resolver: string
+    composer: any // function
+  }
+
+  interface MeshPrefix {
+    prefix: string
+    renameType?: boolean
+    renameField?: boolean
+    ignoreList?: Array<string>
+  }
+
+  interface MeshOptions {
+    name: string
+    type: 'openapi' | 'graphql'
+    endpoint: string
+    headers?: object
+    prefixTransforms?: MeshPrefix
+    compositions?: Array<MeshCompostion>
+  }
+
   interface ServiceOptions {
+    /**
+     * Mesh source
+     *
+     * @type {array}
+     * @memberof ServiceOptions
+     */
+    sources: Array<MeshOptions>
     /**
      * Service name
      *

@@ -1,16 +1,12 @@
 import type { Service } from '../'
-import type { mrapi } from '../types'
+import type { mrapi, GraphqlConfig } from '../types'
 import type { app } from '@mrapi/app'
 import type { graphql } from '@mrapi/graphql'
 
 import { join } from 'path'
 import { tryRequire } from '@mrapi/common'
 import { applyMiddleware } from 'graphql-middleware'
-interface GraphqlConfig {
-  options?: mrapi.ServiceOptions
-  schema: any
-  playground: boolean
-}
+import { getMeshSchema } from './mesh'
 
 export async function makeGraphqlServices(
   serviceInstance: Service,
@@ -52,16 +48,24 @@ export async function makeGraphqlServices(
     if (opt.datasource?.provider === 'prisma') {
       plugins.push('nexus-plugin-prisma')
     }
+    let schema = await getSchemaFn({
+      customPath: opts.custom,
+      generatedPath: opts.output!,
+      datasourcePath: opt.datasource?.output!,
+      contextFile: opt.contextFile,
+      plugins,
+      mock: opt.mock,
+    })
+    if (opt.sources) {
+      const { stitchSchemas } = tryRequire('@graphql-tools/stitch', 'Please install it manually.')
+      const meshSchema = await getMeshSchema(opt.sources)
+      schema = stitchSchemas({
+        subschemas: [schema, meshSchema]
+      })
+    }
     configs.push({
       options: opt,
-      schema: await getSchemaFn({
-        customPath: opts.custom,
-        generatedPath: opts.output!,
-        datasourcePath: opt.datasource?.output!,
-        contextFile: opt.contextFile,
-        plugins,
-        mock: opt.mock,
-      }),
+      schema,
       playground: !!opt.graphql?.playground,
     })
   }
