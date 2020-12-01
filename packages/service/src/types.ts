@@ -27,6 +27,12 @@ interface ServiceConfig {
   logger: app.LoggerOptions
 }
 
+interface GraphqlConfig {
+  options?: mrapi.ServiceOptions
+  schema: any
+  playground: boolean
+}
+
 declare module '@mrapi/types' {
   interface Request extends app.Request {}
 
@@ -61,4 +67,4 @@ declare module '@mrapi/types' {
   }
 }
 
-export { mrapi }
+export { mrapi, GraphqlConfig }
