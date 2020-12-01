@@ -16,8 +16,8 @@
   "dependencies": {
     "@mrapi/graphql": "*",
     "@mrapi/service": "*",
-    "@nexus/schema": "^0.17.0",
-    "express-openapi": "^7.1.0",
+    "@nexus/schema": "^0.19.2",
+    "express-openapi": "^7.2.0",
     "graphql": "^15.4.0",
     "graphql-playground-middleware-express": "^1.7.22",
     "pino-pretty": "^4.3.0"

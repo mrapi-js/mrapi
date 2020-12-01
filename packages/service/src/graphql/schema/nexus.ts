@@ -18,14 +18,19 @@ export default function getSchema({
   plugins: string[]
   mock: any
 }): GraphQLSchema {
-  const { makeSchema }: typeof import('@nexus/schema') = tryRequire(
+  const {
+    makeSchema,
+    declarativeWrappingPlugin,
+  }: typeof import('@nexus/schema') = tryRequire(
     '@nexus/schema',
     'Please install it manually.',
   )
   let types: any[] = []
   let datasourceModuleName: string
 
-  const nexusPlugins = []
+  // https://nexusjs.org/docs/plugins/declarativeWrapping#declarative-wrapping
+  // TODO: if paljs/generator updated, declarativeWrappingPlugin() should be removed
+  const nexusPlugins = [declarativeWrappingPlugin()]
   const generatedTypes = tryRequire(generatedPath)
   const customTypes = tryRequire(customPath)
   types = types.concat(

@@ -123,7 +123,7 @@ function genPaths(options: any, model: any, mapping: any, modelObj: any) {
     getCrud(
       modelTmpFn,
       {
-        GET: ableQueries && !exclude.includes('findOne'),
+        GET: ableQueries && !exclude.includes('findUnique'),
         PUT: ableMutations && !exclude.includes('updateOne'),
         DELETE: ableMutations && !exclude.includes('deleteOne'),
       },
@@ -146,12 +146,11 @@ export function generateOpenapiSpecsFromPrisma(
   opts: mrapi.GeneratorOptions,
 ) {
   const timeStart = Date.now()
-
-  const {
-    datamodel,
-    mappings,
-    schema: { inputTypes, outputTypes },
-  } = dmmf
+  const { datamodel, mappings, schema } = dmmf
+  // compatible with prisma v2.12.0+
+  const inputTypes = schema.inputTypes || schema.inputObjectTypes?.prisma || []
+  const outputTypes =
+    schema.outputTypes || schema.outputObjectTypes?.model || []
 
   // Get the filtered models
   const models = outputTypes.filter(
