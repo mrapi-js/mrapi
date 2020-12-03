@@ -16,7 +16,6 @@ export const timeQuery = extendType({
       type: ServerTime,
       args: { type: stringArg() },
       async resolve(_, _args, ctx: Context) {
-        console.log(ctx.req.headers)
         return { time: String(Date.now()) }
       },
     })
