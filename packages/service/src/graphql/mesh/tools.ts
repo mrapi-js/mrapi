@@ -13,33 +13,43 @@ export async function getOpenapiSchema(
   return new Promise((resolve, reject) => {
     require(endpoint.split(':')[0]).get(endpoint, (res: IncomingMessage) => {
       if (res.statusCode !== 200)
-        reject(`fetch ${endpoint} error ${res.statusCode}`)
+        return reject(`fetch ${endpoint} error ${res.statusCode}`)
       res.setEncoding('utf8')
       let rawData = ''
       res.on('data', (chunk) => {
         rawData += chunk
       })
       res.on('end', () => {
-        createGraphQLSchema(JSON.parse(rawData), {
+        try { 
+          rawData = JSON.parse(rawData)
+        } catch (err) {
+          return reject('mesh openapi support json source only ')
+        }
+        createGraphQLSchema(rawData, {
           headers: (_1: string, _2: string, _3: string, params: any) => {
             if (!headers || !params || !params.context) return {}
-            const ret: { [type: string]: string } = {}
-            for (const key in headers) {
-              ret[key] = headers[key]
-                .slice(1, -1)
-                .split('.')
-                .reduce((c, k) => {
-                  return c[k] ? c[k] : null
-                }, params)
+            try {
+              const ret: { [type: string]: string } = {}
+              for (const key in headers) {
+                ret[key] = headers[key]
+                  .slice(1, -1)
+                  .split('.')
+                  .reduce((c, k) => {
+                    return c[k] ? c[k] : null
+                  }, params)
+              }
+              return ret
+            } catch (err) {
+              console.error(`[Error] set header ${headers} error`, err)
+              return {}
             }
-            return ret
           },
         })
           .then((data: any) => {
-            resolve(data.schema)
+            return resolve(data.schema)
           })
           .catch((err: Error) => {
-            reject(err)
+            return reject(err)
           })
       })
     })
