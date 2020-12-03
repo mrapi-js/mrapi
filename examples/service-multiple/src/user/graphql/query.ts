@@ -4,8 +4,8 @@ import { Context } from '../context'
 const User = objectType({
   name: 'User',
   definition(t) {
-    t.int('id', { nullable: false, description: 'id' })
-    t.string('name', { nullable: false, description: 'user name' })
+    t.nonNull.int('id', { description: 'id' })
+    t.nonNull.string('name', { description: 'user name' })
   },
 })
 

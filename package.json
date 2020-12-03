@@ -9,8 +9,8 @@
   "scripts": {
     "dev": "lerna run watch --parallel",
     "build": "tsc -b tsconfig.build.json",
-    "clean": "rm -rf packages/*/lib packages/*/*.tsbuildinfo",
-    "clean:npm": "rm -rf node_modules ./**/*/node_modules ./**/*/package-lock.json  ./**/*/yarn.lock",
+    "clean": "rm -rf ./packages/*/lib/ ./packages/*/*.tsbuildinfo",
+    "clean:npm": "rm -rf node_modules ./packages/*/node_modules ./examples/*/node_modules ./**/*/package-lock.json  ./**/*/yarn.lock",
     "clean:all": "npm run clean && npm run clean:npm",
     "test": "jest --watch",
     "coverage": "jest --coverage",
@@ -42,7 +42,7 @@
     "jest-watch-typeahead": "^0",
     "lerna": "^3",
     "ts-jest": "^26",
-    "typescript": "^4"
+    "typescript": "4.0.5"
   },
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"

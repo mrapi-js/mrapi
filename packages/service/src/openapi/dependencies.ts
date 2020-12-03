@@ -91,7 +91,7 @@ export const dependenciesPlugins = (getDBClient: any) => {
     // },
 
     // get -> /api/users/{id}
-    findOne: async (
+    findUnique: async (
       req: any,
       _res: any,
       _next: any,
@@ -102,7 +102,7 @@ export const dependenciesPlugins = (getDBClient: any) => {
         const params = {
           where: req.params,
         }
-        const data = await db[modelName].findOne(params)
+        const data = await db[modelName].findUnique(params)
         return {
           code: 0,
           data,

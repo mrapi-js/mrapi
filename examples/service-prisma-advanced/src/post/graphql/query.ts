@@ -1,4 +1,4 @@
-import { arg, extendType } from '@nexus/schema'
+import { arg, extendType, list } from '@nexus/schema'
 import { Context } from '../context'
 
 export const customQuery = extendType({
@@ -9,7 +9,7 @@ export const customQuery = extendType({
       description: 'Get unpublished posts',
       args: {
         where: arg({ type: 'PostWhereInput' }),
-        orderBy: arg({ type: 'PostOrderByInput', list: true }),
+        orderBy: arg({ type: list('PostOrderByInput') }),
         cursor: 'PostWhereUniqueInput',
         skip: 'Int',
         take: 'Int',

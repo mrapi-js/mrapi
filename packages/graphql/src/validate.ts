@@ -10,7 +10,7 @@ export function validateQuery({
   document,
   introspection,
   queryDepth,
-}: ValidateQueryParams): GraphQLError[] {
+}: ValidateQueryParams): readonly GraphQLError[] {
   // basic validation
   const basicErrors = validate(schema, document)
   if (Array.isArray(basicErrors) && basicErrors.length > 0) {

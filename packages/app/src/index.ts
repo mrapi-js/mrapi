@@ -153,7 +153,7 @@ export class App extends Router<Middleware> {
       return Promise.reject('server not started')
     }
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       this.server?.close((err: any) => {
         if (err) reject(err)
         resolve()

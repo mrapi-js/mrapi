@@ -1,16 +1,12 @@
 import type { Service } from '../'
-import type { mrapi } from '../types'
+import type { mrapi, GraphqlConfig } from '../types'
 import type { app } from '@mrapi/app'
 import type { graphql } from '@mrapi/graphql'
 
 import { join } from 'path'
 import { tryRequire } from '@mrapi/common'
 import { applyMiddleware } from 'graphql-middleware'
-interface GraphqlConfig {
-  options?: mrapi.ServiceOptions
-  schema: any
-  playground: boolean
-}
+import { getMeshSchema } from './mesh'
 
 export async function makeGraphqlServices(
   serviceInstance: Service,
@@ -52,16 +48,24 @@ export async function makeGraphqlServices(
     if (opt.datasource?.provider === 'prisma') {
       plugins.push('nexus-plugin-prisma')
     }
+    let schema = await getSchemaFn({
+      customPath: opts.custom,
+      generatedPath: opts.output!,
+      datasourcePath: opt.datasource?.output!,
+      contextFile: opt.contextFile,
+      plugins,
+      mock: opt.mock,
+    })
+    if (opt.sources) {
+      const { stitchSchemas } = tryRequire('@graphql-tools/stitch', 'Please install it manually.')
+      const meshSchema = await getMeshSchema(opt.sources)
+      schema = stitchSchemas({
+        subschemas: [schema, meshSchema]
+      })
+    }
     configs.push({
       options: opt,
-      schema: await getSchemaFn({
-        customPath: opts.custom,
-        generatedPath: opts.output!,
-        datasourcePath: opt.datasource?.output!,
-        contextFile: opt.contextFile,
-        plugins,
-        mock: opt.mock,
-      }),
+      schema,
       playground: !!opt.graphql?.playground,
     })
   }
@@ -152,7 +156,7 @@ export async function makeGraphqlServices(
   const endpoints = []
 
   for (const { options, schema, playground } of servicesToApply) {
-    const _schema = registerMiddlewares(options,schema)
+    const _schema = registerMiddlewares(options, schema)
     const endpoint =
       config.isMultiService && options ? `/graphql/${options.name}` : `/graphql`
     const middlewareOptions: graphql.Options = {
@@ -321,19 +325,21 @@ async function makeConetxt({
   }
 }
 
-function registerMiddlewares(options:mrapi.ServiceOptions|undefined,schema:any){
-    try{
-       const temp = tryRequire(`${options?.customDir}/middlewares`)
-       if(temp){
-         let middlewares: any[] = []
-         middlewares = middlewares.concat(Array.isArray(temp) ? temp : [temp])
-         if(middlewares.length>0){
-            schema=applyMiddleware(schema, ...middlewares)
-         }
-       }
-      return schema
-    }catch(error){
-      throw new Error("register middlerwares failed")
+function registerMiddlewares(
+  options: mrapi.ServiceOptions | undefined,
+  schema: any,
+) {
+  try {
+    const temp = tryRequire(`${options?.customDir}/middlewares`)
+    if (temp) {
+      let middlewares: any[] = []
+      middlewares = middlewares.concat(Array.isArray(temp) ? temp : [temp])
+      if (middlewares.length > 0) {
+        schema = applyMiddleware(schema, ...middlewares)
+      }
     }
+    return schema
+  } catch (error) {
+    throw new Error('register middlerwares failed')
+  }
 }
-

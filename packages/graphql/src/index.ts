@@ -6,9 +6,15 @@ import type { CacheValue, ErrorCacheValue, Options } from './types'
 import LRU from 'tiny-lru'
 import { validateQuery } from './validate'
 import { getRequestParams } from './param'
-import { compileQuery,isCompiledQuery } from 'graphql-jit'
+import { compileQuery, isCompiledQuery } from 'graphql-jit'
 import { defaultErrorFormatter } from './error'
-import { parse, validateSchema,execute ,typeFromAST, OperationDefinitionNode} from 'graphql'
+import {
+  parse,
+  validateSchema,
+  execute,
+  typeFromAST,
+  OperationDefinitionNode,
+} from 'graphql'
 
 export * as graphql from './types'
 
@@ -50,7 +56,7 @@ export const graphqlMiddleware = ({
     // adapted from https://github.com/mcollina/fastify-gql/blob/master/index.js#L206
     let cached = lru.get(query)
     let document: DocumentNode
-  
+
     if (!cached) {
       // We use two caches to avoid errors bust the good
       // cache. This is a protection against DoS attacks
@@ -69,6 +75,7 @@ export const graphqlMiddleware = ({
           .status(400)
           .send(`GraphQL query syntax error: ${error.message}`)
       }
+      //修改docuemnet 层级
 
       const errors = validateQuery({
         schema,
@@ -84,11 +91,11 @@ export const graphqlMiddleware = ({
           errors,
         })
       }
-      if(checkCircularDependencies(schema,parse(query),operationName)){
+      if (checkCircularDependencies(schema, parse(query), operationName)) {
         //这里加是否循环依赖判断，如果是循环依赖直接使用 execute
-         lru.set(query, {document,errors,jit:false})
-      }else{
-        const compiledQuery = compileQuery(schema, document);
+        lru.set(query, { document, errors, jit: false })
+      } else {
+        const compiledQuery = compileQuery(schema, document)
         // check if the compilation is successful
         if (isCompiledQuery(compiledQuery)) {
           cached = {
@@ -100,9 +107,9 @@ export const graphqlMiddleware = ({
           if (lru) {
             lru.set(query, cached)
           }
-        }else{
+        } else {
           // 否则不可用 compiledQuery.query
-          lru.set(query, {document,errors,jit:false})
+          lru.set(query, { document, errors, jit: false })
         }
       }
     }
@@ -113,16 +120,16 @@ export const graphqlMiddleware = ({
     try {
       contextObj =
         typeof context === 'function' ? await context({ req, res }) : context
-      if(cached?.jit){
+      if (cached?.jit) {
         result = await cached.jit.query({}, contextObj, variables)
-      }else{
+      } else {
         result = await execute(
           schema,
           parse(query),
           {},
           contextObj,
           variables,
-          operationName
+          operationName,
         )
       }
       if (result?.errors) {
@@ -152,41 +159,56 @@ export const graphqlMiddleware = ({
   }
 }
 //循环依赖检查
-function checkCircularDependencies( schema:GraphQLSchema,document:DocumentNode,operationName:String){
-  let operation: OperationDefinitionNode ;
+function checkCircularDependencies(
+  schema: GraphQLSchema,
+  document: DocumentNode,
+  operationName: String,
+) {
+  let operation: OperationDefinitionNode
   for (const definition of document.definitions) {
-      switch (definition.kind) {
-          case "OperationDefinition":
-              if (!operationName ||
-                  (definition.name && definition.name.value === operationName)) {
-                  operation = definition;
-              }
-              break;
+    switch (definition.kind) {
+      case 'OperationDefinition':
+        if (
+          !operationName ||
+          (definition.name && definition.name.value === operationName)
+        ) {
+          operation = definition
+        }
+        break
+    }
+  }
+  let dependencies: Boolean = false
+  //@ts-ignore
+  for (const variableDefinition of operation.variableDefinitions) {
+    const varType = typeFromAST(schema, variableDefinition.type as any)
+    if (varType?.constructor.name === 'GraphQLInputObjectType') {
+      //@ts-ignore
+      dependencies = isDependencies(varType?.name, varType?.getFields())
+      if (dependencies) {
+        return true
       }
     }
-    let dependencies:Boolean=false
-    //@ts-ignore
-   for(const variableDefinition of  operation.variableDefinitions){
-        const varType =typeFromAST(schema, variableDefinition.type as any) ;
-         if(varType?.constructor.name=="GraphQLInputObjectType"){
-           //@ts-ignore
-           dependencies =  isDependencies(varType?.name,varType?.getFields())
-           if(dependencies){
-             return true
-           }
-         }
-   }
-   return false
+  }
+  return false
 }
-function isDependencies(name:String|undefined,varType:any,subname:String|undefined):Boolean{
-  if(subname&&name==subname){
+function isDependencies(
+  name: String | undefined,
+  varType: any,
+  subname: String | undefined,
+): Boolean {
+  if (subname && name === subname) {
     return true
   }
-  for(var temp of Object.values(varType)){
-       //@ts-ignore
-    if(temp?.type?.ofType){
-      //@ts-ignore
-      return  isDependencies(name,temp?.type?.ofType?.ofType.getFields(),temp?.type?.ofType?.ofType.name)
+  for (var temp of Object.values(varType)) {
+    //@ts-ignoreF
+    if (temp?.type?.ofType) {
+      return isDependencies(
+        name,
+        //@ts-ignore
+        temp?.type?.ofType?.ofType.getFields(),
+        //@ts-ignore
+        temp?.type?.ofType?.ofType.name,
+      )
     }
   }
   return false
