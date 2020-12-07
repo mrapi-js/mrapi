@@ -135,6 +135,7 @@ declare namespace mrapi {
     headers?: object
     prefixTransforms?: MeshPrefix
     compositions?: Array<MeshCompostion>
+    ignoreFields?: Array<string>
   }
 
   interface ServiceOptions {
