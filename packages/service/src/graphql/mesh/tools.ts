@@ -105,17 +105,19 @@ export function resolverComposition(
   })
 }
 
-export function prefixTransform(
+export function transform(
   prefix: string,
   renameType: boolean,
   renameField: boolean,
   ignoreList: Array<string> = [],
+  ignoreFileds: Array<string> = []
 ) {
-  const { RenameTypes, RenameRootFields } = tryRequire(
+  const { RenameTypes, RenameRootFields, FilterRootFields } = tryRequire(
     '@graphql-tools/wrap',
     'Please install it manually.',
   )
   const transforms = []
+  const ignoreRenameField = ignoreList.concat(ignoreFileds)
   if (renameType) {
     transforms.push(
       new RenameTypes((typeName: string) =>
@@ -123,15 +125,23 @@ export function prefixTransform(
       ),
     )
   }
-  if (renameField) {
+  if (renameField && ignoreRenameField.length > 0) {
     transforms.push(
       new RenameRootFields((typeName: string, fieldName: string) =>
-        ignoreList.includes(typeName) ||
-        ignoreList.includes(`${typeName}.${fieldName}`)
+        ignoreRenameField.includes(typeName) ||
+        ignoreRenameField.includes(`${typeName}.${fieldName}`)
           ? fieldName
           : `${prefix}${fieldName}`,
       ),
     )
   }
+
+  if (ignoreFileds.length > 0)
+    transforms.push(
+      new FilterRootFields((typeName: string, fieldName: string) => 
+        !(ignoreFileds.includes(typeName) ||
+        ignoreFileds.includes(`${typeName}.${fieldName}`))
+      )
+    )
   return transforms
 }

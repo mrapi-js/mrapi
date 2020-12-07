@@ -11,7 +11,7 @@ const config: mrapi.PartialConfig = {
         prefix: 'auth_',
         renameType: true,
         renameField: true,
-        ignoreList: ['Query.appConfig'],
+        ignoreList: ['Query.cases'],
       },
       compositions: [
         {
@@ -23,6 +23,7 @@ const config: mrapi.PartialConfig = {
           },
         },
       ],
+      ignoreFields: ['Query.case']
     }, {
       name: 'cms',
       type: 'openapi',

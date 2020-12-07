@@ -4,7 +4,7 @@ import {
   getGraphqlSchema,
   getOpenapiSchema,
   resolverComposition,
-  prefixTransform
+  transform
 } from './tools'
 
 export async function getMeshSchema(sources: Array<any>): Promise<GraphQLSchema> {
@@ -32,7 +32,7 @@ export async function getMeshSchema(sources: Array<any>): Promise<GraphQLSchema>
   }))
 
   for (let i = 0, len = remoteSchemas.length; i < len; i++) {
-    const { name, compositions, prefixTransforms } = sources[i]
+    const { name, compositions, prefixTransforms, ignoreFields } = sources[i]
     const schema = remoteSchemas[i]
     const subSchema: {[type: string]: any} = { schema }
 
@@ -55,11 +55,12 @@ export async function getMeshSchema(sources: Array<any>): Promise<GraphQLSchema>
     // wrap and transform
     if (prefixTransforms)
       try {
-        subSchema.transforms = prefixTransform(
+        subSchema.transforms = transform(
           prefixTransforms.prefix,
           prefixTransforms.renameType,
           prefixTransforms.renameField,
           prefixTransforms.ignoreList,
+          ignoreFields
         )
       } catch (err) {
         console.error(`[Error] transform ${name} prefix fail`)
