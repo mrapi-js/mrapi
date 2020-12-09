@@ -6,12 +6,12 @@ const config: mrapi.PartialConfig = {
     sources: [{
       name: 'auth',
       type: 'graphql',
-      endpoint: 'xxx',
+      endpoint: 'https://covid-19.dava.engineer/api/graphql',
       prefixTransforms: {
         prefix: 'auth_',
         renameType: true,
         renameField: true,
-        ignoreList: ['Query.appConfig'],
+        ignoreList: ['Query.cases'],
       },
       compositions: [
         {
@@ -23,10 +23,12 @@ const config: mrapi.PartialConfig = {
           },
         },
       ],
+      ignoreFields: ['Query.case']
     }, {
       name: 'cms',
       type: 'openapi',
-      endpoint: 'xxx',
+      // endpoint: 'https://api.apis.guru/v2/specs/wikimedia.org/1.0.0/swagger.yaml',
+      endpoint: 'https://api.apis.guru/v2/specs/mashape.com/geodb/1.0.0/swagger.json',
       headers: {
         host: '{context.headers.host}'
       },

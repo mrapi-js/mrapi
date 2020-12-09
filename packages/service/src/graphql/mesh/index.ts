@@ -1,11 +1,10 @@
-// import { mrapi } from '../../types'
 import { GraphQLSchema } from 'graphql'
 import { tryRequire } from '@mrapi/common'
 import {
   getGraphqlSchema,
   getOpenapiSchema,
   resolverComposition,
-  prefixTransform
+  transform
 } from './tools'
 
 export async function getMeshSchema(sources: Array<any>): Promise<GraphQLSchema> {
@@ -27,38 +26,51 @@ export async function getMeshSchema(sources: Array<any>): Promise<GraphQLSchema>
         fn = Promise.reject('mesh type error')
     }
     return fn.catch(err => {
-      console.error(err)
+      console.error(`[Error] Fetch remote source <${c.name}> error,`, err)
       return null
     })
   }))
 
-  remoteSchemas.forEach((schema, index) => {
-    const { name, compositions, prefixTransforms } = sources[index]
-    const subSchema: {[type: string]: any} = { schema: schema }
+  for (let i = 0, len = remoteSchemas.length; i < len; i++) {
+    const { name, compositions, prefixTransforms, ignoreFields } = sources[i]
+    const schema = remoteSchemas[i]
+    const subSchema: {[type: string]: any} = { schema }
 
+    if (!schema) {
+      console.error(`[Error] mesh source <${name}> fail`)
+      continue
+    }
     // resolver composition
     if (compositions) 
-      subSchema.schema = resolverComposition(
-        name,
-        schema as GraphQLSchema,
-        compositions
-      )
+      try {
+        subSchema.schema = resolverComposition(
+          name,
+          schema as GraphQLSchema,
+          compositions
+        )
+      } catch (err) {
+        console.error(`[Error] composition ${name} resolver fail`)
+      }
 
     // wrap and transform
     if (prefixTransforms)
-      subSchema.transforms = prefixTransform(
-        prefixTransforms.prefix,
-        prefixTransforms.renameType,
-        prefixTransforms.renameField,
-        prefixTransforms.ignoreList,
-      )
+      try {
+        subSchema.transforms = transform(
+          prefixTransforms.prefix,
+          prefixTransforms.renameType,
+          prefixTransforms.renameField,
+          prefixTransforms.ignoreList,
+          ignoreFields
+        )
+      } catch (err) {
+        console.error(`[Error] transform ${name} prefix fail`)
+      }
 
-    if(subSchema.schema) {
       schemas.push(subSchema as GraphQLSchema)
-    }
-  })
-
-  return stitchSchemas({
-    subschemas: schemas
-  })
+  }
+  return schemas.length > 1
+    ? stitchSchemas({
+        subschemas: schemas
+      })
+    : schemas[0]
 }
