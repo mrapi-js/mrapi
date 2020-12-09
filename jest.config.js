@@ -11,4 +11,6 @@ module.exports = {
   testRegex: '/tests/.*\\.(test|spec)?\\.(ts|tsx|js)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   snapshotSerializers: ['jest-serializer-path'],
+  collectCoverage: true,
+  coverageReporters: ["html"]
 }
