@@ -27,6 +27,5 @@
     "@mrapi/router": "^1.0.0-beta.1",
     "@mrapi/types": "^2.0.1-beta.1",
     "fast-proxy": "^1"
-  },
-  "gitHead": "da9bdbb644e86b73870e2a6120403dcea927fd9d"
+  }
 }

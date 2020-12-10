@@ -26,6 +26,5 @@
   },
   "devDependencies": {
     "@prisma/client": "^2"
-  },
-  "gitHead": "da9bdbb644e86b73870e2a6120403dcea927fd9d"
+  }
 }
