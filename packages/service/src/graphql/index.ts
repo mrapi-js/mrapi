@@ -57,7 +57,10 @@ export async function makeGraphqlServices(
       mock: opt.mock,
     })
     if (opt.sources) {
-      const { stitchSchemas } = tryRequire('@graphql-tools/stitch', 'Please install it manually.')
+      const { stitchSchemas } = tryRequire(
+        '@graphql-tools/stitch',
+        'Please install it manually.',
+      )
       const meshSchema = await getMeshSchema(opt.sources)
       schema = stitchSchemas({
         subschemas: [schema, meshSchema],
