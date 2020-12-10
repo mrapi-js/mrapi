@@ -2,9 +2,6 @@
 
 ## Development
 
-- node.js v15+
-- npm v7.0.8+
-
 1. Setup
 
    ```bash
@@ -12,21 +9,20 @@
 
    cd mrapi
 
-   npm i --legacy-peer-deps
+   yarn
    ```
 
 1. Start development
 
    ```bash
-   npm run build
-   npm run dev
+   yarn dev
    ```
 
 ## Run example
 
 ```bash
 cd examples/service-basic
-npm run dev
+yarn dev
 ```
 
 ## Git Commit

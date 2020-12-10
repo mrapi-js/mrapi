@@ -9,27 +9,24 @@ export function tryRequire(
     return null
   }
 
-  try {
-    const mod = require(name)
-    return resolveDefault ? mod?.default || mod : mod
-  } catch (err) {
+  const modulePath = resolveModule(name)
+  if (!modulePath) {
     if (message !== undefined) {
-      const prefix = err.code === 'MODULE_NOT_FOUND' ? `Cannot find module '${name}'.` : ''
-      if (message) {
-        console.error(`Error: ${prefix} ${message}`)
-        process.exit(1)
-      } else {
-        throw err
-      }
+      console.error(`Cannot find module '${name}'.`)
+      process.exit(1)
     }
     return null
   }
+  const mod = require(modulePath)
+  return resolveDefault ? mod?.default || mod : mod
 }
 
-export const resolveFile = (path: string): string => {
+export const resolveModule = (path: string): string => {
   let result = ''
   try {
-    result = require.resolve(path)
+    result = require.resolve(path, {
+      paths: [process.cwd(), '../../../'],
+    })
   } catch {}
   return result
 }

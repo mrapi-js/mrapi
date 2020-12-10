@@ -18,11 +18,10 @@
   "author": "neikvon",
   "license": "MIT",
   "publishConfig": {
-    "access": "public",
-    "directory": "lib"
+    "access": "public"
   },
   "dependencies": {
-    "@mrapi/types": "*",
+    "@mrapi/types": "^2.0.1-beta.0",
     "deepmerge": "^4"
   }
 }

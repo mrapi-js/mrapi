@@ -1,6 +1,9 @@
 import type { app } from '@mrapi/app'
 import {
- DocumentNode, ExecutionResult, GraphQLSchema, __Field ,
+  DocumentNode,
+  ExecutionResult,
+  GraphQLSchema,
+  __Field,
   parse,
   validateSchema,
   execute,
@@ -99,7 +102,7 @@ export const graphqlMiddleware = ({
           cached = {
             document,
             errors,
-            jit: compiledQuery ,
+            jit: compiledQuery,
           }
 
           if (lru) {
@@ -156,6 +159,7 @@ export const graphqlMiddleware = ({
     return res.json(result)
   }
 }
+
 // 循环依赖检查
 function checkCircularDependencies(
   schema: GraphQLSchema,
@@ -189,6 +193,7 @@ function checkCircularDependencies(
   }
   return false
 }
+
 function isDependencies(
   name: String | undefined,
   varType: any,

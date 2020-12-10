@@ -18,8 +18,7 @@
   "author": "neikvon",
   "license": "MIT",
   "publishConfig": {
-    "access": "public",
-    "directory": "lib"
+    "access": "public"
   },
   "dependencies": {
     "regexparam": "^1.3"

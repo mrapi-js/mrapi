@@ -12,14 +12,14 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/app": "*",
+    "@mrapi/app": "^1.0.0-beta.0",
     "express-openapi": "^7",
     "swagger-ui-express": "^4"
   },
   "devDependencies": {
     "@types/node": "*",
     "@types/swagger-ui-express": "^4",
-    "ts-node-dev": "1.1.0",
+    "ts-node-dev": "^1.1.1",
     "typescript": "4.0.5"
   },
   "prettier": {

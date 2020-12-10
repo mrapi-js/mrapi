@@ -7,6 +7,8 @@ logs/
 .idea
 .npm
 yarn.lock
+tsconfig.json
+package-lock.json
 
 # Directories
 examples/

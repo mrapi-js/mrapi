@@ -19,14 +19,13 @@
   "author": "neikvon",
   "license": "MIT",
   "publishConfig": {
-    "access": "public",
-    "directory": "lib"
+    "access": "public"
   },
   "dependencies": {
     "@mrapi/app": "^1.0.0-beta.0",
-    "@mrapi/common": "*",
+    "@mrapi/common": "^2.0.1-beta.0",
     "@mrapi/router": "^1.0.0-beta.0",
-    "@mrapi/types": "*",
+    "@mrapi/types": "^2.0.1-beta.0",
     "fast-proxy": "^1"
   }
 }

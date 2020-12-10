@@ -19,9 +19,9 @@
   "license": "MIT",
   "dependencies": {
     "@mrapi/app": "^1.0.0-beta.0",
-    "@mrapi/common": "*",
+    "@mrapi/common": "^2.0.1-beta.0",
     "@mrapi/graphql": "^1.0.0-beta.0",
-    "@mrapi/types": "*",
+    "@mrapi/types": "^2.0.1-beta.0",
     "body-parser": "^1.19",
     "graphql-middleware": "^4",
     "graphql-shield": "^7"
@@ -31,11 +31,16 @@
     "@graphql-tools/stitch": "^7",
     "@mrapi/datasource": "^1.0.0-beta.0",
     "@nexus/schema": "^0",
+    "@types/body-parser": "^1.19.0",
     "@types/swagger-tools": "^0",
     "express-openapi": "^7",
+    "graphql": "^15.4",
     "graphql-playground-middleware-express": "^1",
     "nexus-plugin-prisma": "^0",
     "swagger-tools": "^0.10",
     "type-graphql": "^1"
+  },
+  "peerDependencies": {
+    "graphql": "*"
   }
 }

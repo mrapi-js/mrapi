@@ -2,12 +2,11 @@ import type mrapi from '@mrapi/types'
 
 import chalk from 'chalk'
 import { relative } from 'path'
-import { merge, resolveFile } from '@mrapi/common'
+import { merge, tryRequire } from '@mrapi/common'
 
 export function generateGraphqlSchema({
   schemaPath,
   graphqlOptions,
-  exitWithError,
   clientOutput,
   databaseUrl,
 }: {
@@ -18,14 +17,11 @@ export function generateGraphqlSchema({
   databaseUrl: string
 }) {
   const timeStart = Date.now()
-  const generatorPath = resolveFile('@paljs/generator')
-  if (!generatorPath) {
-    exitWithError(`Please run "npm i -D @paljs/generator" first.`)
-  }
 
-  const {
-    Generator,
-  }: typeof import('@paljs/generator') = require(generatorPath)
+  const { Generator }: typeof import('@paljs/generator') = tryRequire(
+    '@paljs/generator',
+    'Please install it manually.',
+  )
 
   process.env.CLIENT_OUTPUT = clientOutput
   process.env.DATABASE_URL = databaseUrl
