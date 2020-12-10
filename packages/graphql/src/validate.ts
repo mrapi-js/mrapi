@@ -28,7 +28,7 @@ export function validateQuery({
   // custom validation
   if (
     typeof introspection === 'boolean' &&
-    introspection === false &&
+    !introspection &&
     Object.keys(map).includes('IntrospectionQuery')
   ) {
     return [
@@ -56,7 +56,7 @@ function validateQueryDepth({
   queryDepthLimit,
 }: {
   map?: OperationsMap
-  definitions?: ReadonlyArray<DefinitionNode>
+  definitions?: readonly DefinitionNode[]
   queryDepthLimit?: number
 }) {
   if (!map && !definitions) {
@@ -64,7 +64,7 @@ function validateQueryDepth({
   }
 
   const operationsMap =
-    map || getOperationsMap(definitions as ReadonlyArray<DefinitionNode>)
+    map || getOperationsMap(definitions as readonly DefinitionNode[])
   const queryDepth: { [key: string]: number } = {}
 
   for (const name in operationsMap) {

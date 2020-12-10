@@ -5,15 +5,15 @@ export interface RouterOptions {
 }
 
 export interface Route<T> {
-  keys: Array<string> | false
+  keys: string[] | false
   pattern: RegExp
   method: HTTPMethod | ''
-  handlers: Array<T>
+  handlers: T[]
 }
 
 export interface FindResult<T> {
   params: { [k: string]: string }
-  handlers: Array<T>
+  handlers: T[]
 }
 
 export type HTTPMethod =

@@ -73,11 +73,11 @@ declare namespace mrapi {
     javaScript?: boolean
     includeModels?: string[]
     excludeFields: string[]
-    excludeModels: {
+    excludeModels: Array<{
       name: string
       queries?: boolean
       mutations?: boolean
-    }[]
+    }>
     disableQueries?: boolean
     disableMutations?: boolean
     excludeFieldsByModel: {
@@ -125,7 +125,7 @@ declare namespace mrapi {
     prefix: string
     renameType?: boolean
     renameField?: boolean
-    ignoreList?: Array<string>
+    ignoreList?: string[]
   }
 
   interface MeshOptions {
@@ -134,8 +134,8 @@ declare namespace mrapi {
     endpoint: string
     headers?: object
     prefixTransforms?: MeshPrefix
-    compositions?: Array<MeshCompostion>
-    ignoreFields?: Array<string>
+    compositions?: MeshCompostion[]
+    ignoreFields?: string[]
   }
 
   interface ServiceOptions {
@@ -145,7 +145,7 @@ declare namespace mrapi {
      * @type {array}
      * @memberof ServiceOptions
      */
-    sources: Array<MeshOptions>
+    sources: MeshOptions[]
     /**
      * Service name
      *
@@ -202,7 +202,7 @@ declare namespace mrapi {
      * @type {Array<TenantOptions>}
      * @memberof ServiceOptions
      */
-    tenants: Array<TenantOptions>
+    tenants: TenantOptions[]
     /**
      * Multi-tenant config
      */
@@ -282,7 +282,7 @@ declare namespace mrapi {
      * @type {Array<ServiceOptions>}
      * @memberof Config
      */
-    service: Array<ServiceOptions>
+    service: ServiceOptions[]
     /**
      * Is multi-service or not
      *
@@ -307,7 +307,7 @@ declare namespace mrapi {
      * @type {(PartialServiceOptions | Array<PartialServiceOptions>)}
      * @memberof PartialConfig
      */
-    service?: PartialServiceOptions | Array<PartialServiceOptions>
+    service?: PartialServiceOptions | PartialServiceOptions[]
   }
 }
 

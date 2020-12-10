@@ -18,6 +18,10 @@
   "keywords": [],
   "author": "neikvon",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "lib"
+  },
   "dependencies": {
     "regexparam": "^1.3"
   },

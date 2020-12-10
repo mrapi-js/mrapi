@@ -71,7 +71,7 @@ export function makeOpenapiOptions(
     dependencies: {
       db: dependenciesPlugins(async (req: any, res: any) => {
         const tenantId: any = await getTenantIdentity(req, res, service)
-        return datasource?.getServiceClient(service.name!, tenantId)
+        return await datasource?.getServiceClient(service.name, tenantId)
       }),
     },
     apiDoc: {

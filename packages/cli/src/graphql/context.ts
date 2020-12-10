@@ -21,7 +21,7 @@ export function generateContextFile(
     writeFileSync(
       contextFilePath,
       `import type { mrapi } from '@mrapi/service'${
-        !!datasourceModuleName
+        datasourceModuleName
           ? `
 import type { PrismaClient } from '${datasourceModuleName}'`
           : ''
@@ -30,7 +30,7 @@ import type { PrismaClient } from '${datasourceModuleName}'`
 export interface Context {
   req: mrapi.Request
   res: mrapi.Response${
-    !!datasourceModuleName
+    datasourceModuleName
       ? `
   prisma: PrismaClient`
       : ''

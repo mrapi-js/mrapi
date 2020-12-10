@@ -10,17 +10,17 @@ export async function getOpenapiSchema(
     'openapi-to-graphql',
     'Please install it manually.',
   )
-  return new Promise((resolve, reject) => {
+  return await new Promise((resolve, reject) => {
     require(endpoint.split(':')[0]).get(endpoint, (res: IncomingMessage) => {
       if (res.statusCode !== 200)
-        return reject(`fetch ${endpoint} error ${res.statusCode}`)
+        { return reject(`fetch ${endpoint} error ${res.statusCode}`) }
       res.setEncoding('utf8')
       let rawData = ''
       res.on('data', (chunk) => {
         rawData += chunk
       })
       res.on('end', () => {
-        try { 
+        try {
           rawData = JSON.parse(rawData)
         } catch (err) {
           return reject('mesh openapi support json source only ')
@@ -77,7 +77,7 @@ export async function getGraphqlSchema(
 export function resolverComposition(
   _1: string,
   schema: GraphQLSchema,
-  compositionConfig: Array<any>,
+  compositionConfig: any[],
 ) {
   const { getResolversFromSchema } = tryRequire(
     '@graphql-tools/utils',
@@ -109,8 +109,8 @@ export function transform(
   prefix: string,
   renameType: boolean,
   renameField: boolean,
-  ignoreList: Array<string> = [],
-  ignoreFileds: Array<string> = []
+  ignoreList: string[] = [],
+  ignoreFileds: string[] = [],
 ) {
   const { RenameTypes, RenameRootFields, FilterRootFields } = tryRequire(
     '@graphql-tools/wrap',
@@ -137,11 +137,11 @@ export function transform(
   }
 
   if (ignoreFileds.length > 0)
-    transforms.push(
-      new FilterRootFields((typeName: string, fieldName: string) => 
+    { transforms.push(
+      new FilterRootFields((typeName: string, fieldName: string) =>
         !(ignoreFileds.includes(typeName) ||
-        ignoreFileds.includes(`${typeName}.${fieldName}`))
-      )
-    )
+        ignoreFileds.includes(`${typeName}.${fieldName}`)),
+      ),
+    ) }
   return transforms
 }

@@ -4,7 +4,7 @@ import type { OperationsMap } from './types'
 import { Kind } from 'graphql'
 
 export function getOperationsMap(
-  definitions: ReadonlyArray<DefinitionNode>,
+  definitions: readonly DefinitionNode[],
 ): OperationsMap {
   // TODO: when operation.name is undefined, should use fieldName instead
   return definitions.reduce(

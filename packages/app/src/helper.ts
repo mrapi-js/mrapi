@@ -18,7 +18,7 @@ export function defaultRoute(_req: Request, res: Response) {
 }
 
 export function next(
-  middlewares: Array<Middleware>,
+  middlewares: Middleware[],
   req: Request,
   res: Response,
   index: number,

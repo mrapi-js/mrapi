@@ -15,18 +15,18 @@ export class Service {
     protected providerName: ProviderName,
     protected management?: Management,
   ) {
-    this.name = options.name!
+    this.name = options.name
   }
 
   async getClient(tenantName: string = '', options = {}) {
     const tenant = await this.getTenant(tenantName || this.defaultTenantName)
-    return tenant?.getClient(options)
+    return await tenant?.getClient(options)
   }
 
   async init() {
     if (this.options?.multiTenant) {
       this.defaultTenantName = this.options?.multiTenant?.default ?? ''
-      for (let tenant of this.options.tenants) {
+      for (const tenant of this.options.tenants) {
         const options = {
           database: this.options.database,
           ...tenant,

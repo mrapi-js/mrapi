@@ -50,7 +50,7 @@ export async function makeGraphqlServices(
     }
     let schema = await getSchemaFn({
       customPath: opts.custom,
-      generatedPath: opts.output!,
+      generatedPath: opts.output,
       datasourcePath: opt.datasource?.output!,
       contextFile: opt.contextFile,
       plugins,
@@ -60,7 +60,7 @@ export async function makeGraphqlServices(
       const { stitchSchemas } = tryRequire('@graphql-tools/stitch', 'Please install it manually.')
       const meshSchema = await getMeshSchema(opt.sources)
       schema = stitchSchemas({
-        subschemas: [schema, meshSchema]
+        subschemas: [schema, meshSchema],
       })
     }
     configs.push({
@@ -70,10 +70,10 @@ export async function makeGraphqlServices(
     })
   }
 
-  let stitchingConfigs: Array<GraphqlConfig> = []
-  let normalConfigs: Array<GraphqlConfig> = []
+  let stitchingConfigs: GraphqlConfig[] = []
+  let normalConfigs: GraphqlConfig[] = []
 
-  if (!!config.graphql?.stitching) {
+  if (config.graphql?.stitching) {
     if (typeof config.graphql.stitching === 'boolean') {
       stitchingConfigs = configs
     } else if (Array.isArray(config.graphql.stitching)) {
@@ -92,7 +92,7 @@ export async function makeGraphqlServices(
     normalConfigs = configs
   }
 
-  let servicesToApply: Array<GraphqlConfig> = []
+  let servicesToApply: GraphqlConfig[] = []
 
   if (stitchingConfigs.length > 0) {
     const {
@@ -112,7 +112,7 @@ export async function makeGraphqlServices(
     const unifiedSchema = stitchSchemas({
       subschemas: stitchingConfigs.map(({ options, schema }) => ({
         schema,
-        ...(!!options?.datasource
+        ...(options?.datasource
           ? {
               createProxyingResolver: ({
                 subschemaConfig,
@@ -158,7 +158,7 @@ export async function makeGraphqlServices(
   for (const { options, schema, playground } of servicesToApply) {
     const _schema = registerMiddlewares(options, schema)
     const endpoint =
-      config.isMultiService && options ? `/graphql/${options.name}` : `/graphql`
+      config.isMultiService && options ? `/graphql/${options.name}` : '/graphql'
     const middlewareOptions: graphql.Options = {
       extensions: ({ context }) => {
         return {
@@ -170,7 +170,7 @@ export async function makeGraphqlServices(
       },
       ...(options?.graphql || {}),
       schema: _schema,
-      context: !!options
+      context: options
         ? // handle the request directly
           ({ req, res }: graphql.ContextParams) =>
             makeConetxt({

@@ -14,7 +14,7 @@ export function tryRequire(
     return resolveDefault ? mod?.default || mod : mod
   } catch (err) {
     if (message !== undefined) {
-      const prefix = err.code === 'MODULE_NOT_FOUND'?`Cannot find module '${name}'.`:''
+      const prefix = err.code === 'MODULE_NOT_FOUND' ? `Cannot find module '${name}'.` : ''
       if (message) {
         console.error(`Error: ${prefix} ${message}`)
         process.exit(1)
@@ -86,7 +86,7 @@ export const ensurePosixPath = (path: string) => {
   return posixPath
 }
 
-export const ensureArray = <T>(x: unknown): Array<T> =>
+export const ensureArray = <T>(x: unknown): T[] =>
   Array.isArray(x) ? x : [x].filter(Boolean)
 
 export const ensureAbsolutePath = (path: string, cwd = process.cwd()) => {

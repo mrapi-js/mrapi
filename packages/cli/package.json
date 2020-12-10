@@ -21,6 +21,10 @@
   "keywords": [],
   "author": "neikvon",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "directory": "lib"
+  },
   "dependencies": {
     "@mrapi/types": "*",
     "@mrapi/common": "*",

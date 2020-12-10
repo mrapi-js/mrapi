@@ -62,9 +62,7 @@ declare module '@mrapi/types' {
     service: Service
   }
 
-  interface GetSchemaFn {
-    (args: GetSchemaParams): GraphQLSchema | Promise<GraphQLSchema>
-  }
+  type GetSchemaFn = (args: GetSchemaParams) => GraphQLSchema | Promise<GraphQLSchema>
 }
 
 export { mrapi, GraphqlConfig }

@@ -13,11 +13,11 @@ export class Datasource {
   constructor(public config: DatasourceOptions) {}
 
   async init() {
-    if (!!this.config.management) {
+    if (this.config.management) {
       await this.initManagement()
     }
 
-    if (!!this.config.services) {
+    if (this.config.services) {
       await this.initServices()
     }
   }
@@ -34,7 +34,7 @@ export class Datasource {
   private async initServices() {
     const services = ensureArray<ServiceOptions>(this.config.services)
     for (const service of services) {
-      const exist = await this.services.get(service.name!)
+      const exist = await this.services.get(service.name)
       if (!exist) {
         const instance = new Service(
           service,
@@ -42,7 +42,7 @@ export class Datasource {
           this.management,
         )
         await instance.init()
-        this.services.set(service.name!, instance)
+        this.services.set(service.name, instance)
       }
     }
   }
