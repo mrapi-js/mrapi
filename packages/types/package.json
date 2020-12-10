@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/types",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.1-beta.0",
   "description": "mrapi types",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -14,7 +14,6 @@
   "dependencies": {
     "@types/node": "*"
   },
-  "devDependencies": {},
   "prettier": {
     "semi": false,
     "tabWidth": 2,
