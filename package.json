@@ -3,8 +3,7 @@
   "version": "2.0.0-beta.3",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "examples/*"
+    "packages/*"
   ],
   "scripts": {
     "dev": "lerna run watch --parallel",
