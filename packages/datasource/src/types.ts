@@ -22,7 +22,7 @@ export enum ProviderName {
 
 export interface DatasourceOptions {
   provider: ProviderName
-  services: Array<ServiceOptions>
+  services: ServiceOptions[]
   management?: ManagementOptions
   tenantMode?: string
 }

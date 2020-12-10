@@ -1,6 +1,12 @@
 import type { app } from '@mrapi/app'
-import { DocumentNode, ExecutionResult, GraphQLSchema, __Field } from 'graphql'
-import type { CompiledQuery } from 'graphql-jit'
+import {
+ DocumentNode, ExecutionResult, GraphQLSchema, __Field ,
+  parse,
+  validateSchema,
+  execute,
+  typeFromAST,
+  OperationDefinitionNode,
+} from 'graphql'
 import type { CacheValue, ErrorCacheValue, Options } from './types'
 
 import LRU from 'tiny-lru'
@@ -8,13 +14,6 @@ import { validateQuery } from './validate'
 import { getRequestParams } from './param'
 import { compileQuery, isCompiledQuery } from 'graphql-jit'
 import { defaultErrorFormatter } from './error'
-import {
-  parse,
-  validateSchema,
-  execute,
-  typeFromAST,
-  OperationDefinitionNode,
-} from 'graphql'
 
 export * as graphql from './types'
 
@@ -50,7 +49,7 @@ export const graphqlMiddleware = ({
     const { query, variables, operationName } = getRequestParams(req)
 
     if (!query) {
-      return res.status(400).send(`Invalid GraphQL query`)
+      return res.status(400).send('Invalid GraphQL query')
     }
 
     // adapted from https://github.com/mcollina/fastify-gql/blob/master/index.js#L206
@@ -75,7 +74,6 @@ export const graphqlMiddleware = ({
           .status(400)
           .send(`GraphQL query syntax error: ${error.message}`)
       }
-      //修改docuemnet 层级
 
       const errors = validateQuery({
         schema,
@@ -92,7 +90,7 @@ export const graphqlMiddleware = ({
         })
       }
       if (checkCircularDependencies(schema, parse(query), operationName)) {
-        //这里加是否循环依赖判断，如果是循环依赖直接使用 execute
+        // 这里加是否循环依赖判断，如果是循环依赖直接使用 execute
         lru.set(query, { document, errors, jit: false })
       } else {
         const compiledQuery = compileQuery(schema, document)
@@ -101,7 +99,7 @@ export const graphqlMiddleware = ({
           cached = {
             document,
             errors,
-            jit: compiledQuery as CompiledQuery,
+            jit: compiledQuery ,
           }
 
           if (lru) {
@@ -158,7 +156,7 @@ export const graphqlMiddleware = ({
     return res.json(result)
   }
 }
-//循环依赖检查
+// 循环依赖检查
 function checkCircularDependencies(
   schema: GraphQLSchema,
   document: DocumentNode,
@@ -178,11 +176,11 @@ function checkCircularDependencies(
     }
   }
   let dependencies: Boolean = false
-  //@ts-ignore
+  // @ts-expect-error
   for (const variableDefinition of operation.variableDefinitions) {
     const varType = typeFromAST(schema, variableDefinition.type as any)
     if (varType?.constructor.name === 'GraphQLInputObjectType') {
-      //@ts-ignore
+      // @ts-expect-error
       dependencies = isDependencies(varType?.name, varType?.getFields())
       if (dependencies) {
         return true
@@ -200,13 +198,13 @@ function isDependencies(
     return true
   }
   for (var temp of Object.values(varType)) {
-    //@ts-ignoreF
+    // @ts-expect-errorF
     if (temp?.type?.ofType) {
       return isDependencies(
         name,
-        //@ts-ignore
+        // @ts-expect-error
         temp?.type?.ofType?.ofType.getFields(),
-        //@ts-ignore
+        // @ts-expect-error
         temp?.type?.ofType?.ofType.name,
       )
     }

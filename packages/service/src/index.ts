@@ -20,7 +20,7 @@ const groupBy = (arr: any[], fn: any): Record<string, any[]> =>
 export class Service {
   app: App
   datasource: Datasource | undefined
-  endpoints: Array<mrapi.Endpoint> = []
+  endpoints: mrapi.Endpoint[] = []
   config: mrapi.Config
 
   constructor(config?: mrapi.PartialConfig) {
@@ -118,7 +118,7 @@ export class Service {
 
     if (managementOptions) {
       opts.management = {
-        database: managementOptions.database!,
+        database: managementOptions.database,
         tenantModelName: managementOptions.managementTenantModelName!,
         clientPath: managementOptions.datasource!.output!,
       }
@@ -148,7 +148,7 @@ export class Service {
 
     return (typeof tenantIdentity === 'function'
       ? await tenantIdentity(req, res)
-      : req.headers[tenantIdentity!]) as string
+      : req.headers[tenantIdentity]) as string
   }
 
   logEndpoints() {

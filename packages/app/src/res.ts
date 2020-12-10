@@ -44,7 +44,6 @@ export function send(
   }
 
   res.end(data as string)
-  return
 }
 
 export function status(res: Response, code: number) {

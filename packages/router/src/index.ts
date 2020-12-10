@@ -20,9 +20,9 @@ export class Router<T = any> {
     }
   }
 
-  on(method: HTTPMethod | '', route: Pattern, ...fns: Array<T>) {
+  on(method: HTTPMethod | '', route: Pattern, ...fns: T[]) {
     const { keys, pattern } = parse(route as string)
-    const handlers = ([] as Array<T>).concat.apply([], fns)
+    const handlers = ([] as T[]).concat.apply([], fns)
     this.routes.push({
       keys,
       pattern,
@@ -57,23 +57,23 @@ export class Router<T = any> {
     return this
   }
 
-  use(route: Pattern, ...fns: Array<T>) {
-    const handlers = ([] as Array<T>).concat.apply([], fns)
+  use(route: Pattern, ...fns: T[]) {
+    const handlers = ([] as T[]).concat.apply([], fns)
     const { keys, pattern } = parse(route as string, true)
     this.routes.push({ keys, pattern, method: '', handlers })
     return this
   }
 
   find(method: HTTPMethod, url: string): FindResult<T> {
-    let isHEAD = method === 'HEAD'
-    let i = 0,
-      j = 0,
-      k,
-      tmp,
-      arr = this.routes
-    let matches: RegExpExecArray | never[] | null = [],
-      params: { [k: string]: any } = {},
-      handlers: Array<T> = []
+    const isHEAD = method === 'HEAD'
+    let i = 0
+      let j = 0
+      let k
+      let tmp
+      const arr = this.routes
+    let matches: RegExpExecArray | never[] | null = []
+      const params: { [k: string]: any } = {}
+      let handlers: T[] = []
     for (; i < arr.length; i++) {
       tmp = arr[i]
       if (
@@ -85,14 +85,14 @@ export class Router<T = any> {
           matches = tmp.pattern.exec(url)
           if (matches === null) continue
           if (matches.groups !== void 0)
-            for (k in matches.groups) params[k] = matches.groups[k]
+            { for (k in matches.groups) params[k] = matches.groups[k] }
           tmp.handlers.length > 1
             ? (handlers = handlers.concat(tmp.handlers))
             : handlers.push(tmp.handlers[0])
         } else if (tmp.keys.length > 0) {
           matches = tmp.pattern.exec(url)
           if (matches === null) continue
-          for (j = 0; j < tmp.keys.length; ) params[tmp.keys[j]] = matches[++j]
+          for (j = 0; j < tmp.keys.length;) params[tmp.keys[j]] = matches[++j]
           tmp.handlers.length > 1
             ? (handlers = handlers.concat(tmp.handlers))
             : handlers.push(tmp.handlers[0])
@@ -108,34 +108,43 @@ export class Router<T = any> {
   }
 
   // shorthands
-  all(pattern: Pattern, ...handlers: Array<T>) {
+  all(pattern: Pattern, ...handlers: T[]) {
     return this.on('', pattern, ...handlers)
   }
-  get(pattern: Pattern, ...handlers: Array<T>) {
+
+  get(pattern: Pattern, ...handlers: T[]) {
     return this.on('GET', pattern, ...handlers)
   }
-  head(pattern: Pattern, ...handlers: Array<T>) {
+
+  head(pattern: Pattern, ...handlers: T[]) {
     return this.on('HEAD', pattern, ...handlers)
   }
-  patch(pattern: Pattern, ...handlers: Array<T>) {
+
+  patch(pattern: Pattern, ...handlers: T[]) {
     return this.on('PATCH', pattern, ...handlers)
   }
-  options(pattern: Pattern, ...handlers: Array<T>) {
+
+  options(pattern: Pattern, ...handlers: T[]) {
     return this.on('OPTIONS', pattern, ...handlers)
   }
-  connect(pattern: Pattern, ...handlers: Array<T>) {
+
+  connect(pattern: Pattern, ...handlers: T[]) {
     return this.on('CONNECT', pattern, ...handlers)
   }
-  delete(pattern: Pattern, ...handlers: Array<T>) {
+
+  delete(pattern: Pattern, ...handlers: T[]) {
     return this.on('DELETE', pattern, ...handlers)
   }
-  trace(pattern: Pattern, ...handlers: Array<T>) {
+
+  trace(pattern: Pattern, ...handlers: T[]) {
     return this.on('TRACE', pattern, ...handlers)
   }
-  post(pattern: Pattern, ...handlers: Array<T>) {
+
+  post(pattern: Pattern, ...handlers: T[]) {
     return this.on('POST', pattern, ...handlers)
   }
-  put(pattern: Pattern, ...handlers: Array<T>) {
+
+  put(pattern: Pattern, ...handlers: T[]) {
     return this.on('PUT', pattern, ...handlers)
   }
 }

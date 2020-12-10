@@ -52,7 +52,7 @@ export class App extends Router<Middleware> {
     })
   }
 
-  use(prefix: Pattern | Middleware, ...fns: Array<Middleware>): this {
+  use(prefix: Pattern | Middleware, ...fns: Middleware[]): this {
     if (typeof prefix === 'function' || prefix instanceof App) {
       super.use('/', prefix)
       return this
@@ -118,10 +118,10 @@ export class App extends Router<Middleware> {
     if (this.opts.server) {
       // custom server
       this.server = this.opts.server
-    } else if (!!this.opts.http2) {
+    } else if (this.opts.http2) {
       // http2
       if (typeof this.opts.http2 === 'boolean' && !this.opts.https) {
-        throw new Error(`please config http2 in 'http2' or 'https' field`)
+        throw new Error('please config http2 in \'http2\' or \'https\' field')
       }
       this.server = createSecureServer(
         typeof this.opts.http2 !== 'boolean'

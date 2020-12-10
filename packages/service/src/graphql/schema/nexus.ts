@@ -45,7 +45,7 @@ export default function getSchema({
   }
 
   // TODO: support custom prettier config
-  let prettierConfig = {
+  const prettierConfig = {
     semi: false,
     tabWidth: 2,
     singleQuote: true,
@@ -68,7 +68,7 @@ export default function getSchema({
     //   schema: join(generateTo, 'api.graphql'),
     // },
     outputs: false,
-    ...(!!datasourcePath
+    ...(datasourcePath
       ? {
           typegenAutoConfig: {
             headers: [FILE_HEADER],
@@ -124,7 +124,7 @@ function resolvePrismaPlugin(datasourcePath: string) {
 
   if (!valid) {
     throw new Error(
-      `You most likely forgot to initialize the Prisma Client. Please run \`npx mrapi setup\`, then try to run it again.`,
+      'You most likely forgot to initialize the Prisma Client. Please run `npx mrapi setup`, then try to run it again.',
     )
   }
 

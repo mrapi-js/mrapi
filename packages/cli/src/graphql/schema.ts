@@ -20,7 +20,7 @@ export function generateGraphqlSchema({
   const timeStart = Date.now()
   const generatorPath = resolveFile('@paljs/generator')
   if (!generatorPath) {
-    exitWithError(`Please run 'npm i -D @paljs/generator' first.`)
+    exitWithError('Please run \'npm i -D @paljs/generator\' first.')
   }
 
   const {
@@ -40,14 +40,14 @@ export function generateGraphqlSchema({
     graphqlOptions.generatorOptions || {},
   )
   new Generator(
-    { name: 'nexus-plugin-prisma', schemaPath: schemaPath! },
+    { name: 'nexus-plugin-prisma', schemaPath: schemaPath },
     opts,
   ).run()
 
   console.log(
     chalk`✔ Generated {bold GraphQL} {dim to ${relative(
       process.cwd(),
-      graphqlOptions.output!,
+      graphqlOptions.output,
     )}} in ${Date.now() - timeStart}ms\n`,
   )
 }

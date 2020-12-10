@@ -7,8 +7,9 @@ const config: mrapi.PartialConfig = {
     // required if using prisma
     database: 'file:./dev.db',
     graphql: {
-      queryDepth: 2,
+      queryDepth: 3,
     },
+    openapi: true
   },
   logger: {
     prettyPrint: true,

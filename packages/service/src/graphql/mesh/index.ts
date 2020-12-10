@@ -4,15 +4,15 @@ import {
   getGraphqlSchema,
   getOpenapiSchema,
   resolverComposition,
-  transform
+  transform,
 } from './tools'
 
-export async function getMeshSchema(sources: Array<any>): Promise<GraphQLSchema> {
+export async function getMeshSchema(sources: any[]): Promise<GraphQLSchema> {
   const { stitchSchemas } = tryRequire(
     '@graphql-tools/stitch',
     'Please install it manually.',
   )
-  const schemas: Array<GraphQLSchema> = []
+  const schemas: GraphQLSchema[] = []
   const remoteSchemas: Array<GraphQLSchema | null> = await Promise.all(sources.map(c => {
     let fn: Promise<GraphQLSchema | null>
     switch(c.type) {
@@ -41,36 +41,36 @@ export async function getMeshSchema(sources: Array<any>): Promise<GraphQLSchema>
       continue
     }
     // resolver composition
-    if (compositions) 
-      try {
+    if (compositions)
+      { try {
         subSchema.schema = resolverComposition(
           name,
-          schema as GraphQLSchema,
-          compositions
+          schema ,
+          compositions,
         )
       } catch (err) {
         console.error(`[Error] composition ${name} resolver fail`)
-      }
+      } }
 
     // wrap and transform
     if (prefixTransforms)
-      try {
+      { try {
         subSchema.transforms = transform(
           prefixTransforms.prefix,
           prefixTransforms.renameType,
           prefixTransforms.renameField,
           prefixTransforms.ignoreList,
-          ignoreFields
+          ignoreFields,
         )
       } catch (err) {
         console.error(`[Error] transform ${name} prefix fail`)
-      }
+      } }
 
       schemas.push(subSchema as GraphQLSchema)
   }
   return schemas.length > 1
     ? stitchSchemas({
-        subschemas: schemas
+        subschemas: schemas,
       })
     : schemas[0]
 }

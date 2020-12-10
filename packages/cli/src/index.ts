@@ -21,8 +21,8 @@ Commands:
 
   setup            Setup
   prisma           Run prisma commands
-  graphql          Generate GraphQL API base on prisma schema
-  openapi          Generate OpenAPI base on prisma schema
+  graphql          Generate GraphQL APIs base on prisma schema
+  openapi          Generate OpenAPIs base on prisma schema
 
 Options:
 
@@ -37,15 +37,13 @@ Examples:
 
   # Single tenant:
   $ mrapi prisma generate --service=post
-  $ mrapi prisma migrate save --experimental --create-db --name="" --service=post
-  $ mrapi prisma migrate up --experimental --create-db --service=post
+  $ mrapi prisma migrate dev --preview-feature --service=post
   $ mrapi prisma db push --ignore-migrations --preview-feature --service=post
   $ mrapi prisma studio --service=post
 
   # Multiple tenant:
   $ mrapi prisma generate --service=user
-  $ mrapi prisma migrate save --experimental --create-db --name="" --service=user --tenant=one
-  $ mrapi prisma migrate up --experimental --create-db --service=user --tenant=one
+  $ mrapi prisma migrate dev --preview-feature --service=user --tenant=one
   $ mrapi prisma db push --ignore-migrations --preview-feature --service=user --tenant=one
   $ mrapi prisma studio --service=user --tenant=one
 
@@ -54,13 +52,12 @@ Examples:
   $ mrapi prisma generate --tenant=.
   $ mrapi prisma generate --service=user --tenant=.
 
-  $ mrapi prisma migrate up --experimental --create-db --service=user --tenant=two
   $ mrapi prisma db push --ignore-migrations --preview-feature --service=user --tenant=two
   $ mrapi prisma studio --service=user --tenant=two
 
 `
 
-  #argv: Array<string>
+  #argv: string[]
 
   #args = {
     service: '',
@@ -157,7 +154,9 @@ Examples:
       }
 
       if (!type || type === 'openapi') {
-        if ((service.openapi as mrapi.OpenapiOptions)?.output) {
+        if (!service.openapi) {
+          console.log(chalk.yellow`"openapi" not enabled in config file`)
+        } else if ((service.openapi as mrapi.OpenapiOptions)?.output) {
           await this.runOpenapiGenerate(service)
         }
       }
@@ -165,24 +164,28 @@ Examples:
       if (!type || type === 'prisma') {
         // migrate database for each tenant
         const databases = tenants.map((t) => t.database).filter(Boolean)
+        const prismaVersion = this.prismaVersion
+        const prismaVersionGreaterThan13 =
+          prismaVersion[1] && prismaVersion[1] >= 13
+        const migrateCmd = prismaVersionGreaterThan13
+          ? 'prisma migrate dev --preview-feature --name=""'
+          : 'prisma migrate save --experimental --create-db --name=""'
 
         for (const database of databases) {
           try {
+            await this.runPrismaCommand(migrateCmd, service, database)
+          } catch (err) {
+            console.log(err)
+            console.log(chalk.dim`migrate canceled`)
+            continue
+          }
+          if (!prismaVersionGreaterThan13) {
             await this.runPrismaCommand(
-              'prisma migrate save --experimental --create-db --name=""',
+              'prisma migrate up --experimental --create-db',
               service,
               database,
             )
-          } catch (err) {
-            console.log(err)
-            console.log(chalk.dim`migrate up canceled`)
-            continue
           }
-          await this.runPrismaCommand(
-            'prisma migrate up --experimental --create-db',
-            service,
-            database,
-          )
         }
       }
     }
@@ -217,7 +220,8 @@ Examples:
         shell: true,
         preferLocal: true,
         // prisma studio
-        stdio: cmd.includes('studio') ? 'inherit' : 'pipe',
+        // stdio: cmd.includes('studio') ? 'inherit' : 'pipe',
+        stdio: 'inherit',
         env: {
           CLIENT_OUTPUT: clientOutput,
           DATABASE_URL: databaseUrl,
@@ -271,7 +275,7 @@ Examples:
         : ''
 
     if (databaseUrl && schemaPath) {
-      this.log(`Running \`mrapi graphql\` ...`)
+      this.log('Running `mrapi graphql` ...')
 
       generateGraphqlSchema({
         schemaPath,
@@ -302,7 +306,7 @@ Examples:
       return
     }
 
-    this.log(`Running \`mrapi openapi\` ...`)
+    this.log('Running `mrapi openapi` ...')
 
     const { dmmf } = await import(service.datasource.output)
 
@@ -330,12 +334,12 @@ Examples:
 
     if (config.isMultiService && !args.service) {
       this.exitWithError(
-        `You are using multi-service mode, please provide '--service=<service name>'`,
+        "You are using multi-service mode, please provide '--service=<service name>'",
       )
       return []
     }
 
-    let services: Array<mrapi.ServiceOptions> = Array.isArray(config.service)
+    let services: mrapi.ServiceOptions[] = Array.isArray(config.service)
       ? config.service
       : config.service
       ? [config.service]
@@ -359,7 +363,7 @@ Examples:
   }
 
   private getTenantConfig(service: mrapi.ServiceOptions) {
-    let tenants: Array<mrapi.TenantOptions> =
+    let tenants: mrapi.TenantOptions[] =
       service.tenants ||
       (service.database
         ? [
@@ -404,6 +408,15 @@ Examples:
 
   private get isPrismaStudioCommand() {
     return this.#cmd.includes('studio')
+  }
+
+  private get prismaVersion() {
+    try {
+      const { version } = require('@prisma/cli/package.json')
+      return version.split('.').map((x: string) => Number(x))
+    } catch {
+      return ['2']
+    }
   }
 
   private exitWithError(message: string) {

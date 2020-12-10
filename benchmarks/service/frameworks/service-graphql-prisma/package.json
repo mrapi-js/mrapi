@@ -15,11 +15,11 @@
   "license": "MIT",
   "dependencies": {
     "@mrapi/service": "file:../../../../packages/service",
-    "@nexus/schema": "^0.17.0",
+    "@nexus/schema": "^0",
     "@prisma/client": "^2",
-    "express-graphql": "^0.11.0",
+    "express-graphql": "^0",
     "nexus-plugin-prisma": "^0",
-    "pino-pretty": "^4.3.0"
+    "pino-pretty": "^4"
   },
   "devDependencies": {
     "@mrapi/cli": "file:../../../../packages/cli",
@@ -27,7 +27,7 @@
     "@paljs/schema": "^2.5",
     "@prisma/cli": "^2",
     "@types/node": "*",
-    "ts-node-dev": "1.0.0",
+    "ts-node-dev": "1.1.0",
     "typescript": "4.0.5"
   },
   "prettier": {

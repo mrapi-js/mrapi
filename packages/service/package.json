@@ -24,8 +24,8 @@
     "@mrapi/graphql": "*",
     "@mrapi/types": "*",
     "body-parser": "^1.19",
-    "graphql-middleware": "^4.0.2",
-    "graphql-shield": "^7.4.2"
+    "graphql-middleware": "^4",
+    "graphql-shield": "^7"
   },
   "devDependencies": {
     "@graphql-tools/mock": "^7",
