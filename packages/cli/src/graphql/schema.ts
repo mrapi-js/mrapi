@@ -20,7 +20,7 @@ export function generateGraphqlSchema({
   const timeStart = Date.now()
   const generatorPath = resolveFile('@paljs/generator')
   if (!generatorPath) {
-    exitWithError('Please run \'npm i -D @paljs/generator\' first.')
+    exitWithError(`Please run "npm i -D @paljs/generator" first.`)
   }
 
   const {

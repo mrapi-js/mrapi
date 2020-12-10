@@ -1,12 +1,11 @@
 {
   "name": "@mrapi/app",
-  "version": "2.0.0",
+  "version": "0.1.0",
   "description": "mrapi",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
   "files": [
-    "lib",
-    "src"
+    "lib"
   ],
   "engines": {
     "node": ">=10"
@@ -23,8 +22,8 @@
     "directory": "lib"
   },
   "dependencies": {
-    "@types/express":"^4",
-    "@types/express-serve-static-core":"^4",
+    "@types/express": "^4",
+    "@types/express-serve-static-core": "^4",
     "@mrapi/router": "*",
     "@polka/url": "1.0.0-next.11",
     "lru-cache": "^6",
@@ -33,7 +32,7 @@
   "devDependencies": {
     "@types/pino": "^6",
     "@types/lru-cache": "^5",
-    "body-parser":"^1.19.0",
-    "cookie-parser":"^1.4.5"
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5"
   }
 }

@@ -19,10 +19,7 @@
     "publish:next": "TAG=next ts-node scripts/publish.ts",
     "publish:next:dry": "TAG=next DRY_RUN=true ts-node scripts/publish.ts",
     "lint": "eslint packages/*/src/**/*.ts",
-    "format": "prettier:packages && pnpm run prettier:scripts && pnpm run prettier:docs",
-    "prettier:packages": "prettier --write packages/**/*.ts",
-    "prettier:scripts": "prettier --write scripts/**/*.ts",
-    "prettier:docs": "prettier --write README.md"
+    "format": "prettier --write packages/*/src/**/*.ts"
   },
   "husky": {
     "hooks": {
