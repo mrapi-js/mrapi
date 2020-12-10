@@ -23,5 +23,6 @@
   "dependencies": {
     "@mrapi/types": "^2.0.1-beta.1",
     "deepmerge": "^4"
-  }
+  },
+  "gitHead": "da9bdbb644e86b73870e2a6120403dcea927fd9d"
 }
