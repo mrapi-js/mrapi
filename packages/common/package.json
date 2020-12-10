@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/common",
-  "version": "2.0.1-beta.0",
+  "version": "2.0.1-beta.1",
   "description": "mrapi",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -21,7 +21,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@mrapi/types": "^2.0.1-beta.0",
+    "@mrapi/types": "^2.0.1-beta.1",
     "deepmerge": "^4"
   }
 }

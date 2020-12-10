@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/datasource",
-  "version": "1.0.0-beta.0",
+  "version": "1.0.0-beta.1",
   "description": "mrapi",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -21,8 +21,8 @@
     "access": "public"
   },
   "dependencies": {
-    "@mrapi/common": "^2.0.1-beta.0",
-    "@mrapi/types": "^2.0.1-beta.0"
+    "@mrapi/common": "^2.0.1-beta.1",
+    "@mrapi/types": "^2.0.1-beta.1"
   },
   "devDependencies": {
     "@prisma/client": "^2"
