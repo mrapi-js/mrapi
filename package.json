@@ -13,7 +13,7 @@
     "clean:all": "npm run clean && npm run clean:npm",
     "test": "jest --watch",
     "coverage": "jest --coverage",
-    "publish:beta": "lerna publish prerelease --preid beta --dist-tag next",
+    "publish:beta": "lerna publish from-package --preid beta --dist-tag next",
     "lint": "eslint packages/*/src/**/*.ts",
     "format": "prettier --write packages/*/src/**/*.ts"
   },
