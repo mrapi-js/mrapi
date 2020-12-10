@@ -1,5 +1,6 @@
-import { IncomingMessage } from 'http'
-import { GraphQLSchema } from 'graphql'
+import type { IncomingMessage } from 'http'
+import type { GraphQLSchema } from 'graphql'
+
 import { tryRequire } from '@mrapi/common'
 
 export async function getOpenapiSchema(

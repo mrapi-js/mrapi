@@ -18,12 +18,11 @@
   "author": "neikvon",
   "license": "MIT",
   "publishConfig": {
-    "access": "public",
-    "directory": "lib"
+    "access": "public"
   },
   "dependencies": {
-    "@mrapi/common": "*",
-    "@mrapi/types": "*"
+    "@mrapi/common": "^2.0.1-beta.0",
+    "@mrapi/types": "^2.0.1-beta.0"
   },
   "devDependencies": {}
 }
