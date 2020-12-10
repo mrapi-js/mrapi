@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/graphql",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.0",
   "description": "GraphQL middleware for mrapi app or express",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -12,11 +12,11 @@
     "watch": "tsc --preserveWatchOutput -w"
   },
   "dependencies": {
-    "tiny-lru": "^7",
-    "graphql-jit": "^0"
+    "graphql-jit": "^0",
+    "tiny-lru": "^7"
   },
   "devDependencies": {
-    "@mrapi/app": "*",
+    "@mrapi/app": "^1.0.0-beta.0",
     "graphql": "^15.4"
   },
   "peerDependencies": {

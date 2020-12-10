@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/gateway",
-  "version": "0.1.0",
+  "version": "1.0.0-beta.0",
   "description": "mrapi",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -23,11 +23,10 @@
     "directory": "lib"
   },
   "dependencies": {
-    "@mrapi/types": "*",
+    "@mrapi/app": "^1.0.0-beta.0",
     "@mrapi/common": "*",
-    "@mrapi/app": "*",
-    "@mrapi/router": "*",
+    "@mrapi/router": "^1.0.0-beta.0",
+    "@mrapi/types": "*",
     "fast-proxy": "^1"
-  },
-  "devDependencies": {}
+  }
 }
