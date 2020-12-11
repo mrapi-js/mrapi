@@ -45,5 +45,13 @@
   },
   "peerDependencies": {
     "graphql": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  },
+  "homepage": "https://github.com/mrapi-js/mrapi",
+  "bugs": {
+    "url": "https://github.com/mrapi-js/mrapi/issues"
   }
 }
