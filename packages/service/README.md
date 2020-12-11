@@ -1,17 +1,17 @@
 # @mrapi/service
 
-## If `graphql: true`
+API service, support GraphQL and OpenAPI.
 
-- `express-graphql`
-- `graphql-playground-middleware-express`
+## Usage
 
-## Features
+```bash
+yarn add @mrapi/service
+```
 
-- single service + single tenant
-- single service + multi tenants
-- multi services + single tenant
-- multi services + multi tenants
-- graphql stitching
-  - all services
-  - partial services
-  - multi tenants + single tenant
+```ts
+import { service } from '@mrapi/service'
+
+const service = new Service()
+
+service.start().catch((err) => service.logger.error(err))
+```
