@@ -7,8 +7,7 @@
     "publish": {
       "ignoreChanges": [],
       "message": "chore(release): publish",
-      "registry": "http://registry.npmjs.org",
-      "bump": "from-package"
+      "registry": "http://registry.npmjs.org"
     },
     "bootstrap": {
       "npmClientArgs": ["--no-package-lock", "--legacy-peer-deps"]
