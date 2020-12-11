@@ -14,8 +14,8 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/graphql": "file:../../packages/graphql",
-    "@mrapi/service": "file:../../packages/service",
+    "@mrapi/graphql": "^1.0.0-beta.1",
+    "@mrapi/service": "^1.0.0-beta.1",
     "@nexus/schema": "0.19.2",
     "@prisma/client": "^2.13",
     "graphql-middleware": "^4.0.2",
