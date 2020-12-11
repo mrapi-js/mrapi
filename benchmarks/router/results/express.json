@@ -1,0 +1,11 @@
+{
+  "express": {
+    "short static": 1834190,
+    "static with same radix": 1462614,
+    "dynamic route": 738011,
+    "mixed static dynamic": 527102,
+    "long static": 745875,
+    "wildcard": 413464,
+    "all together": 114290
+  }
+}

@@ -2,20 +2,93 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
-### [1.1.3](https://github.com/mrapi-js/mrapi/compare/v1.1.2...v1.1.3) (2020-10-02)
-
-
-### Bug Fixes
-
-* mershed operationName prefix remove ([ce145fe](https://github.com/mrapi-js/mrapi/commit/ce145fef4fcb50bb2aee15a58638d29782cc3602))
-* mershed operationName prefix remove ([036f4b9](https://github.com/mrapi-js/mrapi/commit/036f4b9707dd2f0bef42b090eacf04df04b8bcc8))
-
-### [1.1.2](https://github.com/mrapi-js/mrapi/compare/v1.1.1...v1.1.2) (2020-10-02)
+## [2.0.0-beta.3](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2020-10-16)
 
 
 ### Features
 
-* update api console ([2109b29](https://github.com/mrapi-js/mrapi/commit/2109b29a0958a314e09aa29ab35d6c18dd2bd85c))
+* **dal:** support configure introspection and playground for graphql server ([771e67a](https://github.com/mrapi-js/mrapi/commit/771e67a277cc645c07c65e34337a9e90af58615e))
+* **types:** add introspection option ([2e86b96](https://github.com/mrapi-js/mrapi/commit/2e86b96a0ca2939f16737d301f6039c0b088bbc1))
+
+
+### Bug Fixes
+
+* **api:** make 'outputSchema' optional;validate 'customSchemasPath';change 'addOpenapi' logic ([618c5fb](https://github.com/mrapi-js/mrapi/commit/618c5fb682e9d0bd8f255b2bab187f3fb699c59f))
+* **db:** rename public methods;add jsdocs ([190ca3c](https://github.com/mrapi-js/mrapi/commit/190ca3c81879039d27fd290140c9de1041726f7c))
+* **oas:** rename 'getPrisma' to 'getDBClient' ([ca135fb](https://github.com/mrapi-js/mrapi/commit/ca135fb499c7f1dc7cd28d45acc87a4c1d69e071))
+
+## [2.0.0-beta.2](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2020-10-15)
+
+
+### Features
+
+* **dal:** add extensions fiels to graphql result ([3fd06d2](https://github.com/mrapi-js/mrapi/commit/3fd06d27e6f90d6f1702b8d3fda94da879462f13))
+* **db:** add options and middlewares config for prisma client ([43d8728](https://github.com/mrapi-js/mrapi/commit/43d87280f7fe2bcfdfae916f3efcfd309f48aa95))
+
+
+### Bug Fixes
+
+* **nexus:** fix type name error when schema is not following prisma's style guide ([9141512](https://github.com/mrapi-js/mrapi/commit/914151234e84edb60418636762dbeb98c18227b9))
+* **types:** add prismaOptions and prismaMiddlewares types ([333851d](https://github.com/mrapi-js/mrapi/commit/333851d271117370f7f86380c1659a65b51e7160))
+
+## [2.0.0-beta.1](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.0...v2.0.0-beta.1) (2020-10-14)
+
+
+### Bug Fixes
+
+* remove unused vars ([e191930](https://github.com/mrapi-js/mrapi/commit/e191930b846e0f836c75f2bff3c207e142ad0576))
+
+## [2.0.0-beta.0](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.3...v2.0.0-beta.0) (2020-10-14)
+
+
+### Bug Fixes
+
+* set api's 'autoGenerate' false defaultly;error when dal's db is null;fix default database path ([df36bc3](https://github.com/mrapi-js/mrapi/commit/df36bc3dc0a4cf0f0efcf014f9f6cecc43e081c9))
+
+## [2.0.0-alpha.3](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2020-10-14)
+
+
+### Bug Fixes
+
+* include schemas dir in npm package ([c05b158](https://github.com/mrapi-js/mrapi/commit/c05b158948031a74293d57636986bf35c1b66f4a))
+
+## [2.0.0-alpha.2](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2020-10-14)
+
+
+### Bug Fixes
+
+* bugs ([74e0660](https://github.com/mrapi-js/mrapi/commit/74e0660c0c68f1817a9d8a5f138b7d7cb371c1fc))
+
+## [2.0.0-alpha.1](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2020-10-13)
+
+
+### Bug Fixes
+
+* **api:** pass tenant id in headers to DAL ([29c174c](https://github.com/mrapi-js/mrapi/commit/29c174c25e6401f1a9dda982c8ae0c782b4bfad8))
+* **types:** add 'build' script ([96ed047](https://github.com/mrapi-js/mrapi/commit/96ed047822e531ecd88aa3dc653f11492b5d7f0d))
+
+## [2.0.0-alpha.0](https://github.com/mrapi-js/mrapi/compare/v1.1.1...v2.0.0-alpha.0) (2020-10-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* Many changes are not compatible with the old version
+
+### Features
+
+* add config validation; refactor multi-tenant logic ([1ea3693](https://github.com/mrapi-js/mrapi/commit/1ea3693891ec3a84f1d1a3384fcce1f31d475d04))
+* eat: add config validation; refactor multi-tenant logic ([810c807](https://github.com/mrapi-js/mrapi/commit/810c8076a7feaf08667fae43b4b9cbebf32643a7))
+
+
+### Bug Fixes
+
+* **dal:** prisma migrate & generate ([c01195c](https://github.com/mrapi-js/mrapi/commit/c01195ce1483cdf7012482fe61c7de8dded78def))
+* fix management path error ([387b088](https://github.com/mrapi-js/mrapi/commit/387b088f94427bfacfaa8a7db11abbad0b5b90ea))
+
+
+### Code Refactoring
+
+* add @mrapi/db package ([32e164f](https://github.com/mrapi-js/mrapi/commit/32e164fab1ce0e376c5d889cbdf01472c6add3f8))
 
 ### [1.1.1](https://github.com/mrapi-js/mrapi/compare/v1.1.0...v1.1.1) (2020-10-01)
 

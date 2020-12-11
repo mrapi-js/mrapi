@@ -1,0 +1,39 @@
+{
+  "name": "@mrapi/gateway",
+  "version": "1.0.0-beta.1",
+  "description": "mrapi",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "engines": {
+    "node": ">=10"
+  },
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput -w",
+    "test": "tape -r esm test/*.js | tap-spec"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@mrapi/app": "^1.0.0-beta.1",
+    "@mrapi/common": "^2.0.1-beta.1",
+    "@mrapi/router": "^1.0.0-beta.1",
+    "@mrapi/types": "^2.0.1-beta.1",
+    "fast-proxy": "^1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  },
+  "homepage": "https://github.com/mrapi-js/mrapi",
+  "bugs": {
+    "url": "https://github.com/mrapi-js/mrapi/issues"
+  }
+}

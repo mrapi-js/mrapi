@@ -1,0 +1,30 @@
+{
+  "name": "app-express-graphql",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/app": "1.0.0-beta.1",
+    "express-graphql": "^0.11.0",
+    "graphql": "^15"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "ts-node-dev": "^1.1.1",
+    "typescript": "4.0.5"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

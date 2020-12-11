@@ -1,0 +1,17 @@
+{
+  "version": "independent",
+  "packages": ["packages/*", "examples/*"],
+  "npmClient": "yarn",
+  "useWorkspaces": true,
+  "command": {
+    "publish": {
+      "ignoreChanges": ["*.md"],
+      "message": "chore(release): publish",
+      "registry": "http://registry.npmjs.org",
+      "bump": "from-package"
+    },
+    "bootstrap": {
+      "npmClientArgs": ["--no-package-lock", "--legacy-peer-deps"]
+    }
+  }
+}

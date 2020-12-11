@@ -1,0 +1,47 @@
+{
+  "name": "service-mesh",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
+    "start": "NODE_ENV=production node lib/app.js"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/graphql": "^1.0.0-beta.1",
+    "@mrapi/service": "^1.0.0-beta.1",
+    "@nexus/schema": "0.19.2",
+    "@prisma/client": "^2.13",
+    "graphql-middleware": "^4.0.2",
+    "nexus-plugin-prisma": "0.26.0",
+    "openapi-to-graphql": "2.2.5",
+    "pino-pretty": "^4.3.0"
+  },
+  "devDependencies": {
+    "@graphql-tools/load": "6.2.5",
+    "@graphql-tools/resolvers-composition": "6.2.5",
+    "@graphql-tools/schema": "7.1.2",
+    "@graphql-tools/stitch": "7.1.4",
+    "@graphql-tools/url-loader": "6.6.0",
+    "@graphql-tools/utils": "7.1.4",
+    "@graphql-tools/wrap": "7.0.4",
+    "@paljs/generator": "^2.8.4",
+    "@paljs/schema": "^2.8.1",
+    "@prisma/cli": "^2.13",
+    "@types/node": "*",
+    "ts-node-dev": "^1.1.1",
+    "typescript": "4.0.5"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

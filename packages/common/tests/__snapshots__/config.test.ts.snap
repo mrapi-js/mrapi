@@ -1,0 +1,281 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Config basic 1`] = `
+Object {
+  "cwd": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs",
+  "isMultiService": false,
+  "parsed": true,
+  "service": Array [
+    Object {
+      "contextFile": "<PROJECT_ROOT>/src/context",
+      "customDir": "<PROJECT_ROOT>/src",
+      "database": "file:./dev.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/schema.prisma",
+      },
+      "graphql": Object {
+        "custom": "<PROJECT_ROOT>/src/graphql",
+        "generator": "nexus",
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/graphql",
+        "playground": true,
+      },
+      "name": "default",
+      "openapi": undefined,
+      "schema": "prisma/schema.prisma",
+    },
+  ],
+}
+`;
+
+exports[`Config disable-api 1`] = `
+Object {
+  "cwd": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs",
+  "isMultiService": true,
+  "parsed": true,
+  "service": Array [
+    Object {
+      "contextFile": "<PROJECT_ROOT>/src/user/context",
+      "customDir": "<PROJECT_ROOT>/src/user",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/user-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/user/schema.prisma",
+      },
+      "graphql": undefined,
+      "multiTenant": Object {
+        "default": "one",
+        "identity": "mrapi-tenant-id",
+        "mode": "seprate-db",
+      },
+      "name": "user",
+      "openapi": undefined,
+      "schema": "prisma/user/schema.prisma",
+      "tenants": Array [
+        Object {
+          "database": "file:./user-one.db",
+          "name": "one",
+        },
+        Object {
+          "database": "file:./user-two.db",
+          "name": "two",
+        },
+      ],
+    },
+    Object {
+      "contextFile": "<PROJECT_ROOT>/src/post/context",
+      "customDir": "<PROJECT_ROOT>/src/post",
+      "database": "file:./post.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/post-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/post/schema.prisma",
+      },
+      "graphql": Object {
+        "custom": "<PROJECT_ROOT>/src/post/graphql",
+        "generator": "nexus",
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/post/graphql",
+        "playground": true,
+      },
+      "multiTenant": Object {
+        "default": "one",
+        "identity": "mrapi-tenant-id",
+        "mode": "seprate-db",
+      },
+      "name": "post",
+      "openapi": undefined,
+      "schema": "prisma/post/schema.prisma",
+      "tenants": Array [
+        Object {
+          "database": "file:./post-one.db",
+          "name": "one",
+        },
+        Object {
+          "database": "file:./post-two.db",
+          "name": "two",
+        },
+      ],
+    },
+    Object {
+      "contextFile": "<PROJECT_ROOT>/src/management/context",
+      "customDir": "<PROJECT_ROOT>/src/management",
+      "database": "file:./dev.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/management-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/management/schema.prisma",
+      },
+      "graphql": undefined,
+      "management": true,
+      "managementTenantModelName": "tenant",
+      "name": "management",
+      "openapi": undefined,
+      "schema": "prisma/management/schema.prisma",
+    },
+  ],
+}
+`;
+
+exports[`Config multi-service 1`] = `
+Object {
+  "cwd": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs",
+  "isMultiService": true,
+  "parsed": true,
+  "service": Array [
+    Object {
+      "contextFile": "<PROJECT_ROOT>/src/user/context",
+      "customDir": "<PROJECT_ROOT>/src/user",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/user-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/user/schema.prisma",
+      },
+      "graphql": Object {
+        "custom": "<PROJECT_ROOT>/src/user/graphql",
+        "generator": "nexus",
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/user/graphql",
+        "playground": true,
+      },
+      "multiTenant": Object {
+        "default": "one",
+        "identity": "mrapi-tenant-id",
+        "mode": "seprate-db",
+      },
+      "name": "user",
+      "openapi": undefined,
+      "schema": "prisma/user/schema.prisma",
+      "tenants": Array [
+        Object {
+          "database": "file:./user-one.db",
+          "name": "one",
+        },
+        Object {
+          "database": "file:./user-two.db",
+          "name": "two",
+        },
+      ],
+    },
+    Object {
+      "contextFile": "<PROJECT_ROOT>/src/post/context",
+      "customDir": "<PROJECT_ROOT>/src/post",
+      "database": "file:./post.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/post-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/post/schema.prisma",
+      },
+      "graphql": Object {
+        "custom": "<PROJECT_ROOT>/src/post/graphql",
+        "generator": "nexus",
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/post/graphql",
+        "playground": true,
+      },
+      "multiTenant": Object {
+        "default": "one",
+        "identity": "mrapi-tenant-id",
+        "mode": "seprate-db",
+      },
+      "name": "post",
+      "openapi": undefined,
+      "schema": "prisma/post/schema.prisma",
+      "tenants": Array [
+        Object {
+          "database": "file:./post-one.db",
+          "name": "one",
+        },
+        Object {
+          "database": "file:./post-two.db",
+          "name": "two",
+        },
+      ],
+    },
+    Object {
+      "contextFile": "<PROJECT_ROOT>/src/management/context",
+      "customDir": "<PROJECT_ROOT>/src/management",
+      "database": "file:./dev.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/management-client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/management/schema.prisma",
+      },
+      "graphql": Object {
+        "custom": "<PROJECT_ROOT>/src/management/graphql",
+        "generator": "nexus",
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/management/graphql",
+        "playground": true,
+      },
+      "management": true,
+      "managementTenantModelName": "tenant",
+      "name": "management",
+      "openapi": undefined,
+      "schema": "prisma/management/schema.prisma",
+    },
+  ],
+}
+`;
+
+exports[`Config multi-tenant 1`] = `
+Object {
+  "cwd": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs",
+  "isMultiService": false,
+  "parsed": true,
+  "service": Array [
+    Object {
+      "contextFile": "<PROJECT_ROOT>/src/context",
+      "customDir": "<PROJECT_ROOT>/src",
+      "database": "file:./dev.db",
+      "datasource": Object {
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.prisma/client",
+        "provider": "prisma",
+        "schema": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/prisma/schema.prisma",
+      },
+      "graphql": Object {
+        "custom": "<PROJECT_ROOT>/src/graphql",
+        "generator": "nexus",
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/configs/node_modules/.mrapi/graphql",
+        "playground": true,
+      },
+      "multiTenant": Object {
+        "identity": "mrapi-tenant-id",
+        "mode": "seprate-db",
+      },
+      "name": "default",
+      "openapi": undefined,
+      "schema": "prisma/schema.prisma",
+      "tenants": Array [
+        Object {
+          "database": "file:./user-one.db",
+          "name": "one",
+        },
+        Object {
+          "database": "file:./user-two.db",
+          "name": "two",
+        },
+      ],
+    },
+  ],
+}
+`;
+
+exports[`Config no-config 1`] = `
+Object {
+  "cwd": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/no-config",
+  "isMultiService": false,
+  "parsed": true,
+  "service": Array [
+    Object {
+      "contextFile": "<PROJECT_ROOT>/src/context",
+      "customDir": "<PROJECT_ROOT>/src",
+      "graphql": Object {
+        "custom": "<PROJECT_ROOT>/src/graphql",
+        "generator": "nexus",
+        "output": "<PROJECT_ROOT>/packages/common/tests/__fixtures__/config/no-config/node_modules/.mrapi/graphql",
+        "playground": true,
+      },
+      "name": "default",
+      "openapi": undefined,
+    },
+  ],
+}
+`;

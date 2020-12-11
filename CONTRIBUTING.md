@@ -6,31 +6,31 @@
 
    ```bash
    git clone https://github.com/mrapi-js/mrapi.git
+
    cd mrapi
-   npm i -g pnpm
-   pnpm i
+
+   yarn
    ```
 
 1. Start development
 
    ```bash
-   pnpm run watch
+   yarn build
+   yarn dev
    ```
 
 ## Run example
 
 ```bash
-cd examples/basic # or examples/multi-tenant
-pnpm i
-
-pnpm run dev
+cd examples/service-basic
+yarn dev
 ```
 
 ## Git Commit
 
 1. Add commit plugin
 
-   docs: https://github.com/fbi-templates/fbi-task-commit#usage
+   docs: https://github.com/fbi-js/factory-commands/blob/main/src/commands/commit/README.md
 
    ```bash
    # install fbi

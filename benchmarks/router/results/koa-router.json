@@ -1,0 +1,11 @@
+{
+  "koa-router": {
+    "short static": 2614473,
+    "static with same radix": 2773000,
+    "dynamic route": 2250154,
+    "mixed static dynamic": 2340057,
+    "long static": 2857885,
+    "wildcard": 3078443,
+    "all together": 428638
+  }
+}

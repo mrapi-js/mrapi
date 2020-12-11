@@ -1,0 +1,34 @@
+{
+  "name": "app-express-middlewares",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/app": "1.0.0-beta.1",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "cookie-parser": "^1.4.5"
+  },
+  "devDependencies": {
+    "@types/body-parser": "^1.19.0",
+    "@types/compression": "^1.7.0",
+    "@types/cookie-parser": "^1.4.2",
+    "@types/node": "*",
+    "ts-node-dev": "^1.1.1",
+    "typescript": "4.0.5"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

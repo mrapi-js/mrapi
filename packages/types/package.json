@@ -1,0 +1,40 @@
+{
+  "name": "@mrapi/types",
+  "version": "2.0.1-beta.1",
+  "description": "mrapi types",
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -b .",
+    "watch": "tsc --preserveWatchOutput -w"
+  },
+  "dependencies": {
+    "@types/node": "*"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "engines": {
+    "node": ">= 10.3"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  },
+  "homepage": "https://github.com/mrapi-js/mrapi",
+  "bugs": {
+    "url": "https://github.com/mrapi-js/mrapi/issues"
+  }
+}

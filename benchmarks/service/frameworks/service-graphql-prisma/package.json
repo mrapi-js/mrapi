@@ -1,0 +1,39 @@
+{
+  "name": "service-graphql-prisma",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "build": "tsc -b .",
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
+    "generate": "npx prisma generate && npx mrapi graphql generate",
+    "start": "NODE_ENV=production node ./lib/app.js"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/service": "^1.0.0-beta.1",
+    "@nexus/schema": "^0",
+    "@prisma/client": "^2",
+    "express-graphql": "^0",
+    "nexus-plugin-prisma": "^0",
+    "pino-pretty": "^4"
+  },
+  "devDependencies": {
+    "@mrapi/cli": "^2.0.1-beta.1",
+    "@paljs/generator": "^2.5",
+    "@paljs/schema": "^2.5",
+    "@prisma/cli": "^2",
+    "@types/node": "*",
+    "ts-node-dev": "^1.1.1",
+    "typescript": "4.0.5"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

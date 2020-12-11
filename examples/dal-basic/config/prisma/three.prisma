@@ -1,8 +1,0 @@
-model User {
-    num       Int      @id @default(autoincrement())
-    stringId  String   @unique
-    name      String?
-    date      DateTime
-    isBoolean Boolean
-    fNum      Float
-}

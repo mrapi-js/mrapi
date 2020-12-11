@@ -1,0 +1,30 @@
+{
+  "name": "vs-express",
+  "version": "1.0.0",
+  "private": "true",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "scripts": {
+    "mrapi": "ts-node-dev --respawn --transpile-only ./src/mrapi.ts",
+    "express": "ts-node-dev --respawn --transpile-only ./src/express.ts"
+  },
+  "keywords": [],
+  "author": "neikvon",
+  "license": "MIT",
+  "dependencies": {
+    "@mrapi/app": "^1.0.0-beta.0",
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "@types/node": "*",
+    "ts-node-dev": "^1.1.1",
+    "typescript": "4.0.5"
+  },
+  "prettier": {
+    "semi": false,
+    "tabWidth": 2,
+    "singleQuote": true,
+    "trailingComma": "all"
+  }
+}

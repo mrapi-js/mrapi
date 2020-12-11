@@ -1,0 +1,11 @@
+{
+  "find-my-way": {
+    "short static": 13793274,
+    "static with same radix": 5032992,
+    "dynamic route": 1805882,
+    "mixed static dynamic": 2098639,
+    "long static": 3558708,
+    "wildcard": 2762032,
+    "all together": 476368
+  }
+}
