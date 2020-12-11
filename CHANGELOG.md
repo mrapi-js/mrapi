@@ -2,6 +2,63 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1-alpha.0](https://github.com/mrapi-js/mrapi/compare/v1.1.3...v2.0.1-alpha.0) (2020-12-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* Many changes are not compatible with the old version
+
+### Features
+
+* ignore mesh fieldName ([70d4ed4](https://github.com/mrapi-js/mrapi/commit/70d4ed4abb7edc1be711c74470ffc827e2dfd0c0))
+* mesh remote graphql or openapi ([83fb083](https://github.com/mrapi-js/mrapi/commit/83fb0839b724191682dc17b8af868bb6fa1c7d56))
+* 引入 applyMiddleware 实现鉴权 ([d340d5f](https://github.com/mrapi-js/mrapi/commit/d340d5fb312911f7f56f520d21db9a3e02944762))
+* **dal:** support configure introspection and playground for graphql server ([6e8e390](https://github.com/mrapi-js/mrapi/commit/6e8e39033c0a2b5a23481b67bc4b460cfa6d4f68))
+* **datasource:** [WIP]multi-tenant-single-db ([faba821](https://github.com/mrapi-js/mrapi/commit/faba821929f558713572eb1b156e25d895b87f88))
+* **datasource:** multi-tenant 'single-db' mode ([f519a7f](https://github.com/mrapi-js/mrapi/commit/f519a7fc6814c03d9c1e5bf85b650440a23bc024))
+* **graphql:** Aggregate graphql validations; Support introspection disable ([5a79da3](https://github.com/mrapi-js/mrapi/commit/5a79da3b4f3e0418966e18bb1c3c7e0247f90292))
+* **graphql:** query depth limit ([87814a3](https://github.com/mrapi-js/mrapi/commit/87814a35c85d889fa34bc3c3cf9b7b04dda8f6dc))
+* **graphql:** support custom 'extensions' in graphql result ([495910c](https://github.com/mrapi-js/mrapi/commit/495910cd34ff7c40e9708dcbcd68c54990a7377a))
+* **service:** 'type-graphql' basic support ([a091006](https://github.com/mrapi-js/mrapi/commit/a0910065403b0b84856b3118c8843512e80d2ffb))
+* **service:** add 'req' 'res' to Context ([2001178](https://github.com/mrapi-js/mrapi/commit/2001178e5b638e1ee93a0478513c6e923eb5d184))
+* **service:** make graphql 'getSchema' configurable ([9f51cc6](https://github.com/mrapi-js/mrapi/commit/9f51cc618f0494ff2cb2d2f44a681b8f9805fa03))
+* **service:** support graphql stitching ([5c3d38f](https://github.com/mrapi-js/mrapi/commit/5c3d38fb518fa2903d067c192774aa04dec5992c))
+* **service config:** support 'mrapi.config.ts'; types optimization ([8cd1414](https://github.com/mrapi-js/mrapi/commit/8cd14140d3b6cae0b8125360abfaab7a1b19bd1a))
+* eat: add config validation; refactor multi-tenant logic ([3f384d7](https://github.com/mrapi-js/mrapi/commit/3f384d780e6eb8374f90ff9b844c969ef16e0ca3))
+* use npm (v7) workspaces ([c184a81](https://github.com/mrapi-js/mrapi/commit/c184a8112b93c5dd42bbd4e9dc42ed50d31484d4))
+* **types:** add introspection option ([91e8852](https://github.com/mrapi-js/mrapi/commit/91e8852731b3783675689b6f8b7a37087337e507))
+
+
+### Bug Fixes
+
+* merge from main branch ([afd1bde](https://github.com/mrapi-js/mrapi/commit/afd1bde7a654fd1a659e501cef122d8484abc85b))
+* **service:** npm publish as public ([cbcb5cb](https://github.com/mrapi-js/mrapi/commit/cbcb5cba7d4bc8e41869f847211ec8748c537cad))
+* add mesh feature exception tip ([50ce7ef](https://github.com/mrapi-js/mrapi/commit/50ce7efc91fd416a72feb93342d5beb0e06ba3f2))
+* add mesh feature exception tip ([dd96cb3](https://github.com/mrapi-js/mrapi/commit/dd96cb35365630eaf8fbf63126c4233c3e97a6a7))
+* bugs ([e33efd8](https://github.com/mrapi-js/mrapi/commit/e33efd82f07fad8b29c8b263ad92694d5b54afde))
+* compatible with pirsma 2.13 ([314e35a](https://github.com/mrapi-js/mrapi/commit/314e35aa82e3cf52fded47a5455786c59ccd3469))
+* fixed versions of 'typescript' and 'ts-node-dev' ([5b9a7c5](https://github.com/mrapi-js/mrapi/commit/5b9a7c50b9de4de87bdfd97c766e766f9bf6c1df))
+* include schemas dir in npm package ([61cb7a8](https://github.com/mrapi-js/mrapi/commit/61cb7a8a0f28da682be3401d6aa2f5fdf97f5644))
+* reset packages version ([3dfe85a](https://github.com/mrapi-js/mrapi/commit/3dfe85aa418d9ab680f340e9c27d759ef962a0ff))
+* update prisma and related packages to latest versions ([f06ea17](https://github.com/mrapi-js/mrapi/commit/f06ea1715e6d00964c6986b0c9ba352910bcc94f))
+* **api:** make 'outputSchema' optional;validate 'customSchemasPath';change 'addOpenapi' logic ([fc8f563](https://github.com/mrapi-js/mrapi/commit/fc8f5631f175c87b590e053afc00711e1c1d7bb4))
+* **api:** pass tenant id in headers to DAL ([52c2d75](https://github.com/mrapi-js/mrapi/commit/52c2d75057a858ddaa47df1bd07d9c9f1e4bfd54))
+* **cli:** simplify logic of code generation ([27a40d3](https://github.com/mrapi-js/mrapi/commit/27a40d3cb657e2ff64e814958b0619903436a88a))
+* **config:** cleanup ([b4e6573](https://github.com/mrapi-js/mrapi/commit/b4e6573919443560c85d91e585c5f62802339529))
+* **dal:** prisma migrate & generate ([369f8e5](https://github.com/mrapi-js/mrapi/commit/369f8e5fa1e88e404433a8466efabe0407ca8f4c))
+* **service:** playground logic ([0f0c30e](https://github.com/mrapi-js/mrapi/commit/0f0c30e7bd7a409a1f29637ebd207f0c6478cbd9))
+* **tests:** update tests ([5392bce](https://github.com/mrapi-js/mrapi/commit/5392bceb7f5eaf6844b31eff200583600e2bca8f))
+* **types:** add 'build' script ([485f8ac](https://github.com/mrapi-js/mrapi/commit/485f8ac6c3481309f115c439d5a6adf7cd822ad3))
+* **types:** add prismaOptions and prismaMiddlewares types ([2ecf866](https://github.com/mrapi-js/mrapi/commit/2ecf866252c53eda20998e50450b4e0a99a07c59))
+* **types:** rename type 'ConfigInput' => 'PartialConfig', 'ServiceOptionsInput' => 'PartialServiceOptions' ([4024637](https://github.com/mrapi-js/mrapi/commit/402463726085d443092ee03bbd08d616d9648952))
+* fix management path error ([550367d](https://github.com/mrapi-js/mrapi/commit/550367d02b16eaf7bd9b83fd5e0b4497a2a1e812))
+
+
+### Code Refactoring
+
+* add @mrapi/db package ([e504f20](https://github.com/mrapi-js/mrapi/commit/e504f20df09d4eb710fcb35da273ae426784522b))
+
 ## [2.0.0-beta.3](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2020-10-16)
 
 
