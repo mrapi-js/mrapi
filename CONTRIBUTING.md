@@ -15,6 +15,7 @@
 1. Start development
 
    ```bash
+   yarn build
    yarn dev
    ```
 
