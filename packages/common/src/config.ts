@@ -78,7 +78,7 @@ export function resolveConfig(
   )
   const ServiceCwd = dirname(maybeConfigPath)
   const isMultiService = Array.isArray(config.service)
-  const services: mrapi.PartialServiceOptions[] = config.service
+  const services: Array<mrapi.PartialServiceOptions> = config.service
     ? Array.isArray(config.service)
       ? config.service
       : [config.service]
@@ -90,7 +90,7 @@ export function resolveConfig(
     )
     assert(
       hasName,
-      '[Config Error] Multiple services should have \'name\' fields on each.',
+      `[Config Error] Multiple services should have 'name' fields on each.`,
     )
   }
 
@@ -135,7 +135,7 @@ function normalizeServiceConfig(
   if (service.tenants) {
     assert(
       Array.isArray(service.tenants),
-      '[Config Error] \'service.tenants\' should be an array ',
+      `[Config Error] 'service.tenants' should be an array `,
     )
   }
 
@@ -154,7 +154,7 @@ function normalizeServiceConfig(
         service.name
       }' using prisma, but no 'database' field configured. ${
         isMultiTenant && service.multiTenant?.mode === 'seprate-db'
-          ? 'Each tenant should configure \'database\' field when using multi-tenant \'seprate-db\' mode'
+          ? `Each tenant should configure 'database' field when using multi-tenant 'seprate-db' mode`
           : ''
       }`,
     )
@@ -256,7 +256,7 @@ function normalizeOpenapiConfig(
     return undefined
   }
 
-  const tmp = (service.openapi || {}) as PathsObject
+  const tmp = service.openapi as PathsObject
   const options = merge(defaults.openapi, tmp)
 
   return {

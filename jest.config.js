@@ -8,9 +8,19 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest',
   },
+  // globals:{
+  //   'ts-jest': {
+  //     babelConfig: true
+  //   }
+  // },
   testRegex: '/tests/.*\\.(test|spec)?\\.(ts|tsx|js)$',
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   snapshotSerializers: ['jest-serializer-path'],
   collectCoverage: true,
-  coverageReporters: ["html"]
+  coverageReporters: ['html', 'lcov', 'text'],
+  collectCoverageFrom: [
+    'packages/*/src/**/*.ts',
+    '!packages/*/lib/**',
+    '!packages/*/utils/**'
+  ],
 }
