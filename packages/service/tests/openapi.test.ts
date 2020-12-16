@@ -1,11 +1,62 @@
 import { findManyFilter } from '../src/openapi/filters'
 import { makeOpenapi, makeOpenapiOptions } from '../src/openapi'
 import { dependenciesPlugins } from '../src/openapi/dependencies'
+import { App } from '@mrapi/app'
+import { Datasource, DatasourceOptions } from '@mrapi/datasource'
+import { ServiceOptions } from '@mrapi/types'
+import { join } from 'path'
 
+const fakeApp = new App()
+const fakeDatasource = new Datasource({
+  provider: 'prisma' as any,
+  management: {
+    database: 'file:./dev.db',
+    clientPath: '.prisma/management-client',
+  },
+  services: [
+    {
+      name: 'a',
+      database: 'file:./dev.db',
+      clientPath: '.prisma/a-client',
+    },
+    {
+      name: 'b',
+      database: 'file:./dev.db',
+      clientPath: '.prisma/b-client',
+    },
+  ],
+} as DatasourceOptions)
+const fakeService = {
+  name: 'cyrus',
+  database: 'file:./dev.db',
+  clientPath: '.prisma/a-client',
+  customDir: 'openapi',
+  sources: [{ name: 'openapi', type: 'openapi', endpoint: 'openapi' }],
+  schema: 'database-url',
+  tenants: [{ name: 'cyrus' }],
+  contextFile: 'openapi',
+  openapi: { output: join(__dirname, './definitions'), custom: 'openapi' },
+} as ServiceOptions
+const fakeService2 = {
+  name: 'cyrus',
+  database: 'file:./dev.db',
+  clientPath: '.prisma/a-client',
+  customDir: 'openapi',
+  sources: [{ name: 'openapi', type: 'openapi', endpoint: 'openapi' }],
+  schema: 'database-url',
+  tenants: [{ name: 'cyrus' }],
+  contextFile: 'openapi',
+  openapi: { output: '', custom: 'openapi' },
+} as ServiceOptions
 const fakeModelName = 'user'
 const fakeReq = {
   body: { username: 'cyrusyjli' },
-  query: { id: '1', username: 'cyrusyjli', where: 'cyrusyjli' },
+  query: {
+    id: '1',
+    username: 'cyrusyjli',
+    where: '{"name": "cyrus"}',
+    skip: 3,
+  },
   params: { usename: 'cyrusyjli' },
 }
 const fakeRes = { id: '1', username: 'cyrusyjli' }
@@ -17,12 +68,12 @@ function fakeCreate(params: any) {
 }
 function fakeFindMany(params: any) {
   return new Promise((resolve) => {
-    if (params.username && params.where === 'cyrusyjli') resolve(1)
+    if (params) resolve(1)
   })
 }
 function fakeCount(params: any) {
   return new Promise((resolve) => {
-    if (params.where === 'cyrusyjli') resolve(1)
+    if (params) resolve(1)
   })
 }
 function fakeFindUnique(params: any) {
@@ -56,148 +107,171 @@ function fakeDBClient(req: any) {
   }
 }
 
+function fakeGetTenantIdentity(req: any, res: any, service: any) {
+  return new Promise((resolve) => {
+    if (req && res && service) resolve(1)
+  })
+}
+
 // ====== dependenciesPlugins ====== //
-
-test('dependenciesPlugins findMany', async () => {
-  expect(
-    await dependenciesPlugins(fakeDBClient(fakeReq)).findMany(
-      fakeReq,
-      null,
-      null,
-      {
-        modelName: fakeModelName,
+describe('dependenciesPlugins', () => {
+  test('dependenciesPlugins findMany', async () => {
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).findMany(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName,
+        },
+      ),
+    ).toEqual({
+      code: 0,
+      data: {
+        list: 1,
+        total: 1,
       },
-    ),
-  ).toEqual({
-    code: -1,
-    message: 'Unexpected token c in JSON at position 0',
-  })
-})
-
-test('dependenciesPlugins create', async () => {
-  expect(
-    await dependenciesPlugins(fakeDBClient(fakeReq)).create(
-      fakeReq,
-      null,
-      null,
-      {
-        modelName: fakeModelName,
-      },
-    ),
-  ).toEqual({
-    code: 0,
-    data: fakeRes,
-  })
-
-  expect(
-    await dependenciesPlugins(fakeDBClient(fakeReq)).create(
-      fakeReq,
-      null,
-      null,
-      {
-        modelName: fakeModelName + 1,
-      },
-    ),
-  ).toEqual({
-    code: -1,
-    message: "Cannot read property 'create' of undefined",
-  })
-})
-
-test('dependenciesPlugins findUnique', async () => {
-  expect(
-    await dependenciesPlugins(fakeDBClient(fakeReq)).findUnique(
-      fakeReq,
-      null,
-      null,
-      {
-        modelName: fakeModelName,
-      },
-    ),
-  ).toEqual({
-    code: 0,
-    data: 1,
+    })
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).findMany(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName + 1,
+        },
+      ),
+    ).toEqual({
+      code: -1,
+      message: "Cannot read property 'findMany' of undefined",
+    })
   })
 
-  expect(
-    await dependenciesPlugins(fakeDBClient(fakeReq)).findUnique(
-      fakeReq,
-      null,
-      null,
-      {
-        modelName: fakeModelName + 1,
-      },
-    ),
-  ).toEqual({
-    code: -1,
-    message: "Cannot read property 'findUnique' of undefined",
-  })
-})
+  test('dependenciesPlugins create', async () => {
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).create(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName,
+        },
+      ),
+    ).toEqual({
+      code: 0,
+      data: fakeRes,
+    })
 
-test('dependenciesPlugins update', async () => {
-  expect(
-    await dependenciesPlugins(fakeDBClient(fakeReq)).update(
-      fakeReq,
-      null,
-      null,
-      {
-        modelName: fakeModelName,
-      },
-    ),
-  ).toEqual({
-    code: 0,
-    data: 1,
-  })
-
-  expect(
-    await dependenciesPlugins(fakeDBClient(fakeReq)).update(
-      fakeReq,
-      null,
-      null,
-      {
-        modelName: fakeModelName + 1,
-      },
-    ),
-  ).toEqual({
-    code: -1,
-    message: "Cannot read property 'update' of undefined",
-  })
-})
-
-test('dependenciesPlugins delete', async () => {
-  expect(
-    await dependenciesPlugins(fakeDBClient(fakeReq)).delete(
-      fakeReq,
-      null,
-      null,
-      {
-        modelName: fakeModelName,
-      },
-    ),
-  ).toEqual({
-    code: 0,
-    data: 1,
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).create(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName + 1,
+        },
+      ),
+    ).toEqual({
+      code: -1,
+      message: "Cannot read property 'create' of undefined",
+    })
   })
 
-  expect(
-    await dependenciesPlugins(fakeDBClient(fakeReq)).delete(
-      fakeReq,
-      null,
-      null,
-      {
-        modelName: fakeModelName + 1,
-      },
-    ),
-  ).toEqual({
-    code: -1,
-    message: "Cannot read property 'delete' of undefined",
-  })
-})
+  test('dependenciesPlugins findUnique', async () => {
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).findUnique(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName,
+        },
+      ),
+    ).toEqual({
+      code: 0,
+      data: 1,
+    })
 
-test('dependenciesPlugins check', () => {
-  expect(() => {
-    dependenciesPlugins(undefined)
-  }).toThrow()
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).findUnique(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName + 1,
+        },
+      ),
+    ).toEqual({
+      code: -1,
+      message: "Cannot read property 'findUnique' of undefined",
+    })
+  })
+
+  test('dependenciesPlugins update', async () => {
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).update(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName,
+        },
+      ),
+    ).toEqual({
+      code: 0,
+      data: 1,
+    })
+
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).update(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName + 1,
+        },
+      ),
+    ).toEqual({
+      code: -1,
+      message: "Cannot read property 'update' of undefined",
+    })
+  })
+
+  test('dependenciesPlugins delete', async () => {
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).delete(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName,
+        },
+      ),
+    ).toEqual({
+      code: 0,
+      data: 1,
+    })
+
+    expect(
+      await dependenciesPlugins(fakeDBClient(fakeReq)).delete(
+        fakeReq,
+        null,
+        null,
+        {
+          modelName: fakeModelName + 1,
+        },
+      ),
+    ).toEqual({
+      code: -1,
+      message: "Cannot read property 'delete' of undefined",
+    })
+  })
+
+  test('dependenciesPlugins check', () => {
+    expect(() => {
+      dependenciesPlugins(undefined)
+    }).toThrow()
+  })
 })
 
 describe('openapi', () => {
@@ -207,12 +281,25 @@ describe('openapi', () => {
 
   test('makeOpenapi', async () => {
     expect(typeof makeOpenapi).toBe('function')
-
-    // makeOpenapi(app, makeOpenapiOptions(), )
+    expect(typeof makeOpenapi(fakeApp, {}, 'test')).toBe('object')
   })
 
   test('makeOpenapiOptions', () => {
     expect(typeof makeOpenapiOptions).toBe('function')
+    expect(
+      typeof makeOpenapiOptions(
+        fakeService,
+        fakeGetTenantIdentity,
+        fakeDatasource,
+      ),
+    ).toBe('object')
+    expect(
+      typeof makeOpenapiOptions(
+        fakeService2,
+        fakeGetTenantIdentity,
+        fakeDatasource,
+      ),
+    ).toBe('object')
   })
 
   // ====== findManyFilter ====== //
@@ -296,7 +383,7 @@ describe('openapi', () => {
     // ).toBeTruthy()
   })
 
-  test('getParams', () => {
+  test('getParams filterPagination skip', () => {
     const result = findManyFilter.getParams({
       x: 1,
       y: 2,
@@ -304,5 +391,33 @@ describe('openapi', () => {
       filtering: true,
     })
     expect(result.skip).toEqual(3)
+  })
+
+  test('getParams filterPagination cursor', () => {
+    const result = findManyFilter.getParams({
+      cursor: 'name: 1',
+    })
+    expect(result.cursor).toEqual({ name: 1 })
+  })
+
+  test('getParams filterOther', () => {
+    const result = findManyFilter.getParams({
+      where: '{"name": "cyrus"}',
+    })
+    expect(result.where).toEqual({ name: 'cyrus' })
+  })
+
+  test('getParams filterSorting', () => {
+    const result = findManyFilter.getParams({
+      orderBy: ['name:asc'],
+    })
+    expect(result.orderBy).toEqual({ name: 'asc' })
+  })
+
+  test('getParams filterSelecting', () => {
+    const result = findManyFilter.getParams({
+      select: ['name:asc'],
+    })
+    expect(result.select).toEqual({ 'name:asc': true })
   })
 })
