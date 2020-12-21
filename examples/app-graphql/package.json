@@ -12,7 +12,11 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
+<<<<<<< HEAD
     "@mrapi/app": "^1.0.0-beta.0",
+=======
+    "@mrapi/app": "1.0.0-beta.1",
+>>>>>>> 3fdc1b298f7212ca5f2d2f5b3b96f852720f82f0
     "body-parser": "1.19.0",
     "graphql": "^15"
   },

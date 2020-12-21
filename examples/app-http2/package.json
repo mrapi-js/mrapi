@@ -12,7 +12,7 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/app": "^1.0.0-beta.0",
+    "@mrapi/app": "1.0.0-beta.1",
     "pem": "1.14.4"
   },
   "devDependencies": {

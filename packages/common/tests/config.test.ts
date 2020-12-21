@@ -4,11 +4,18 @@ import { resolveConfig } from '../src/index'
 const fixturesRoot = join(__dirname, './__fixtures__/config')
 
 describe('Config', () => {
+<<<<<<< HEAD
   beforeEach(() => {
     jest.resetModules()
   })
 
   afterEach(() => {})
+=======
+  beforeEach(() => {})
+
+  afterEach(() => {})
+
+>>>>>>> 3fdc1b298f7212ca5f2d2f5b3b96f852720f82f0
   test('types', () => {
     expect(typeof resolveConfig).toBe('function')
   })
@@ -75,6 +82,7 @@ describe('Config', () => {
       )
     }
   })
+<<<<<<< HEAD
   test('resolveConfig() input.parsed exsits', () => {
     const cwd = join(fixturesRoot, 'configs')
     // input.parsed exsits
@@ -197,4 +205,6 @@ describe('Config', () => {
       const out= resolveConfig({},cwd,'mrapi.config.openapi-multi-false')
       expect(typeof out).toBe('object')
     });
+=======
+>>>>>>> 3fdc1b298f7212ca5f2d2f5b3b96f852720f82f0
 })

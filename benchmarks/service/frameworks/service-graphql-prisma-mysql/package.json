@@ -14,7 +14,11 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
+<<<<<<< HEAD
     "@mrapi/service": "file:../../../../packages/service",
+=======
+    "@mrapi/service": "^1.0.0-beta.1",
+>>>>>>> 3fdc1b298f7212ca5f2d2f5b3b96f852720f82f0
     "@nexus/schema": "^0.19.2",
     "@prisma/client": "^2.13",
     "express-graphql": "^0.12.0",
@@ -22,7 +26,11 @@
     "pino-pretty": "^4.3.0"
   },
   "devDependencies": {
+<<<<<<< HEAD
     "@mrapi/cli": "file:../../../../packages/cli",
+=======
+    "@mrapi/cli": "^2.0.1-beta.1",
+>>>>>>> 3fdc1b298f7212ca5f2d2f5b3b96f852720f82f0
     "@paljs/generator": "^2.8.4",
     "@paljs/schema": "^2.8.1",
     "@prisma/cli": "^2.13",

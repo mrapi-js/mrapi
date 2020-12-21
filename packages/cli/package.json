@@ -36,5 +36,13 @@
     "@paljs/schema": "^2.8",
     "@prisma/cli": "^2",
     "@prisma/debug": "^2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  },
+  "homepage": "https://github.com/mrapi-js/mrapi",
+  "bugs": {
+    "url": "https://github.com/mrapi-js/mrapi/issues"
   }
 }

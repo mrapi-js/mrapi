@@ -14,16 +14,16 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/datasource": "file:../../packages/datasource",
-    "@mrapi/graphql": "file:../../packages/graphql",
-    "@mrapi/service": "file:../../packages/service",
+    "@mrapi/datasource": "^1.0.0-beta.1",
+    "@mrapi/graphql": "^1.0.0-beta.1",
+    "@mrapi/service": "^1.0.0-beta.1",
     "@nexus/schema": "^0.19.2",
     "@prisma/client": "^2.13",
     "nexus-plugin-prisma": "^0.26",
     "pino-pretty": "^4.3.0"
   },
   "devDependencies": {
-    "@mrapi/cli": "file:../../packages/cli",
+    "@mrapi/cli": "^2.0.1-beta.1",
     "@paljs/generator": "^2.8.4",
     "@prisma/cli": "^2.13",
     "@types/node": "*",

@@ -1,6 +1,6 @@
 {
   "name": "mrapi-workspace",
-  "version": "2.0.0-beta.3",
+  "version": "2.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -8,9 +8,10 @@
   "scripts": {
     "dev": "lerna run watch --parallel",
     "build": "tsc -b tsconfig.build.json",
-    "clean": "rm -rf ./packages/*/lib/ ./packages/*/*.tsbuildinfo",
-    "clean:npm": "rm -rf node_modules && lerna clean",
-    "clean:all": "npm run clean && npm run clean:npm",
+    "clean": "yarn clean:build_files && yarn clean:node_modules && yarn clean:lock_files",
+    "clean:build_files": "rm -rf ./packages/*/lib/ ./examples/*/lib/ ./packages/*/*.tsbuildinfo ./examples/*/*.tsbuildinfo",
+    "clean:lock_files": "rm -rf ./yarn.lock ./package-lock.json ./packages/*/package-lock.json ./examples/*/package-lock.json ./packages/*/yarn.lock ./examples/*/yarn.lock",
+    "clean:node_modules": "rm -rf node_modules && lerna clean --yes",
     "test": "jest --watch",
     "coverage": "jest --coverage",
     "publish:beta": "lerna publish from-package --preid beta --dist-tag next",

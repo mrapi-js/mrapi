@@ -27,5 +27,16 @@
     "@mrapi/router": "^1.0.0-beta.1",
     "@mrapi/types": "^2.0.1-beta.1",
     "fast-proxy": "^1"
+<<<<<<< HEAD
+=======
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  },
+  "homepage": "https://github.com/mrapi-js/mrapi",
+  "bugs": {
+    "url": "https://github.com/mrapi-js/mrapi/issues"
+>>>>>>> 3fdc1b298f7212ca5f2d2f5b3b96f852720f82f0
   }
 }

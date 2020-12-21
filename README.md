@@ -2,27 +2,7 @@
   <a href="https://mrapi-js.github.io/docs/" target="_blank" rel="noopener noreferrer"><img width="200" src="./assets/logo.png" alt="mrapi logo"></a>
 </p>
 
-mrapi is a framework for rapid development of API or DAL applications.
-
-[Website](https://mrapi-js.github.io/docs/)
-
-## Overview
-
-Hello! Thank you for checking out Mrapi!
-Mrapi is a lightweight, out-of-the-box, nodejs server framework, Born for construction
-Use Node.js and Koa for better enterprise frameworks and applications
-
-Born to build enterprise-level nodejs applications faster
-
-## Core features
-
-- Easier to use
-- Automation
-- Flexible and Extendible
-- Highly performant
-- TypeScript Support
-
-Let's start!
+Application framework for [node](https://nodejs.org/).
 
 ## Requirements
 
@@ -30,12 +10,6 @@ Let's start!
 
 - NodeJS >= 10.x
 - NPM >= 6.x
-
-**Database:**
-
-- MySQL >= 5.6
-- PostgreSQL >= 10
-- SQLite >= 3
 
 ## Quick start
 
@@ -103,25 +77,19 @@ Run in developer environment
 
 ```termianl
 npx ts-node-dev --respawn --transpile-only ./src/app.ts
+```bash
+npx fbi create factory-node
 ```
 
-## Documentation
+## Main packages
 
-You can find the Mrapi documentation on the [website](https://mrapi-js.github.io/docs/).
+- [@mrapi/app](./packages/app/README.md)
+- [@mrapi/service](./packages/service/README.md)
+- [@mrapi/gateway](./packages/gateway/README.md)
 
-- [x] [Getting Started](https://mrapi-js.github.io/docs/GettingStart.html)
-- [x] Configuration
-  - [x] [common](https://mrapi-js.github.io/docs/Configuration/Common.html)
-  - [x] [@mrapi/dal](https://mrapi-js.github.io/docs/Configuration/DAL.html)
-  - [x] [@mrapi/api](https://mrapi-js.github.io/docs/Configuration/API.html)
-- [x] [CLI](https://mrapi-js.github.io/docs/CLI.html)
-- [x] [DAL](https://mrapi-js.github.io/docs/DAL/DAL.html)
-  - [x] [GraphQL API](https://mrapi-js.github.io/docs/DAL/GraphQl-API.html)
-  - [x] [OpenAPI](https://mrapi-js.github.io/docs/DAL/OpenAPI.html)
-- [x] [API](https://mrapi-js.github.io/docs/API.html)
-- [x] [Examples](https://mrapi-js.github.io/docs/Examples.html)
-- [x] [Deployment](https://mrapi-js.github.io/docs/Deployment.html)
+## Contribute to Mrapi
 
+Please read the [guide](./CONTRIBUTING.md)
 ## License
 
 Licensed under [MIT](./LICENSE).

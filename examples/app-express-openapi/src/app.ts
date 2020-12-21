@@ -25,7 +25,6 @@ const opts = {
     mrapiFn: () => {},
   },
 }
-console.log(opts)
 const instance = initialize(opts)
 
 const apiDoc = instance.apiDoc
