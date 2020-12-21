@@ -146,27 +146,49 @@ describe('Config', () => {
   })
   test('service.datasource.provider ', () => {
     const cwd = join(fixturesRoot, 'configs')
-    // const out= resolveConfig({}, cwd, 'mrapi.config.multi-tenant-db-provider')
-    // expect(typeof out).toBe('object')
-    // expect(typeof out.service).toBe('object')
+    const out= resolveConfig({}, cwd, 'mrapi.config.multi-tenant-db-provider')
+    expect(typeof out).toBe('object')
+    expect(typeof out.service).toBe('object')
     const out1= resolveConfig({}, cwd, 'mrapi.config.multi-tenant-true')
     expect(typeof out1).toBe('object')
     expect(typeof out1.service).toBe('object')
     // openapi is not exists
-    // const out1=resolveConfig({},cwd,'mrapi.config.openapi-is-false')
-    // expect(typeof out1).toBe('object')
+    const out2=resolveConfig({},cwd,'mrapi.config.openapi-is-false')
+    expect(typeof out2).toBe('object')
   })
   test('resolveConfig no params ', () => {
       let nullValue:any
-      const notExistFileName='mrapi.config.mot-exsits-file'
+      const cwd = join(fixturesRoot, 'configs')
+      const nullConfigFileName:any=null
+      const notExistFileName='mrapi.config.not-exsits-file'
+      const notExistConfigService='mrapi.config.no-config-service'
       const out= resolveConfig(nullValue)
       expect(typeof out).toBe('object')
       // test configFileName is null
-      const out1=resolveConfig(nullValue,nullValue,undefined)
+      const out1=resolveConfig(nullValue,nullValue,nullConfigFileName)
       expect(typeof out1).toBe('object')
       // configFileName is not exist
       const out2=resolveConfig(nullValue,nullValue,notExistFileName)
       expect(typeof out2).toBe('object')
+      const out3=resolveConfig(nullValue,cwd,notExistFileName)
+      expect(typeof out3).toBe('object')
+      // config-service is not exist
+      const out4=resolveConfig(nullValue,cwd,notExistConfigService)
+      expect(typeof out4).toBe('object')
   });
-
+  test('no-schema', () => {
+    const cwd = join(fixturesRoot, 'configs')
+    const out= resolveConfig({},cwd,'mrapi.config.no-schema')
+    expect(typeof out).toBe('object')
+  });
+    test('multi-tenant-no-name', () => {
+      const cwd = join(fixturesRoot, 'configs')
+    const out= resolveConfig({},cwd,'mrapi.config.multi-tenant-no-name')
+    expect(typeof out).toBe('object')
+    });
+    test('openapi-multi-false', () => {
+      const cwd = join(fixturesRoot, 'configs')
+      const out= resolveConfig({},cwd,'mrapi.config.openapi-multi-false')
+      expect(typeof out).toBe('object')
+    });
 })

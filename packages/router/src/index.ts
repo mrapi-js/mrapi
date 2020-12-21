@@ -16,7 +16,7 @@ export class Router<T = any> {
 
   constructor(opts?: RouterOptions) {
     if (opts?.prefix) {
-      this.prefix = opts?.prefix
+      this.prefix = opts.prefix
     }
   }
 
