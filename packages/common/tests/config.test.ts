@@ -6,7 +6,6 @@ const fixturesRoot = join(__dirname, './__fixtures__/config')
 describe('Config', () => {
   beforeEach(() => {
     jest.resetModules()
-    process.env.NODE_ENV ='production'
   })
 
   afterEach(() => {})
@@ -97,21 +96,28 @@ describe('Config', () => {
   })
   test('process.env.NODE_ENV ', () => {
     const cwd = join(fixturesRoot, 'configs')
+    const mockFn: any = jest.fn()
     // production
-    process.env.NODE_ENV ='production'
+    const realProcess = process
+    global.process = { ...realProcess, env: {NODE_ENV:'production'} }
     const out=resolveConfig({}, cwd, 'mrapi.config.basic')
-    expect(process.env.NODE_ENV).toBe('production')
     expect(typeof out).toBe('object')
+    expect(mockFn).not.toHaveBeenCalled()
+    global.process = realProcess
     // null
-    delete process.env.NODE_ENV
+    global.process = { ...realProcess, env: {NODE_ENV:undefined} }
     const out2=resolveConfig({}, cwd, 'mrapi.config.basic')
     expect(process.env.NODE_ENV).toBeUndefined()
+    expect(mockFn).not.toHaveBeenCalled()
     expect(typeof out2).toBe('object')
+    global.process = realProcess
     // test
-    process.env.NODE_ENV='test'
+    global.process = { ...realProcess, env: {NODE_ENV:'test'} }
     const out3=resolveConfig({}, cwd, 'mrapi.config.basic')
     expect(process.env.NODE_ENV).toBe('test')
+    expect(mockFn).not.toHaveBeenCalled()
     expect(typeof out3).toBe('object')
+    global.process = realProcess
   })
   test('normalizeOpenapiConfig() service.tenants ', () => {
     const cwd = join(fixturesRoot, 'configs')

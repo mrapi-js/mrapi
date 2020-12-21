@@ -10,7 +10,7 @@ import {
   getWorkspaceDirs
 } from './../src/utils'
 const fixturesRoot = join(__dirname, './__fixtures__/config')
-describe('Config', () => {
+describe('ConfigTest', () => {
   beforeEach(() => {
     jest.resetModules()
     process.env.NODE_ENV = 'production'
@@ -33,6 +33,20 @@ describe('Config', () => {
     expect(exitMock).toHaveBeenCalled()
     global.process = realProcess
   })
+  test('tryRequire() resolveDefault', () => {
+    const cwd=join(fixturesRoot,'ts','empty-file')
+    const cwd1=join(fixturesRoot,'config','mrapi.config.basic')
+    const cwd2=join(fixturesRoot,'ts','default-empty-file')
+    // resolveDefault=false
+    const out=tryRequire(cwd,'test-info',false)
+    expect(out).toEqual({})
+    // resolveDefault=true
+    const out1=tryRequire(cwd1) 
+    expect(typeof out1).toEqual('object')
+    //  mod=undefind
+    const out2=tryRequire(cwd2)
+    expect(out2).toEqual(undefined)
+  });
   test('ensureEndSlash()  ', () => {
     //  ! endsWith '/'
     const out = ensureEndSlash('/test')
@@ -67,7 +81,8 @@ describe('Config', () => {
     const out = now()
     expect(typeof out).toBe('string')
   })
-  test('ensurePosixPath() platform=win32  ', () => {
+  test('ensurePosixPath()   ', () => {
+    // platform=win32
     const realProcess = process
     const playformMock: any = jest.fn()
     global.process = { ...realProcess, platform: 'win32' }
@@ -80,6 +95,9 @@ describe('Config', () => {
     expect(playformMock).not.toHaveBeenCalled()
     expect(out1).toBe('/a/')
     global.process = realProcess
+    // platform!=win32
+    const out2 = ensurePosixPath('test-path')
+    expect(out2).toBe('test-path')
   })
   test('ensureArray() ', () => {
       // params is an array

@@ -1,9 +1,7 @@
 {
-    "compilerOptions": {
-        "rootDir":"/test/src",
-        "outDir":"/test/out"
-    },
-    "include": ["packages", "scripts", "typings/**/*.ts"],
-    "exclude": ["node_modules", "./**/*/tests/**/", "benchmarks", "./**/*/lib/"]
-  }
-  
+  "compilerOptions": {
+    "rootDir": "/test/src",
+    "outDir": "/test/out"
+  },
+  "include": ["src/**/*"]
+}
