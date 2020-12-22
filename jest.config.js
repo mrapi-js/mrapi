@@ -12,5 +12,10 @@ module.exports = {
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
   snapshotSerializers: ['jest-serializer-path'],
   collectCoverage: true,
-  coverageReporters: ["html"]
+  coverageReporters: ['html', 'lcov', 'text'],
+  collectCoverageFrom: [
+    'packages/*/src/**/*.ts',
+    '!packages/*/lib/**',
+    '!packages/*/utils/**'
+  ],
 }

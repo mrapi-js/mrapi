@@ -72,7 +72,7 @@ export function resolveConfig(
   const config: mrapi.PartialConfig = merge(
     {
       ...defaults.config,
-      ...(tmp || {}),
+      ...tmp,
     },
     (input || {}) as mrapi.Config,
   )
@@ -143,11 +143,12 @@ function normalizeServiceConfig(
 
   // datasource paths
   const usingDatasource = service.datasource || service.schema
+  const tenants=service.tenants as mrapi.TenantOptions[]
   if (usingDatasource) {
     const hasDatabase =
       !isMultiTenant || service.multiTenant?.mode === 'single-db'
         ? !!service.database
-        : service.tenants?.every((t) => !!t.database)
+        : tenants.every((t) => !!t.database)
     assert(
       hasDatabase,
       `[Config Error] Service '${
@@ -189,7 +190,7 @@ function normalizeServiceConfig(
   const contextFile = join(service.customDir, 'context')
 
   if (isMultiTenant) {
-    service.tenants = service.tenants?.map((t) => ({
+    service.tenants = tenants.map((t) => ({
       ...t,
       name: t.name || defaults.tenantName,
     }))
@@ -204,7 +205,7 @@ function normalizeServiceConfig(
   )
 
   return merge(defaultConfig, {
-    ...(service || {}),
+    ...service,
     ...(isMultiTenant
       ? {
           multiTenant: {
@@ -239,7 +240,7 @@ function normalizeGraphqlConfig(
   return {
     ...options,
     output: ensureAbsolutePath(
-      tmp?.output ||
+      tmp.output ||
         join(defaultApiOutput, isMultiService ? service.name! : '', 'graphql'),
       cwd,
     ),
@@ -256,13 +257,13 @@ function normalizeOpenapiConfig(
     return undefined
   }
 
-  const tmp = (service.openapi || {}) as PathsObject
+  const tmp = service.openapi as PathsObject
   const options = merge(defaults.openapi, tmp)
 
   return {
     ...options,
     output: ensureAbsolutePath(
-      tmp?.output ||
+      tmp.output ||
         join(defaultApiOutput, isMultiService ? service.name! : '', 'openapi'),
       cwd,
     ),
