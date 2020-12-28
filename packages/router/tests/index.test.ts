@@ -1,6 +1,6 @@
-import  { Router } from '../src'
+import { Router } from '../src'
 import defaultRouter from '../src'
-import type {HTTPMethod} from '../src'
+import type { HTTPMethod } from '../src'
 const fn = () => {}
 const fn1 = (x: any, y: any) => x + y
 const fn2 = (x: any, y: any, z: any) => x + y + z
@@ -20,7 +20,18 @@ const functionNamesArr = [
   'post',
   'put',
 ]
-const routerFunctionsName=['all','get','head','patch','options','connect','delete','trace','post','put']
+const routerFunctionsName = [
+  'all',
+  'get',
+  'head',
+  'patch',
+  'options',
+  'connect',
+  'delete',
+  'trace',
+  'post',
+  'put',
+]
 describe('Router Basic', () => {
   test('types', () => {
     const router = new Router()
@@ -34,19 +45,19 @@ describe('Router Basic', () => {
     expect(router.prefix).toBe(undefined)
     // expect(HTTPMethod).toBeDefined()
   })
-    test('constructor', () => {
-      expect(typeof Router).toBe('function')
-      expect(Router).toBeDefined()
-      const router=new Router({prefix:'testPrefix'})
-      expect(router.prefix).toBe('testPrefix')
-      const router2=new Router({})
-      expect(router2.prefix).toBe(undefined)
-      const router3=new Router(void 0)
-      expect(router3).toEqual({routes:[]})
-      expect(typeof defaultRouter).toBe('function')
-      const requireRouter=require('../src')
-      expect(requireRouter.default).toEqual(defaultRouter)
-    });
+  test('constructor', () => {
+    expect(typeof Router).toBe('function')
+    expect(Router).toBeDefined()
+    const router = new Router({ prefix: 'testPrefix' })
+    expect(router.prefix).toBe('testPrefix')
+    const router2 = new Router({})
+    expect(router2.prefix).toBe(undefined)
+    const router3 = new Router(void 0)
+    expect(router3).toEqual({ routes: [] })
+    expect(typeof defaultRouter).toBe('function')
+    const requireRouter = require('../src')
+    expect(requireRouter.default).toEqual(defaultRouter)
+  })
   test('on()', () => {
     const router = new Router()
     const out = router.on('GET', '/foo/:hello', fn)
@@ -87,7 +98,7 @@ describe('Router Basic', () => {
       expect(router.routes[i].keys).toEqual(['hello'])
       expect(router.routes[i].handlers).toEqual([fn])
     }
-    const empty=router.on('', '/foo/:hello', fn)
+    const empty = router.on('', '/foo/:hello', fn)
     expect(empty).toEqual(router)
   })
   test('off() idx>=0', () => {
@@ -103,7 +114,7 @@ describe('Router Basic', () => {
   })
   test('off() handler is different && idx=-1', () => {
     const router = new Router()
-    router.on('GET', '/foo/:hello', fn,fn1)
+    router.on('GET', '/foo/:hello', fn, fn1)
     expect(router.routes.length).toBe(1)
     expect(router.routes[0].handlers.length).toBe(2)
     router.off('GET', '/foo/:hello', fn2)
@@ -117,10 +128,10 @@ describe('Router Basic', () => {
     router.off('POST', '/foo/:hello', fn1)
     expect(router.routes.length).toBe(1)
     expect(router.routes[0].handlers.length).toBe(1)
-    router.on('GET','/foo2/:hello',[fn1,fn2])
-    router.off('GET','/^/foo/([^/]+?)/?$/i',fn1)
+    router.on('GET', '/foo2/:hello', [fn1, fn2])
+    router.off('GET', '/^/foo/([^/]+?)/?$/i', fn1)
   })
- 0
+  0
   test('use()', () => {
     const router = new Router()
 
@@ -201,42 +212,34 @@ describe('Router Basic', () => {
     ;(out as any).chain = 1
     out.handlers.forEach((f) => f(out))
     expect((out as any).chain).toBe(3)
-    router.get(
-      '/foo2/:title',
-      (req: any) => {
-        expect(req.chain++).toBe(1)
-        expect(req.params.title).toBe('bar')
-      },
-    )
+    router.get('/foo2/:title', (req: any) => {
+      expect(req.chain++).toBe(1)
+      expect(req.params.title).toBe('bar')
+    })
   })
   test('find() tmp.keys.length>0', () => {
     const router = new Router()
-    router.get(
-      '/foo/:title',
-      fn
-    )
+    router.get('/foo/:title', fn)
     // mathces groups&& tmp.handlers.length = 1
     const out = router.find('GET', '/foo/bar')
     expect(out.handlers.length).toBe(1)
     expect(out.params.title).toBe('bar')
     // mathces groups&& tmp.handlers.length >1
-    router.get('/foo2/:title',[fn1,fn2])
-    const out2= router.find('GET', '/foo2/bar')
-    expect(out2.params).toEqual({title:'bar'})
-    expect(out2.handlers).toEqual([fn1,fn2])
+    router.get('/foo2/:title', [fn1, fn2])
+    const out2 = router.find('GET', '/foo2/bar')
+    expect(out2.params).toEqual({ title: 'bar' })
+    expect(out2.handlers).toEqual([fn1, fn2])
     // matches=null
     const out3 = router.find('GET', '/foo')
     expect(typeof out3).toBe('object')
     expect(out3.params).toEqual({})
     expect(out3.handlers).toEqual([])
     expect(out3.handlers.length).toBe(0)
-    
-    // isHEAD && tmp.method === 'GET'
-    const out4=router.find('HEAD','/foo')
-    expect(out4.params).toEqual({})
-    
 
-});
+    // isHEAD && tmp.method === 'GET'
+    const out4 = router.find('HEAD', '/foo')
+    expect(out4.params).toEqual({})
+  })
   test('find() multiple', () => {
     const router = new Router()
     router
@@ -272,14 +275,14 @@ describe('Router Basic', () => {
   test('find() tmp.pattern.test(url)', () => {
     const router = new Router()
     // tmp.handlers.length > 1
-    router.on('GET','/foo',[fn1,fn2])
-    const out=router.find('GET','/foo')
+    router.on('GET', '/foo', [fn1, fn2])
+    const out = router.find('GET', '/foo')
     expect(out.handlers.length).toBe(2)
     // tmp.handlers.length <= 1
-    router.on('GET','/foo2',fn1)
-    const out2=router.find('GET','/foo2')
+    router.on('GET', '/foo2', fn1)
+    const out2 = router.find('GET', '/foo2')
     expect(out2.handlers.length).toBe(1)
-  });
+  })
   test('find() no match', () => {
     const router = new Router()
     const out = router.find('DELETE', '/nothing')
@@ -303,30 +306,30 @@ describe('Router Basic', () => {
     expect(out2.handlers).toEqual([])
     expect(out2.handlers.length).toBe(0)
     // mathces groups&& tmp.handlers.length> 1
-    router.on('GET',/^[/]foo2[/](?<hello>\w+)[/]?$/,[fn,fn1])
+    router.on('GET', /^[/]foo2[/](?<hello>\w+)[/]?$/, [fn, fn1])
     const out3 = router.find('GET', '/foo2/bar')
-    expect(out3.params).toEqual({hello:'bar'})
-    expect(out3.handlers).toEqual([fn,fn1])
+    expect(out3.params).toEqual({ hello: 'bar' })
+    expect(out3.handlers).toEqual([fn, fn1])
     // matches.groups == void 0
-    const out4=router.find('GET','/foo2/bar bar2')
+    const out4 = router.find('GET', '/foo2/bar bar2')
     expect(out4.params).toEqual({})
   })
 
   test('find() !tmp.mehtod', () => {
-    const router=new Router()
+    const router = new Router()
     router.on('GET', /^[/]foo[/](?<hello>\w+)[/]?$/, fn)
     const out1 = router.find('POST', '/foo/bar')
     expect(out1.handlers).toEqual([])
     expect(out1.params).toEqual({})
-  });
+  })
   test('find() tmp.method & !other', () => {
-      const router=new Router()
-      router.on('GET','/foo',fn1)
-      const out=router.find('GET','/foo2')
-      expect(out.params).toEqual({})
-      expect(out.handlers).toEqual([])
-      // expect(out).toBeDefined()
-  });
+    const router = new Router()
+    router.on('GET', '/foo', fn1)
+    const out = router.find('GET', '/foo2')
+    expect(out.params).toEqual({})
+    expect(out.handlers).toEqual([])
+    // expect(out).toBeDefined()
+  })
   test('find() w/ all()', () => {
     const r1 = new Router().all('api', fn)
     const r2 = new Router().all('api/:version', fn)
@@ -376,9 +379,9 @@ describe('Router Basic', () => {
   })
   test('other http function', () => {
     const router = new Router()
-    for(let i=0;i<routerFunctionsName.length;i++){
-      const routerFunctionName:string=routerFunctionsName[i]
-      const out = (router as any)[routerFunctionName]('/foo/bar',[fn,fn1])
+    for (let i = 0; i < routerFunctionsName.length; i++) {
+      const routerFunctionName: string = routerFunctionsName[i]
+      const out = (router as any)[routerFunctionName]('/foo/bar', [fn, fn1])
       expect(out).toEqual(router)
     }
     expect(router.routes.length).toBe(10)

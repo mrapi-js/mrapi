@@ -67,13 +67,13 @@ export class Router<T = any> {
   find(method: HTTPMethod, url: string): FindResult<T> {
     const isHEAD = method === 'HEAD'
     let i = 0
-      let j = 0
-      let k
-      let tmp
-      const arr = this.routes
+    let j = 0
+    let k
+    let tmp
+    const arr = this.routes
     let matches: RegExpExecArray | never[] | null = []
-      const params: { [k: string]: any } = {}
-      let handlers: T[] = []
+    const params: { [k: string]: any } = {}
+    let handlers: T[] = []
     for (; i < arr.length; i++) {
       tmp = arr[i]
       if (
@@ -84,15 +84,16 @@ export class Router<T = any> {
         if (tmp.keys === false) {
           matches = tmp.pattern.exec(url)
           if (matches === null) continue
-          if (matches.groups !== void 0)
-            { for (k in matches.groups) params[k] = matches.groups[k] }
+          if (matches.groups !== void 0) {
+            for (k in matches.groups) params[k] = matches.groups[k]
+          }
           tmp.handlers.length > 1
             ? (handlers = handlers.concat(tmp.handlers))
             : handlers.push(tmp.handlers[0])
         } else if (tmp.keys.length > 0) {
           matches = tmp.pattern.exec(url)
           if (matches === null) continue
-          for (j = 0; j < tmp.keys.length;) params[tmp.keys[j]] = matches[++j]
+          for (j = 0; j < tmp.keys.length; ) params[tmp.keys[j]] = matches[++j]
           tmp.handlers.length > 1
             ? (handlers = handlers.concat(tmp.handlers))
             : handlers.push(tmp.handlers[0])

@@ -61,7 +61,7 @@ describe('no-port-app', () => {
         expect(typeof err).toBe('object')
       })
   })
- 
+
   test('GET /v1/child', () => {
     return ajax
       .get(`${NO_PORT_URL}/v1/sub`)

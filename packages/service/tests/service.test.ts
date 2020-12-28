@@ -15,7 +15,7 @@ describe('Service Instance Method', () => {
       'logEndpoints',
       'start',
     ]
-    serviceMethods.forEach(k => {
+    serviceMethods.forEach((k) => {
       expect(typeof (service as any)[k]).toBe('function')
     })
   })

@@ -5,7 +5,7 @@ import { App } from '../src/index'
 import Ajax from './__fixtrues__/axios'
 let app: App
 const ajax = new Ajax()
-process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 describe('App Basic', () => {
   beforeEach(() => {
     app = new App()
@@ -101,13 +101,13 @@ describe('App Basic', () => {
         if (err) {
           throw err
         }
-        // 
+        //
         const app2 = new App({
           http2: true,
           https: {
             key: keys.serviceKey,
             cert: keys.certificate,
-            allowHTTP1: true
+            allowHTTP1: true,
           } as any,
         })
           .get('/', (_req, res) => {
@@ -117,17 +117,15 @@ describe('App Basic', () => {
 
         expect(app2.find('GET', '/').handlers.length).toBe(1)
         return ajax
-        .get('https://localhost:3000/')
-        .then((res) => {
-          expect(res.data).toBe('Hello World!')
-          app2.close()
-        })
-        .catch((err) => {
-          expect(typeof err).toBe('object')
-          app2.close()
-        })
-
-
+          .get('https://localhost:3000/')
+          .then((res) => {
+            expect(res.data).toBe('Hello World!')
+            app2.close()
+          })
+          .catch((err) => {
+            expect(typeof err).toBe('object')
+            app2.close()
+          })
       },
     )
   })
@@ -147,7 +145,7 @@ describe('App Basic', () => {
           http2: {
             key: keys.serviceKey,
             cert: keys.certificate,
-            allowHTTP1: true
+            allowHTTP1: true,
           },
         })
           .get('/test', (_req, res) => {

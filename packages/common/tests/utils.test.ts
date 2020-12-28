@@ -7,7 +7,7 @@ import {
   ensurePosixPath,
   ensureArray,
   ensureAbsolutePath,
-  getWorkspaceDirs
+  getWorkspaceDirs,
 } from './../src/utils'
 const fixturesRoot = join(__dirname, './__fixtures__/config')
 describe('ConfigTest', () => {
@@ -34,19 +34,19 @@ describe('ConfigTest', () => {
     global.process = realProcess
   })
   test('tryRequire() resolveDefault', () => {
-    const cwd=join(fixturesRoot,'ts','empty-file')
-    const cwd1=join(fixturesRoot,'config','mrapi.config.basic')
-    const cwd2=join(fixturesRoot,'ts','default-empty-file')
+    const cwd = join(fixturesRoot, 'ts', 'empty-file')
+    const cwd1 = join(fixturesRoot, 'config', 'mrapi.config.basic')
+    const cwd2 = join(fixturesRoot, 'ts', 'default-empty-file')
     // resolveDefault=false
-    const out=tryRequire(cwd,'test-info',false)
+    const out = tryRequire(cwd, 'test-info', false)
     expect(out).toEqual({})
     // resolveDefault=true
-    const out1=tryRequire(cwd1) 
+    const out1 = tryRequire(cwd1)
     expect(typeof out1).toEqual('object')
     //  mod=undefind
-    const out2=tryRequire(cwd2)
+    const out2 = tryRequire(cwd2)
     expect(out2).toEqual(undefined)
-  });
+  })
   test('ensureEndSlash()  ', () => {
     //  ! endsWith '/'
     const out = ensureEndSlash('/test')
@@ -100,31 +100,31 @@ describe('ConfigTest', () => {
     expect(out2).toBe('test-path')
   })
   test('ensureArray() ', () => {
-      // params is an array
-      const out=ensureArray([1,2,3])
-      expect(out).toStrictEqual([1,2,3])
-      // params is not an array
-      const out1=ensureArray('string')
-      expect(out1).toStrictEqual(["string"])
-  });
-  test('ensureAbsolutePath()',()=>{
+    // params is an array
+    const out = ensureArray([1, 2, 3])
+    expect(out).toStrictEqual([1, 2, 3])
+    // params is not an array
+    const out1 = ensureArray('string')
+    expect(out1).toStrictEqual(['string'])
+  })
+  test('ensureAbsolutePath()', () => {
     const absolutePath = join(fixturesRoot, 'configs', 'mrapi.config.basic')
     const cwd = join(fixturesRoot, 'configs')
     // path is absolute
-    const out=ensureAbsolutePath(absolutePath)
+    const out = ensureAbsolutePath(absolutePath)
     expect(out).toBe(absolutePath)
     // path is not absolute
-    const out1=ensureAbsolutePath('test',cwd)
-    expect(out1).toBe(join(cwd,'test'))
+    const out1 = ensureAbsolutePath('test', cwd)
+    expect(out1).toBe(join(cwd, 'test'))
   })
   test('getWorkspaceDirs()  ', () => {
     const cwd = join(fixturesRoot, 'utils')
     // src-dst-not-exisits
-    const path=join(cwd,'test.src-dst-exists.tsconfig.json')
-    const out=getWorkspaceDirs(path)
-    expect(out).toEqual({src:'src',dst:'lib'})
+    const path = join(cwd, 'test.src-dst-exists.tsconfig.json')
+    const out = getWorkspaceDirs(path)
+    expect(out).toEqual({ src: 'src', dst: 'lib' })
     // src-dst-exisits
-    const out1=getWorkspaceDirs(cwd)
-    expect(out1).toEqual({src:'/test/src',dst:"/test/out"})
-  });
+    const out1 = getWorkspaceDirs(cwd)
+    expect(out1).toEqual({ src: '/test/src', dst: '/test/out' })
+  })
 })

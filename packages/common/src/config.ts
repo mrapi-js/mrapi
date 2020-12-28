@@ -90,7 +90,7 @@ export function resolveConfig(
     )
     assert(
       hasName,
-      '[Config Error] Multiple services should have \'name\' fields on each.',
+      "[Config Error] Multiple services should have 'name' fields on each.",
     )
   }
 
@@ -135,7 +135,7 @@ function normalizeServiceConfig(
   if (service.tenants) {
     assert(
       Array.isArray(service.tenants),
-      '[Config Error] \'service.tenants\' should be an array ',
+      "[Config Error] 'service.tenants' should be an array ",
     )
   }
 
@@ -143,7 +143,7 @@ function normalizeServiceConfig(
 
   // datasource paths
   const usingDatasource = service.datasource || service.schema
-  const tenants=service.tenants as mrapi.TenantOptions[]
+  const tenants = service.tenants as mrapi.TenantOptions[]
   if (usingDatasource) {
     const hasDatabase =
       !isMultiTenant || service.multiTenant?.mode === 'single-db'
@@ -155,7 +155,7 @@ function normalizeServiceConfig(
         service.name
       }' using prisma, but no 'database' field configured. ${
         isMultiTenant && service.multiTenant?.mode === 'seprate-db'
-          ? 'Each tenant should configure \'database\' field when using multi-tenant \'seprate-db\' mode'
+          ? "Each tenant should configure 'database' field when using multi-tenant 'seprate-db' mode"
           : ''
       }`,
     )

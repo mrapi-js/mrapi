@@ -16,7 +16,7 @@
     "coverage": "jest --coverage",
     "publish:beta": "lerna publish from-package --preid beta --dist-tag next",
     "lint": "eslint packages/*/src/**/*.ts",
-    "format": "prettier --write packages/*/src/**/*.ts"
+    "format":"prettier --write packages/**/*/*.ts"
   },
   "husky": {
     "hooks": {
