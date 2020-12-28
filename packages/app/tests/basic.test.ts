@@ -101,7 +101,6 @@ describe('App Basic', () => {
         if (err) {
           throw err
         }
-        //
         const app2 = new App({
           http2: true,
           https: {
