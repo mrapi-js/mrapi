@@ -89,15 +89,6 @@ describe('Router Basic', () => {
     }
     const empty=router.on('', '/foo/:hello', fn)
     expect(empty).toEqual(router)
-    // ohterHttpMethods.forEach((item:HTTPMethod,index:number)=>{
-    //   const out = router.on(item, '/foo/:hello', fn)
-    //   expect(out).toEqual(router)
-    //   expect(router.routes[index].method).toBe(item)
-    //   expect(router.routes[index].pattern).toEqual(/^\/foo\/([^/]+?)\/?$/i)
-    //   expect(router.routes[index].keys).toEqual(['hello'])
-    // expect(router.routes[index].handlers).toEqual([fn])
-    // })
-    // expect(out).toEqual(router)
   })
   test('off() idx>=0', () => {
     const router = new Router()
@@ -117,7 +108,6 @@ describe('Router Basic', () => {
     expect(router.routes[0].handlers.length).toBe(2)
     router.off('GET', '/foo/:hello', fn2)
     expect(router.routes.length).toBe(1)
-    // expect(router.routes[0].handlers).toBe(undefined)
   })
   test('off() method is different', () => {
     const router = new Router()
@@ -392,14 +382,5 @@ describe('Router Basic', () => {
       expect(out).toEqual(router)
     }
     expect(router.routes.length).toBe(10)
-    // router.get('/foo/bar', fn)
-    // router.head('/foo/bar', fn)
-    // router.patch('/foo/bar', [fn, fn1])
-    // router.options('/foo/bar', [fn, fn1])
-    // router.connect('/foo/bar', [fn, fn1])
-    // router.delete('/foo/bar', [fn, fn1])
-    // router.trace('/foo/bar', [fn, fn1])
-    // router.post('/foo/bar', [fn, fn1, fn2])
-    // router.put('/foo/bar', [fn, fn1])
   })
 })

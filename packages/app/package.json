@@ -23,14 +23,17 @@
   "dependencies": {
     "@mrapi/router": "^1.0.0-beta.1",
     "@polka/url": "1.0.0-next.11",
+    "@types/cookie-parser": "^1.4.2",
     "@types/express": "^4",
     "@types/express-serve-static-core": "^4",
     "lru-cache": "^6",
+    "pem": "^1.14.4",
     "pino": "^6"
   },
   "devDependencies": {
     "@types/lru-cache": "^5",
     "@types/pino": "^6",
+    "axios": "^0.21.1",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.5",
     "pino-pretty": "^4.3.0"

@@ -35,12 +35,12 @@ export class App extends Router<Middleware> {
     super()
 
     this.parse = parser
-    if (this.opts.cache) {
+    if (this.opts?.cache) {
       this.cache = new LRU(Number(this.opts.cache) || 1000)
     }
 
-    this.errorHandler = this.opts.errorHandler || errorHandler
-    this.defaultRoute = this.opts.defaultRoute || defaultRoute
+    this.errorHandler = this.opts?.errorHandler || errorHandler
+    this.defaultRoute = this.opts?.defaultRoute || defaultRoute
 
     this.id = (
       Date.now().toString(36) + Math.random().toString(36).substr(2, 5)
@@ -121,13 +121,11 @@ export class App extends Router<Middleware> {
     } else if (this.opts.http2) {
       // http2
       if (typeof this.opts.http2 === 'boolean' && !this.opts.https) {
-        throw new Error('please config http2 in \'http2\' or \'https\' field')
+        throw new Error("please config http2 in 'http2' or 'https' field")
       }
-      this.server = createSecureServer(
-        typeof this.opts.http2 !== 'boolean'
-          ? this.opts.http2
-          : this.opts.https || {},
-      )
+      const createSecureServerParams: any =
+        typeof this.opts.http2 !== 'boolean' ? this.opts.http2 : this.opts.https
+      this.server = createSecureServer(createSecureServerParams)
     } else {
       // http1.1
       this.server = createServer()
@@ -143,11 +141,9 @@ export class App extends Router<Middleware> {
         ? setImmediate(() => this.lookup(req, res, null))
         : this.lookup(req, res, null)
     })
-
     this.server.listen(port, ...args)
     return this
   }
-
   close() {
     if (!this.server) {
       return Promise.reject('server not started')
