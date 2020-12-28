@@ -72,13 +72,13 @@ export function resolveConfig(
   const config: mrapi.PartialConfig = merge(
     {
       ...defaults.config,
-      ...(tmp || {}),
+      ...tmp,
     },
     (input || {}) as mrapi.Config,
   )
   const ServiceCwd = dirname(maybeConfigPath)
   const isMultiService = Array.isArray(config.service)
-  const services: Array<mrapi.PartialServiceOptions> = config.service
+  const services: mrapi.PartialServiceOptions[] = config.service
     ? Array.isArray(config.service)
       ? config.service
       : [config.service]
@@ -90,7 +90,7 @@ export function resolveConfig(
     )
     assert(
       hasName,
-      `[Config Error] Multiple services should have 'name' fields on each.`,
+      '[Config Error] Multiple services should have \'name\' fields on each.',
     )
   }
 
@@ -135,7 +135,7 @@ function normalizeServiceConfig(
   if (service.tenants) {
     assert(
       Array.isArray(service.tenants),
-      `[Config Error] 'service.tenants' should be an array `,
+      '[Config Error] \'service.tenants\' should be an array ',
     )
   }
 
@@ -143,18 +143,19 @@ function normalizeServiceConfig(
 
   // datasource paths
   const usingDatasource = service.datasource || service.schema
+  const tenants=service.tenants as mrapi.TenantOptions[]
   if (usingDatasource) {
     const hasDatabase =
       !isMultiTenant || service.multiTenant?.mode === 'single-db'
         ? !!service.database
-        : service.tenants?.every((t) => !!t.database)
+        : tenants.every((t) => !!t.database)
     assert(
       hasDatabase,
       `[Config Error] Service '${
         service.name
       }' using prisma, but no 'database' field configured. ${
         isMultiTenant && service.multiTenant?.mode === 'seprate-db'
-          ? `Each tenant should configure 'database' field when using multi-tenant 'seprate-db' mode`
+          ? 'Each tenant should configure \'database\' field when using multi-tenant \'seprate-db\' mode'
           : ''
       }`,
     )
@@ -189,7 +190,7 @@ function normalizeServiceConfig(
   const contextFile = join(service.customDir, 'context')
 
   if (isMultiTenant) {
-    service.tenants = service.tenants?.map((t) => ({
+    service.tenants = tenants.map((t) => ({
       ...t,
       name: t.name || defaults.tenantName,
     }))
@@ -204,7 +205,7 @@ function normalizeServiceConfig(
   )
 
   return merge(defaultConfig, {
-    ...(service || {}),
+    ...service,
     ...(isMultiTenant
       ? {
           multiTenant: {
@@ -239,7 +240,7 @@ function normalizeGraphqlConfig(
   return {
     ...options,
     output: ensureAbsolutePath(
-      tmp?.output ||
+      tmp.output ||
         join(defaultApiOutput, isMultiService ? service.name! : '', 'graphql'),
       cwd,
     ),
@@ -262,7 +263,7 @@ function normalizeOpenapiConfig(
   return {
     ...options,
     output: ensureAbsolutePath(
-      tmp?.output ||
+      tmp.output ||
         join(defaultApiOutput, isMultiService ? service.name! : '', 'openapi'),
       cwd,
     ),

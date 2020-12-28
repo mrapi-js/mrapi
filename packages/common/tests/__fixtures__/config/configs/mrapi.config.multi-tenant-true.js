@@ -8,6 +8,10 @@ module.exports = {
             dir: '/src/openapi',
             prefix: '/api',
         },
+        graphql:{
+          dir: '/src/openapi',
+          prefix: '/api',
+        },
         datasource: {
               provider:'prisma',
               schema: 'prisma/schema.prisma',
@@ -36,7 +40,16 @@ module.exports = {
         name: 'management',
         schema: 'prisma/management/schema.prisma',
         database: 'file:./dev.db',
-        management: true,
+        openapi:{
+          dir: '/src/openapi',
+          prefix: '/api',
+          output:'test-output'
+        },
+        graphql:{
+          dir: '/src/openapi',
+          prefix: '/api',
+          output:'test-output'
+        }
       },
     ],
   }

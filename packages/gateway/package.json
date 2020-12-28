@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/gateway",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "mrapi",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -27,5 +27,13 @@
     "@mrapi/router": "^1.0.0-beta.1",
     "@mrapi/types": "^2.0.1-beta.1",
     "fast-proxy": "^1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrapi-js/mrapi.git"
+  },
+  "homepage": "https://github.com/mrapi-js/mrapi",
+  "bugs": {
+    "url": "https://github.com/mrapi-js/mrapi/issues"
   }
 }
