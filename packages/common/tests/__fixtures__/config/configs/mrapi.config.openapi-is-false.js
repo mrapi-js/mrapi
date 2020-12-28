@@ -1,15 +1,13 @@
-
-  module.exports = {
-    service: {
-    name:'openapi',
+module.exports = {
+  service: {
+    name: 'openapi',
     schema: 'prisma/schema.prisma',
     database: 'file:./dev.db',
-    openapi:false,
+    openapi: false,
     datasource: {
-          provider:'prisma',
-          schema: 'prisma/schema.prisma',
-          output:'test-output'
-      },
+      provider: 'prisma',
+      schema: 'prisma/schema.prisma',
+      output: 'test-output',
     },
-  }
-  
+  },
+}

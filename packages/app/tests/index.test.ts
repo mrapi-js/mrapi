@@ -1,14 +1,13 @@
-import Ajax from './__fixtrues__/axios'
+import Ajax from './__fixtures__/axios'
 import { App } from '../src/index'
 import defaultApp from '../src/index'
 import {
   noPortApp,
   http2ErrorApp,
   middlewareApp,
-} from './__fixtrues__/app-demo/index'
+} from './__fixtures__/app-demo/index'
 const ajax = new Ajax()
 const NO_PORT_URL = 'http://localhost:1358'
-// const MIDDLEWARE_URL='http://localhost:3001'
 describe('no-port-app', () => {
   beforeEach(() => {})
 

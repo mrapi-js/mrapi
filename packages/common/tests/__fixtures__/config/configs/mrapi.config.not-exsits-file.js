@@ -1,1 +1,1 @@
-module.export=null
+module.export = null

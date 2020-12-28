@@ -2,7 +2,7 @@ import pem from 'pem'
 import { json } from 'body-parser'
 import cookieParser from 'cookie-parser'
 import { App } from '../src/index'
-import Ajax from './__fixtrues__/axios'
+import Ajax from './__fixtures__/axios'
 let app: App
 const ajax = new Ajax()
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'

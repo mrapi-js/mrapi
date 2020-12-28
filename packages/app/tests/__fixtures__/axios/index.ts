@@ -1,21 +1,20 @@
 import axios from 'axios'
 import { AxiosRequestConfig, AxiosResponse } from 'axios'
 import https from 'https'
-const myagent = new https.Agent({  
-  rejectUnauthorized: false
-});
-const defaultParams:any={
-  httpsAgent:myagent,
-  NODE_TLS_REJECT_UNAUTHORIZED:'0',
-  timeout: 120000
+const myagent = new https.Agent({
+  rejectUnauthorized: false,
+})
+const defaultParams: any = {
+  httpsAgent: myagent,
+  NODE_TLS_REJECT_UNAUTHORIZED: '0',
+  timeout: 120000,
 }
 export default class Ajax {
   private request(params: AxiosRequestConfig): Promise<any> {
-    
     return new Promise((resolve, reject) => {
-      axios({...defaultParams,...params})
+      axios({ ...defaultParams, ...params })
         .then((res: AxiosResponse) => {
-         resolve(res)
+          resolve(res)
         })
         .catch((err) => {
           reject(err)
@@ -34,7 +33,7 @@ export default class Ajax {
   public get(url = '', params?: Record<string, string>): Promise<any> {
     return this.request({
       method: 'get',
-      url: this.queryString(`${url}`, params)
+      url: this.queryString(`${url}`, params),
     })
   }
 
@@ -42,7 +41,7 @@ export default class Ajax {
     return this.request({
       method: 'post',
       url: `${url}`,
-      data: params
+      data: params,
     })
   }
 }
