@@ -1,11 +1,11 @@
 import pem from 'pem'
 import { json } from 'body-parser'
 import cookieParser from 'cookie-parser'
-
 import { App } from '../src/index'
-
+import Ajax from './__fixtures__/axios'
 let app: App
-
+const ajax = new Ajax()
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 describe('App Basic', () => {
   beforeEach(() => {
     app = new App()
@@ -33,6 +33,7 @@ describe('App Basic', () => {
     })
 
     expect(typeof app.routes).toBe('object')
+    expect(app.cache).toBe(undefined)
   })
 
   test('listen', () => {
@@ -47,10 +48,8 @@ describe('App Basic', () => {
     app.get('/one', (_req, res) => {
       res.end('one')
     })
-
     app.listen(3000)
     expect(app.find('GET', '/one').handlers.length).toBe(1)
-
     app.close()
   })
 
@@ -92,7 +91,44 @@ describe('App Basic', () => {
     app.close()
   })
 
-  test('http2', () => {
+  test('http2 typeof http2=boolean&http', () => {
+    pem.createCertificate(
+      {
+        days: 1,
+        selfSigned: true,
+      },
+      (err, keys) => {
+        if (err) {
+          throw err
+        }
+        const app2 = new App({
+          http2: true,
+          https: {
+            key: keys.serviceKey,
+            cert: keys.certificate,
+            allowHTTP1: true,
+          } as any,
+        })
+          .get('/', (_req, res) => {
+            res.end('Hello World!')
+          })
+          .listen(3000)
+
+        expect(app2.find('GET', '/').handlers.length).toBe(1)
+        return ajax
+          .get('https://localhost:3000/')
+          .then((res) => {
+            expect(res.data).toBe('Hello World!')
+            app2.close()
+          })
+          .catch((err) => {
+            expect(typeof err).toBe('object')
+            app2.close()
+          })
+      },
+    )
+  })
+  test('http2 typeof http2!=boolean', () => {
     pem.createCertificate(
       {
         days: 1,
@@ -103,37 +139,31 @@ describe('App Basic', () => {
           throw err
         }
 
-        const app2 = new App({
-          http2: true,
-          https: {
+        // typeof http2!='boolean'
+        const app4 = new App({
+          http2: {
             key: keys.serviceKey,
             cert: keys.certificate,
+            allowHTTP1: true,
           },
         })
-          .get('/', (_req, res) => {
+          .get('/test', (_req, res) => {
             res.end('Hello World!')
           })
-          .listen(3000)
-
-        expect(app2.find('GET', '/').handlers.length).toBe(1)
-        // TODO: request
-
-        app2.close()
+          .listen(3001)
+        expect(app4.find('GET', '/test').handlers.length).toBe(1)
+        // TODO request
+        return ajax
+          .get('https://localhost:3001/test')
+          .then((res) => {
+            expect(res.data).toBe('Hello World!')
+            app4.close()
+          })
+          .catch((err) => {
+            expect(typeof err).toBe('object')
+            app4.close()
+          })
       },
     )
-  })
-
-  test('nested', () => {
-    app.get('/', (_req, res) => {
-      res.end('')
-    })
-
-    const appMain = new App()
-    appMain.use('/v1', app).listen(3000)
-
-    expect(appMain.find('GET', '/v1').handlers.length).toBe(1)
-    // TODO: request
-
-    appMain.close()
   })
 })

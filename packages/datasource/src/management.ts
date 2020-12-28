@@ -101,7 +101,7 @@ export class Management {
 
   private checkClient() {
     if (!this.client) {
-      throw new Error('Management database client hasn\'t been initialized yet.')
+      throw new Error("Management database client hasn't been initialized yet.")
     }
   }
 }

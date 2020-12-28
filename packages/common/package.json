@@ -31,5 +31,8 @@
   "homepage": "https://github.com/mrapi-js/mrapi",
   "bugs": {
     "url": "https://github.com/mrapi-js/mrapi/issues"
+  },
+  "devDependencies": {
+    "tempfile": "^3.0.0"
   }
 }

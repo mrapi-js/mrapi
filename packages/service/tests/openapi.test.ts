@@ -8,8 +8,8 @@ const fakeReq = {
   query: { username: 'leozmli' },
 }
 const fakeInst = { id: '1', username: 'leozmli' }
-function fakeCreate (params: any) {
-  return new Promise(resolve => {
+function fakeCreate(params: any) {
+  return new Promise((resolve) => {
     if (params.data.username) resolve(fakeInst)
   })
 }
@@ -23,7 +23,7 @@ function fakeCreate (params: any) {
 //     if (params.data.username) resolve(1)
 //   })
 // }
-function fakeDBClient (req: any) {
+function fakeDBClient(req: any) {
   return function () {
     return {
       req,

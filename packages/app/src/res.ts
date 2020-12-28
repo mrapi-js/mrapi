@@ -1,10 +1,6 @@
 import type { Request, Response } from './types'
 
-export function send(
-  req: Request,
-  res: Response,
-  data: unknown = '',
-) {
+export function send(req: Request, res: Response, data: unknown = '') {
   if (req.method === 'HEAD') {
     // skip body for HEAD
     res.end()

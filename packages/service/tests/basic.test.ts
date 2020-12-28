@@ -25,17 +25,17 @@ describe('Service', () => {
       'on',
       'off',
       'find',
-    ].forEach(k => {
+    ].forEach((k) => {
       expect(typeof (app as any)[k]).toBe('function')
     })
     ;[
       // Service
       'start',
       'logEndpoints',
-    ].forEach(k => {
+    ].forEach((k) => {
       expect(typeof (service as any)[k]).toBe('function')
     })
-    ;['endpoints'].forEach(k => {
+    ;['endpoints'].forEach((k) => {
       expect(Array.isArray((service as any)[k])).toBeTruthy()
     })
   })

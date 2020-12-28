@@ -3,8 +3,7 @@
   "version": "2.0.1-beta.1",
   "private": true,
   "workspaces": [
-    "packages/*",
-    "examples/*"
+    "packages/*"
   ],
   "scripts": {
     "dev": "lerna run watch --parallel",
@@ -17,7 +16,7 @@
     "coverage": "jest --coverage",
     "publish:beta": "lerna publish from-package --preid beta --dist-tag next",
     "lint": "eslint packages/*/src/**/*.ts",
-    "format": "prettier --write packages/*/src/**/*.ts"
+    "format": "prettier --write packages/**/*/*.ts"
   },
   "husky": {
     "hooks": {

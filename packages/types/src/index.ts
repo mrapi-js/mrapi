@@ -89,7 +89,12 @@ declare namespace mrapi {
     }
     excludeQueriesAndMutations: QueriesAndMutations[]
   }
-  type Query = 'findUnique' | 'findFirst' | 'findMany' | 'findCount' | 'aggregate'
+  type Query =
+    | 'findUnique'
+    | 'findFirst'
+    | 'findMany'
+    | 'findCount'
+    | 'aggregate'
   type Mutation =
     | 'createOne'
     | 'updateOne'
