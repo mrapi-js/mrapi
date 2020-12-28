@@ -104,11 +104,6 @@ describe('error App', () => {
         expect(error).toContain('server not started')
       })
   })
-  test('close() error', () => {
-    // const closeErrorApp=new App()
-    // closeErrorApp.listen(3002)
-    // closeErrorApp.close()
-  })
   test('app opts is null', () => {
     const options: any = null
     const nullOptionsApp = new App(options)

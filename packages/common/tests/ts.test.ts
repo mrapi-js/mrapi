@@ -2,14 +2,14 @@ import { join } from 'path'
 import { resolveConfig, compileTSFile } from '../src/index'
 import tempfile from 'tempfile'
 const fixturesRoot = join(__dirname, './__fixtures__/config')
-const dest =
-  '/Users/clik/Documents/mrapi2.0/mrapi/node_modules/.mrapi/config.js'
+
 describe('Config', () => {
   beforeEach(() => {})
 
   afterEach(() => {})
   test('compileTSFile()  not exists ', () => {
-    const out = compileTSFile('not-exists.ts', dest)
+    const randomConfig = tempfile('/config.js')
+    const out = compileTSFile('not-exists.ts', randomConfig)
     expect(out).toBe('')
   })
   test('compileTSFile() values exists ', () => {
