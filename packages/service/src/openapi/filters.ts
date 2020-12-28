@@ -140,7 +140,6 @@ class Fillter {
     }
 
     let isContinue = false
-
     if (pagination[0].includes(key)) {
       // must >=0
       const num = parseInt(val)
@@ -153,7 +152,7 @@ class Fillter {
     } else if (pagination[1].includes(key)) {
       // cursor=id:xxxx
       const arr = val.split(':')
-      if (val.length === 2) {
+      if (arr.length === 2) {
         result[key] = {
           [arr[0]]: +arr[1],
         }
