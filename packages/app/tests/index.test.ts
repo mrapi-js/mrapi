@@ -1,6 +1,7 @@
 import path from 'path'
 import { App } from '../src/index'
 import http from 'http'
+import { errorHandler, next } from '../src/helper'
 const configPath = path.join(__dirname, '__fixtures__/config/mrapi.config.js')
 const config = require(configPath)
 let apptest: App = new App(config)
@@ -81,22 +82,27 @@ describe('index', () => {
     }
   })
 
-  // test('close error with server exist', async () => {
-  //   const apptest2 = new App({
-  //     http2: true,
-  //     https: {},
-  //   })
-  //   apptest2.listen(3032)
-  //   const s = createServer()
-  //   s.close = function () {
-  //     throw Error('server close test')
-  //   }
-  //   apptest2.server = s
-
-  //   try {
-  //     await apptest2.close()
-  //   } catch (error) {
-  //     expect(error.message).toBe('server close test')
-  //   }
-  // })
+  test('lookup step', async () => {
+    const apptest2 = new App(config)
+    apptest2.listen(3032)
+    apptest2.get('/step', (req, res) => {
+      next([apptest], req, res, 1, errorHandler)
+    })
+    function httpReq () {
+      return new Promise(resolve => {
+        http.get('http://127.0.0.1:3030/foo2', res => {
+          let body = ''
+          res.on('data', data => {
+            body += data
+          })
+          res.on('end', () => {
+            expect(body).toBe('Not Found')
+            resolve(body)
+          })
+        })
+      })
+    }
+    await httpReq()
+    await apptest2.close()
+  })
 })
