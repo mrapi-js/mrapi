@@ -429,10 +429,9 @@ Examples:
   }
 }
 
-export default new Cli().run().catch((err) => {
-  console.error(err)
-  process.exit(1)
-})
+export default (argv = process.argv.slice(2))=>{
+  return new Cli(argv).run()
+}
 
 export function run(argv: string) {
   return new Cli(argv.split(' ')).run()
