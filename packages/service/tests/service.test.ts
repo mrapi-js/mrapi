@@ -1,11 +1,10 @@
 import { Service } from '../src/index'
-
 describe('Service Instance Method', () => {
   beforeEach(() => {})
 
   afterEach(() => {})
 
-  test('start', () => {
+  test('start', async () => {
     const service = new Service()
     const serviceMethods = [
       'applyGraphql',
@@ -15,7 +14,7 @@ describe('Service Instance Method', () => {
       'logEndpoints',
       'start',
     ]
-    serviceMethods.forEach(k => {
+    serviceMethods.forEach((k) => {
       expect(typeof (service as any)[k]).toBe('function')
     })
   })
@@ -31,9 +30,35 @@ describe('Service Instance Method', () => {
   //   }
   //   const sub : Sub = new Sub()
   // })
+  test('start openapi', async () => {
+    const service = new Service({
+      service: {
+        openapi: true,
+        graphql: false,
+      },
+    })
+    expect(await service.start(8080)).toEqual({
+      address: '::',
+      family: 'IPv6',
+      port: 8080,
+    })
+  })
+  test('start graphql', async () => {
+    const service = new Service()
+    expect(await service.start(8081)).toEqual({
+      address: '::',
+      family: 'IPv6',
+      port: 8081,
+    })
+  })
+  // test('start datasource', async () => {
+  //   const service = new Service({
+  //     service: {
+  //       schema: 'prisma/schema.prisma',
+  //       database: 'file:./dev.db',
+  //     },
+  //   })
 
-  // test('start', () => {
-  //   const service = new Service()
-  //   service.start()
+  //   expect(await service.start(8082)).toEqual({})
   // })
 })

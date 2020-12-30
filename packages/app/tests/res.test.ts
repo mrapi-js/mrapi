@@ -34,9 +34,9 @@ describe('res', () => {
     apptest.get('/user2', (req, res) => {
       send(req, res, null)
     })
-    apptest.get('/buffer', (req, res) => {
-      send(req, res, Buffer.from([], 10, 10))
-    })
+    // apptest.get('/buffer', (req, res) => {
+    //   send(req, res, Buffer.from([], 10, 10))
+    // })
     // send string
     function httpReq () {
       return new Promise(resolve => {
@@ -136,26 +136,26 @@ describe('res', () => {
     }
     await httpReq5()
     // data buffer
-    function httpReq6 () {
-      return new Promise(resolve => {
-        http.get(
-          'http://127.0.0.1:3030/buffer',
-          {
-            method: 'get',
-          },
-          res => {
-            let body = ''
-            res.on('data', data => {
-              body += data
-            })
-            res.on('end', () => {
-              expect(body).toBe('')
-              resolve(body)
-            })
-          },
-        )
-      })
-    }
-    await httpReq6()
+    // function httpReq6 () {
+    //   return new Promise(resolve => {
+    //     http.get(
+    //       'http://127.0.0.1:3030/buffer',
+    //       {
+    //         method: 'get',
+    //       },
+    //       res => {
+    //         let body = ''
+    //         res.on('data', data => {
+    //           body += data
+    //         })
+    //         res.on('end', () => {
+    //           expect(body).toBe('')
+    //           resolve(body)
+    //         })
+    //       },
+    //     )
+    //   })
+    // }
+    // await httpReq6()
   })
 })

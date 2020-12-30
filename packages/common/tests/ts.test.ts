@@ -26,18 +26,18 @@ describe('Config', () => {
     const config = resolveConfig({}, cwd, 'not-exsits')
     expect(typeof config).toBe('object')
   })
-  test('compileTSFile() dest is not exists', () => {
-    const cwd = path.join(fixturesRoot, 'configs')
-    const filePath = path.join(cwd, 'mrapi.config.basic.ts')
-    // const out1 = compileTSFile(
-    //   filePath,
-    //   `${process.cwd()}/test-node_modules/not-exsits-dest.js`,
-    // )
-    // expect(out1).toBe(`${process.cwd()}/test-node_modules/not-exsits-dest.js`)
-    // const out2 = compileTSFile(
-    //   filePath,
-    //   `${process.cwd()}/test-node_modules/not-exsits-dest.js`,
-    // )
-    // expect(out2).toBe(`${process.cwd()}/test-node_modules/not-exsits-dest.js`)
-  })
+  // test('compileTSFile() dest is not exists', () => {
+  //   const cwd = path.join(fixturesRoot, 'configs')
+  //   const filePath = path.join(cwd, 'mrapi.config.basic.ts')
+  //   const out1 = compileTSFile(
+  //     filePath,
+  //     `${process.cwd()}/test-node_modules/not-exsits-dest.js`,
+  //   )
+  //   expect(out1).toBe(`${process.cwd()}/test-node_modules/not-exsits-dest.js`)
+  //   const out2 = compileTSFile(
+  //     filePath,
+  //     `${process.cwd()}/test-node_modules/not-exsits-dest.js`,
+  //   )
+  //   expect(out2).toBe(`${process.cwd()}/test-node_modules/not-exsits-dest.js`)
+  // })
 })
