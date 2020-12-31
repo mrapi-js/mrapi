@@ -42,6 +42,7 @@ describe('Service Instance Method', () => {
       family: 'IPv6',
       port: 8080,
     })
+    await service.app.close()
   })
   test('start graphql', async () => {
     const service = new Service()
@@ -50,15 +51,26 @@ describe('Service Instance Method', () => {
       family: 'IPv6',
       port: 8081,
     })
+    await service.app.close()
   })
-  // test('start datasource', async () => {
-  //   const service = new Service({
-  //     service: {
-  //       schema: 'prisma/schema.prisma',
-  //       database: 'file:./dev.db',
-  //     },
-  //   })
 
-  //   expect(await service.start(8082)).toEqual({})
-  // })
+  test('start datasource', async () => {
+    try {
+      const service = new Service({
+        service: {
+          schema: 'prisma/schema.prisma',
+          database: 'file:./dev.db',
+        },
+      })
+      const res = await service.start(8082)
+      expect(res).toEqual({
+        address: '::',
+        family: 'IPv6',
+        port: 8082,
+      })
+      await service.app.close()
+    } catch (error) {
+      expect(typeof error).toBe('object')
+    }
+  })
 })
