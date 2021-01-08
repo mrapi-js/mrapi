@@ -43,16 +43,13 @@ describe('mesh', () => {
         family: 'IPv6',
         port: 9000,
       })
+      service.app.close()
     } catch (error) {
       expect(error).toBe('address already in use :::9000')
     }
-    await service.app.close()
   }, 10000)
 
-  test('mesh tools', async () => {
-    expect(typeof transform).toBe('function')
-    expect(typeof resolverComposition).toBe('function')
-    expect(typeof getGraphqlSchema).toBe('function')
+  test('mesh tools getOpenapiSchema', async () => {
     expect(typeof getOpenapiSchema).toBe('function')
     // openapi
     try {
@@ -80,7 +77,9 @@ describe('mesh', () => {
       },
     )
     expect(typeof openapiRes).toBe('object')
+  }, 30000)
 
+  test('mesh tools getGraphqlSchema', async () => {
     // graphql
     try {
       const graphqlRes = await getGraphqlSchema(
@@ -93,25 +92,36 @@ describe('mesh', () => {
     } catch (error) {
       expect(error.message).toBe('UrlLoader is not a constructor')
     }
-  }, 30000)
-
-  // transform
-  try {
-    const transformRes = transform('auth_', true, true, ['Query.cases'])
-    expect(typeof transformRes).toBe('object')
-  } catch (error) {}
-
-  // resolveerComposition
-  // try {
-  //   const resolverCompositionRes = resolverComposition('auth_', 'prisma/schema.prisma', [])
-  //   expect(typeof resolverCompositionRes).toBe('object')
-  // } catch (error) {}
+  })
+  test('mesh tools transform', () => {
+    // transform
+    expect(typeof transform).toBe('function')
+    try {
+      const transformRes = transform('auth_', true, true, ['Query.cases'])
+      expect(typeof transformRes).toBe('object')
+    } catch (error) {}
+  })
+  test('mesh tools resolveerComposition', () => {
+    expect(typeof resolverComposition).toBe('function')
+    // resolveerComposition
+    // try {
+    //   const resolverCompositionRes = resolverComposition('auth_', 'prisma/schema.prisma', [])
+    //   expect(typeof resolverCompositionRes).toBe('object')
+    // } catch (error) {}
+  })
 })
 
 describe('schema', () => {
   test('schema type-graphql', async () => {
     try {
-      const typeRes = await getSchema({customPath: '', contextFile: '', generatedPath: '', datasourcePath: '', plugins: [''], mock: {name: 'cyrus'}})
+      const typeRes = await getSchema({
+        customPath: '',
+        contextFile: '',
+        generatedPath: '',
+        datasourcePath: '',
+        plugins: [''],
+        mock: { name: 'cyrus' },
+      })
       expect(typeof typeRes).toBe('object')
     } catch (error) {}
   })
