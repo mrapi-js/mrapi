@@ -37,7 +37,6 @@ describe('no-port-app', () => {
   })
   test('use() Reg', () => {
     noPortApp.use(/\/test/, async (_req, _res, next) => {
-      console.log(1)
       await next()
     })
   })
@@ -77,10 +76,10 @@ describe('no-port-app', () => {
     return ajax
       .get(`${NO_PORT_URL}/foo/2`)
       .then((res) => {
-        console.log(res)
+        expect(typeof res).toBe('object')
       })
       .catch((err) => {
-        console.log(err)
+        expect(typeof err).toBe('object')
       })
   })
 })
@@ -98,7 +97,7 @@ describe('error App', () => {
     return http2ErrorApp
       .close()
       .then((res) => {
-        console.log(res)
+        expect(typeof res).toBe('object')
       })
       .catch((error) => {
         expect(error).toContain('server not started')
