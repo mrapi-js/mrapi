@@ -116,7 +116,6 @@ Examples:
       }
       case 'openapi': {
         await this.setup('openapi')
-
         break
       }
       default:
@@ -180,11 +179,19 @@ Examples:
             continue
           }
           if (!prismaVersionGreaterThan13) {
-            await this.runPrismaCommand(
-              'prisma migrate up --experimental --create-db',
-              service,
-              database,
-            )
+            try {
+              await this.runPrismaCommand(
+                'prisma migrate up --experimental --create-db',
+                service,
+                database,
+              )
+            } catch (err) {
+              console.log(err)
+              console.log(
+                chalk.dim`prisma migrate up --experimental --create-db canceled`,
+              )
+              continue
+            }
           }
         }
       }
@@ -315,17 +322,22 @@ Examples:
     }
 
     console.log(chalk.dim`\nPrisma schema loaded from ${service.schema}\n`)
-
+    let generatorOptions =
+      openapiOptions.generatorOptions &&
+      typeof openapiOptions.generatorOptions === 'object' &&
+      Object.keys(openapiOptions.generatorOptions).length > 0
+        ? openapiOptions.generatorOptions
+        : {
+            excludeFields: [],
+            excludeModels: [],
+            excludeFieldsByModel: {},
+            excludeQueriesAndMutations: [],
+            excludeQueriesAndMutationsByModel: {},
+          }
     generateOpenapiSpecsFromPrisma(
       dmmf,
       openapiOptions.output,
-      openapiOptions.generatorOptions || {
-        excludeFields: [],
-        excludeModels: [],
-        excludeFieldsByModel: {},
-        excludeQueriesAndMutations: [],
-        excludeQueriesAndMutationsByModel: {},
-      },
+      generatorOptions,
     )
   }
 

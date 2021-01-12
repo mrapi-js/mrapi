@@ -32,11 +32,11 @@ module.exports = {
     tenants: [
       {
         name: 'one',
-        database: 'file:./post-one.db',
+        database: 'error-database1',
       },
       {
         name: 'two',
-        database: 'file:./post-two.db',
+        database: 'error-database2',
       },
     ],
     multiTenant: {
