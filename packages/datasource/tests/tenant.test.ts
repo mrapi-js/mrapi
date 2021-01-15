@@ -17,7 +17,7 @@ describe('Tenant', () => {
     )
     expect(typeof instance).toBe('object')
     expect(instance).toBeInstanceOf(Tenant)
-    ;['getClient', 'connect', 'disconnect'].forEach((k) => {
+    ;['getClient', 'connect', 'disconnect'].forEach(k => {
       expect(typeof (instance as any)[k]).toBe('function')
     })
     expect(typeof instance.name).toBe('string')
