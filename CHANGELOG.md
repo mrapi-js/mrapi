@@ -2,6 +2,157 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.0.1-rc.0](https://github.com/mrapi-js/mrapi/compare/v2.0.1-beta.1...v2.0.1-rc.0) (2021-02-20)
+
+
+### Features
+
+* app包单测 ([28cfa74](https://github.com/mrapi-js/mrapi/commit/28cfa74e123983fc8d1b9e9b9d13e752905cf732))
+* app包单测 ([2ba3485](https://github.com/mrapi-js/mrapi/commit/2ba34857f4b47afce28b9521d66d0a1ba7790768))
+* cli 30%覆盖率 ([c4aa029](https://github.com/mrapi-js/mrapi/commit/c4aa029f9df83923f392ef9c0295e7f6f35ceaed))
+* datasource覆盖率 48% ([cb35d32](https://github.com/mrapi-js/mrapi/commit/cb35d326715c0b02672996ff831fd7e3e8f28bf6))
+* graphql ([5073129](https://github.com/mrapi-js/mrapi/commit/507312982f7ed87cad948c9721787ee0a65e0d6b))
+* service ([50f8ba6](https://github.com/mrapi-js/mrapi/commit/50f8ba6776cb17bdd2b3d372b5ce7bc6b6c338d4))
+* service 80% ([8bd4557](https://github.com/mrapi-js/mrapi/commit/8bd4557dc679e91c9f59abc16fb1efb568afdbcc))
+* total 78% ([e7690c6](https://github.com/mrapi-js/mrapi/commit/e7690c6751e5b427fd03db7bc7f55254a5d44d97))
+* **gateway:** gateway 90% ([12314fa](https://github.com/mrapi-js/mrapi/commit/12314faf99a0c3797ec05ed231223b5365a861e3))
+* ignore mesh fieldName ([e920894](https://github.com/mrapi-js/mrapi/commit/e92089430bdb6864fa17bfa82d4fa70deba80c15))
+* mesh remote graphql or openapi ([01023f6](https://github.com/mrapi-js/mrapi/commit/01023f6bb0c87d7069abd4f832f8a8c7f1779797))
+* service index 80% ([b38c547](https://github.com/mrapi-js/mrapi/commit/b38c5473be4a442a6ac0e1d0019d459698c45f00))
+* 执行 yarn format ([34055bb](https://github.com/mrapi-js/mrapi/commit/34055bbf8d5cbbc2b5ed8e3c322049a1bf48469f))
+* **merge dev:** merge dev ([391f5c1](https://github.com/mrapi-js/mrapi/commit/391f5c175ddad9b0a24cdd46a0394c8a1d505d8c))
+* use npm (v7) workspaces ([f6ee2f1](https://github.com/mrapi-js/mrapi/commit/f6ee2f17bac8c1f81bae9a4799c3f1a419f69eb1))
+* 完善router,common包的单元测试 ([28a5561](https://github.com/mrapi-js/mrapi/commit/28a5561f89429e0c80fe25f07f1a507d6ddece11))
+* 添加common\router包单侧并修改去除部分判断语句 ([900bd4f](https://github.com/mrapi-js/mrapi/commit/900bd4ff1f2476b70c175787c8c0655353c87fc9))
+* **datasource:** [WIP]multi-tenant-single-db ([e7063dd](https://github.com/mrapi-js/mrapi/commit/e7063dddf7dac04da91593accbed8e10afd30119))
+* **datasource:** multi-tenant 'single-db' mode ([724d97c](https://github.com/mrapi-js/mrapi/commit/724d97c2a94b1e64368487faad1107a11d0ae94f))
+* **graphql:** Aggregate graphql validations; Support introspection disable ([5a9d39e](https://github.com/mrapi-js/mrapi/commit/5a9d39efb4d9869f41af07f16f8ba1f9cca1272d))
+* **graphql:** query depth limit ([ad38849](https://github.com/mrapi-js/mrapi/commit/ad38849a8480eb47a2254120ac8149e9c9f6665f))
+* **graphql:** support custom 'extensions' in graphql result ([3decd5e](https://github.com/mrapi-js/mrapi/commit/3decd5e1910b7d946f782726aa0d3b7dc6616842))
+* **openapi:** 90% openapi test cover ([6ee899b](https://github.com/mrapi-js/mrapi/commit/6ee899bbca83b4ffef6812539bce639b0f14b219))
+* **openapi.test.ts:** update openapi test cases ([5e6e60b](https://github.com/mrapi-js/mrapi/commit/5e6e60b34fd69e1a05b8ac29701bd6da2f94a3ad))
+* 引入 applyMiddleware 实现鉴权 ([7e7a2be](https://github.com/mrapi-js/mrapi/commit/7e7a2be09969cd82518cfc4e50086763ac47d1a3))
+* **service:** 'type-graphql' basic support ([d42377c](https://github.com/mrapi-js/mrapi/commit/d42377c3e27db1ea6f8cf2a9d7c98fa26d11032e))
+* **service:** add 'req' 'res' to Context ([174f63a](https://github.com/mrapi-js/mrapi/commit/174f63a1954c911ee61c1efa95a0b2e8faeb1bb7))
+* **service:** make graphql 'getSchema' configurable ([a665152](https://github.com/mrapi-js/mrapi/commit/a6651524b2f69b2671d1cb96afbbea3ae2771285))
+* **service:** support graphql stitching ([e3af090](https://github.com/mrapi-js/mrapi/commit/e3af090cb6cf0758275544bfa3d538d0247b36a3))
+* **service config:** support 'mrapi.config.ts'; types optimization ([d8c76ff](https://github.com/mrapi-js/mrapi/commit/d8c76ff476d84d52e809777ca0782c86903caf52))
+
+
+### Bug Fixes
+
+* add mesh feature exception tip ([179d6f7](https://github.com/mrapi-js/mrapi/commit/179d6f73fca0b913404f9079533f760682580329))
+* add mesh feature exception tip ([d4c1daa](https://github.com/mrapi-js/mrapi/commit/d4c1daaedadbfb7483024410af40a51c5dffb1c4))
+* compatible with pirsma 2.13 ([c9da20c](https://github.com/mrapi-js/mrapi/commit/c9da20c38d9d3e2bb78c8867a9700fd7419edd7b))
+* fixed versions of 'typescript' and 'ts-node-dev' ([4ed48e1](https://github.com/mrapi-js/mrapi/commit/4ed48e1fab8699f23da9c60d573c02cb9eda1dcc))
+* merge from main branch ([c19ec24](https://github.com/mrapi-js/mrapi/commit/c19ec24a7bc420eb5cfe363e87cf5a2bd506cff5))
+* pretter 格式化代码 ([9469ab1](https://github.com/mrapi-js/mrapi/commit/9469ab17260205198e4b9d19c566002489674add))
+* reset packages version ([2943195](https://github.com/mrapi-js/mrapi/commit/2943195f80b293932abc2865dc5c8becc98b4549))
+* update prisma and related packages to latest versions ([ce24306](https://github.com/mrapi-js/mrapi/commit/ce24306b76cd230486c9083f7755eb7129bbbb9c))
+* update prisma@2.17.0; fix tests issues ([e69c0ab](https://github.com/mrapi-js/mrapi/commit/e69c0ab15b0e2f57f90cfc73ae5ec61ca319df87))
+* 去除多余单测 ([4bbcbea](https://github.com/mrapi-js/mrapi/commit/4bbcbeafbdb79ece7631bc7056f7ea5fc44253fb))
+* 合并冲突 ([63c2a7c](https://github.com/mrapi-js/mrapi/commit/63c2a7cb7bbfa2561ae0e761ba6106bd5f3d3cd7))
+* 合并冲突 ([c3051a6](https://github.com/mrapi-js/mrapi/commit/c3051a6530677da467368db46e40ceb94d2454ea))
+* 合并冲突 ([224875b](https://github.com/mrapi-js/mrapi/commit/224875b15b350782bc59f071f34c4378ca3ac25d))
+* 格式化代码 ([e2dea6f](https://github.com/mrapi-js/mrapi/commit/e2dea6fdb82c844875bcb785ce08ac8fd3aa0ee7))
+* 测试环境导致的process.argv异常 ([b9fa0e9](https://github.com/mrapi-js/mrapi/commit/b9fa0e9821c33ccd63936fc8b1e83b00896911c4))
+* 解决缺少pem包和cookies-parser的问题，以及test中执行compileTSFile死循环问题，TODO：clickcheng ([6046c62](https://github.com/mrapi-js/mrapi/commit/6046c620c1904cfa7d0528da3a38c01598b2de38))
+* 解决缺少pem包和cookies-parser的问题，以及test中执行compileTSFile死循环问题，TODO：clickcheng ([7d09520](https://github.com/mrapi-js/mrapi/commit/7d0952038aaaa108cfc00b7246673c6c0263098e))
+* **cli:** simplify logic of code generation ([f3f7a3c](https://github.com/mrapi-js/mrapi/commit/f3f7a3ce9d38f3a88a62a9fd23d4d2d364db27b5))
+* **config:** cleanup ([2c085c3](https://github.com/mrapi-js/mrapi/commit/2c085c36f5f9601285d63e1167928c50b7b8d275))
+* **service:** npm publish as public ([b16aa2b](https://github.com/mrapi-js/mrapi/commit/b16aa2b9beebdf439b70376b1f0c359ac00dfdaa))
+* **service:** playground logic ([543232c](https://github.com/mrapi-js/mrapi/commit/543232cb3e1b85d40bb2437330612dd367b542dc))
+* **tests:** update tests ([6126f32](https://github.com/mrapi-js/mrapi/commit/6126f32f1d306350a33deb0c932046c33b316aba))
+* **types:** rename type 'ConfigInput' => 'PartialConfig', 'ServiceOptionsInput' => 'PartialServiceOptions' ([39449ff](https://github.com/mrapi-js/mrapi/commit/39449ff80cb842edbabe4b5ca6237f00ccb28dd6))
+
+## [2.0.0-beta.3](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2020-10-16)
+
+
+### Features
+
+* **dal:** support configure introspection and playground for graphql server ([771e67a](https://github.com/mrapi-js/mrapi/commit/771e67a277cc645c07c65e34337a9e90af58615e))
+* **types:** add introspection option ([2e86b96](https://github.com/mrapi-js/mrapi/commit/2e86b96a0ca2939f16737d301f6039c0b088bbc1))
+
+
+### Bug Fixes
+
+* **api:** make 'outputSchema' optional;validate 'customSchemasPath';change 'addOpenapi' logic ([618c5fb](https://github.com/mrapi-js/mrapi/commit/618c5fb682e9d0bd8f255b2bab187f3fb699c59f))
+* **db:** rename public methods;add jsdocs ([190ca3c](https://github.com/mrapi-js/mrapi/commit/190ca3c81879039d27fd290140c9de1041726f7c))
+* **oas:** rename 'getPrisma' to 'getDBClient' ([ca135fb](https://github.com/mrapi-js/mrapi/commit/ca135fb499c7f1dc7cd28d45acc87a4c1d69e071))
+
+## [2.0.0-beta.2](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2020-10-15)
+
+
+### Features
+
+* **dal:** add extensions fiels to graphql result ([3fd06d2](https://github.com/mrapi-js/mrapi/commit/3fd06d27e6f90d6f1702b8d3fda94da879462f13))
+* **db:** add options and middlewares config for prisma client ([43d8728](https://github.com/mrapi-js/mrapi/commit/43d87280f7fe2bcfdfae916f3efcfd309f48aa95))
+
+
+### Bug Fixes
+
+* **nexus:** fix type name error when schema is not following prisma's style guide ([9141512](https://github.com/mrapi-js/mrapi/commit/914151234e84edb60418636762dbeb98c18227b9))
+* **types:** add prismaOptions and prismaMiddlewares types ([333851d](https://github.com/mrapi-js/mrapi/commit/333851d271117370f7f86380c1659a65b51e7160))
+
+## [2.0.0-beta.1](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.0...v2.0.0-beta.1) (2020-10-14)
+
+
+### Bug Fixes
+
+* remove unused vars ([e191930](https://github.com/mrapi-js/mrapi/commit/e191930b846e0f836c75f2bff3c207e142ad0576))
+
+## [2.0.0-beta.0](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.3...v2.0.0-beta.0) (2020-10-14)
+
+
+### Bug Fixes
+
+* set api's 'autoGenerate' false defaultly;error when dal's db is null;fix default database path ([df36bc3](https://github.com/mrapi-js/mrapi/commit/df36bc3dc0a4cf0f0efcf014f9f6cecc43e081c9))
+
+## [2.0.0-alpha.3](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2020-10-14)
+
+
+### Bug Fixes
+
+* include schemas dir in npm package ([c05b158](https://github.com/mrapi-js/mrapi/commit/c05b158948031a74293d57636986bf35c1b66f4a))
+
+## [2.0.0-alpha.2](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.1...v2.0.0-alpha.2) (2020-10-14)
+
+
+### Bug Fixes
+
+* bugs ([74e0660](https://github.com/mrapi-js/mrapi/commit/74e0660c0c68f1817a9d8a5f138b7d7cb371c1fc))
+
+## [2.0.0-alpha.1](https://github.com/mrapi-js/mrapi/compare/v2.0.0-alpha.0...v2.0.0-alpha.1) (2020-10-13)
+
+
+### Bug Fixes
+
+* **api:** pass tenant id in headers to DAL ([29c174c](https://github.com/mrapi-js/mrapi/commit/29c174c25e6401f1a9dda982c8ae0c782b4bfad8))
+* **types:** add 'build' script ([96ed047](https://github.com/mrapi-js/mrapi/commit/96ed047822e531ecd88aa3dc653f11492b5d7f0d))
+
+## [2.0.0-alpha.0](https://github.com/mrapi-js/mrapi/compare/v1.1.3...v2.0.0-alpha.0) (2020-10-13)
+
+
+### ⚠ BREAKING CHANGES
+
+* Many changes are not compatible with the old version
+
+### Features
+
+* add config validation; refactor multi-tenant logic ([1ea3693](https://github.com/mrapi-js/mrapi/commit/1ea3693891ec3a84f1d1a3384fcce1f31d475d04))
+* eat: add config validation; refactor multi-tenant logic ([810c807](https://github.com/mrapi-js/mrapi/commit/810c8076a7feaf08667fae43b4b9cbebf32643a7))
+
+
+### Bug Fixes
+
+* **dal:** prisma migrate & generate ([c01195c](https://github.com/mrapi-js/mrapi/commit/c01195ce1483cdf7012482fe61c7de8dded78def))
+* fix management path error ([387b088](https://github.com/mrapi-js/mrapi/commit/387b088f94427bfacfaa8a7db11abbad0b5b90ea))
+
+
+### Code Refactoring
+
+* add @mrapi/db package ([32e164f](https://github.com/mrapi-js/mrapi/commit/32e164fab1ce0e376c5d889cbdf01472c6add3f8))
+
 ## [2.0.0-beta.3](https://github.com/mrapi-js/mrapi/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2020-10-16)
 
 
