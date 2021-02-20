@@ -3,7 +3,7 @@ import { graphqlMiddleware } from '../src/index'
 import { defaultErrorFormatter } from '../src/error'
 import { getRequestParams } from '../src/param'
 import { App } from '@mrapi/app'
-import http from 'http' 
+import http from 'http'
 // import { getOperationsMap } from '../src/utils'
 // import { validateQuery } from '../src/validate'
 
@@ -272,25 +272,28 @@ describe('graphql', () => {
         }),
         extensions: () => {
           return {
-            runTime: Date.now()
+            runTime: Date.now(),
           }
-        }
+        },
       }
       await app.use('/graphql', graphqlMiddleware(options))
       await app.listen(3000, () => {
-        console.log("graphql server is ok");
-      });
-      function httpReq () {
-        return new Promise(resolve => {
-          http.get(`http://127.0.0.1:3000/graphql?query=query fetchObjectData {\n  fetchObjectData(\n    isReturn: true\n  ) {\n    id\n    username\n    age\n    height\n    isMarried}}`, res => {
-            let body = ''
-            res.on('data', data => {
-              body += data
-            })
-            res.on('end', () => {
-              resolve(body)
-            })
-          })
+        console.log('graphql server is ok')
+      })
+      function httpReq() {
+        return new Promise((resolve) => {
+          http.get(
+            `http://127.0.0.1:3000/graphql?query=query fetchObjectData {\n  fetchObjectData(\n    isReturn: true\n  ) {\n    id\n    username\n    age\n    height\n    isMarried}}`,
+            (res) => {
+              let body = ''
+              res.on('data', (data) => {
+                body += data
+              })
+              res.on('end', () => {
+                resolve(body)
+              })
+            },
+          )
         })
       }
       const res = await httpReq()
@@ -302,5 +305,4 @@ describe('graphql', () => {
       expect(error).toBeDefined()
     }
   })
-
 })

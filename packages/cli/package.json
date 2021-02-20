@@ -25,17 +25,17 @@
     "access": "public"
   },
   "dependencies": {
-    "@mrapi/common": "^2.0.1-beta.1",
-    "@mrapi/types": "^2.0.1-beta.1",
-    "chalk": "^4",
-    "execa": "^4",
-    "prettier": "^2"
+    "@mrapi/common": "^2.0.1-beta.2",
+    "@mrapi/types": "^2.0.1-beta.2",
+    "chalk": "^4.1.0",
+    "execa": "^5.0.0",
+    "prettier": "^2.2.1"
   },
   "devDependencies": {
-    "@paljs/generator": "^2.8",
-    "@paljs/schema": "^2.8",
-    "@prisma/cli": "^2",
-    "@prisma/debug": "^2"
+    "@paljs/generator": "^2.13.0",
+    "@paljs/schema": "^2.13.0",
+    "prisma": "^2.17.0",
+    "@prisma/debug": "^2.17.0"
   },
   "repository": {
     "type": "git",

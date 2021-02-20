@@ -22,10 +22,10 @@
     "access": "public"
   },
   "dependencies": {
-    "@mrapi/app": "^1.0.0-beta.1",
-    "@mrapi/common": "^2.0.1-beta.1",
-    "@mrapi/router": "^1.0.0-beta.1",
-    "@mrapi/types": "^2.0.1-beta.1",
+    "@mrapi/app": "^1.0.0-beta.2",
+    "@mrapi/common": "^2.0.1-beta.2",
+    "@mrapi/router": "^1.0.0-beta.2",
+    "@mrapi/types": "^2.0.1-beta.2",
     "fast-proxy": "^1"
   },
   "repository": {

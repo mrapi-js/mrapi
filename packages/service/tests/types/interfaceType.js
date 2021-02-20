@@ -1,7 +1,7 @@
 const {
   GraphQLString,
   GraphQLObjectType,
-  GraphQLInterfaceType
+  GraphQLInterfaceType,
 } = require('graphql')
 
 const AnimalType = new GraphQLInterfaceType({
@@ -10,9 +10,9 @@ const AnimalType = new GraphQLInterfaceType({
   fields: {
     species: {
       type: GraphQLString,
-      description: '动物物种'
-    }
-  }
+      description: '动物物种',
+    },
+  },
 })
 
 const dogType = new GraphQLObjectType({
@@ -22,14 +22,14 @@ const dogType = new GraphQLObjectType({
   fields: {
     species: {
       type: GraphQLString,
-      description: '动物物种'
+      description: '动物物种',
     },
     name: {
       type: GraphQLString,
-      description: '名称'
-    }
+      description: '名称',
+    },
   },
-  isTypeOf: obj => obj.varietie
+  isTypeOf: (obj) => obj.varietie,
 })
 
 const fishType = new GraphQLObjectType({
@@ -39,18 +39,18 @@ const fishType = new GraphQLObjectType({
   fields: {
     species: {
       type: GraphQLString,
-      description: '动物物种'
+      description: '动物物种',
     },
     color: {
       type: GraphQLString,
-      description: '颜色'
-    }
+      description: '颜色',
+    },
   },
-  isTypeOf: obj => obj.color
+  isTypeOf: (obj) => obj.color,
 })
 
 module.exports = {
   AnimalType: AnimalType,
   dogType: dogType,
-  fishType: fishType
+  fishType: fishType,
 }

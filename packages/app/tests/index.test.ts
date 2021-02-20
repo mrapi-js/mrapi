@@ -76,7 +76,7 @@ describe('index', () => {
     try {
       await apptest2.close()
     } catch (error) {
-      expect(error).toBe('server not started')
+      expect(error.message).toBe('server not started')
       apptest2.server = tmp
       apptest2.close()
     }

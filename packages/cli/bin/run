@@ -5,4 +5,4 @@ process.on('unhandledRejection', error => {
   process.exit(1)
 })
 
-require('../lib/index')()
+require('../lib/index').default()

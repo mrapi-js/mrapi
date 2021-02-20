@@ -1,3 +1,0 @@
-describe('helper', () => {
-  test('errorHandler()', () => {})
-})

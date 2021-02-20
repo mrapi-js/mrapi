@@ -3,7 +3,6 @@ import { defaultRoute, errorHandler, next } from '../src/helper'
 import { App } from '../src/index'
 import http from 'http'
 import { Middleware } from '../src/types'
-// import { send } from '../src/res'
 
 const configPath = path.join(__dirname, '__fixtures__/config/mrapi.config.js')
 const config = require(configPath)
@@ -26,11 +25,11 @@ describe('helper', () => {
     apptest.get('/foo2', (req, res) => {
       errorHandler({ message: 'leo hack2' }, req, res)
     })
-    function httpReq () {
-      return new Promise(resolve => {
-        http.get('http://127.0.0.1:3030/foo', res => {
+    function httpReq() {
+      return new Promise((resolve) => {
+        http.get('http://127.0.0.1:3030/foo', (res) => {
           let body = ''
-          res.on('data', data => {
+          res.on('data', (data) => {
             body += data
           })
           res.on('end', () => {
@@ -41,11 +40,11 @@ describe('helper', () => {
       })
     }
     await httpReq()
-    function httpReq2 () {
-      return new Promise(resolve => {
-        http.get('http://127.0.0.1:3030/foo2', res => {
+    function httpReq2() {
+      return new Promise((resolve) => {
+        http.get('http://127.0.0.1:3030/foo2', (res) => {
           let body = ''
-          res.on('data', data => {
+          res.on('data', (data) => {
             body += data
           })
           res.on('end', () => {
@@ -65,11 +64,11 @@ describe('helper', () => {
     app.get('/foo', (req, res) => {
       defaultRoute(req, res)
     })
-    function httpReq () {
-      return new Promise(resolve => {
-        http.get('http://127.0.0.1:3030/foo', res => {
+    function httpReq() {
+      return new Promise((resolve) => {
+        http.get('http://127.0.0.1:3030/foo', (res) => {
           let body = ''
-          res.on('data', data => {
+          res.on('data', (data) => {
             body += data
           })
           res.on('end', () => {
@@ -93,11 +92,11 @@ describe('helper', () => {
     app.get('/foo2', (req, res) => {
       next([], req, res, 0, errorHandler)
     })
-    function httpReq () {
-      return new Promise(resolve => {
-        http.get('http://127.0.0.1:3030/foo', res => {
+    function httpReq() {
+      return new Promise((resolve) => {
+        http.get('http://127.0.0.1:3030/foo', (res) => {
           let body = ''
-          res.on('data', data => {
+          res.on('data', (data) => {
             body += data
           })
           res.on('end', () => {
@@ -108,11 +107,11 @@ describe('helper', () => {
       })
     }
     await httpReq()
-    function httpReq2 () {
-      return new Promise(resolve => {
-        http.get('http://127.0.0.1:3030/foo2', res => {
+    function httpReq2() {
+      return new Promise((resolve) => {
+        http.get('http://127.0.0.1:3030/foo2', (res) => {
           let body = ''
-          res.on('data', data => {
+          res.on('data', (data) => {
             body += data
           })
           res.on('end', () => {

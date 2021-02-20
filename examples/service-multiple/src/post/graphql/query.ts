@@ -1,4 +1,4 @@
-import { extendType, objectType } from '@nexus/schema'
+import { extendType, objectType } from 'nexus'
 import { Context } from '../context'
 
 const Post = objectType({

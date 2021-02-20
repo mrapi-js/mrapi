@@ -1,8 +1,6 @@
-const {
-  GraphQLList
-} = require('graphql')
+const { GraphQLList } = require('graphql')
 
-const { AnimalType } = require("../types/interfaceType")
+const { AnimalType } = require('../types/interfaceType')
 
 module.exports = {
   type: new GraphQLList(AnimalType),
@@ -10,17 +8,16 @@ module.exports = {
   resolve: (root, params, context) => {
     return [
       {
-        "species": "哈士奇",
-        "color": "旺财"
+        species: '哈士奇',
+        color: '旺财',
       },
       {
-        "species": "热带鱼",
-        "color": "红色"
-      }
+        species: '热带鱼',
+        color: '红色',
+      },
     ]
-  }
+  },
 }
-
 
 // 调用例子
 // query fetchInterfaceData {

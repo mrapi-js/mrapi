@@ -51,7 +51,7 @@ export default class PrismaProvider {
   }
 
   disconnect() {
-    return this.instance && this.instance.$disconnect()
+    return this.instance?.$disconnect()
   }
 
   // only for multi-tenant in one DB
@@ -64,8 +64,7 @@ export default class PrismaProvider {
       let result
 
       if (
-        !params.model ||
-        (excludeModels && excludeModels.includes(params.model)) ||
+        (!params.model || excludeModels?.includes(params.model)) ??
         params.action === 'delete'
       ) {
         result = await next(params)

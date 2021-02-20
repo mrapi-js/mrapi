@@ -2,7 +2,7 @@ const {
   GraphQLString,
   GraphQLList,
   GraphQLUnionType,
-  GraphQLObjectType
+  GraphQLObjectType,
 } = require('graphql')
 
 const weixinType = new GraphQLObjectType({
@@ -11,13 +11,13 @@ const weixinType = new GraphQLObjectType({
   fields: {
     source: {
       type: GraphQLString,
-      description: '来源'
+      description: '来源',
     },
     title: {
       type: GraphQLString,
-      description: '标题'
-    }
-  }
+      description: '标题',
+    },
+  },
 })
 
 const weiboType = new GraphQLObjectType({
@@ -26,13 +26,13 @@ const weiboType = new GraphQLObjectType({
   fields: {
     source: {
       type: GraphQLString,
-      description: '来源'
+      description: '来源',
     },
     author: {
       type: GraphQLString,
-      description: '作者'
-    }
-  }
+      description: '作者',
+    },
+  },
 })
 
 const articleUnion = new GraphQLUnionType({
@@ -46,7 +46,7 @@ const articleUnion = new GraphQLUnionType({
       case 'weibo':
         return weiboType
     }
-  }
+  },
 })
 
 module.exports = {
@@ -55,17 +55,16 @@ module.exports = {
   resolve: (root, params, context) => {
     return [
       {
-        "source": "weixin",
-        "title": "标题 1",
+        source: 'weixin',
+        title: '标题 1',
       },
       {
-        "source": "weibo",
-        "author": "作者 1"
-      }
+        source: 'weibo',
+        author: '作者 1',
+      },
     ]
-  }
+  },
 }
-
 
 // 调用例子
 // query fetchUnionData {

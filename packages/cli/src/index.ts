@@ -38,13 +38,13 @@ Examples:
   # Single tenant:
   $ mrapi prisma generate --service=post
   $ mrapi prisma migrate dev --preview-feature --service=post
-  $ mrapi prisma db push --ignore-migrations --preview-feature --service=post
+  $ mrapi prisma db push --preview-feature --service=post
   $ mrapi prisma studio --service=post
 
   # Multiple tenant:
   $ mrapi prisma generate --service=user
   $ mrapi prisma migrate dev --preview-feature --service=user --tenant=one
-  $ mrapi prisma db push --ignore-migrations --preview-feature --service=user --tenant=one
+  $ mrapi prisma db push --preview-feature --service=user --tenant=one
   $ mrapi prisma studio --service=user --tenant=one
 
   ## generate all services
@@ -52,7 +52,7 @@ Examples:
   $ mrapi prisma generate --tenant=.
   $ mrapi prisma generate --service=user --tenant=.
 
-  $ mrapi prisma db push --ignore-migrations --preview-feature --service=user --tenant=two
+  $ mrapi prisma db push --preview-feature --service=user --tenant=two
   $ mrapi prisma studio --service=user --tenant=two
 
 `
@@ -155,7 +155,7 @@ Examples:
       if (!type || type === 'openapi') {
         if (!service.openapi) {
           console.log(chalk.yellow`"openapi" not enabled in config file`)
-        } else if ((service.openapi as mrapi.OpenapiOptions)?.output) {
+        } else if (service.openapi?.output) {
           await this.runOpenapiGenerate(service)
         }
       }
@@ -284,7 +284,7 @@ Examples:
     if (databaseUrl && schemaPath) {
       this.log('Running `mrapi graphql` ...')
 
-      generateGraphqlSchema({
+      await generateGraphqlSchema({
         schemaPath,
         clientOutput,
         databaseUrl,
@@ -322,7 +322,7 @@ Examples:
     }
 
     console.log(chalk.dim`\nPrisma schema loaded from ${service.schema}\n`)
-    let generatorOptions =
+    const generatorOptions =
       openapiOptions.generatorOptions &&
       typeof openapiOptions.generatorOptions === 'object' &&
       Object.keys(openapiOptions.generatorOptions).length > 0
@@ -424,7 +424,7 @@ Examples:
 
   private get prismaVersion() {
     try {
-      const { version } = require('@prisma/cli/package.json')
+      const { version } = require('prisma/package.json')
       return version.split('.').map((x: string) => Number(x))
     } catch {
       return ['2']
@@ -441,6 +441,6 @@ Examples:
   }
 }
 
-export default (argv = process.argv.slice(2)) => new Cli(argv).run()
+export default async (argv = process.argv.slice(2)) => await new Cli(argv).run()
 
-export const run = (argv: string) => new Cli(argv.split(' ')).run()
+export const run = async (argv: string) => await new Cli(argv.split(' ')).run()

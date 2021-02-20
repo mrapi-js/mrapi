@@ -6,14 +6,13 @@
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "scripts": {
-    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "debug": "wtfnode ts-node-dev --respawn --transpile-only ./src/app.ts"
+    "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts"
   },
   "keywords": [],
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/service": "^1.0.0-beta.1",
+    "@mrapi/service": "^1.0.0-beta.2",
     "class-validator": "^0",
     "graphql": "^15",
     "pino-pretty": "^4.3.0",

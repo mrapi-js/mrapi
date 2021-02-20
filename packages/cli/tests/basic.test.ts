@@ -58,7 +58,7 @@ describe('packages cli test', () => {
   })
   test('prisma db', async () => {
     await run(
-      'prisma db push --ignore-migrations --preview-feature --service=post',
+      'prisma db push --preview-feature --service=post',
     ).catch((e) => {
       console.error(e)
     })

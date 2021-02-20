@@ -13,12 +13,12 @@
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/service": "^1.0.0-beta.1",
-    "@nexus/schema": "^0.17.0",
-    "pino-pretty": "^4.3.0"
+    "@mrapi/service": "^1.0.0-beta.2",
+    "nexus": "^1.0.0",
+    "pino-pretty": "^4.5.0"
   },
   "devDependencies": {
-    "@types/node": "*",
+    "@types/node": "14.14.30",
     "ts-node-dev": "^1.1.1",
     "typescript": "4.0.5"
   },

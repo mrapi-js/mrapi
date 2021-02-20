@@ -202,7 +202,7 @@ function isDependencies(
   if (subname && name === subname) {
     return true
   }
-  for (var temp of Object.values(varType)) {
+  for (const temp of Object.values(varType)) {
     // @ts-expect-errorF
     if (temp?.type?.ofType) {
       return isDependencies(

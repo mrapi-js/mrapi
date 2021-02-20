@@ -21,11 +21,11 @@
     "access": "public"
   },
   "dependencies": {
-    "@mrapi/common": "^2.0.1-beta.1",
-    "@mrapi/types": "^2.0.1-beta.1"
+    "@mrapi/common": "^2.0.1-beta.2",
+    "@mrapi/types": "^2.0.1-beta.2"
   },
   "devDependencies": {
-    "@prisma/client": "^2"
+    "@prisma/client": "^2.17.0"
   },
   "repository": {
     "type": "git",

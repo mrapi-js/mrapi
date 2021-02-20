@@ -1,4 +1,4 @@
-import { extendType } from '@nexus/schema'
+import { extendType } from 'nexus'
 import { Context } from '../context'
 
 export const customQuery = extendType({

@@ -1,4 +1,4 @@
-import type { GraphQLSchema } from 'graphql'
+import { GraphQLSchema } from 'graphql'
 
 import { join } from 'path'
 import { defaults, tryRequire, FILE_HEADER } from '@mrapi/common'
@@ -21,10 +21,7 @@ export default function getSchema({
   const {
     makeSchema,
     declarativeWrappingPlugin,
-  }: typeof import('@nexus/schema') = tryRequire(
-    '@nexus/schema',
-    'Please install it manually.',
-  )
+  }: typeof import('nexus') = tryRequire('nexus', 'Please install it manually.')
   let types: any[] = []
   let datasourceModuleName: string
 
@@ -91,7 +88,7 @@ export default function getSchema({
                 alias: 'models',
                 source: join(customPath, 'models/index.ts'),
                 // Note: This will match any declared type in models if the name matches
-                typeMatch: (type) => [new RegExp(`(${type.name})`)],
+                typeMatch: (type: any) => [new RegExp(`(${type.name})`)],
               },
             ],
             debug: true,

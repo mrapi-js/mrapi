@@ -1,7 +1,4 @@
-const {
-  GraphQLString,
-  GraphQLEnumType
-} = require('graphql')
+const { GraphQLString, GraphQLEnumType } = require('graphql')
 
 const sourceEnumType = new GraphQLEnumType({
   name: 'sourceEnum',
@@ -9,13 +6,13 @@ const sourceEnumType = new GraphQLEnumType({
   values: {
     weixin: {
       value: 'weixin',
-      description: '微信'
+      description: '微信',
     },
     weibo: {
       value: 'weibo',
-      description: '微博'
-    }
-  }
+      description: '微博',
+    },
+  },
 })
 
 module.exports = {
@@ -25,16 +22,15 @@ module.exports = {
     source: {
       type: sourceEnumType,
       description: '文章来源类型',
-      defaultValue: 'weixin'
-    }
+      defaultValue: 'weixin',
+    },
   },
   resolve: (root, params, context) => {
     let { source } = params
 
     return source
-  }
+  },
 }
-
 
 // 调用例子
 // query fetchEnumData {

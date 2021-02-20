@@ -7,6 +7,7 @@ import { ServiceOptions } from '@mrapi/types'
 import { join } from 'path'
 
 const fakeApp = new App()
+
 const fakeDatasource = new Datasource({
   provider: 'prisma' as any,
   management: {
@@ -26,6 +27,7 @@ const fakeDatasource = new Datasource({
     },
   ],
 } as DatasourceOptions)
+
 const fakeService = {
   name: 'cyrus',
   database: 'file:./dev.db',
@@ -35,19 +37,9 @@ const fakeService = {
   schema: 'database-url',
   tenants: [{ name: 'cyrus' }],
   contextFile: 'openapi',
-  openapi: { output: join(__dirname, './definitions'), custom: 'openapi' },
+  openapi: { output: join(__dirname, './output'), custom: 'openapi' },
 } as ServiceOptions
-const fakeService2 = {
-  name: 'cyrus',
-  database: 'file:./dev.db',
-  clientPath: '.prisma/a-client',
-  customDir: 'openapi',
-  sources: [{ name: 'openapi', type: 'openapi', endpoint: 'openapi' }],
-  schema: 'database-url',
-  tenants: [{ name: 'cyrus' }],
-  contextFile: 'openapi',
-  openapi: { output: '', custom: 'openapi' },
-} as ServiceOptions
+
 const fakeModelName = 'user'
 const fakeReq = {
   body: { username: 'cyrusyjli' },
@@ -61,37 +53,37 @@ const fakeReq = {
 }
 const fakeRes = { id: '1', username: 'cyrusyjli' }
 
-function fakeCreate(params: any) {
-  return new Promise((resolve) => {
+function fakeCreate (params: any) {
+  return new Promise(resolve => {
     if (params.data.username) resolve(fakeRes)
   })
 }
-function fakeFindMany(params: any) {
-  return new Promise((resolve) => {
+function fakeFindMany (params: any) {
+  return new Promise(resolve => {
     if (params) resolve(1)
   })
 }
-function fakeCount(params: any) {
-  return new Promise((resolve) => {
+function fakeCount (params: any) {
+  return new Promise(resolve => {
     if (params) resolve(1)
   })
 }
-function fakeFindUnique(params: any) {
-  return new Promise((resolve) => {
+function fakeFindUnique (params: any) {
+  return new Promise(resolve => {
     if (params.where) resolve(1)
   })
 }
-function fakeUpdate(params: any) {
-  return new Promise((resolve) => {
+function fakeUpdate (params: any) {
+  return new Promise(resolve => {
     if (params.data.username) resolve(1)
   })
 }
-function fakeDelete(params: any) {
-  return new Promise((resolve) => {
+function fakeDelete (params: any) {
+  return new Promise(resolve => {
     if (params.where) resolve(1)
   })
 }
-function fakeDBClient(req: any) {
+function fakeDBClient (req: any) {
   return function () {
     return {
       req,
@@ -107,8 +99,8 @@ function fakeDBClient(req: any) {
   }
 }
 
-function fakeGetTenantIdentity(req: any, res: any, service: any) {
-  return new Promise((resolve) => {
+function fakeGetTenantIdentity (req: any, res: any, service: any) {
+  return new Promise(resolve => {
     if (req && res && service) resolve(1)
   })
 }
@@ -281,25 +273,15 @@ describe('openapi', () => {
 
   test('makeOpenapi', async () => {
     expect(typeof makeOpenapi).toBe('function')
-    expect(typeof makeOpenapi(fakeApp, {}, 'test')).toBe('object')
-  })
-
-  test('makeOpenapiOptions', () => {
     expect(typeof makeOpenapiOptions).toBe('function')
-    expect(
-      typeof makeOpenapiOptions(
-        fakeService,
-        fakeGetTenantIdentity,
-        fakeDatasource,
-      ),
-    ).toBe('object')
-    expect(
-      typeof makeOpenapiOptions(
-        fakeService2,
-        fakeGetTenantIdentity,
-        fakeDatasource,
-      ),
-    ).toBe('object')
+    const opts = makeOpenapiOptions(
+      fakeService,
+      fakeGetTenantIdentity,
+      fakeDatasource,
+    )
+    expect(typeof opts).toBe('object')
+    const result = await makeOpenapi(fakeApp, opts, 'test')
+    expect(typeof result).toBe('object')
   })
 
   // ====== findManyFilter ====== //

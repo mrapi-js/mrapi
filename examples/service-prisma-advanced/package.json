@@ -7,26 +7,25 @@
   "types": "lib/index.d.ts",
   "scripts": {
     "dev": "ts-node-dev --respawn --transpile-only ./src/app.ts",
-    "debug": "wtfnode ts-node-dev --respawn --transpile-only ./src/app.ts",
     "setup": "npx mrapi setup"
   },
   "keywords": [],
   "author": "neikvon",
   "license": "MIT",
   "dependencies": {
-    "@mrapi/datasource": "^1.0.0-beta.1",
-    "@mrapi/graphql": "^1.0.0-beta.1",
-    "@mrapi/service": "^1.0.0-beta.1",
-    "@nexus/schema": "^0.19.2",
-    "@prisma/client": "^2.13",
-    "nexus-plugin-prisma": "^0.26",
-    "pino-pretty": "^4.3.0"
+    "@mrapi/datasource": "^1.0.0-beta.2",
+    "@mrapi/graphql": "^1.0.0-beta.2",
+    "@mrapi/service": "^1.0.0-beta.2",
+    "nexus": "^1.0.0",
+    "@prisma/client": "^2.17.0",
+    "nexus-plugin-prisma": "^0.30.0",
+    "pino-pretty": "^4.5.0"
   },
   "devDependencies": {
-    "@mrapi/cli": "^2.0.1-beta.1",
-    "@paljs/generator": "^2.8",
-    "@prisma/cli": "^2.13",
-    "@types/node": "*",
+    "@mrapi/cli": "^2.0.1-beta.2",
+    "@paljs/generator": "^2.13.0",
+    "prisma": "^2.17.0",
+    "@types/node": "14.14.30",
     "ts-node-dev": "^1.1.1",
     "typescript": "4.0.5"
   },

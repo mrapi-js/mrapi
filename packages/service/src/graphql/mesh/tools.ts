@@ -13,8 +13,9 @@ export async function getOpenapiSchema(
   )
   return await new Promise((resolve, reject) => {
     require(endpoint.split(':')[0]).get(endpoint, (res: IncomingMessage) => {
-      if (res.statusCode !== 200)
-        { return reject(`fetch ${endpoint} error ${res.statusCode}`) }
+      if (res.statusCode !== 200) {
+        return reject(`fetch ${endpoint} error ${res.statusCode}`)
+      }
       res.setEncoding('utf8')
       let rawData = ''
       res.on('data', (chunk) => {
@@ -137,12 +138,16 @@ export function transform(
     )
   }
 
-  if (ignoreFileds.length > 0)
-    { transforms.push(
-      new FilterRootFields((typeName: string, fieldName: string) =>
-        !(ignoreFileds.includes(typeName) ||
-        ignoreFileds.includes(`${typeName}.${fieldName}`)),
+  if (ignoreFileds.length > 0) {
+    transforms.push(
+      new FilterRootFields(
+        (typeName: string, fieldName: string) =>
+          !(
+            ignoreFileds.includes(typeName) ||
+            ignoreFileds.includes(`${typeName}.${fieldName}`)
+          ),
       ),
-    ) }
+    )
+  }
   return transforms
 }

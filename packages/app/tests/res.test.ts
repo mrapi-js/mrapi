@@ -38,11 +38,11 @@ describe('res', () => {
     //   send(req, res, Buffer.from([], 10, 10))
     // })
     // send string
-    function httpReq () {
-      return new Promise(resolve => {
-        http.get('http://127.0.0.1:3030/foo', res => {
+    function httpReq() {
+      return new Promise((resolve) => {
+        http.get('http://127.0.0.1:3030/foo', (res) => {
           let body = ''
-          res.on('data', data => {
+          res.on('data', (data) => {
             body += data
           })
           res.on('end', () => {
@@ -54,11 +54,11 @@ describe('res', () => {
     }
     await httpReq()
     // status code 204/304
-    function httpReq2 () {
-      return new Promise(resolve => {
-        http.get('http://127.0.0.1:3030/foo2', res => {
+    function httpReq2() {
+      return new Promise((resolve) => {
+        http.get('http://127.0.0.1:3030/foo2', (res) => {
           let body = ''
-          res.on('data', data => {
+          res.on('data', (data) => {
             body += data
           })
           res.on('end', () => {
@@ -70,16 +70,16 @@ describe('res', () => {
     }
     await httpReq2()
     // // send head
-    function httpReq3 () {
-      return new Promise(resolve => {
+    function httpReq3() {
+      return new Promise((resolve) => {
         http.get(
           'http://127.0.0.1:3030/head',
           {
             method: 'head',
           },
-          res => {
+          (res) => {
             let body = ''
-            res.on('data', data => {
+            res.on('data', (data) => {
               body += data
             })
             res.on('end', () => {
@@ -92,16 +92,16 @@ describe('res', () => {
     }
     await httpReq3()
     // data
-    function httpReq4 () {
-      return new Promise(resolve => {
+    function httpReq4() {
+      return new Promise((resolve) => {
         http.get(
           'http://127.0.0.1:3030/user',
           {
             method: 'get',
           },
-          res => {
+          (res) => {
             let body = ''
-            res.on('data', data => {
+            res.on('data', (data) => {
               body += data
             })
             res.on('end', () => {
@@ -114,16 +114,16 @@ describe('res', () => {
     }
     await httpReq4()
     // data null
-    function httpReq5 () {
-      return new Promise(resolve => {
+    function httpReq5() {
+      return new Promise((resolve) => {
         http.get(
           'http://127.0.0.1:3030/user2',
           {
             method: 'get',
           },
-          res => {
+          (res) => {
             let body = ''
-            res.on('data', data => {
+            res.on('data', (data) => {
               body += data
             })
             res.on('end', () => {

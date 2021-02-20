@@ -1,4 +1,4 @@
-import { extendType, objectType } from '@nexus/schema'
+import { extendType, objectType } from 'nexus'
 
 const User = objectType({
   name: 'User',

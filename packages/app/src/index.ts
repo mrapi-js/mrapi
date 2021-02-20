@@ -27,7 +27,7 @@ export class App extends Router<Middleware> {
   readonly errorHandler: ErrorHandler
   readonly defaultRoute: DefaultRoute
   server?: Server
-  parse: (req: Request, toDecode: boolean) => ParsedURL | void
+  parse: (req: Request, toDecode: boolean) => ParsedURL
   cache?: LRU<string, any>
   logger: Logger
 
@@ -39,15 +39,15 @@ export class App extends Router<Middleware> {
       this.cache = new LRU(Number(this.opts.cache) || 1000)
     }
 
-    this.errorHandler = this.opts?.errorHandler || errorHandler
-    this.defaultRoute = this.opts?.defaultRoute || defaultRoute
+    this.errorHandler = this.opts?.errorHandler ?? errorHandler
+    this.defaultRoute = this.opts?.defaultRoute ?? defaultRoute
 
     this.id = (
       Date.now().toString(36) + Math.random().toString(36).substr(2, 5)
     ).toUpperCase()
 
     this.logger = getLogger(logger, {
-      ...(opts?.logger || {}),
+      ...(opts?.logger ?? {}),
       name: 'mrapi',
     })
   }
@@ -144,9 +144,10 @@ export class App extends Router<Middleware> {
     this.server.listen(port, ...args)
     return this
   }
-  close() {
+
+   close() {
     if (!this.server) {
-      return Promise.reject('server not started')
+      return Promise.reject(new Error('server not started'))
     }
 
     return new Promise<void>((resolve, reject) => {

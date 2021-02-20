@@ -1,10 +1,10 @@
-import type mrapi from '@mrapi/types'
+import mrapi from '@mrapi/types'
 
 import chalk from 'chalk'
 import { relative } from 'path'
 import { merge, tryRequire } from '@mrapi/common'
 
-export function generateGraphqlSchema({
+export async function generateGraphqlSchema({
   schemaPath,
   graphqlOptions,
   clientOutput,
@@ -33,9 +33,9 @@ export function generateGraphqlSchema({
       javaScript: true,
       output: graphqlOptions.output,
     },
-    graphqlOptions.generatorOptions || {},
+    graphqlOptions.generatorOptions ?? {},
   )
-  new Generator(
+  await new Generator(
     { name: 'nexus-plugin-prisma', schemaPath: schemaPath },
     opts,
   ).run()

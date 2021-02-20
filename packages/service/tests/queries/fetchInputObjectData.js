@@ -8,26 +8,26 @@ const {
 
 const fileObject = new GraphQLInputObjectType({
   name: 'fileObject',
-  description: "文件数据",
+  description: '文件数据',
   fields: () => ({
     type: {
       type: new GraphQLNonNull(GraphQLString),
-      description: '文件类型'
+      description: '文件类型',
     },
     name: {
       type: new GraphQLNonNull(GraphQLString),
-      description: '文件的原始文件名称'
+      description: '文件的原始文件名称',
     },
     size: {
       type: new GraphQLNonNull(GraphQLInt),
-      description: '文件大小(bytes)'
+      description: '文件大小(bytes)',
     },
     path: {
       type: new GraphQLNonNull(GraphQLString),
-      description: '文件上传后的路径'
+      description: '文件上传后的路径',
     },
   }),
-});
+})
 
 module.exports = {
   type: GraphQLBoolean,
@@ -35,14 +35,13 @@ module.exports = {
   args: {
     file: {
       type: fileObject,
-      description: 'object类型参数'
-    }
+      description: 'object类型参数',
+    },
   },
   resolve: (root, params, context) => {
     return true
-  }
+  },
 }
-
 
 // 调用例子
 // query fetchInputObjectData {

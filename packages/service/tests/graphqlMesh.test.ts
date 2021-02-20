@@ -139,5 +139,3 @@ describe('mesh', () => {
     } catch (error) {}
   })
 })
-
-

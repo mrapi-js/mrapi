@@ -1,9 +1,6 @@
-const {
-  GraphQLSchema,
-  GraphQLObjectType
-} = require('graphql')
+const { GraphQLSchema, GraphQLObjectType } = require('graphql')
 
-const { AnimalType, dogType, fishType } = require("./types/interfaceType")
+const { AnimalType, dogType, fishType } = require('./types/interfaceType')
 
 // 规范写法，声明query(查询类型接口) 和 mutation(修改类型接口)
 module.exports = new GraphQLSchema({
@@ -19,15 +16,15 @@ module.exports = new GraphQLSchema({
       fetchEnumData: require('./queries/fetchEnumData'),
       fetchInputObjectData: require('./queries/fetchInputObjectData'),
       fetchUnionData: require('./queries/fetchUnionData'),
-      fetchInterfaceData: require('./queries/fetchInterfaceData')
-    })
+      fetchInterfaceData: require('./queries/fetchInterfaceData'),
+    }),
   }),
   mutation: new GraphQLObjectType({
     name: 'Mutation',
     description: '修改数据',
     fields: () => ({
       // 修改类型接口方法名称
-      updateData: require('./mutations/updateData')
-    })
-  })
+      updateData: require('./mutations/updateData'),
+    }),
+  }),
 })

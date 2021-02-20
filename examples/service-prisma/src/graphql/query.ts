@@ -1,4 +1,4 @@
-import { extendType, stringArg, objectType, arg, list } from '@nexus/schema'
+import { extendType, stringArg, objectType, arg, list } from 'nexus'
 import { Context } from '../context'
 
 const ServerTime = objectType({

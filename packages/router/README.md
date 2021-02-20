@@ -11,13 +11,13 @@ import { Router } from '@mrapi/router'
 
 const router = new Router()
 
-router.on('POST', '/', () => { })
+router.on('POST', '/', () => {})
 router.off('POST', '/')
-router.use('/', () => { })
+router.use('/', () => {})
 router.find('POST', '/')
 
 // shorthands
-router.all('/', () => { })
-router.get('/', () => { })
+router.all('/', () => {})
+router.get('/', () => {})
 // ...
 ```

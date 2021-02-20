@@ -21,7 +21,7 @@
     "access": "public"
   },
   "dependencies": {
-    "@mrapi/types": "^2.0.1-beta.1",
+    "@mrapi/types": "^2.0.1-beta.2",
     "deepmerge": "^4"
   },
   "repository": {

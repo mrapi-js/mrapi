@@ -21,7 +21,7 @@ function getLogger(
   opts?: LoggerOptions,
 ): Logger {
   return (
-    logger ||
+    logger ??
     createLogger({
       ...defaultLoggerOptions,
       ...opts,

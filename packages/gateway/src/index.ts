@@ -86,8 +86,8 @@ export class Gateway extends App {
     }
   }
 
-  start(port: number = defaults.port) {
-    return new Promise((resolve, reject) => {
+  async start(port: number = defaults.port) {
+    return await new Promise((resolve, reject) => {
       this.listen(port, (err?: Error) => {
         if (err) {
           reject(err)
