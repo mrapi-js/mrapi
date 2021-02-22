@@ -47,7 +47,7 @@ export class Gateway extends App {
 
     const prefix = `/${options.name}`
 
-    this.get(`${prefix}/*?`, (req, res) => {
+    this.all(`${prefix}/*?`, (req, res) => {
       let targetPath = req.url.replace(prefix, '')
       targetPath = targetPath || '/'
       proxy(req, res, targetPath, {})
