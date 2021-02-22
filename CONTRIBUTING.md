@@ -31,7 +31,7 @@ yarn test
 2. Commit
 
    ```bash
-   fbi commit
+   npx fbi commit
    ```
 
 ## Pull Request
