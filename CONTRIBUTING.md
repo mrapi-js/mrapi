@@ -2,48 +2,38 @@
 
 ## Development
 
-1. Setup
+1. Folk
+
+   Folk the repository to your own account.
+
+2. Start development
 
    ```bash
-   git clone https://github.com/mrapi-js/mrapi.git
-
-   cd mrapi
-
    yarn
-   ```
-
-1. Start development
-
-   ```bash
    yarn build
    yarn dev
    ```
 
-## Run example
+## Run tests
 
 ```bash
-cd examples/service-basic
-yarn dev
+yarn test
 ```
 
 ## Git Commit
 
 1. Add commit plugin
 
-   docs: https://github.com/fbi-js/factory-commands/blob/main/src/commands/commit/README.md
-
    ```bash
-   # install fbi
-   npm i -g fbi
-
-   # add commit plugin
-   fbi add factory-commands
+   npx fbi add factory-commands
    ```
 
 2. Commit
 
    ```bash
    fbi commit
-
-   # if you wanna release new version, please check 'Bump the package version? Yes'
    ```
+
+## Pull Request
+
+https://github.com/mrapi-js/mrapi/compare
