@@ -10,7 +10,7 @@ service
   .get('/user', (_req, res) => {
     res.end('Hello User!')
   })
-  .listen(3000, (err: any) => {
+  .listen(3001, (err: any) => {
     if (err) {
       throw err
     }
@@ -24,12 +24,19 @@ service
 
 const gateway = new Gateway({
   app: {},
+  clients: true,
   services: [
     {
       name: 'service',
-      url: 'http://0.0.0.0:3000',
+      url: 'http://0.0.0.0:3001',
     },
   ],
+})
+
+// custome api use clients
+gateway.get('/', async (_req, res) => {
+  const resp = await gateway.clients.service.get('/')
+  res.end(resp.data)
 })
 
 gateway.start().catch((err) => gateway.logger.error(err))
