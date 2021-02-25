@@ -1,6 +1,5 @@
 {
   "name": "app-nested",
-  "version": "1.0.0",
   "private": "true",
   "description": "",
   "main": "lib/index.js",
