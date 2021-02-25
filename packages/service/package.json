@@ -1,6 +1,6 @@
 {
   "name": "@mrapi/service",
-  "version": "1.0.0-beta.2",
+  "version": "1.0.0-beta.3",
   "description": "mrapi",
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -22,9 +22,9 @@
   "license": "MIT",
   "dependencies": {
     "@mrapi/app": "^1.0.0-beta.2",
-    "@mrapi/common": "^2.0.1-beta.2",
+    "@mrapi/common": "^2.0.1-beta.3",
     "@mrapi/graphql": "^1.0.0-beta.2",
-    "@mrapi/types": "^2.0.1-beta.2",
+    "@mrapi/types": "^2.0.1-beta.3",
     "body-parser": "^1.19",
     "graphql-middleware": "^6",
     "graphql-shield": "^7"
@@ -32,13 +32,13 @@
   "devDependencies": {
     "@graphql-tools/mock": "^8",
     "@graphql-tools/stitch": "^7",
-    "@mrapi/datasource": "^1.0.0-beta.2",
-    "nexus": "^1.0.0",
+    "@mrapi/datasource": "^1.0.0-beta.3",
     "@types/body-parser": "^1.19.0",
     "@types/swagger-tools": "^0",
     "express-openapi": "^7",
     "graphql": "^15.4",
     "graphql-playground-middleware-express": "^1",
+    "nexus": "^1.0.0",
     "nexus-plugin-prisma": "^0",
     "swagger-tools": "^0.10",
     "type-graphql": "^1"
