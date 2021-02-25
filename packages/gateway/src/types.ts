@@ -1,6 +1,7 @@
 import type mrapi from '@mrapi/types'
 import type { app } from '@mrapi/app'
 import type { HTTPMethod } from '@mrapi/router'
+export type { AxiosInstance } from 'axios'
 
 declare module '@mrapi/types' {
   interface GatewayServiceConfig {
@@ -8,7 +9,8 @@ declare module '@mrapi/types' {
   }
 
   interface GatewayOptions {
-    app: app.Options
+    app: app.Options,
+    clients?: boolean
   }
 }
 

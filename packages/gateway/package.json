@@ -26,6 +26,7 @@
     "@mrapi/common": "^2.0.1-beta.2",
     "@mrapi/router": "^1.0.0-beta.2",
     "@mrapi/types": "^2.0.1-beta.2",
+    "axios": "^0.21.0",
     "fast-proxy": "^1"
   },
   "repository": {

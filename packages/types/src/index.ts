@@ -23,6 +23,7 @@ declare namespace mrapi {
   }
 
   interface GatewayOptions {
+    clients?: boolean
     services: GatewayServiceConfig[]
   }
 

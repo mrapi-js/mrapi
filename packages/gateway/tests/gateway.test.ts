@@ -103,4 +103,31 @@ describe('gateway', () => {
       gateway7.close()
     }
   })
+
+  test('gateway clients', async () => {
+    const gateway = new Gateway({
+      app: {},
+      clients: true,
+      services: [{ name: 'cyrus', url: '123' }],
+    })
+    try {
+      await gateway.start()
+      expect(gateway.clients.cyrus.get instanceof Function).toBe(true)
+    } finally {
+      gateway.close()
+    }
+  })
+
+  test('gateway nonuse clients', async () => {
+    const gateway = new Gateway({
+      app: {},
+      services: [{ name: 'cyrus', url: '123' }],
+    })
+    try {
+      await gateway.start()
+      expect(typeof gateway.clients.cyrus).toBe('undefined')
+    } finally {
+      gateway.close()
+    }
+  })
 })
