@@ -1,12 +1,14 @@
-import type { mrapi, GatewayServiceOptions } from './types'
+import type { mrapi, GatewayServiceOptions, AxiosInstance } from './types'
 
 import Proxy from 'fast-proxy'
 import { App } from '@mrapi/app'
 import { AddressInfo } from 'net'
 import { resolveConfig, defaults } from '@mrapi/common'
+import axios from 'axios'
 
 export class Gateway extends App {
   services: Map<string, GatewayServiceOptions> = new Map()
+  clients: { [key: string]: AxiosInstance } = {}
 
   constructor(public config: mrapi.GatewayOptions) {
     super(config.app)
@@ -59,6 +61,13 @@ export class Gateway extends App {
       proxy,
       close,
     })
+
+    if (this.config.clients) {
+        this.clients[options.name] = axios.create({
+        baseURL: options.url,
+        timeout: 30000,
+      })
+    }
   }
 
   removeService(name: string) {
@@ -74,6 +83,8 @@ export class Gateway extends App {
     service.close()
     service.proxy = null
     this.services.delete(name)
+    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+    delete this.clients[name]
   }
 
   logEndpoints() {
