@@ -1,18 +1,18 @@
 import { Datasource } from '../src/index'
 import path from 'path'
-import { Management } from '../src/management'
+// import { Management } from '../src/management'
 import { Tenant } from '../src/tenant'
 
 const configPath = path.join(
   __dirname,
   '__fixtures__/config/management.config.js',
 )
-const configPath2 = path.join(
-  __dirname,
-  '__fixtures__/config/services.config.js',
-)
+// const configPath2 = path.join(
+//   __dirname,
+//   '__fixtures__/config/services.config.js',
+// )
 const config = require(configPath)
-const config2 = require(configPath2)
+// const config2 = require(configPath2)
 describe('datasource', () => {
   beforeEach(() => {})
 
