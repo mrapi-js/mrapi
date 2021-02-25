@@ -37,3 +37,16 @@ yarn test
 ## Pull Request
 
 https://github.com/mrapi-js/mrapi/compare
+
+
+## Release
+
+```bash
+npx lerna version
+
+# publish beta version
+yarn publish:beta
+
+# or, publish version
+yarn publish
+```
